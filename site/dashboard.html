@@ -199,54 +199,6 @@
 .concept-row .c-bar { width: 70px; height: 4px; background: var(--c-bg); border-radius: 999px; overflow: hidden; }
 .concept-row .c-bar span { display:block; height:100%; background: var(--c-accent); }
 .concept-row.struggling .c-bar span { background: #d49457; }
-
-/* Try-it-yourself demo widget (public preview only) */
-.demo-widget {
-  max-width: 1180px; margin: 24px auto 0;
-  background: var(--c-surface); border: 1px solid var(--c-border);
-  border-radius: 16px; padding: 28px;
-}
-.demo-widget .dw-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
-.demo-widget .dw-head h2 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--c-text); margin: 0; text-transform: none; }
-.demo-widget .dw-head .dw-scope { font-size: 11px; color: var(--c-muted); background: var(--c-bg-2); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--c-border); }
-.demo-widget .dw-intro { font-size: 13px; color: var(--c-muted-strong); margin-bottom: 16px; line-height: 1.55; }
-.demo-form { display: flex; gap: 10px; }
-.demo-form textarea {
-  flex: 1; min-height: 72px; max-height: 200px;
-  background: var(--c-bg-2); border: 1px solid var(--c-border);
-  color: var(--c-text); padding: 12px 14px; border-radius: 10px;
-  font: inherit; font-size: 13.5px; outline: none; resize: vertical;
-  font-family: inherit;
-}
-.demo-form textarea:focus { border-color: var(--c-accent); }
-.demo-form button {
-  padding: 0 24px; min-width: 100px;
-  background: var(--c-accent); color: white; border: 0;
-  border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;
-  font-family: inherit;
-  transition: background 0.15s;
-}
-.demo-form button:hover:not(:disabled) { background: #3d5a3e; }
-.demo-form button:disabled { opacity: 0.5; cursor: not-allowed; }
-.demo-suggestions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-.demo-suggestions button {
-  background: transparent; border: 1px dashed var(--c-border);
-  padding: 5px 11px; border-radius: 999px; font-size: 11.5px;
-  color: var(--c-muted-strong); cursor: pointer; font-family: inherit;
-}
-.demo-suggestions button:hover { border-color: var(--c-accent); color: var(--c-text); }
-
-.demo-result {
-  margin-top: 18px; padding: 16px 18px;
-  background: var(--c-bg-2); border: 1px solid var(--c-border);
-  border-radius: 10px; font-size: 13.5px; line-height: 1.65;
-  color: var(--c-text); white-space: pre-wrap;
-}
-.demo-result.blocked { background: rgba(212,108,87,0.06); border-color: rgba(212,108,87,0.3); }
-.demo-result .dr-label { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--c-accent); margin-bottom: 8px; }
-.demo-result.blocked .dr-label { color: #a64a37; }
-.demo-meta { font-size: 11px; color: var(--c-muted); margin-top: 10px; }
-.demo-error { color: #a64a37; font-size: 12.5px; margin-top: 10px; }
 </style>
 </head>
 <body class="auth-shell">
