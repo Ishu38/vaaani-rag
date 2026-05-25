@@ -374,3 +374,73 @@ def get_school_dashboard(
     if not school.is_school_staff(user["id"], school_id):
         raise HTTPException(status_code=403, detail="Only teachers and admins can view the dashboard.")
     return school.school_dashboard(school_id)
+
+
+# ---------------- parent ↔ student linkage ----------------
+
+class ParentLinkBody(BaseModel):
+    parent_email: str
+    student_email: str
+
+
+@router.post("/schools/{school_id}/parent-links")
+def create_parent_link(
+    school_id: int,
+    body: ParentLinkBody,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Admin creates a parent ↔ student link inside their school.
+
+    Both users must already be members of the school with the correct roles
+    (parent has role='parent', student has role='student'). The admin invites
+    them separately via the school invite code — this endpoint only wires up
+    the linkage after both accept.
+    """
+    user = _require_user(vaaani_session)
+    if not school.is_school_admin(user["id"], school_id):
+        raise HTTPException(status_code=403, detail="Only school admins can link parents to students.")
+    parent_user = service.get_user_by_email(body.parent_email.strip().lower())
+    student_user = service.get_user_by_email(body.student_email.strip().lower())
+    if not parent_user:
+        raise HTTPException(status_code=404, detail=f"No account found for parent email {body.parent_email}. Ask them to sign up + join the school first.")
+    if not student_user:
+        raise HTTPException(status_code=404, detail=f"No account found for student email {body.student_email}. Ask them to sign up + join the school first.")
+    link = school.link_parent_to_student(parent_user["id"], student_user["id"], school_id)
+    if not link:
+        raise HTTPException(
+            status_code=400,
+            detail="Linkage failed — confirm the parent has joined this school as 'parent' and the student has joined as 'student'.",
+        )
+    return {"link": link}
+
+
+@router.delete("/schools/{school_id}/parent-links")
+def delete_parent_link(
+    school_id: int,
+    body: ParentLinkBody,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Admin removes a parent ↔ student link."""
+    user = _require_user(vaaani_session)
+    if not school.is_school_admin(user["id"], school_id):
+        raise HTTPException(status_code=403, detail="Only school admins can manage parent links.")
+    parent_user = service.get_user_by_email(body.parent_email.strip().lower())
+    student_user = service.get_user_by_email(body.student_email.strip().lower())
+    if not parent_user or not student_user:
+        raise HTTPException(status_code=404, detail="One or both accounts not found.")
+    ok = school.unlink_parent_from_student(parent_user["id"], student_user["id"], school_id)
+    return {"removed": ok}
+
+
+@router.get("/schools/{school_id}/parent-dashboard")
+def get_parent_dashboard(
+    school_id: int,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Parent's view of their school: their linked children + school-level summary.
+    Available to any member of the school whose role is 'parent'."""
+    user = _require_user(vaaani_session)
+    role = school.get_user_role(user["id"], school_id)
+    if role != "parent":
+        raise HTTPException(status_code=403, detail="Only parent members can view the parent dashboard.")
+    return school.parent_dashboard(user["id"], school_id)

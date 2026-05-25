@@ -100,6 +100,17 @@ CREATE TABLE IF NOT EXISTS school_memberships (
 CREATE INDEX IF NOT EXISTS ix_memb_user ON school_memberships(user_id);
 CREATE INDEX IF NOT EXISTS ix_memb_school ON school_memberships(school_id);
 
+CREATE TABLE IF NOT EXISTS parent_student_links (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parent_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    student_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    school_id INTEGER NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+    linked_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(parent_user_id, student_user_id, school_id)
+);
+CREATE INDEX IF NOT EXISTS ix_psl_parent ON parent_student_links(parent_user_id, school_id);
+CREATE INDEX IF NOT EXISTS ix_psl_student ON parent_student_links(student_user_id, school_id);
+
 -- Adaptive learning: one row per (user, topic). 'topic' is the canonical
 -- entity key from the Graph-RAG knowledge graph (e.g. "saturn", "hyperion").
 CREATE TABLE IF NOT EXISTS student_skills (
@@ -174,6 +185,19 @@ def _additive_migrate(conn: sqlite3.Connection) -> None:
         """)
         conn.execute("CREATE INDEX IF NOT EXISTS ix_memb_user ON school_memberships(user_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS ix_memb_school ON school_memberships(school_id)")
+    if "parent_student_links" not in tables:
+        conn.execute("""
+            CREATE TABLE parent_student_links (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                parent_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                student_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                school_id INTEGER NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+                linked_at TEXT NOT NULL DEFAULT (datetime('now')),
+                UNIQUE(parent_user_id, student_user_id, school_id)
+            )
+        """)
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_psl_parent ON parent_student_links(parent_user_id, school_id)")
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_psl_student ON parent_student_links(student_user_id, school_id)")
 
 
 def init_db(path: Path = USERS_DB_PATH) -> None:

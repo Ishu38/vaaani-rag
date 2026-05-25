@@ -550,3 +550,136 @@ def school_dashboard(school_id: int) -> dict:
         ],
         "teachers": [m for m in members if m["role"] == "teacher"],
     }
+
+
+# ---------------- parent ↔ student linkage ----------------
+
+def link_parent_to_student(parent_user_id: int, student_user_id: int, school_id: int) -> dict | None:
+    """Create a parent → student link. Both users must already be members of the school
+    (parent with role='parent', student with role='student'). Returns the link dict or
+    None if validation fails."""
+    parent_role = get_user_role(parent_user_id, school_id)
+    student_role = get_user_role(student_user_id, school_id)
+    if parent_role != "parent":
+        return None
+    if student_role != "student":
+        return None
+    with connect() as c:
+        try:
+            c.execute(
+                "INSERT INTO parent_student_links (parent_user_id, student_user_id, school_id) "
+                "VALUES (?, ?, ?)",
+                (parent_user_id, student_user_id, school_id),
+            )
+        except Exception:
+            # already linked — idempotent
+            pass
+        row = c.execute(
+            "SELECT id, parent_user_id, student_user_id, school_id, linked_at "
+            "FROM parent_student_links WHERE parent_user_id = ? AND student_user_id = ? AND school_id = ?",
+            (parent_user_id, student_user_id, school_id),
+        ).fetchone()
+    return dict(row) if row else None
+
+
+def unlink_parent_from_student(parent_user_id: int, student_user_id: int, school_id: int) -> bool:
+    """Remove a parent → student link. Returns True if a row was deleted."""
+    with connect() as c:
+        cur = c.execute(
+            "DELETE FROM parent_student_links WHERE parent_user_id = ? AND student_user_id = ? AND school_id = ?",
+            (parent_user_id, student_user_id, school_id),
+        )
+        return cur.rowcount > 0
+
+
+def get_children_for_parent(parent_user_id: int, school_id: int) -> list[dict]:
+    """Return the student users linked to this parent in the given school."""
+    with connect() as c:
+        rows = c.execute(
+            "SELECT u.id, u.email, u.name, psl.linked_at "
+            "FROM parent_student_links psl "
+            "JOIN users u ON psl.student_user_id = u.id "
+            "WHERE psl.parent_user_id = ? AND psl.school_id = ? "
+            "ORDER BY u.name",
+            (parent_user_id, school_id),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def parent_dashboard(parent_user_id: int, school_id: int) -> dict:
+    """Parent-view aggregate. Returns school summary + per-child activity for any
+    students the parent has been linked to. If no children are linked yet, shows
+    the school-level overview and an explicit empty-state for the children section."""
+    children = get_children_for_parent(parent_user_id, school_id)
+    child_ids = [c["id"] for c in children]
+    school = get_school(school_id)
+    counts = count_members_by_role(school_id)
+
+    school_queries = 0
+    school_blocks = 0
+    children_summaries: list[dict] = []
+
+    with connect() as c:
+        try:
+            row = c.execute(
+                "SELECT COUNT(*) AS n, COALESCE(SUM(tokens),0) AS tok "
+                "FROM hermes_traces WHERE user_id IN (SELECT user_id FROM school_memberships WHERE school_id = ?)",
+                (school_id,),
+            ).fetchone()
+            school_queries = row["n"] or 0
+        except Exception:
+            school_queries = 0
+
+        for child in children:
+            try:
+                qrows = c.execute(
+                    "SELECT query, intent, tokens, created_at FROM hermes_traces "
+                    "WHERE user_id = ? ORDER BY created_at DESC LIMIT 20",
+                    (child["id"],),
+                ).fetchall()
+            except Exception:
+                qrows = []
+            try:
+                srow = c.execute(
+                    "SELECT COUNT(*) AS cnt, AVG(mastery) AS avg_m, "
+                    "SUM(CASE WHEN mastery >= 4 THEN 1 ELSE 0 END) AS strong "
+                    "FROM student_skills WHERE user_id = ?",
+                    (child["id"],),
+                ).fetchone()
+            except Exception:
+                srow = None
+            children_summaries.append({
+                "id": child["id"],
+                "name": child["name"] or child["email"],
+                "email": child["email"],
+                "linked_at": child["linked_at"],
+                "queries_recent": [
+                    {
+                        "query": (r["query"] or "")[:120],
+                        "intent": r["intent"],
+                        "tokens": r["tokens"] or 0,
+                        "at": r["created_at"],
+                    }
+                    for r in qrows
+                ],
+                "queries_total": len(qrows),
+                "skills_tracked": (srow["cnt"] if srow else 0) or 0,
+                "avg_mastery": round((srow["avg_m"] if srow else 0) or 0, 1),
+                "strong_count": (srow["strong"] if srow else 0) or 0,
+            })
+
+    return {
+        "school": {
+            "id": school_id,
+            "name": school["name"] if school else "—",
+            "plan": school["plan"] if school else "",
+            "curriculum": (school["guardrails"] or {}).get("curriculum", "") if school else "",
+        },
+        "school_summary": {
+            "total_members": counts.get("total", 0),
+            "active_students": counts.get("student", 0),
+            "queries_this_school": school_queries,
+        },
+        "children": children_summaries,
+        "children_unlinked": len(children) == 0,
+    }
