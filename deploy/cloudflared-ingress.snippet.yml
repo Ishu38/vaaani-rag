@@ -1,0 +1,20 @@
+# Add this ingress rule to your existing Cloudflare Tunnel config
+# (typically /etc/cloudflared/config.yml on the VPS). Place the new rule
+# BEFORE the catch-all `service: http_status:404` line — Cloudflared evaluates
+# rules top-to-bottom and the first match wins.
+#
+# Example merged config (only the relevant ingress: section shown):
+#
+# tunnel: <your-tunnel-uuid-or-name>
+# credentials-file: /etc/cloudflared/<uuid>.json
+#
+# ingress:
+#   # ... existing rules for app.vaaani.in, api.vaaani.in, vaaani.in ...
+#
+#   - hostname: brain.vaaani.in              # <-- ADD THIS
+#     service: http://localhost:8766         #     PORT in vaaani-rag.service
+#
+#   - service: http_status:404               # catch-all stays last
+
+  - hostname: brain.vaaani.in
+    service: http://localhost:8766

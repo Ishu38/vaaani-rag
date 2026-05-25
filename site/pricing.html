@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Vaaani pricing — Free, Student, and Institution plans for the Socratic AI study assistant." />
+<title>Pricing — Vaaani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+<link rel="stylesheet" href="/auth.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body class="auth-shell">
+
+<nav class="nav scrolled" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/#how">How it works</a>
+    <a href="/pricing" class="active">Pricing</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="pricing-shell">
+  <div class="container">
+    <section class="pricing-head">
+      <span class="eyebrow">Pricing</span>
+      <h1>Built for students.<br/><span class="serif accent">Priced for them too.</span></h1>
+      <p>Start free with local-first features. Upgrade when you want personal skill tracking, spaced review, and unlimited corpus.</p>
+      <div class="cycle-toggle">
+        <button class="on" data-cycle="monthly">Monthly</button>
+        <button data-cycle="yearly">Yearly <span class="save">save 30%</span></button>
+      </div>
+    </section>
+
+    <section class="tier-grid">
+      <article class="tier reveal">
+        <span class="tier-name">Free</span>
+        <div class="tier-price">
+          <span class="cur">₹</span><span class="amt">0</span><span class="per">/forever</span>
+        </div>
+        <p class="tier-tag">For trying it out on your own machine.</p>
+        <ul class="tier-features">
+          <li>Local-first chat assistant</li>
+          <li>Graph-RAG over your uploaded documents</li>
+          <li>Up to 50 documents, 10k chunks</li>
+          <li>Socratic mode across all four subjects</li>
+          <li>Live knowledge constellation</li>
+        </ul>
+        <a class="btn btn-ghost" href="/signup">Get started</a>
+      </article>
+
+      <article class="tier featured reveal">
+        <span class="tier-name">Student</span>
+        <div class="tier-price">
+          <span class="cur">₹</span><span class="amt" data-monthly="299" data-yearly="209">299</span><span class="per" id="perStudent">/month</span>
+        </div>
+        <p class="tier-tag" id="tagStudent">Billed monthly. Cancel anytime.</p>
+        <ul class="tier-features">
+          <li>Everything in Free, plus</li>
+          <li><strong>Per-student skill model</strong> across topics</li>
+          <li><strong>Spaced repetition</strong> review queue</li>
+          <li>Weak-spot bias inside Socratic prompts</li>
+          <li>Unlimited documents · 200k chunks</li>
+          <li>Priority DeepSeek tokens (faster answers)</li>
+          <li>Email support within 24 hours</li>
+        </ul>
+        <a class="btn btn-primary" href="/signup?plan=student">Start free trial</a>
+      </article>
+
+      <article class="tier reveal">
+        <span class="tier-name">Institution</span>
+        <div class="tier-price">
+          <span class="amt" style="font-size:30px;">Custom</span>
+        </div>
+        <p class="tier-tag">For coaching centres &amp; schools.</p>
+        <ul class="tier-features">
+          <li>Everything in Student, plus</li>
+          <li>Shared knowledge libraries for cohorts</li>
+          <li>Teacher dashboards: mastery distribution per class</li>
+          <li>SSO, audit logs, and role permissions</li>
+          <li>White-label branding on the chat surface</li>
+          <li>Onboarding session + named contact</li>
+        </ul>
+        <a class="btn btn-ghost" href="/contact">Talk to us</a>
+      </article>
+    </section>
+
+    <section class="pricing-faq">
+      <h3>Frequently asked</h3>
+      <details class="faq-item">
+        <summary>Do you store my uploaded documents?</summary>
+        <p>Documents and the knowledge graph live on your own machine when you self-host, and inside an encrypted tenant when you use the hosted version. They are never used to train a third-party model.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Is the Student plan really worth ₹299?</summary>
+        <p>Honest answer: only if you actually use Socratic mode and rate your responses, because that's what powers the skill model. If you only want a chat that summarises PDFs, stay on Free — you get the same retrieval.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What's the refund policy?</summary>
+        <p>Cancel within seven days of your first paid month and we'll refund in full, no questions asked. After that, you can cancel anytime and you keep access until the end of the billing period.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can my coaching institute pilot Vaaani?</summary>
+        <p>Yes. Two-day in-cohort observation pilots are available — write to us through the <a href="/contact">contact page</a>.</p>
+      </details>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/></svg>
+        <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+      </div>
+      <p>A Socratic study assistant for serious students.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <a href="/app">Chat</a>
+      <a href="/graph-view">Knowledge map</a>
+      <a href="/pricing">Pricing</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h5>Brand</h5>
+      <a href="https://vaaani.in" target="_blank" rel="noopener">vaaani.in</a>
+    </div>
+  </div>
+  <div class="container footer-line">
+    <span>Designed and Developed by <strong>Neil Shankar Ray</strong>, IIT Patna</span>
+    <span>© 2026 – 2028 · All rights reserved</span>
+  </div>
+</footer>
+
+<script src="/auth.js"></script>
+<script>
+  // Yearly/Monthly toggle
+  const buttons = document.querySelectorAll('.cycle-toggle button');
+  const amount = document.querySelector('.tier.featured .amt');
+  const per = document.getElementById('perStudent');
+  const tag = document.getElementById('tagStudent');
+  buttons.forEach(b => b.addEventListener('click', () => {
+    buttons.forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    const cycle = b.dataset.cycle;
+    amount.textContent = amount.dataset[cycle];
+    per.textContent = cycle === 'yearly' ? '/month, billed yearly' : '/month';
+    tag.textContent = cycle === 'yearly' ? 'Billed yearly. ₹2,499/yr. Save 30%.' : 'Billed monthly. Cancel anytime.';
+  }));
+
+  // Tier card scroll-reveals
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.utils.toArray('.reveal').forEach(el => {
+      gsap.fromTo(el, { y: 24, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.7, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none reverse' },
+      });
+    });
+  }
+</script>
+</body>
+</html>

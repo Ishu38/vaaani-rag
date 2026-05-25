@@ -1,0 +1,1564 @@
+{
+  "directed": true,
+  "multigraph": true,
+  "graph": {},
+  "nodes": [
+    {
+      "display": "TurboVec",
+      "type": "product",
+      "descriptions": [
+        "Rust vector index implementing Google Research's TurboQuant algorithm"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "turbovec"
+    },
+    {
+      "display": "Rust",
+      "type": "technology",
+      "descriptions": [
+        "Programming language"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "rust"
+    },
+    {
+      "display": "Ryan Codrai",
+      "type": "person",
+      "descriptions": [
+        "Developer of TurboVec"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "ryan codrai"
+    },
+    {
+      "display": "Google Research",
+      "type": "organization",
+      "descriptions": [
+        "Research division of Google"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "google research"
+    },
+    {
+      "display": "TurboQuant",
+      "type": "technology",
+      "descriptions": [
+        "Quantization algorithm by Google Research"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "turboquant"
+    },
+    {
+      "display": "DeepSeek",
+      "type": "organization",
+      "descriptions": [
+        "AI company that released deepseek-chat model"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "deepseek"
+    },
+    {
+      "display": "deepseek-chat",
+      "type": "product",
+      "descriptions": [
+        "Chat model with OpenAI-compatible API endpoint"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "deepseek-chat"
+    },
+    {
+      "display": "OpenAI",
+      "type": "organization",
+      "descriptions": [
+        "AI research organization"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "openai"
+    },
+    {
+      "display": "Vaaani Graph-RAG assistant",
+      "type": "product",
+      "descriptions": [
+        "Graph-RAG assistant combining TurboVec, sentence-transformers, and DeepSeek"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "vaaani graph-rag assistant"
+    },
+    {
+      "display": "sentence-transformers",
+      "type": "product",
+      "descriptions": [
+        "Library for sentence embeddings"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "id": "sentence-transformers"
+    },
+    {
+      "display": "Saturn",
+      "type": "deity",
+      "descriptions": [
+        "Gray-hair'd god, quiet as a stone, fallen divinity, unsceptred, realmless eyes closed, listening to Earth.",
+        "A fallen god, former ruler of the cosmos, now deposed.",
+        "A fallen Titan king, seeking to regain his throne.",
+        "A Titan god who has fallen from power, roused from icy trance.",
+        "A fallen Titan god, former ruler.",
+        "First-born of Coelus, fallen from his throne, mentioned as being on earth with his woes.",
+        "Gray-hair'd, fallen god, quiet as a stone, unsceptred, realmless eyes closed, listening to Earth.",
+        "A fallen god, former ruler, now deposed and grieving.",
+        "A Titan, former king, seeking to regain his throne.",
+        "A Titan god, fallen from power, roused from icy trance.",
+        "First-born son of Coelus, tumbled from his throne, mentioned as being on Earth with his woes."
+      ],
+      "chunk_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "id": "saturn"
+    },
+    {
+      "display": "Thea",
+      "type": "deity",
+      "descriptions": [
+        "Goddess of the infant world, tall as Amazon, large face like Memphian sphinx, sorrowful, speaks to Saturn.",
+        "Goddess, spouse of Hyperion, weeping at Saturn's feet.",
+        "A Titaness, companion to Saturn, who urges him to rally their friends.",
+        "A Titaness, companion of Saturn.",
+        "Goddess of the infant world, tall as Amazon, with large face like Memphian sphinx, sorrowful, speaks to Saturn."
+      ],
+      "chunk_ids": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        9,
+        10,
+        11
+      ],
+      "id": "thea"
+    },
+    {
+      "display": "Earth",
+      "type": "concept",
+      "descriptions": [
+        "Saturn's ancient mother, sought for comfort.",
+        "The planet that no longer knows Saturn as a god."
+      ],
+      "chunk_ids": [
+        1,
+        2,
+        8
+      ],
+      "id": "earth"
+    },
+    {
+      "display": "Naiad",
+      "type": "mythological_being",
+      "descriptions": [
+        "Nymph among reeds, presses finger to lips.",
+        "Nymph among reeds, pressing finger to lips."
+      ],
+      "chunk_ids": [
+        1,
+        8
+      ],
+      "id": "naiad"
+    },
+    {
+      "display": "Achilles",
+      "type": "mythological_character",
+      "descriptions": [
+        "Hero whom Thea could have taken by the hair.",
+        "Greek hero, Thea could have taken by hair."
+      ],
+      "chunk_ids": [
+        1,
+        8
+      ],
+      "id": "achilles"
+    },
+    {
+      "display": "Ixion",
+      "type": "mythological_character",
+      "descriptions": [
+        "Figure whose wheel Thea could have stayed with a finger.",
+        "Bound to wheel, Thea could have stayed his wheel."
+      ],
+      "chunk_ids": [
+        1,
+        8
+      ],
+      "id": "ixion"
+    },
+    {
+      "display": "Memphian sphinx",
+      "type": "mythological_being",
+      "descriptions": [
+        "Sphinx of Memphis, compared to Thea's face.",
+        "Comparison for Thea's face size."
+      ],
+      "chunk_ids": [
+        1,
+        8
+      ],
+      "id": "memphian sphinx"
+    },
+    {
+      "display": "Hyperion",
+      "type": "deity",
+      "descriptions": [
+        "Gold Hyperion, spouse of Thea, a god.",
+        "A Titan, still ruling and majestic, sitting on his orbed fire.",
+        "A Titan god, associated with the sun, who is experiencing distress and anger.",
+        "A Titan god of light, who speaks and flees.",
+        "Bright Titan, son of Coelus, grieving and lying on the boundary of day and night.",
+        "Title of the poem by John Keats.",
+        "A Titan god, associated with light and the sun, experiencing wrath and fear of falling.",
+        "Titan, son of Coelus, bright Titan, grieving and lying on the boundary of day and night."
+      ],
+      "chunk_ids": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "id": "hyperion"
+    },
+    {
+      "display": "Ocean",
+      "type": "concept",
+      "descriptions": [
+        "The ocean that has passed from Saturn's sceptre."
+      ],
+      "chunk_ids": [
+        2
+      ],
+      "id": "ocean"
+    },
+    {
+      "display": "Olympus",
+      "type": "Location",
+      "descriptions": [
+        "The realm of the gods, where Saturn's word made the rebel three quake.",
+        "The realm of the gods, where the word of Saturn made quake the rebel three."
+      ],
+      "chunk_ids": [
+        3,
+        10
+      ],
+      "id": "olympus"
+    },
+    {
+      "display": "Titans",
+      "type": "Group",
+      "descriptions": [
+        "The race of Titans, some self-hid or prison-bound, groaning for old allegiance."
+      ],
+      "chunk_ids": [
+        3,
+        10
+      ],
+      "id": "titans"
+    },
+    {
+      "display": "Zephyrs",
+      "type": "deity",
+      "descriptions": [
+        "Wind gods who blow solemn tubes.",
+        "Minor wind gods, blowing solemn tubes."
+      ],
+      "chunk_ids": [
+        4,
+        11
+      ],
+      "id": "zephyrs"
+    },
+    {
+      "display": "Hyperion's palace",
+      "type": "location",
+      "descriptions": [
+        "A bright palace bastion'd with pyramids of glowing gold, with arches, domes, and fiery galleries.",
+        "A grand palace with pyramids, obelisks, courts, arches, domes, and galleries."
+      ],
+      "chunk_ids": [
+        4,
+        11
+      ],
+      "id": "hyperion's palace"
+    },
+    {
+      "display": "Jove",
+      "type": "deity",
+      "descriptions": [
+        "Rebel thunderer, likely Zeus."
+      ],
+      "chunk_ids": [
+        5,
+        12
+      ],
+      "id": "jove"
+    },
+    {
+      "display": "Tellus",
+      "type": "deity",
+      "descriptions": [
+        "Goddess of the earth, invoked by Hyperion."
+      ],
+      "chunk_ids": [
+        5,
+        12
+      ],
+      "id": "tellus"
+    },
+    {
+      "display": "Titan",
+      "type": "deity",
+      "descriptions": [
+        "Primeval gods, including Hyperion and Saturn.",
+        "Refers to Hyperion, described as bright and frenzied with new woes.",
+        "Refers to Hyperion, described as bright Titan, phrenzied with new woes."
+      ],
+      "chunk_ids": [
+        5,
+        6,
+        13
+      ],
+      "id": "titan"
+    },
+    {
+      "display": "Coelus",
+      "type": "deity",
+      "descriptions": [
+        "Universal space, father of Hyperion, speaks to him in a low voice.",
+        "Sky god, father of Hyperion, speaks from universal space, expresses concern about the feud among the gods."
+      ],
+      "chunk_ids": [
+        6,
+        13
+      ],
+      "id": "coelus"
+    },
+    {
+      "display": "John Keats",
+      "type": "person",
+      "descriptions": [
+        "Author of the poem Hyperion."
+      ],
+      "chunk_ids": [
+        8
+      ],
+      "id": "john keats"
+    },
+    {
+      "display": "Hours",
+      "type": "deity",
+      "descriptions": [
+        "Personifications of the hours, meek and ethereal."
+      ],
+      "chunk_ids": [
+        11
+      ],
+      "id": "hours"
+    },
+    {
+      "display": "Phantoms",
+      "type": "entity",
+      "descriptions": [
+        "Pale, cold phantoms that appear after Hyperion's speech."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "id": "phantoms"
+    },
+    {
+      "display": "eastern gates",
+      "type": "location",
+      "descriptions": [
+        "Gates Hyperion flees to and opens."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "id": "eastern gates"
+    },
+    {
+      "display": "planet orb of fire",
+      "type": "celestial object",
+      "descriptions": [
+        "The sun or a fiery orb Hyperion rides."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "id": "planet orb of fire"
+    },
+    {
+      "display": "two fair argent wings",
+      "type": "object",
+      "descriptions": [
+        "Silver wings of the orb, expanded at Hyperion's approach."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "id": "two fair argent wings"
+    },
+    {
+      "display": "calculus",
+      "type": "concept",
+      "descriptions": [
+        "A branch of mathematics dealing with instantaneous rate of change and areas under curves."
+      ],
+      "chunk_ids": [
+        15
+      ],
+      "id": "calculus"
+    },
+    {
+      "display": "instantaneous rate of change",
+      "type": "concept",
+      "descriptions": [
+        "The rate at which something changes at a specific instant, found via the slope of the tangent line.",
+        "The rate of change at a specific point, equal to the slope of the tangent line.",
+        "How things are changing at an instant, given by the derivative."
+      ],
+      "chunk_ids": [
+        15,
+        16,
+        17
+      ],
+      "id": "instantaneous rate of change"
+    },
+    {
+      "display": "area under curve",
+      "type": "concept",
+      "descriptions": [
+        "The integral of a function, representing the area between the curve and the x-axis."
+      ],
+      "chunk_ids": [
+        15
+      ],
+      "id": "area under curve"
+    },
+    {
+      "display": "slope",
+      "type": "concept",
+      "descriptions": [
+        "The measure of steepness of a line, calculated as rise over run.",
+        "Change in y over change in x, representing steepness."
+      ],
+      "chunk_ids": [
+        15,
+        16
+      ],
+      "id": "slope"
+    },
+    {
+      "display": "cant line",
+      "type": "concept",
+      "descriptions": [
+        "A line that intersects a curve at two points, used to find average rate of change."
+      ],
+      "chunk_ids": [
+        15
+      ],
+      "id": "cant line"
+    },
+    {
+      "display": "tangent line",
+      "type": "concept",
+      "descriptions": [
+        "A line that touches a curve at a single point, representing instantaneous rate of change.",
+        "A line that touches a curve at a single point and has the same slope as the curve at that point.",
+        "A line that touches a curve at a point and has the same slope as the curve at that point."
+      ],
+      "chunk_ids": [
+        15,
+        16,
+        19
+      ],
+      "id": "tangent line"
+    },
+    {
+      "display": "point slope form",
+      "type": "concept",
+      "descriptions": [
+        "Equation of a line: y - y1 = m(x - x1), using a point and slope."
+      ],
+      "chunk_ids": [
+        15
+      ],
+      "id": "point slope form"
+    },
+    {
+      "display": "average rate of change",
+      "type": "unknown",
+      "descriptions": [],
+      "chunk_ids": [
+        15
+      ],
+      "id": "average rate of change"
+    },
+    {
+      "display": "limit",
+      "type": "concept",
+      "descriptions": [
+        "The value that a function approaches as the input approaches a certain point."
+      ],
+      "chunk_ids": [
+        16
+      ],
+      "id": "limit"
+    },
+    {
+      "display": "indeterminate form",
+      "type": "concept",
+      "descriptions": [
+        "An expression like 0/0 that requires algebraic manipulation to evaluate."
+      ],
+      "chunk_ids": [
+        16
+      ],
+      "id": "indeterminate form"
+    },
+    {
+      "display": "delta T",
+      "type": "concept",
+      "descriptions": [
+        "Change in time, used in the limit definition of derivative."
+      ],
+      "chunk_ids": [
+        16
+      ],
+      "id": "delta t"
+    },
+    {
+      "display": "derivative",
+      "type": "concept",
+      "descriptions": [
+        "The limit as Delta X goes to zero of (f(x+Delta x)-f(x))/Delta x, representing instantaneous rate of change and slope of tangent line.",
+        "The rate of change of a function with respect to a variable."
+      ],
+      "chunk_ids": [
+        17,
+        19
+      ],
+      "id": "derivative"
+    },
+    {
+      "display": "product rule",
+      "type": "concept",
+      "descriptions": [
+        "Rule for derivative of a product: first times derivative of second plus second times derivative of first."
+      ],
+      "chunk_ids": [
+        17
+      ],
+      "id": "product rule"
+    },
+    {
+      "display": "quotient rule",
+      "type": "concept",
+      "descriptions": [
+        "Rule for derivative of a quotient: bottom times derivative of top minus top times derivative of bottom, all over bottom squared."
+      ],
+      "chunk_ids": [
+        17
+      ],
+      "id": "quotient rule"
+    },
+    {
+      "display": "chain rule",
+      "type": "concept",
+      "descriptions": [
+        "Rule for derivative of a composite function (function with insides).",
+        "A rule for differentiating compositions of functions, described as peeling an onion."
+      ],
+      "chunk_ids": [
+        17,
+        18
+      ],
+      "id": "chain rule"
+    },
+    {
+      "display": "slope of tangent line",
+      "type": "concept",
+      "descriptions": [
+        "Slope of the line tangent to a function at a point, given by the derivative evaluated at that point."
+      ],
+      "chunk_ids": [
+        17
+      ],
+      "id": "slope of tangent line"
+    },
+    {
+      "display": "implicit differentiation",
+      "type": "concept",
+      "descriptions": [
+        "A method for finding the derivative of a function defined implicitly by an equation.",
+        "A method of differentiation used when a function is defined implicitly by an equation."
+      ],
+      "chunk_ids": [
+        18,
+        19
+      ],
+      "id": "implicit differentiation"
+    },
+    {
+      "display": "circle",
+      "type": "concept",
+      "descriptions": [
+        "The equation x^2 + y^2 = 1, used as an example for implicit differentiation."
+      ],
+      "chunk_ids": [
+        18
+      ],
+      "id": "circle"
+    },
+    {
+      "display": "velocity",
+      "type": "concept",
+      "descriptions": [
+        "The rate of change of position with respect to time."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "id": "velocity"
+    },
+    {
+      "display": "acceleration",
+      "type": "concept",
+      "descriptions": [
+        "The rate of change of velocity with respect to time."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "id": "acceleration"
+    },
+    {
+      "display": "second derivative",
+      "type": "concept",
+      "descriptions": [
+        "The derivative of the derivative, representing acceleration when position is differentiated twice."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "id": "second derivative"
+    },
+    {
+      "display": "higher order derivatives",
+      "type": "concept",
+      "descriptions": [
+        "Derivatives of derivatives beyond the first."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "id": "higher order derivatives"
+    },
+    {
+      "display": "linear approximation",
+      "type": "concept",
+      "descriptions": [
+        "Approximating a function near a point using the tangent line."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "id": "linear approximation"
+    }
+  ],
+  "links": [
+    {
+      "type": "implemented_in",
+      "descriptions": [
+        "TurboVec is a Rust vector index"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "turbovec",
+      "target": "rust",
+      "key": 0
+    },
+    {
+      "type": "developed_by",
+      "descriptions": [
+        "TurboVec is developed by Ryan Codrai"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "turbovec",
+      "target": "ryan codrai",
+      "key": 0
+    },
+    {
+      "type": "implements",
+      "descriptions": [
+        "TurboVec implements TurboQuant algorithm"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "turbovec",
+      "target": "turboquant",
+      "key": 0
+    },
+    {
+      "type": "developed_by",
+      "descriptions": [
+        "TurboQuant is developed by Google Research"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "turboquant",
+      "target": "google research",
+      "key": 0
+    },
+    {
+      "type": "released_by",
+      "descriptions": [
+        "DeepSeek released deepseek-chat model"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "deepseek-chat",
+      "target": "deepseek",
+      "key": 0
+    },
+    {
+      "type": "compatible_with",
+      "descriptions": [
+        "deepseek-chat has OpenAI-compatible API endpoint"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "deepseek-chat",
+      "target": "openai",
+      "key": 0
+    },
+    {
+      "type": "uses",
+      "descriptions": [
+        "Vaaani Graph-RAG assistant combines TurboVec"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "vaaani graph-rag assistant",
+      "target": "turbovec",
+      "key": 0
+    },
+    {
+      "type": "uses",
+      "descriptions": [
+        "Vaaani Graph-RAG assistant combines sentence-transformers"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "vaaani graph-rag assistant",
+      "target": "sentence-transformers",
+      "key": 0
+    },
+    {
+      "type": "uses",
+      "descriptions": [
+        "Vaaani Graph-RAG assistant combines DeepSeek"
+      ],
+      "chunk_ids": [
+        0
+      ],
+      "source": "vaaani graph-rag assistant",
+      "target": "deepseek",
+      "key": 0
+    },
+    {
+      "type": "listens_to",
+      "descriptions": [
+        "Saturn's bow'd head seem'd list'ning to the Earth, his ancient mother.",
+        "Saturn's bowed head seems listening to Earth for comfort."
+      ],
+      "chunk_ids": [
+        1,
+        8
+      ],
+      "source": "saturn",
+      "target": "earth",
+      "key": 0
+    },
+    {
+      "type": "lost_dominion",
+      "descriptions": [
+        "Earth no longer knows Saturn as a god."
+      ],
+      "chunk_ids": [
+        2
+      ],
+      "source": "saturn",
+      "target": "earth",
+      "key": 1
+    },
+    {
+      "type": "addressed",
+      "descriptions": [
+        "Saturn speaks to Thea, calling her 'tender spouse of gold Hyperion'."
+      ],
+      "chunk_ids": [
+        2,
+        9
+      ],
+      "source": "saturn",
+      "target": "thea",
+      "key": 0
+    },
+    {
+      "type": "walks_with",
+      "descriptions": [
+        "Saturn walks step for step with Thea through the woods."
+      ],
+      "chunk_ids": [
+        4,
+        11
+      ],
+      "source": "saturn",
+      "target": "thea",
+      "key": 1
+    },
+    {
+      "type": "speaks_to",
+      "descriptions": [
+        "Saturn speaks to Thea, asking her to search for a shape or shadow."
+      ],
+      "chunk_ids": [
+        10
+      ],
+      "source": "saturn",
+      "target": "thea",
+      "key": 2
+    },
+    {
+      "type": "lost_dominion",
+      "descriptions": [
+        "Ocean has passed from Saturn's sceptre."
+      ],
+      "chunk_ids": [
+        2
+      ],
+      "source": "saturn",
+      "target": "ocean",
+      "key": 0
+    },
+    {
+      "type": "seeks_to_overthrow",
+      "descriptions": [
+        "Saturn desires to repossess heaven and become king again, opposing Hyperion's rule."
+      ],
+      "chunk_ids": [
+        3
+      ],
+      "source": "saturn",
+      "target": "hyperion",
+      "key": 0
+    },
+    {
+      "type": "spouse_of",
+      "descriptions": [
+        "Thea is spouse of Hyperion, mentioned by Saturn."
+      ],
+      "chunk_ids": [
+        9
+      ],
+      "source": "saturn",
+      "target": "hyperion",
+      "key": 1
+    },
+    {
+      "type": "affects",
+      "descriptions": [
+        "Saturn's word made Olympus quake.",
+        "Saturn's word made quake the rebel three on Olympus."
+      ],
+      "chunk_ids": [
+        3,
+        10
+      ],
+      "source": "saturn",
+      "target": "olympus",
+      "key": 0
+    },
+    {
+      "type": "touches",
+      "descriptions": [
+        "Thea touched Saturn's wide shoulders and bended neck."
+      ],
+      "chunk_ids": [
+        1
+      ],
+      "source": "thea",
+      "target": "saturn",
+      "key": 0
+    },
+    {
+      "type": "speaks_to",
+      "descriptions": [
+        "Thea spoke words in solemn tenour to Saturn.",
+        "Thea speaks to Saturn, touching his shoulder and neck."
+      ],
+      "chunk_ids": [
+        1,
+        8
+      ],
+      "source": "thea",
+      "target": "saturn",
+      "key": 1
+    },
+    {
+      "type": "weeps_at_feet",
+      "descriptions": [
+        "Thea weeps at Saturn's feet."
+      ],
+      "chunk_ids": [
+        2
+      ],
+      "source": "thea",
+      "target": "saturn",
+      "key": 2
+    },
+    {
+      "type": "accompanies",
+      "descriptions": [
+        "Thea leads Saturn to their friends in covert."
+      ],
+      "chunk_ids": [
+        3
+      ],
+      "source": "thea",
+      "target": "saturn",
+      "key": 3
+    },
+    {
+      "type": "weeps_at_feet_of",
+      "descriptions": [
+        "Thea weeps at Saturn's feet."
+      ],
+      "chunk_ids": [
+        9
+      ],
+      "source": "thea",
+      "target": "saturn",
+      "key": 4
+    },
+    {
+      "type": "urges",
+      "descriptions": [
+        "Thea urges Saturn to come away and give heart to their friends."
+      ],
+      "chunk_ids": [
+        10
+      ],
+      "source": "thea",
+      "target": "saturn",
+      "key": 5
+    },
+    {
+      "type": "could_have_defeated",
+      "descriptions": [
+        "Thea would have ta'en Achilles by the hair and bent his neck."
+      ],
+      "chunk_ids": [
+        1
+      ],
+      "source": "thea",
+      "target": "achilles",
+      "key": 0
+    },
+    {
+      "type": "could_defeat",
+      "descriptions": [
+        "Thea could have taken Achilles by hair and bent his neck."
+      ],
+      "chunk_ids": [
+        8
+      ],
+      "source": "thea",
+      "target": "achilles",
+      "key": 1
+    },
+    {
+      "type": "could_have_stopped",
+      "descriptions": [
+        "Thea with a finger stay'd Ixion's wheel."
+      ],
+      "chunk_ids": [
+        1
+      ],
+      "source": "thea",
+      "target": "ixion",
+      "key": 0
+    },
+    {
+      "type": "could_stop",
+      "descriptions": [
+        "Thea could have stayed Ixion's wheel with a finger."
+      ],
+      "chunk_ids": [
+        8
+      ],
+      "source": "thea",
+      "target": "ixion",
+      "key": 1
+    },
+    {
+      "type": "rules_over",
+      "descriptions": [
+        "Hyperion still keeps sovereignty among the Titans."
+      ],
+      "chunk_ids": [
+        3
+      ],
+      "source": "hyperion",
+      "target": "titans",
+      "key": 0
+    },
+    {
+      "type": "fears_fall_of",
+      "descriptions": [
+        "Hyperion fears that he too will fall like Saturn.",
+        "Hyperion fears he will fall like Saturn."
+      ],
+      "chunk_ids": [
+        4,
+        11
+      ],
+      "source": "hyperion",
+      "target": "saturn",
+      "key": 0
+    },
+    {
+      "type": "serves",
+      "descriptions": [
+        "Hyperion wants to restore Saturn's throne."
+      ],
+      "chunk_ids": [
+        5
+      ],
+      "source": "hyperion",
+      "target": "saturn",
+      "key": 1
+    },
+    {
+      "type": "brother_of",
+      "descriptions": [
+        "Hyperion is a son of Coelus, thus brother to Saturn.",
+        "Hyperion is a son of Coelus, and Saturn is also a son, making them brothers."
+      ],
+      "chunk_ids": [
+        6,
+        13
+      ],
+      "source": "hyperion",
+      "target": "saturn",
+      "key": 2
+    },
+    {
+      "type": "rivals",
+      "descriptions": [
+        "Hyperion still keeps his sovereignty while Saturn seeks to regain his."
+      ],
+      "chunk_ids": [
+        10
+      ],
+      "source": "hyperion",
+      "target": "saturn",
+      "key": 3
+    },
+    {
+      "type": "addresses",
+      "descriptions": [
+        "Hyperion speaks of Saturn's fall and his own potential fall."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "source": "hyperion",
+      "target": "saturn",
+      "key": 4
+    },
+    {
+      "type": "enters",
+      "descriptions": [
+        "Hyperion enters his palace full of wrath."
+      ],
+      "chunk_ids": [
+        4
+      ],
+      "source": "hyperion",
+      "target": "hyperion's palace",
+      "key": 0
+    },
+    {
+      "type": "resides_in",
+      "descriptions": [
+        "Hyperion lives in his palace."
+      ],
+      "chunk_ids": [
+        11
+      ],
+      "source": "hyperion",
+      "target": "hyperion's palace",
+      "key": 1
+    },
+    {
+      "type": "opposes",
+      "descriptions": [
+        "Hyperion threatens to scare Jove."
+      ],
+      "chunk_ids": [
+        5
+      ],
+      "source": "hyperion",
+      "target": "jove",
+      "key": 0
+    },
+    {
+      "type": "threatens",
+      "descriptions": [
+        "Hyperion threatens to scare Jove and restore Saturn."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "source": "hyperion",
+      "target": "jove",
+      "key": 1
+    },
+    {
+      "type": "swears_by",
+      "descriptions": [
+        "Hyperion swears by Tellus.",
+        "Hyperion swears by Tellus and her briny robes."
+      ],
+      "chunk_ids": [
+        5,
+        12
+      ],
+      "source": "hyperion",
+      "target": "tellus",
+      "key": 0
+    },
+    {
+      "type": "goes_to",
+      "descriptions": [
+        "Hyperion arises and plunges toward the earth after Coelus's speech.",
+        "Hyperion arises and plunges toward Earth after Coelus's speech."
+      ],
+      "chunk_ids": [
+        6,
+        13
+      ],
+      "source": "hyperion",
+      "target": "earth",
+      "key": 0
+    },
+    {
+      "type": "served_by",
+      "descriptions": [
+        "Zephyrs blow tubes for Hyperion."
+      ],
+      "chunk_ids": [
+        11
+      ],
+      "source": "hyperion",
+      "target": "zephyrs",
+      "key": 0
+    },
+    {
+      "type": "scares",
+      "descriptions": [
+        "Hyperion's wrath scares away the Hours."
+      ],
+      "chunk_ids": [
+        11
+      ],
+      "source": "hyperion",
+      "target": "hours",
+      "key": 0
+    },
+    {
+      "type": "causes_reaction",
+      "descriptions": [
+        "Hyperion's words cause the Phantoms to bestir themselves."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "source": "hyperion",
+      "target": "phantoms",
+      "key": 0
+    },
+    {
+      "type": "flees_to",
+      "descriptions": [
+        "Hyperion flees to the eastern gates."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "source": "hyperion",
+      "target": "eastern gates",
+      "key": 0
+    },
+    {
+      "type": "opens",
+      "descriptions": [
+        "Hyperion clears and bursts open the eastern gates."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "source": "hyperion",
+      "target": "eastern gates",
+      "key": 1
+    },
+    {
+      "type": "rides",
+      "descriptions": [
+        "Hyperion rides the planet orb of fire each day."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "source": "hyperion",
+      "target": "planet orb of fire",
+      "key": 0
+    },
+    {
+      "type": "causes_expansion",
+      "descriptions": [
+        "At Hyperion's approach, the wings expand."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "source": "hyperion",
+      "target": "two fair argent wings",
+      "key": 0
+    },
+    {
+      "type": "father_of",
+      "descriptions": [
+        "Coelus addresses Hyperion as 'brightest of my children dear'.",
+        "Coelus addresses Hyperion as 'brightest of my children dear' and 'Son'."
+      ],
+      "chunk_ids": [
+        6,
+        13
+      ],
+      "source": "coelus",
+      "target": "hyperion",
+      "key": 0
+    },
+    {
+      "type": "advises",
+      "descriptions": [
+        "Coelus tells Hyperion to strive and go to earth to find Saturn.",
+        "Coelus advises Hyperion to strive and go to Earth to find Saturn."
+      ],
+      "chunk_ids": [
+        6,
+        13
+      ],
+      "source": "coelus",
+      "target": "hyperion",
+      "key": 1
+    },
+    {
+      "type": "father_of",
+      "descriptions": [
+        "Coelus refers to Saturn as his first-born.",
+        "Coelus refers to Saturn as 'my first-born'."
+      ],
+      "chunk_ids": [
+        6,
+        13
+      ],
+      "source": "coelus",
+      "target": "saturn",
+      "key": 0
+    },
+    {
+      "type": "possesses",
+      "descriptions": [
+        "The orb possesses two fair argent wings."
+      ],
+      "chunk_ids": [
+        12
+      ],
+      "source": "planet orb of fire",
+      "target": "two fair argent wings",
+      "key": 0
+    },
+    {
+      "type": "addresses_question",
+      "descriptions": [
+        "Calculus addresses the question of finding instantaneous rate of change."
+      ],
+      "chunk_ids": [
+        15
+      ],
+      "source": "calculus",
+      "target": "instantaneous rate of change",
+      "key": 0
+    },
+    {
+      "type": "addresses_question",
+      "descriptions": [
+        "Calculus addresses the question of finding areas under curves."
+      ],
+      "chunk_ids": [
+        15
+      ],
+      "source": "calculus",
+      "target": "area under curve",
+      "key": 0
+    },
+    {
+      "type": "equals_slope_of",
+      "descriptions": [
+        "Instantaneous rate of change is equal to the slope of the tangent line."
+      ],
+      "chunk_ids": [
+        15
+      ],
+      "source": "instantaneous rate of change",
+      "target": "tangent line",
+      "key": 0
+    },
+    {
+      "type": "equals",
+      "descriptions": [
+        "Instantaneous rate of change equals the slope of the tangent line."
+      ],
+      "chunk_ids": [
+        16
+      ],
+      "source": "instantaneous rate of change",
+      "target": "tangent line",
+      "key": 1
+    },
+    {
+      "type": "property_of",
+      "descriptions": [
+        "Slope is a property of the tangent line."
+      ],
+      "chunk_ids": [
+        16
+      ],
+      "source": "slope",
+      "target": "tangent line",
+      "key": 0
+    },
+    {
+      "type": "equals_slope_of",
+      "descriptions": [
+        "Average rate of change between two points equals the slope of the cant line connecting them."
+      ],
+      "chunk_ids": [
+        15
+      ],
+      "source": "average rate of change",
+      "target": "cant line",
+      "key": 0
+    },
+    {
+      "type": "used_to_find",
+      "descriptions": [
+        "Limit is used to find the instantaneous rate of change."
+      ],
+      "chunk_ids": [
+        16
+      ],
+      "source": "limit",
+      "target": "instantaneous rate of change",
+      "key": 0
+    },
+    {
+      "type": "arises_in",
+      "descriptions": [
+        "Indeterminate form arises when evaluating limits that yield 0/0."
+      ],
+      "chunk_ids": [
+        16
+      ],
+      "source": "indeterminate form",
+      "target": "limit",
+      "key": 0
+    },
+    {
+      "type": "represents",
+      "descriptions": [
+        "The derivative represents the instantaneous rate of change."
+      ],
+      "chunk_ids": [
+        17
+      ],
+      "source": "derivative",
+      "target": "instantaneous rate of change",
+      "key": 0
+    },
+    {
+      "type": "gives",
+      "descriptions": [
+        "The derivative gives the slope of the tangent line."
+      ],
+      "chunk_ids": [
+        17
+      ],
+      "source": "derivative",
+      "target": "slope of tangent line",
+      "key": 0
+    },
+    {
+      "type": "equals",
+      "descriptions": [
+        "The derivative of position gives velocity."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "source": "derivative",
+      "target": "velocity",
+      "key": 0
+    },
+    {
+      "type": "equals",
+      "descriptions": [
+        "The derivative of velocity gives acceleration."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "source": "derivative",
+      "target": "acceleration",
+      "key": 0
+    },
+    {
+      "type": "used_for",
+      "descriptions": [
+        "Product rule is used to find the derivative of a product."
+      ],
+      "chunk_ids": [
+        17
+      ],
+      "source": "product rule",
+      "target": "derivative",
+      "key": 0
+    },
+    {
+      "type": "used_for",
+      "descriptions": [
+        "Quotient rule is used to find the derivative of a quotient."
+      ],
+      "chunk_ids": [
+        17
+      ],
+      "source": "quotient rule",
+      "target": "derivative",
+      "key": 0
+    },
+    {
+      "type": "used_for",
+      "descriptions": [
+        "Chain rule is used to find the derivative of a composite function."
+      ],
+      "chunk_ids": [
+        17
+      ],
+      "source": "chain rule",
+      "target": "derivative",
+      "key": 0
+    },
+    {
+      "type": "used_in",
+      "descriptions": [
+        "The chain rule is used within implicit differentiation."
+      ],
+      "chunk_ids": [
+        18
+      ],
+      "source": "chain rule",
+      "target": "implicit differentiation",
+      "key": 0
+    },
+    {
+      "type": "equals",
+      "descriptions": [
+        "The second derivative of position is acceleration."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "source": "second derivative",
+      "target": "acceleration",
+      "key": 0
+    },
+    {
+      "type": "uses",
+      "descriptions": [
+        "Linear approximation uses the tangent line to approximate function values."
+      ],
+      "chunk_ids": [
+        19
+      ],
+      "source": "linear approximation",
+      "target": "tangent line",
+      "key": 0
+    }
+  ]
+}

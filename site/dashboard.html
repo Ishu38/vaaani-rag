@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>School Dashboard — Vaaani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+<link rel="stylesheet" href="/auth.css" />
+<style>
+.dash-shell { padding: calc(var(--nav-h) + 32px) 24px 60px; }
+.dash-head { max-width: 1180px; margin: 0 auto 28px; }
+.dash-head h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.dash-head p { font-size: 14px; color: var(--c-muted-strong); margin-top: 6px; }
+.dash-wrap { max-width: 1180px; margin: 0 auto; }
+
+.school-selector {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+  padding: 16px 20px; background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 12px;
+}
+.school-selector select {
+  background: var(--c-bg-2); border: 1px solid var(--c-border); color: var(--c-text);
+  padding: 8px 12px; border-radius: 8px; font: inherit; font-size: 14px; min-width: 280px;
+}
+.school-selector .invite-code {
+  margin-left: auto; font-size: 13px; color: var(--c-muted);
+}
+.school-selector .invite-code strong {
+  font-family: monospace; font-size: 14px; color: var(--c-text);
+  background: var(--c-bg-2); padding: 4px 8px; border-radius: 4px; letter-spacing: 0.06em;
+}
+.school-selector .invite-code button {
+  margin-left: 6px; font-size: 12px; background: var(--c-bg-2); border: 1px solid var(--c-border);
+  color: var(--c-muted-strong); padding: 4px 8px; border-radius: 4px; cursor: pointer;
+}
+
+/* Overview stat tiles */
+.overview-stats {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 24px;
+}
+.ov-tile {
+  background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 10px; padding: 18px 16px; text-align: center;
+}
+.ov-tile .ov-val { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; color: var(--c-text); }
+.ov-tile .ov-label { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-muted); font-weight: 600; margin-top: 6px; }
+.ov-tile.highlight .ov-val { color: var(--c-accent); }
+.ov-tile .ov-unit { font-size: 14px; color: var(--c-muted); font-weight: 500; }
+
+/* Two-column layout */
+.dash-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 22px; margin-bottom: 24px; }
+@media (max-width: 960px) { .dash-grid { grid-template-columns: 1fr; } .overview-stats { grid-template-columns: repeat(3, 1fr); } }
+
+.dash-card {
+  background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 14px; padding: 24px;
+}
+.dash-card h2 {
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--c-muted); font-weight: 600; margin-bottom: 18px;
+}
+
+/* Student list */
+.student-table { width: 100%; border-collapse: collapse; }
+.student-table th, .student-table td {
+  padding: 10px 14px; text-align: left; font-size: 13px;
+  border-bottom: 1px dashed var(--c-border);
+}
+.student-table th {
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--c-muted); font-weight: 600; border-bottom: 1px solid var(--c-border);
+}
+.student-table tr:hover td { background: var(--c-surface-2); }
+.student-table .mastery-cell {
+  display: flex; align-items: center; gap: 8px;
+}
+.mini-bar {
+  width: 60px; height: 4px; background: var(--c-bg); border-radius: 999px; overflow: hidden;
+}
+.mini-bar span { display: block; height: 100%; background: var(--c-accent); border-radius: 999px; }
+
+/* Query feed */
+.query-feed { display: flex; flex-direction: column; gap: 10px; max-height: 540px; overflow-y: auto; }
+.query-item {
+  padding: 12px 14px; background: var(--c-bg-2); border: 1px solid var(--c-border);
+  border-radius: 8px; font-size: 13px;
+}
+.query-item .q-student { font-weight: 600; color: var(--c-text); display: flex; justify-content: space-between; align-items: center; }
+.query-item .q-student .q-time { font-size: 11px; color: var(--c-muted); font-weight: 400; }
+.query-item .q-text { color: var(--c-muted-strong); margin-top: 4px; line-height: 1.5; }
+.query-item .q-meta { margin-top: 6px; display: flex; gap: 10px; font-size: 11px; color: var(--c-muted); }
+.query-item .q-meta span { background: var(--c-surface); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); }
+
+/* Guardrails panel */
+.guardrail-form { display: flex; flex-direction: column; gap: 14px; }
+.guardrail-form .field { margin-bottom: 0; }
+.guardrail-form label { font-size: 12px; color: var(--c-muted-strong); font-weight: 500; }
+.guardrail-form input, .guardrail-form select, .guardrail-form textarea {
+  width: 100%; background: var(--c-bg-2); border: 1px solid var(--c-border);
+  color: var(--c-text); padding: 10px 12px; border-radius: 8px;
+  font: inherit; font-size: 13px; outline: none;
+  transition: border-color 0.15s var(--ease-out);
+}
+.guardrail-form input:focus, .guardrail-form select:focus, .guardrail-form textarea:focus {
+  border-color: var(--c-accent);
+}
+.guardrail-form textarea { min-height: 80px; resize: vertical; }
+.guardrail-form .check-row {
+  display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--c-text);
+}
+.guardrail-form .check-row input[type=checkbox] { width: auto; accent-color: var(--c-accent); }
+
+.section-toggle {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; background: var(--c-bg-2); border: 1px solid var(--c-border);
+  border-radius: 8px; cursor: pointer; font-size: 13px; margin-bottom: 12px;
+  color: var(--c-text); font-weight: 500;
+  transition: border-color 0.2s var(--ease-out);
+}
+.section-toggle:hover { border-color: var(--c-accent); }
+.section-toggle .arrow { margin-left: auto; transition: transform 0.2s var(--ease-out); }
+.section-toggle.open .arrow { transform: rotate(180deg); }
+.collapse-panel { display: none; margin-bottom: 20px; }
+.collapse-panel.open { display: block; }
+
+.create-school-form {
+  display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;
+  padding: 16px 20px; background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 12px; margin-bottom: 24px;
+}
+.create-school-form .field { margin-bottom: 0; flex: 1; min-width: 200px; }
+.create-school-form input {
+  background: var(--c-bg-2); border: 1px solid var(--c-border);
+  color: var(--c-text); padding: 10px 12px; border-radius: 8px;
+  font: inherit; font-size: 14px; outline: none; width: 100%;
+}
+.create-school-form input:focus { border-color: var(--c-accent); }
+
+.empty-school { text-align: center; padding: 60px 32px; }
+.empty-school h3 { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+.empty-school p { font-size: 14px; color: var(--c-muted-strong); max-width: 480px; margin: 0 auto 22px; line-height: 1.6; }
+
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 10.5px; letter-spacing: 0.08em; font-weight: 600;
+}
+.tag.admin { background: rgba(77,105,78,0.12); color: var(--c-accent); }
+.tag.teacher { background: rgba(91,141,239,0.1); color: #3a5d9b; }
+.tag.student { background: rgba(95,184,138,0.1); color: #2f8a55; }
+.tag.parent { background: rgba(212,169,87,0.12); color: #8a6520; }
+
+#guardrailStatus, #joinStatus, #createStatus { margin-top: 10px; }
+</style>
+</head>
+<body class="auth-shell">
+
+<nav class="nav scrolled" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/app">Chat</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/account">My Account</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="dash-shell" id="app">
+  <!-- loaded by JS -->
+  <div id="loading" style="text-align:center;padding:60px;color:var(--c-muted);">Loading dashboard…</div>
+</main>
+
+<script src="/auth.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+const state = { user: null, schools: [], activeSchool: null, activeDashboard: null };
+
+async function init() {
+  state.user = await Auth.me();
+  if (!state.user) { window.location = '/login'; return; }
+
+  const r = await Auth.json('/auth/schools');
+  state.schools = (r.ok && r.data && r.data.schools) ? r.data.schools : [];
+  render();
+}
+
+function render() {
+  const el = document.getElementById('app');
+  if (state.schools.length === 0) {
+    el.innerHTML = renderEmpty();
+  } else {
+    el.innerHTML = renderDashboard();
+  }
+  bindEvents();
+}
+
+function renderEmpty() {
+  return `
+    <div class="dash-head"><h1>School Dashboard</h1><p>Create or join a school to manage your students.</p></div>
+    <div class="dash-wrap">
+      <div class="create-school-form">
+        <div class="field"><label>Create a new school</label><input id="newSchoolName" type="text" placeholder="e.g. Delhi Public School, R.K. Puram" /></div>
+        <button class="btn btn-primary" id="createSchoolBtn">Create School</button>
+      </div>
+      <div class="empty-school">
+        <h3>Or join an existing school</h3>
+        <p>If your school already uses Vaaani, ask your admin for the invite code.</p>
+        <div style="display:flex;gap:10px;justify-content:center;align-items:flex-end;">
+          <div class="field" style="margin-bottom:0;"><input id="joinCode" type="text" placeholder="Enter invite code" style="min-width:220px;" /></div>
+          <button class="btn btn-primary" id="joinSchoolBtn" style="margin-bottom:0;">Join</button>
+        </div>
+        <div class="status-msg" id="joinStatus" style="display:none;"></div>
+      </div>
+      <div class="status-msg" id="createStatus" style="display:none;"></div>
+    </div>`;
+}
+
+function renderDashboard() {
+  const schoolOpts = state.schools.map(s =>
+    `<option value="${s.id}" ${state.activeSchool && state.activeSchool.id === s.id ? 'selected' : ''}>${escapeHtml(s.name)} (${escapeHtml(s.code)})</option>`
+  ).join('');
+
+  const active = state.activeSchool || state.schools[0];
+  const d = state.activeDashboard;
+
+  let body = '';
+  if (d) {
+    body = renderStats(d) + renderStudents(d) + renderQueries(d) + renderGuardrails(active);
+  } else {
+    body = '<div style="text-align:center;padding:40px;color:var(--c-muted);">Loading school data…</div>';
+  }
+
+  return `
+    <div class="dash-head"><h1>School Dashboard</h1><p>Monitor student usage, configure guardrails, and manage your school.</p></div>
+    <div class="dash-wrap">
+      <div class="school-selector">
+        <select id="schoolSelect">${schoolOpts}</select>
+        <span class="invite-code" id="inviteSpan">
+          Invite code: <strong>${escapeHtml(active.code)}</strong>
+          <button id="copyCodeBtn" title="Copy invite code">Copy</button>
+        </span>
+        <button class="btn btn-ghost" id="joinOtherBtn">+ Join another school</button>
+      </div>
+      <div id="joinPanel" style="display:none;margin-bottom:20px;">
+        <div class="create-school-form">
+          <div class="field"><label>Join school by code</label><input id="joinCode2" type="text" placeholder="Invite code" /></div>
+          <button class="btn btn-primary" id="doJoinBtn">Join</button>
+          <button class="btn btn-ghost" id="cancelJoinBtn">Cancel</button>
+        </div>
+        <div class="status-msg" id="joinStatus2" style="display:none;"></div>
+      </div>
+      ${body}
+    </div>`;
+}
+
+function renderStats(d) {
+  const c = d.member_counts || {};
+  const totalQ = d.total_queries || 0;
+  const totalT = d.total_tokens || 0;
+  return `
+    <div class="overview-stats">
+      <div class="ov-tile"><div class="ov-val">${c.total || 0}</div><div class="ov-label">Total members</div></div>
+      <div class="ov-tile"><div class="ov-val">${c.student || 0}</div><div class="ov-label">Students</div></div>
+      <div class="ov-tile"><div class="ov-val">${c.teacher || 0}</div><div class="ov-label">Teachers</div></div>
+      <div class="ov-tile highlight"><div class="ov-val">${totalQ}</div><div class="ov-label">Total queries</div></div>
+      <div class="ov-tile highlight"><div class="ov-val">${(totalT / 1000).toFixed(1)}<span class="ov-unit">k</span></div><div class="ov-label">Tokens used</div></div>
+      <div class="ov-tile highlight"><div class="ov-val">${d.students ? d.students.length : 0}</div><div class="ov-label">Active students</div></div>
+    </div>`;
+}
+
+function renderStudents(d) {
+  const students = d.students || [];
+  let rows = '';
+  students.forEach(s => {
+    const sk = s.skills || {};
+    const pct = Math.round(((sk.avg_mastery || 0) / 5) * 100);
+    rows += `<tr>
+      <td>${escapeHtml(s.name || '—')}</td>
+      <td style="color:var(--c-muted);font-size:12px;">${escapeHtml(s.email)}</td>
+      <td>${sk.skills_tracked || 0}</td>
+      <td><div class="mastery-cell"><div class="mini-bar"><span style="width:${pct}%"></span></div> ${(sk.avg_mastery || 0).toFixed(1)}</div></td>
+      <td>${sk.strong_count || 0}</td>
+    </tr>`;
+  });
+  return `
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h2>Students (${students.length})</h2>
+        <div style="overflow-x:auto;">
+          <table class="student-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Skills tracked</th><th>Avg mastery</th><th>Strong (≥4)</th></tr></thead>
+            <tbody>${rows || '<tr><td colspan="5" style="text-align:center;color:var(--c-muted);">No students enrolled yet. Share the invite code to onboard students.</td></tr>'}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="dash-card">
+        ${renderQueries(d)}
+      </div>
+    </div>`;
+}
+
+function renderQueries(d) {
+  const qs = d.recent_queries || [];
+  let items = '';
+  qs.forEach(q => {
+    items += `<div class="query-item">
+      <div class="q-student"><span>${escapeHtml(q.student_name)}</span><span class="q-time">${q.at ? q.at.slice(0,16).replace('T',' ') : ''}</span></div>
+      <div class="q-text">${escapeHtml(q.query)}</div>
+      <div class="q-meta"><span>${escapeHtml(q.intent || 'knowledge')}</span><span>${q.tokens} tokens</span></div>
+    </div>`;
+  });
+  return `<h2>Recent student queries</h2>
+    <div class="query-feed">${items || '<div class="empty-state">No queries yet. Students will appear here as they use the assistant.</div>'}</div>`;
+}
+
+function renderGuardrails(school) {
+  const g = school.guardrails || {};
+  return `
+    <div class="dash-card" style="margin-top:24px;">
+      <div class="section-toggle" id="guardrailToggle">
+        Curriculum Guardrails & Socratic Enforcement
+        <span class="arrow">▼</span>
+      </div>
+      <div class="collapse-panel" id="guardrailPanel">
+        <p style="font-size:13px;color:var(--c-muted);margin-bottom:16px;">
+          Configure how students receive answers. You can scope responses to a specific curriculum (CBSE, ICSE, State Board) and enforce Socratic questioning so students don't get direct answers to exam papers.
+        </p>
+        <div class="guardrail-form" id="guardrailForm">
+          <div class="field">
+            <label>Board / Syllabus</label>
+            <select id="grBoard">
+              <option value="">— None —</option>
+              <option value="CBSE" ${g.board === 'CBSE' ? 'selected' : ''}>CBSE</option>
+              <option value="ICSE" ${g.board === 'ICSE' ? 'selected' : ''}>ICSE</option>
+              <option value="State Board" ${g.board === 'State Board' ? 'selected' : ''}>State Board</option>
+              <option value="IB" ${g.board === 'IB' ? 'selected' : ''}>IB</option>
+              <option value="IGCSE" ${g.board === 'IGCSE' ? 'selected' : ''}>IGCSE</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Grade Level</label>
+            <select id="grGrade">
+              <option value="">— None —</option>
+              ${renderGradeOptions(g.grade_level || '')}
+            </select>
+          </div>
+          <div class="field">
+            <label>Allowed Subjects (comma-separated)</label>
+            <input id="grSubjects" type="text" value="${escapeHtml((g.allowed_subjects || []).join(', '))}" placeholder="e.g. Physics, Chemistry, Mathematics" />
+          </div>
+          <div class="field">
+            <label>Curriculum Context (e.g. "CBSE Class 8 Science — NCERT textbook")</label>
+            <textarea id="grCurriculum" placeholder="Describe the curriculum scope for your school...">${escapeHtml(g.curriculum || '')}</textarea>
+          </div>
+          <div class="field">
+            <label>Socratic Enforcement Level</label>
+            <select id="grSocratic">
+              <option value="strict" ${g.socratic_level === 'strict' ? 'selected' : ''}>Strict — never give direct answers</option>
+              <option value="moderate" ${(!g.socratic_level || g.socratic_level === 'moderate') ? 'selected' : ''}>Moderate — guide, confirm reasoning (recommended)</option>
+              <option value="light" ${g.socratic_level === 'light' ? 'selected' : ''}>Light — prefer questions but allow worked examples</option>
+            </select>
+          </div>
+          <div class="check-row">
+            <input type="checkbox" id="grDirect" ${g.allow_direct_answers ? 'checked' : ''} />
+            <label for="grDirect">Allow direct answers (disable Socratic enforcement)</label>
+          </div>
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="button" id="saveGuardrailsBtn">Save guardrails</button>
+          </div>
+          <div class="status-msg" id="guardrailStatus" style="display:none;"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderGradeOptions(selected) {
+  const grades = [
+    'Class 1','Class 2','Class 3','Class 4','Class 5',
+    'Class 6','Class 7','Class 8','Class 9','Class 10',
+    'Class 11','Class 12'
+  ];
+  return grades.map(g => `<option value="${g}" ${g === selected ? 'selected' : ''}>${g}</option>`).join('');
+}
+
+async function loadDashboard(schoolId) {
+  const r = await Auth.json(`/auth/schools/${schoolId}/dashboard`);
+  state.activeDashboard = r.ok ? r.data : null;
+  state.activeSchool = state.schools.find(s => s.id === schoolId) || state.schools[0];
+  render();
+}
+
+function bindEvents() {
+  const sel = document.getElementById('schoolSelect');
+  if (sel) {
+    sel.addEventListener('change', () => {
+      const sid = parseInt(sel.value);
+      state.activeSchool = state.schools.find(s => s.id === sid);
+      state.activeDashboard = null;
+      loadDashboard(sid);
+    });
+  }
+
+  const createBtn = document.getElementById('createSchoolBtn');
+  if (createBtn) {
+    createBtn.addEventListener('click', async () => {
+      const name = document.getElementById('newSchoolName').value.trim();
+      if (!name) { Auth.setStatus(document.getElementById('createStatus'), 'err', 'Enter a school name.'); return; }
+      const r = await Auth.json('/auth/schools', { method: 'POST', body: JSON.stringify({ name }) });
+      if (!r.ok) { Auth.setStatus(document.getElementById('createStatus'), 'err', r.data?.detail || 'Failed to create school.'); return; }
+      await init(); // refresh everything
+    });
+  }
+
+  const joinBtn = document.getElementById('joinSchoolBtn');
+  if (joinBtn) {
+    joinBtn.addEventListener('click', async () => {
+      const code = document.getElementById('joinCode').value.trim();
+      if (!code) { Auth.setStatus(document.getElementById('joinStatus'), 'err', 'Enter an invite code.'); return; }
+      const r = await Auth.json('/auth/schools/join', { method: 'POST', body: JSON.stringify({ code }) });
+      if (!r.ok) { Auth.setStatus(document.getElementById('joinStatus'), 'err', r.data?.detail || 'Invalid code.'); return; }
+      await init();
+    });
+  }
+
+  const copyBtn = document.getElementById('copyCodeBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const code = state.activeSchool?.code || '';
+      navigator.clipboard.writeText(code).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+      });
+    });
+  }
+
+  const joinOther = document.getElementById('joinOtherBtn');
+  if (joinOther) {
+    joinOther.addEventListener('click', () => {
+      document.getElementById('joinPanel').style.display = 'block';
+    });
+  }
+  const cancelJoin = document.getElementById('cancelJoinBtn');
+  if (cancelJoin) {
+    cancelJoin.addEventListener('click', () => {
+      document.getElementById('joinPanel').style.display = 'none';
+    });
+  }
+  const doJoinBtn = document.getElementById('doJoinBtn');
+  if (doJoinBtn) {
+    doJoinBtn.addEventListener('click', async () => {
+      const code = document.getElementById('joinCode2').value.trim();
+      if (!code) { Auth.setStatus(document.getElementById('joinStatus2'), 'err', 'Enter an invite code.'); return; }
+      const r = await Auth.json('/auth/schools/join', { method: 'POST', body: JSON.stringify({ code }) });
+      if (!r.ok) { Auth.setStatus(document.getElementById('joinStatus2'), 'err', r.data?.detail || 'Invalid code.'); return; }
+      document.getElementById('joinPanel').style.display = 'none';
+      await init();
+    });
+  }
+
+  const guardToggle = document.getElementById('guardrailToggle');
+  const guardPanel = document.getElementById('guardrailPanel');
+  if (guardToggle && guardPanel) {
+    guardToggle.addEventListener('click', () => {
+      const open = guardPanel.classList.toggle('open');
+      guardToggle.classList.toggle('open', open);
+    });
+  }
+
+  const saveG = document.getElementById('saveGuardrailsBtn');
+  if (saveG) {
+    saveG.addEventListener('click', async () => {
+      const sid = state.activeSchool?.id;
+      if (!sid) return;
+      const body = {
+        board: document.getElementById('grBoard').value,
+        grade_level: document.getElementById('grGrade').value,
+        allowed_subjects: document.getElementById('grSubjects').value.split(',').map(s => s.trim()).filter(Boolean),
+        curriculum: document.getElementById('grCurriculum').value,
+        socratic_level: document.getElementById('grSocratic').value,
+        allow_direct_answers: document.getElementById('grDirect').checked,
+      };
+      const r = await Auth.json(`/auth/schools/${sid}/guardrails`, { method: 'PUT', body: JSON.stringify(body) });
+      const el = document.getElementById('guardrailStatus');
+      if (!r.ok) { Auth.setStatus(el, 'err', r.data?.detail || 'Failed to save guardrails.'); return; }
+      Auth.setStatus(el, 'ok', 'Guardrails saved.');
+      state.activeSchool.guardrails = r.data.guardrails;
+      state.activeDashboard = null;
+      setTimeout(() => { loadDashboard(sid); }, 500);
+    });
+  }
+}
+
+init();
+</script>
+</body>
+</html>

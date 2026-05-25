@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Vaaani is a Socratic AI study assistant for Physics, Mathematics, English Literature, and Persuasive Writing. Upload your textbooks. Ask questions. Learn deeply." />
+<meta name="theme-color" content="#0a0a0c" />
+<title>Vaaani — A Socratic AI study assistant</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/style.css?v=20260524b" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+</head>
+<body>
+
+<!-- ============================================================ INTRO CURTAIN -->
+<div class="intro-curtain" aria-hidden="true">
+  <div class="curtain-content">
+    <svg class="curtain-brand" viewBox="0 0 24 24">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/>
+      <circle cx="20" cy="12" r="2"/><circle cx="12" cy="20" r="2"/>
+      <circle cx="12" cy="12" r="1.5"/>
+      <path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+      <path d="M4 12 L12 12 M12 4 L12 20 M20 12 L12 12" stroke="currentColor" stroke-width="0.5" opacity="0.4" fill="none"/>
+    </svg>
+    <span class="curtain-word">Vaaani</span>
+  </div>
+</div>
+
+<!-- Custom cursor follower (hidden on touch + reduced-motion via CSS) -->
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<nav class="nav" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+      <path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+      <path d="M4 12 L12 12 M12 4 L12 20 M20 12 L12 12" stroke="currentColor" stroke-width="0.5" opacity="0.4" fill="none"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="/integrations">Integrations</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/about">About</a>
+  </div>
+  <div class="nav-cta" id="navAuth">
+    <a class="nav-signin" href="/login">Sign in</a>
+    <a class="btn btn-primary" href="/signup">Get started</a>
+  </div>
+</nav>
+
+<!-- progress bar (top edge, scroll-linked) -->
+<div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+<!-- ============================================================ HERO -->
+<section class="hero">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+
+  <!-- Floating product previews — four tilted UI cards orbiting the headline -->
+  <div class="hero-float-card hf-listen" aria-hidden="true">
+    <div class="hf-row">
+      <div class="hf-icon listen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14M15.5 8.5a4 4 0 0 1 0 7"/></svg>
+      </div>
+      <div>
+        <div class="hf-title">Listening</div>
+        <div class="hf-sub">Hyperion · The Poetry Foundation</div>
+      </div>
+    </div>
+    <div class="hf-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="hf-time">2:14 / 48:30</div>
+  </div>
+
+  <div class="hero-float-card hf-graph">
+    <div class="hf-pill">Knowledge graph</div>
+    <svg class="hf-mini-graph" viewBox="0 0 160 110" aria-hidden="true">
+      <g stroke="#bfa86f" stroke-width="0.7" fill="none">
+        <line x1="80" y1="55" x2="35" y2="25"/>
+        <line x1="80" y1="55" x2="130" y2="25"/>
+        <line x1="80" y1="55" x2="40" y2="90"/>
+        <line x1="80" y1="55" x2="125" y2="90"/>
+        <line x1="35" y1="25" x2="40" y2="90"/>
+        <line x1="125" y1="90" x2="130" y2="25"/>
+      </g>
+      <g>
+        <circle cx="80" cy="55" r="6" fill="#4d694e"/>
+        <circle cx="35" cy="25" r="4" fill="#6a8a6b"/>
+        <circle cx="130" cy="25" r="4" fill="#6a8a6b"/>
+        <circle cx="40" cy="90" r="4" fill="#6a8a6b"/>
+        <circle cx="125" cy="90" r="4" fill="#6a8a6b"/>
+      </g>
+      <text x="80" y="78" text-anchor="middle" font-size="9" fill="#3c5340" font-weight="600" font-family="Inter">Derivative</text>
+    </svg>
+  </div>
+
+  <div class="hero-float-card hf-explain" aria-hidden="true">
+    <div class="hf-explain-head">
+      <span class="hf-explain-pct">82<small>%</small></span>
+      <span class="hf-explain-label">Coverage</span>
+    </div>
+    <div class="hf-explain-row">
+      <span class="hf-chip covered">Function</span>
+      <span class="hf-chip covered">Limit</span>
+      <span class="hf-chip covered">Slope</span>
+      <span class="hf-chip missed">Cauchy</span>
+      <span class="hf-chip missed">Tangent</span>
+    </div>
+  </div>
+
+  <div class="hero-float-card hf-integrations" aria-hidden="true">
+    <div class="hf-int-head">
+      <span>5 channels</span>
+      <span class="hf-int-status">3 live</span>
+    </div>
+    <div class="hf-int-grid">
+      <span class="hf-int-tile tg" title="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 4.5L18.5 19.2c-.24 1.07-.88 1.34-1.78.83l-4.92-3.63-2.37 2.28c-.26.26-.49.49-1 .49l.35-5.04 9.18-8.3c.4-.36-.09-.55-.62-.2L6.99 12.7l-4.9-1.53c-1.07-.33-1.09-1.07.22-1.59L20.4 3.3c.89-.33 1.66.2 1.3 1.2z"/></svg></span>
+      <span class="hf-int-tile wa" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.07l-1.4 5.12 5.24-1.38A10 10 0 1 0 12 2zm5.5 12.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.78.97-.95 1.17-.18.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.18-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51-.18-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.18-1.42-.07-.13-.27-.2-.57-.35z"/></svg></span>
+      <span class="hf-int-tile ank" title="Anki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg></span>
+      <span class="hf-int-tile yt" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 7.19a2.51 2.51 0 0 0-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42a2.51 2.51 0 0 0-1.77 1.77A26.5 26.5 0 0 0 2 12a26.5 26.5 0 0 0 .42 4.81 2.51 2.51 0 0 0 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42a2.51 2.51 0 0 0 1.77-1.77A26.5 26.5 0 0 0 22 12a26.5 26.5 0 0 0-.42-4.81zM10 15V9l5 3z"/></svg></span>
+      <span class="hf-int-tile gd" title="Google Drive"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.65 14.27L4.41 19.9h11.18l3.24-5.63zM12 4.1L8.41 10.3l4.65 8.07 3.59-6.2zM20.59 16.07L17.41 10.5 14.06 4.1H21l3 5.2z"/></svg></span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <p class="eyebrow">A study assistant for serious students</p>
+    <h1 class="hero-title">
+      <span class="line"><span>Learn it deeply.</span></span>
+      <span class="line"><span class="serif tonal">Not just retrieve it.</span></span>
+    </h1>
+    <p class="hero-sub">Vaaani ingests your textbooks, your notes, even a textbook photo snapped on your phone — then teaches you the material with Socratic dialogue, spaced review, and graph-aware explanations.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary lg" href="/signup">Start free <span class="arr">→</span></a>
+      <a class="btn btn-ghost lg" href="#how">See how it works</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CHAPTER 1 — THE TRAP (pinned, scrubbed) -->
+<section class="chapter chapter-trap" id="ch-trap" data-chapter="1">
+  <div class="chapter-inner">
+    <span class="chapter-num">Chapter 01</span>
+    <div class="trap-lines">
+      <h2 class="trap-line" data-line="0">Most AI tutors say <span class="accent-text">"here's the answer."</span></h2>
+      <h2 class="trap-line" data-line="1">Your brain says <span class="serif">"good — I don't need to think."</span></h2>
+      <h2 class="trap-line" data-line="2">By tomorrow morning, <span class="accent-text">you've forgotten everything.</span></h2>
+      <h2 class="trap-line" data-line="3">So we had to <span class="serif accent-text">fix this.</span></h2>
+    </div>
+    <div class="trap-progress" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CHAPTER 2 — THE FLIP (Socratic compare, animated) -->
+<section class="chapter chapter-flip" id="ch-flip" data-chapter="2">
+  <div class="container">
+    <div class="chapter-head">
+      <span class="chapter-num">Chapter 02</span>
+      <h2 class="section-title">Teaching is <span class="serif accent-text">asking the right question.</span></h2>
+      <p class="section-sub">Most AI hands you the answer. Vaaani asks you back — anchored in the very text you're trying to understand.</p>
+    </div>
+    <div class="dialog-compare">
+      <div class="dialog dialog-bad" data-side="left">
+        <div class="dialog-head">
+          <span class="dialog-tag">Most AI tutors</span>
+          <span class="dialog-subtag">Answer first. Thinking optional.</span>
+        </div>
+        <div class="bubble user">Explain the first stanza of Hyperion.</div>
+        <div class="bubble assistant">The first stanza describes the fallen god Saturn in deep despair and isolation. He sits in a shady, sunken vale, far from the natural cycles of morning, noon, and evening. The stanza emphasises his stillness — quiet as a stone — and the silence around him.</div>
+      </div>
+      <div class="dialog dialog-good" data-side="right">
+        <div class="dialog-head">
+          <span class="dialog-tag good">Vaaani · Socratic mode</span>
+          <span class="dialog-subtag">Questions, anchored in the text.</span>
+        </div>
+        <div class="bubble user">Explain the first stanza of Hyperion.</div>
+        <div class="bubble assistant">Let us look at the first stanza together. It describes Saturn sitting in a deep, shady vale, "quiet as a stone," with forests hanging about his head "like cloud on cloud." The stream goes "voiceless," and the Naiad presses her finger to her lips.<br/><br/>What do you think the stillness and silence in this scene tell us about Saturn's condition?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CHAPTER 3 — THE CONSTELLATION (pinned, builds on scroll) -->
+<section class="chapter chapter-build" id="ch-build" data-chapter="3">
+  <div class="chapter-inner build-grid">
+    <div class="build-text">
+      <span class="chapter-num">Chapter 03</span>
+      <h2 class="section-title">A constellation of your <span class="serif accent-text">ideas</span> — drawn for you.</h2>
+      <p class="build-line" data-step="0">Every concept you upload becomes a <strong>star</strong>.</p>
+      <p class="build-line" data-step="1">Whenever two ideas appear together, a <strong>line</strong> joins them.</p>
+      <p class="build-line" data-step="2">Clusters of related stars become <strong>themes</strong> — automatically.</p>
+      <p class="build-line" data-step="3">You don't just <em>search</em> your library. You <span class="accent-text">navigate</span> it.</p>
+    </div>
+    <div class="build-visual" aria-hidden="true">
+      <svg viewBox="0 0 600 600" class="build-svg">
+        <g class="build-lines" stroke="#e63b66" stroke-opacity="0.5" stroke-width="1.2" fill="none">
+          <line x1="120" y1="120" x2="280" y2="180" data-step="1"/>
+          <line x1="280" y1="180" x2="440" y2="110" data-step="1"/>
+          <line x1="280" y1="180" x2="240" y2="320" data-step="1"/>
+          <line x1="240" y1="320" x2="120" y2="430" data-step="1"/>
+          <line x1="240" y1="320" x2="380" y2="360" data-step="1"/>
+          <line x1="380" y1="360" x2="480" y2="260" data-step="1"/>
+          <line x1="480" y1="260" x2="440" y2="110" data-step="1"/>
+          <line x1="380" y1="360" x2="450" y2="470" data-step="1"/>
+          <line x1="450" y1="470" x2="280" y2="480" data-step="1"/>
+          <line x1="280" y1="480" x2="120" y2="430" data-step="1"/>
+        </g>
+        <g class="build-stars">
+          <circle cx="120" cy="120" r="8" fill="#e63b66" data-step="0"/>
+          <circle cx="280" cy="180" r="11" fill="#e63b66" data-step="0"/>
+          <circle cx="440" cy="110" r="7" fill="#5b8def" data-step="0" data-cluster="b"/>
+          <circle cx="240" cy="320" r="10" fill="#e63b66" data-step="0"/>
+          <circle cx="120" cy="430" r="7" fill="#d4a957" data-step="0" data-cluster="c"/>
+          <circle cx="380" cy="360" r="8" fill="#5fb88a" data-step="0" data-cluster="d"/>
+          <circle cx="480" cy="260" r="7" fill="#5b8def" data-step="0" data-cluster="b"/>
+          <circle cx="450" cy="470" r="6" fill="#9c7bd6" data-step="0" data-cluster="e"/>
+          <circle cx="280" cy="480" r="7" fill="#d4a957" data-step="0" data-cluster="c"/>
+        </g>
+        <g class="build-clusters" data-step="2">
+          <ellipse cx="220" cy="220" rx="160" ry="100" fill="rgba(230,59,102,0.06)" stroke="rgba(230,59,102,0.18)" stroke-dasharray="3 4"/>
+          <ellipse cx="460" cy="180" rx="80" ry="100" fill="rgba(91,141,239,0.05)" stroke="rgba(91,141,239,0.18)" stroke-dasharray="3 4"/>
+          <ellipse cx="200" cy="455" rx="120" ry="60" fill="rgba(212,169,87,0.05)" stroke="rgba(212,169,87,0.18)" stroke-dasharray="3 4"/>
+        </g>
+        <g class="build-labels" fill="#9a9aa8" font-family="Inter, sans-serif" font-size="11" data-step="3">
+          <text x="100" y="105">Saturn</text>
+          <text x="290" y="172">Hyperion</text>
+          <text x="450" y="100">Naiad</text>
+          <text x="250" y="312">Thea</text>
+          <text x="100" y="450">Coelus</text>
+          <text x="388" y="354">Titan</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CHAPTER 4 — FOUR SUBJECTS (horizontal pinned) -->
+<section class="chapter chapter-subjects" id="ch-subjects" data-chapter="4">
+  <div class="subjects-pin">
+    <div class="subjects-head">
+      <span class="chapter-num">Chapter 04</span>
+      <h2 class="section-title">Four subjects. <span class="serif accent-text">Four pedagogies.</span></h2>
+      <p class="section-sub">The same Socratic engine, four different ways of asking. Scroll → to walk through them.</p>
+    </div>
+    <div class="subjects-track">
+      <article class="subject-panel" data-subject="physics">
+        <div class="subject-frame">
+          <span class="subject-tag">Physics</span>
+          <h3>Which principle applies first?</h3>
+          <div class="mini-dialog">
+            <div class="bubble user">A ball thrown at 30° with v₀ = 20 m/s — find the range.</div>
+            <div class="bubble assistant">Before any numbers — which conservation or kinematic principle fits a projectile? And once you pick it, what are the two component equations you need to write down?</div>
+          </div>
+        </div>
+      </article>
+      <article class="subject-panel" data-subject="math">
+        <div class="subject-frame">
+          <span class="subject-tag">Mathematics</span>
+          <h3>What's the next step you'd write?</h3>
+          <div class="mini-dialog">
+            <div class="bubble user">Solve ∫ x·sin(x) dx</div>
+            <div class="bubble assistant">Two factors multiplied — which technique pairs that pattern? After you pick u and dv, write the first line of integration by parts and let me see it.</div>
+          </div>
+        </div>
+      </article>
+      <article class="subject-panel" data-subject="english">
+        <div class="subject-frame">
+          <span class="subject-tag">English Literature</span>
+          <h3>Where does the poem say so?</h3>
+          <div class="mini-dialog">
+            <div class="bubble user">What is Keats showing in the first stanza of Hyperion?</div>
+            <div class="bubble assistant">Look at "quiet as a stone" and the "voiceless" stream. What do those two images do to Saturn's <em>presence</em> in the scene — and which line tells you he hasn't moved in a long time?</div>
+          </div>
+        </div>
+      </article>
+      <article class="subject-panel" data-subject="writing">
+        <div class="subject-frame">
+          <span class="subject-tag">Persuasive Writing</span>
+          <h3>What is your claim — really?</h3>
+          <div class="mini-dialog">
+            <div class="bubble user">Social media is harmful for teenagers.</div>
+            <div class="bubble assistant">Is the harm the screen time itself, or what happens during it? Pick one — then tell me the strongest counter-argument someone in your audience would raise.</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow reveal">How it works</p>
+      <h2 class="section-title reveal">Three steps. No setup.</h2>
+      <p class="section-sub reveal">Vaaani turns whatever you upload into a navigable map of ideas — then teaches across that map.</p>
+    </div>
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step-num">01</span>
+        <h3>Upload your material</h3>
+        <p>PDFs, notes, essays, problem sets, DOCX, plain text. Vaaani chunks each document, embeds it, and indexes everything locally.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-num">02</span>
+        <h3>A knowledge constellation forms</h3>
+        <p>Every concept becomes a star. Every time two concepts appear together becomes a line. Themes — clusters of related ideas — name themselves automatically.</p>
+      </li>
+      <li class="step reveal">
+        <span class="step-num">03</span>
+        <h3>Ask. Or be asked.</h3>
+        <p>Get clear answers grounded in your sources. Or flip Socratic mode on and Vaaani teaches by asking — never spoiling the punchline.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================================================ SUBJECTS -->
+<section class="subjects" id="subjects">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow reveal">Subject-aware pedagogy</p>
+      <h2 class="section-title reveal">Tutors that know <span class="serif accent-text">their subject.</span></h2>
+      <p class="section-sub reveal">The same Socratic engine, four different pedagogies. Vaaani adapts how it questions you to the material it's working with.</p>
+    </div>
+    <div class="subject-grid">
+      <article class="subject-card reveal">
+        <div class="subject-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor"/><ellipse cx="12" cy="12" rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1"/><ellipse cx="12" cy="12" rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(120 12 12)"/></svg>
+        </div>
+        <h3>Physics</h3>
+        <p>Asks which principle applies, what's given vs. unknown, and what units the answer should be in. Will not hand you a numeric answer until you've reasoned about the approach.</p>
+      </article>
+      <article class="subject-card reveal">
+        <div class="subject-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 19 L9 13 L13 17 L21 5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 5 L21 5 L21 12" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+        </div>
+        <h3>Mathematics</h3>
+        <p>Asks which technique fits, what the next algebraic step would be, and whether your result passes a sanity check — units, limits, boundary cases. Makes you write the step first.</p>
+      </article>
+      <article class="subject-card reveal">
+        <div class="subject-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 4 L4 20 L20 20 L20 8 L16 4 Z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M16 4 L16 8 L20 8" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 12 L16 12 M8 15 L14 15" stroke="currentColor" stroke-width="1"/></svg>
+        </div>
+        <h3>English Literature</h3>
+        <p>Points to specific lines and stanzas. Asks what evidence in the text supports a reading and which devices the author uses. Always anchors interpretation in the page.</p>
+      </article>
+      <article class="subject-card reveal">
+        <div class="subject-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="15" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10.5 11 L13.5 13" stroke="currentColor" stroke-width="1"/></svg>
+        </div>
+        <h3>Persuasive Writing</h3>
+        <p>Toulmin-style probing: what is the claim, where is the warrant, is the evidence sufficient, who is the audience, what is the strongest counter-argument. Strengthens — never rewrites.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FEATURE GRID -->
+<section class="features">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow reveal">What's inside</p>
+      <h2 class="section-title reveal">Engineered, not assembled.</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature reveal">
+        <h4>Local-first by design</h4>
+        <p>Everything runs on your machine. Embeddings, the vector index, the graph — local. Only the language model call leaves the box.</p>
+      </div>
+      <div class="feature reveal">
+        <h4>TurboVec compression</h4>
+        <p>4-bit quantised vectors. A million-chunk corpus fits in roughly 4 GB of RAM, with faster search than uncompressed indexes.</p>
+      </div>
+      <div class="feature reveal">
+        <h4>Graph reasoning</h4>
+        <p>Every chunk contributes entities and relations. Global queries map-reduce across community summaries — not against a single prompt window.</p>
+      </div>
+      <div class="feature reveal">
+        <h4>Citation discipline</h4>
+        <p>In non-Socratic mode every sentence is checked against retrieved context. Ungrounded claims are detected before they reach you.</p>
+      </div>
+      <div class="feature reveal">
+        <h4>Rolling memory</h4>
+        <p>Persistent facts and recent queries inject themselves into prompts when relevant — without bloating context for unrelated questions.</p>
+      </div>
+      <div class="feature reveal">
+        <h4>Honest by default</h4>
+        <p>If your corpus doesn't contain the answer, Vaaani says so. It will not invent material to look helpful.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CTA -->
+<section class="final-cta">
+  <div class="container center">
+    <h2 class="section-title big reveal">Stop retrieving.<br/><span class="serif accent-text">Start understanding.</span></h2>
+    <p class="section-sub reveal">Launch Vaaani, upload your first PDF, and ask it anything about what you just uploaded.</p>
+    <div class="hero-cta reveal" style="justify-content: center;">
+      <a class="btn btn-primary lg" href="/app">Launch the assistant <span class="arr">→</span></a>
+      <a class="btn btn-ghost lg" href="/graph-view">See a live constellation</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FOOTER -->
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+          <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+          <path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+        </svg>
+        <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+      </div>
+      <p>A Socratic study assistant for serious students.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <a href="/app">Chat</a>
+      <a href="/graph-view">Knowledge map</a>
+      <a href="/status">Status</a>
+    </div>
+    <div class="footer-col">
+      <h5>Learn</h5>
+      <a href="#how">How it works</a>
+      <a href="#subjects">Subjects</a>
+      <a href="#socratic">Socratic mode</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="https://vaaani.in" target="_blank" rel="noopener">vaaani.in</a>
+    </div>
+  </div>
+  <div class="container footer-line">
+    <span>Designed and Developed by <strong>Neil Shankar Ray</strong>, IIT Patna</span>
+    <span>© 2026 – 2028 · All rights reserved</span>
+  </div>
+</footer>
+
+<script src="/auth.js"></script>
+<script src="/main.js?v=20260524b"></script>
+</body>
+</html>

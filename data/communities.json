@@ -1,0 +1,216 @@
+[
+  {
+    "id": 0,
+    "nodes": [
+      "coelus",
+      "eastern gates",
+      "hours",
+      "hyperion",
+      "hyperion's palace",
+      "jove",
+      "phantoms",
+      "planet orb of fire",
+      "tellus",
+      "titans",
+      "two fair argent wings",
+      "zephyrs"
+    ],
+    "title": "Hyperion's Titan Realm and Divine Conflict",
+    "summary": "This community centers on the Titan god Hyperion, his domain, and his relationships with other divine entities. Hyperion rules over the Titans, opposes the rebel god Jove, and interacts with various deities and personifications within his celestial palace and the broader cosmos.",
+    "findings": [
+      "Hyperion rules over the Titans and resides in his grand palace, which is described as a bright bastion with pyramids, obelisks, courts, arches, domes, and fiery galleries.",
+      "Hyperion is in direct conflict with Jove (the rebel thunderer), whom he opposes and threatens, while also swearing by the earth goddess Tellus.",
+      "Hyperion rides a planet orb of fire (likely the sun) that possesses two fair argent wings, which expand at his approach.",
+      "Coelus, the sky god and Hyperion's father, advises Hyperion and speaks to him in a low voice from universal space, expressing concern about the feud among the gods.",
+      "Hyperion's actions cause reactions from other entities: he scares the Hours, causes pale cold Phantoms to appear after his speech, and is served by Zephyrs who blow solemn tubes.",
+      "Hyperion flees to and opens the eastern gates, suggesting movement between realms or domains."
+    ],
+    "size": 12
+  },
+  {
+    "id": 1,
+    "nodes": [
+      "deepseek",
+      "deepseek-chat",
+      "google research",
+      "openai",
+      "rust",
+      "ryan codrai",
+      "sentence-transformers",
+      "turboquant",
+      "turbovec",
+      "vaaani graph-rag assistant"
+    ],
+    "title": "Graph-RAG Assistant Technology Stack",
+    "summary": "This community centers on the Vaaani Graph-RAG assistant, which integrates multiple technologies and products to provide a retrieval-augmented generation system. The assistant combines TurboVec (a Rust-based vector index implementing Google Research's TurboQuant algorithm), sentence-transformers, and DeepSeek's deepseek-chat model.",
+    "findings": [
+      "TurboVec is a Rust vector index developed by Ryan Codrai that implements Google Research's TurboQuant quantization algorithm.",
+      "The deepseek-chat model, released by DeepSeek, is compatible with OpenAI's API endpoint.",
+      "Vaaani Graph-RAG assistant uses TurboVec, sentence-transformers, and DeepSeek's deepseek-chat model as its core components."
+    ],
+    "size": 10
+  },
+  {
+    "id": 2,
+    "nodes": [
+      "acceleration",
+      "chain rule",
+      "derivative",
+      "implicit differentiation",
+      "product rule",
+      "quotient rule",
+      "second derivative",
+      "slope of tangent line",
+      "velocity"
+    ],
+    "title": "Core Derivative Rules and Applications",
+    "summary": "This community centers on the concept of the derivative and its fundamental rules for computation, including the product, quotient, and chain rules. It also covers key applications of derivatives, such as finding the slope of a tangent line and relating to velocity and acceleration, as well as the technique of implicit differentiation.",
+    "findings": [
+      "The derivative gives the slope of the tangent line.",
+      "The derivative equals velocity, and the second derivative equals acceleration.",
+      "The product rule, quotient rule, and chain rule are all used for finding derivatives.",
+      "The chain rule is used in implicit differentiation."
+    ],
+    "size": 9
+  },
+  {
+    "id": 3,
+    "nodes": [
+      "area under curve",
+      "calculus",
+      "indeterminate form",
+      "instantaneous rate of change",
+      "limit",
+      "linear approximation",
+      "slope",
+      "tangent line"
+    ],
+    "title": "Calculus: Rates of Change and Area",
+    "summary": "This community centers on the foundational concepts of calculus, which addresses two core questions: instantaneous rate of change and area under a curve. The entities are bound by their roles in defining and calculating these ideas, with the tangent line and limit serving as key tools.",
+    "findings": [
+      "Calculus addresses the questions of instantaneous rate of change and area under a curve.",
+      "Instantaneous rate of change equals the slope of the tangent line.",
+      "Limits are used to find instantaneous rate of change.",
+      "Indeterminate forms arise in the evaluation of limits.",
+      "Linear approximation uses the tangent line to approximate a function near a point."
+    ],
+    "size": 8
+  },
+  {
+    "id": 4,
+    "nodes": [
+      "achilles",
+      "earth",
+      "ixion",
+      "ocean",
+      "olympus",
+      "saturn",
+      "thea"
+    ],
+    "title": "The Fallen Titan and His Consort",
+    "summary": "This community centers on the fallen Titan king Saturn and his companion Thea, set in a post-cosmic overthrow landscape. Saturn has lost dominion over Earth and Ocean, and his presence affects Olympus, while Thea urges him to rally their allies. Thea’s immense power is highlighted by her ability to defeat Achilles or stop Ixion, contrasting with Saturn’s current state of quiet despair.",
+    "findings": [
+      "Saturn has lost dominion over both Earth and Ocean, and his presence affects Olympus.",
+      "Thea accompanies Saturn, speaks to him, weeps at his feet, and urges him to rally their friends.",
+      "Thea possesses the power to defeat Achilles or stop Ixion, indicating her formidable strength.",
+      "Saturn listens to Earth, his ancient mother, seeking comfort from her.",
+      "Saturn is described as a gray-hair’d, fallen god, quiet as a stone, with unsceptred, realmless eyes closed."
+    ],
+    "size": 7
+  },
+  {
+    "id": 5,
+    "nodes": [
+      "average rate of change",
+      "cant line"
+    ],
+    "title": "Average Rate of Change and Cant Lines",
+    "summary": "This community centers on the relationship between the mathematical concept of average rate of change and the geometric tool of a cant line. The cant line is defined as a line intersecting a curve at two points, and it is used to determine the average rate of change.",
+    "findings": [
+      "The average rate of change is equivalent to the slope of a cant line.",
+      "A cant line is defined as a line that intersects a curve at two points.",
+      "The cant line serves as a geometric representation for calculating the average rate of change."
+    ],
+    "size": 2
+  },
+  {
+    "id": 6,
+    "nodes": [
+      "naiad"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 7,
+    "nodes": [
+      "memphian sphinx"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 8,
+    "nodes": [
+      "titan"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 9,
+    "nodes": [
+      "john keats"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 10,
+    "nodes": [
+      "point slope form"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 11,
+    "nodes": [
+      "delta t"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 12,
+    "nodes": [
+      "circle"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 13,
+    "nodes": [
+      "higher order derivatives"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  }
+]

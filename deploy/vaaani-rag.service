@@ -1,0 +1,36 @@
+[Unit]
+# Vaaani RAG — Socratic study assistant.
+# Runs on the same VPS as Vaani CAVP (different port, different Cloudflare
+# Tunnel ingress rule, different systemd unit). Both processes coexist
+# because Cloudflared multiplexes hostnames to localhost ports.
+Description=Vaaani RAG (Socratic study assistant)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=vaaani
+Group=vaaani
+WorkingDirectory=/opt/vaaani-rag
+EnvironmentFile=/etc/vaaani-rag/env
+# PORT is read by run.sh (defaults to 8765 if unset).
+Environment=PORT=8766
+Environment=PYTHONUNBUFFERED=1
+# run.sh exec's uvicorn, so Type=exec works correctly (PID == uvicorn).
+ExecStart=/opt/vaaani-rag/run.sh
+Restart=on-failure
+RestartSec=5
+
+# Hardening — only the data/ dir is writable.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/vaaani-rag/data /opt/vaaani-rag/data/raw
+ProtectHome=true
+
+# Logs go to the journal — view with `journalctl -u vaaani-rag -f`.
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

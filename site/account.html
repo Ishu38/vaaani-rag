@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Account — Vaaani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+<link rel="stylesheet" href="/auth.css" />
+</head>
+<body class="auth-shell">
+
+<nav class="nav scrolled" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/app">Chat</a>
+    <a href="/graph-view">Graph</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/account" class="active">Account</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="dash-shell">
+  <header class="dash-head">
+    <h1 id="hello">Welcome.</h1>
+    <p id="hello-sub">Your learning snapshot. Ratings you give in the chat power what shows up here.</p>
+    <div class="status-msg" id="banner" style="display:none; margin-top:14px;"></div>
+  </header>
+
+  <section class="dash-grid">
+    <div class="dash-card">
+      <h2>Mastery overview</h2>
+      <div class="stat-row" id="stats">
+        <div class="stat-tile"><div class="label">Skills tracked</div><div class="value" id="sSkills">—</div></div>
+        <div class="stat-tile"><div class="label">Average mastery</div><div class="value accent" id="sAvg">—</div></div>
+        <div class="stat-tile"><div class="label">Strong (≥4/5)</div><div class="value" id="sStrong">—</div></div>
+        <div class="stat-tile"><div class="label">Due for review</div><div class="value" id="sDue">—</div></div>
+      </div>
+
+      <h2 style="margin-top:24px;">Recent skills</h2>
+      <div class="skill-list" id="skillList">
+        <div class="empty-state">Use Socratic mode in the chat, then rate how well you understood. Your topics will appear here.</div>
+      </div>
+    </div>
+
+    <div class="dash-card">
+      <h2>Review queue</h2>
+      <div class="due-list" id="dueList">
+        <div class="empty-state">Nothing is due yet. Topics you rate "Sort of" or "Confused" will resurface here on a spaced schedule.</div>
+      </div>
+
+      <h2 style="margin-top:24px;">Account</h2>
+      <div class="profile-block">
+        <div><div class="label">Name</div><div class="value" id="pName">—</div></div>
+        <div><div class="label">Email</div><div class="value" id="pEmail">—</div></div>
+        <div><div class="label">Plan</div><div class="value" id="pPlan">—</div></div>
+        <div><div class="label">Phone</div><div class="value" id="pPhone">—</div></div>
+      </div>
+
+      <div id="schoolSection" style="display:none;">
+        <h2 style="margin-top:24px;">My Schools</h2>
+        <div id="schoolList" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+
+      <div class="phone-step" id="phoneStep">
+        <h2 style="margin-bottom:10px;">Verify your phone</h2>
+        <div class="status-msg" id="phoneStatus" style="display:none;"></div>
+        <div class="field">
+          <label for="phone">Phone number (with country code)</label>
+          <input id="phone" type="tel" autocomplete="tel" placeholder="+91 98xx xxxxxx" />
+        </div>
+        <div class="auth-actions">
+          <button class="btn btn-ghost" type="button" id="sendOtpBtn">Send OTP</button>
+        </div>
+        <div class="field" style="margin-top:14px; display:none;" id="otpField">
+          <label for="otp">Enter the 6-digit code</label>
+          <input id="otp" type="text" inputmode="numeric" maxlength="6" placeholder="000000" />
+        </div>
+        <div class="auth-actions" id="verifyOtpWrap" style="display:none;">
+          <button class="btn btn-primary" type="button" id="verifyOtpBtn">Verify code</button>
+        </div>
+      </div>
+
+      <div class="auth-actions" style="margin-top:22px;">
+        <a class="btn btn-primary" href="/app">Launch the assistant <span class="arr">→</span></a>
+        <button class="btn btn-ghost" type="button" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="/auth.js"></script>
+<script>
+  const $ = s => document.querySelector(s);
+
+  async function load() {
+    const user = await Auth.me();
+    if (!user) { window.location = '/login'; return; }
+
+    document.getElementById('hello').textContent = `Welcome${user.name ? ', ' + user.name.split(' ')[0] : ''}.`;
+    $('#pName').textContent = user.name || '—';
+    $('#pEmail').innerHTML = escapeHtml(user.email)
+      + (user.email_verified_at ? ' <span class="badge ok">verified</span>' : ' <span class="badge warn">unverified</span>');
+    $('#pPlan').textContent = (user.plan || 'free').replace(/\b\w/g, c => c.toUpperCase());
+    $('#pPhone').innerHTML = user.phone
+      ? escapeHtml(user.phone) + (user.phone_verified_at ? ' <span class="badge ok">verified</span>' : ' <span class="badge warn">unverified</span>')
+      : '—';
+
+    if (new URLSearchParams(window.location.search).get('welcome')) {
+      Auth.setStatus($('#banner'), 'info',
+        user.email_verified_at
+          ? 'Welcome back. Your account is ready.'
+          : 'Welcome. Check your email (or server logs in dev mode) and click the verification link to confirm your address.');
+    }
+    if (user.phone_verified_at) $('#phoneStep').style.display = 'none';
+
+    const sr = await Auth.json('/auth/schools');
+    if (sr.ok && sr.data && sr.data.schools && sr.data.schools.length) {
+      const el = $('#schoolSection');
+      const list = $('#schoolList');
+      el.style.display = 'block';
+      list.innerHTML = '';
+      sr.data.schools.forEach(s => {
+        list.insertAdjacentHTML('beforeend',
+          `<div class="skill-row" style="grid-template-columns: 1fr auto auto;">
+            <div>
+              <div class="topic">${escapeHtml(s.name)}</div>
+              <div style="font-size:11.5px;color:var(--c-muted);">${escapeHtml(s.code)}</div>
+            </div>
+            <span class="tag ${s.role}">${escapeHtml(s.role)}</span>
+            ${s.role === 'admin' || s.role === 'teacher' ? `<a class="btn btn-ghost" href="/dashboard" style="padding:4px 10px;font-size:12px;">Dashboard</a>` : ''}
+          </div>`);
+      });
+    }
+
+    const r = await Auth.json('/learning/skills');
+    if (r.ok) renderSkills(r.data);
+  }
+
+  function renderSkills(d) {
+    const s = d.stats || {};
+    $('#sSkills').textContent = s.skills_tracked ?? 0;
+    $('#sAvg').textContent = (s.avg_mastery ?? 0).toFixed(1);
+    $('#sStrong').textContent = s.strong_count ?? 0;
+    $('#sDue').textContent = s.due_count ?? 0;
+
+    const list = $('#skillList');
+    const due = $('#dueList');
+    list.innerHTML = ''; due.innerHTML = '';
+    if (!d.skills || !d.skills.length) {
+      list.innerHTML = '<div class="empty-state">Use Socratic mode in the chat, then rate how well you understood. Your topics will appear here.</div>';
+    } else {
+      for (const sk of d.skills.slice(0, 16)) {
+        const pct = Math.round((sk.mastery / 5) * 100);
+        const subject = sk.subject ? `<span class="subject">${escapeHtml(sk.subject)}</span>` : '<span></span>';
+        list.insertAdjacentHTML('beforeend',
+          `<div class="skill-row">
+             <div class="topic">${escapeHtml(sk.display)}</div>
+             ${subject}
+             <div class="mastery-bar" style="--m:${pct}%" title="Mastery ${sk.mastery.toFixed(1)}/5"></div>
+           </div>`);
+      }
+    }
+    if (!d.due || !d.due.length) {
+      due.innerHTML = '<div class="empty-state">Nothing is due yet. Topics you rate "Sort of" or "Confused" will resurface here on a spaced schedule.</div>';
+    } else {
+      for (const sk of d.due) {
+        due.insertAdjacentHTML('beforeend',
+          `<div class="due-row">
+             <div class="topic">${escapeHtml(sk.display)}</div>
+             <span class="subject">${escapeHtml(sk.subject || '—')}</span>
+             <a class="btn btn-ghost" href="/app?topic=${encodeURIComponent(sk.display)}">Review</a>
+           </div>`);
+      }
+    }
+  }
+
+  $('#logoutBtn').addEventListener('click', async () => {
+    await Auth.json('/auth/logout', { method: 'POST' });
+    window.location = '/';
+  });
+
+  $('#sendOtpBtn').addEventListener('click', async () => {
+    const phone = $('#phone').value.trim();
+    if (!phone) { Auth.setStatus($('#phoneStatus'), 'err', 'Enter a phone number first.'); return; }
+    Auth.setStatus($('#phoneStatus'), 'info', 'Sending code…');
+    const r = await Auth.json('/auth/phone/send-otp', { method: 'POST', body: JSON.stringify({ phone }) });
+    if (!r.ok) { Auth.setStatus($('#phoneStatus'), 'err', (r.data && r.data.detail) || 'Could not send OTP.'); return; }
+    Auth.setStatus($('#phoneStatus'), 'ok',
+      'Code sent. (If no SMS provider is configured, the OTP is printed to the server logs in dev mode.)');
+    $('#otpField').style.display = 'flex';
+    $('#verifyOtpWrap').style.display = 'flex';
+  });
+
+  $('#verifyOtpBtn').addEventListener('click', async () => {
+    const code = $('#otp').value.trim();
+    if (!/^\d{4,8}$/.test(code)) { Auth.setStatus($('#phoneStatus'), 'err', 'Enter the numeric code we sent.'); return; }
+    const r = await Auth.json('/auth/phone/verify-otp', { method: 'POST', body: JSON.stringify({ code }) });
+    if (!r.ok) { Auth.setStatus($('#phoneStatus'), 'err', (r.data && r.data.detail) || 'Verification failed.'); return; }
+    Auth.setStatus($('#phoneStatus'), 'ok', 'Phone verified.');
+    setTimeout(load, 600);
+  });
+
+  load();
+</script>
+</body>
+</html>

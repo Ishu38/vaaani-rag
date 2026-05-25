@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+.Python
+*.egg-info/
+
+# Local data (never commit)
+data/index.tq
+data/index.tq.*
+data/users.db
+data/users.db-*
+data/memory.json
+data/raw/
+data/hermes/
+data/cache/
+
+# Secrets / env
+.env
+.env.local
+*.env.local
+deploy/vaaani-rag.env
+/etc/vaaani-rag/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build artefacts
+dist/
+build/
+*.log
+
+# Playwright
+test-results/
+playwright-report/

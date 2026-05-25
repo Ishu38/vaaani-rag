@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vaaani · Graph View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  :root {
+    --bg: #fff3d5;
+    --panel: #fbedc6;
+    --panel-2: #f0dda8;
+    --border: #e0cc93;
+    --border-strong: #bfa86f;
+    --text: #4d694e;
+    --muted: #7a8b6f;
+    --muted-strong: #5d7459;
+    --accent: #4d694e;
+    --accent-glow: rgba(77,105,78,0.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body {
+    background:
+      radial-gradient(ellipse 1100px 500px at 50% -15%, rgba(77,105,78,0.06), transparent 65%),
+      var(--bg);
+    display: flex; flex-direction: column; min-height: 100vh;
+    letter-spacing: -0.005em;
+  }
+  nav.top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px; gap: 24px;
+    backdrop-filter: blur(14px);
+    background: rgba(255,243,213,0.75);
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+  .brand .a { color: var(--accent); }
+  .brand .badge {
+    margin-left: 8px; padding: 3px 8px; border-radius: 4px;
+    background: transparent; color: var(--muted-strong);
+    font-size: 10px; letter-spacing: 0.14em; font-weight: 600; text-transform: uppercase;
+    border: 1px solid var(--border-strong);
+  }
+  .nav-links { display: flex; gap: 28px; font-size: 13.5px; color: var(--muted); }
+  .nav-links a { color: var(--muted); text-decoration: none; padding: 4px 0; position: relative; transition: color .15s; }
+  .nav-links a.active { color: var(--text); }
+  .nav-links a.active::after { content: ''; position: absolute; bottom: -18px; left: 0; right: 0; height: 2px; background: var(--accent); }
+  .nav-links a:hover { color: var(--text); }
+  .pill { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
+    background: var(--panel); border: 1px solid var(--border); color: var(--muted-strong);
+    font-variant-numeric: tabular-nums; }
+  main { flex: 1; display: grid; grid-template-columns: 280px 1fr; gap: 0; min-height: 0; }
+  aside {
+    border-right: 1px solid var(--border); padding: 20px 18px; overflow-y: auto;
+    background: rgba(247,233,194,0.5);
+  }
+  aside .intro {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; font-size: 12.5px; color: var(--muted-strong);
+    line-height: 1.6; margin-bottom: 24px;
+  }
+  aside .intro strong { color: var(--text); font-weight: 600; }
+  aside .help { font-size: 11.5px; color: var(--muted); margin: -4px 0 10px; }
+  aside h2 { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 14px; font-weight: 600; }
+  aside .stat { display: flex; justify-content: space-between; padding: 10px 0;
+    border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted-strong);
+    font-variant-numeric: tabular-nums; }
+  aside .stat b { color: var(--text); font-weight: 600; }
+  aside .community { margin: 8px 0; padding: 12px 14px; border-radius: 6px;
+    background: var(--panel); border: 1px solid var(--border); cursor: pointer;
+    transition: border-color .15s, background .15s; font-size: 12.5px; }
+  aside .community:hover { border-color: var(--border-strong); background: var(--panel-2); }
+  aside .community .title { font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  aside .community .size { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  aside .community .swatch { display: inline-block; width: 10px; height: 10px;
+    border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  #graph { width: 100%; height: 100%; }
+  .empty {
+    display: flex; align-items: center; justify-content: center; height: 100%;
+    color: var(--muted); font-size: 14px; text-align: center; padding: 40px;
+  }
+  .legend {
+    position: absolute; right: 20px; bottom: 20px;
+    background: rgba(251,237,198,0.95); border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 14px; font-size: 11.5px; max-width: 260px;
+    backdrop-filter: blur(8px); color: var(--muted-strong);
+  }
+  .legend .row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .legend .swatch { width: 8px; height: 8px; border-radius: 50%; }
+  .legend .head { font-weight: 600; color: var(--text); margin-bottom: 6px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ===== FEYNMAN OVERLAY BANNER ===== */
+  .feynman-banner {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--bg); border: 1px solid var(--accent);
+    border-radius: 10px; padding: 12px 18px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 12px 32px rgba(77,105,78,0.18);
+    z-index: 5; max-width: 90%;
+  }
+  .feynman-banner .head {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .feynman-banner .pct {
+    font-size: 22px; font-weight: 700; color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .feynman-banner .label {
+    font-size: 13px; color: var(--text);
+  }
+  .feynman-banner .label b { color: var(--accent); font-weight: 600; }
+  .feynman-banner .swatch-row { display: flex; gap: 12px; font-size: 11px; color: var(--muted-strong); }
+  .feynman-banner .sw { display: inline-flex; align-items: center; gap: 5px; }
+  .feynman-banner .sw .dot {
+    width: 9px; height: 9px; border-radius: 50%; display: inline-block;
+  }
+  .feynman-banner .sw .dot.covered { background: var(--accent); border: 2px solid var(--accent); }
+  .feynman-banner .sw .dot.missed { background: var(--panel); border: 2px dashed var(--accent); }
+  .feynman-banner .sw .dot.dimmed { background: var(--panel-2); border: 1px solid var(--border-strong); opacity: 0.6; }
+  .feynman-banner .x {
+    background: transparent; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--muted-strong); font: inherit; font-size: 12px; cursor: pointer;
+    padding: 4px 10px; transition: border-color .15s, color .15s;
+  }
+  .feynman-banner .x:hover { border-color: var(--accent); color: var(--text); }
+</style>
+</head>
+<body>
+<nav class="top">
+  <div class="brand"><span>Vaa</span><span class="a">ani</span><span class="badge">Graph-RAG</span></div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/app">Chat</a>
+    <a href="/graph-view" class="active">Graph</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <span class="pill" id="statusPill">—</span>
+</nav>
+
+<main>
+  <aside>
+    <div class="intro">
+      Vaaani read your documents and drew a map of every idea it found, and how those ideas connect. Think of it as a constellation — each <strong>star</strong> is an idea, each <strong>line</strong> connects two ideas mentioned together, and each <strong>cluster</strong> is a theme.
+    </div>
+
+    <h2>At a glance</h2>
+    <div class="stat"><span>Ideas (stars)</span><b id="sNodes">—</b></div>
+    <div class="stat"><span>Connections</span><b id="sEdges">—</b></div>
+    <div class="stat"><span>Themes (clusters)</span><b id="sComms">—</b></div>
+
+    <h2 style="margin-top:28px;">Themes in your library</h2>
+    <div class="help">Click any theme to fly to it on the map.</div>
+    <div id="commList"></div>
+  </aside>
+
+  <div style="position: relative;">
+    <div id="graph"></div>
+    <div id="empty" class="empty" style="display:none;">
+      No graph yet. Ingest documents from the Chat page to build the knowledge graph.
+    </div>
+    <div class="legend">
+      <div class="head">How to read this</div>
+      <div class="row"><span class="swatch" style="background:var(--accent)"></span>A coloured star is one idea</div>
+      <div class="row"><span class="swatch" style="background:#888"></span>A line means two ideas were mentioned together</div>
+      <div class="row" style="margin-top:8px; color: var(--muted); display: block;">Same colour = same theme. Click a star to see only what it connects to. Scroll to zoom.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+const COMMUNITY_COLOURS = [
+  '#4d694e', '#7c6a2f', '#a06a1e', '#3c5340', '#6a8a6b', '#8a6f3c',
+  '#5d7459', '#b08a4a', '#6e5a8a', '#4a7c6b', '#a05a5a', '#5e8a3a'
+];
+
+function colourFor(cid) {
+  if (cid == null) return '#444';
+  return COMMUNITY_COLOURS[cid % COMMUNITY_COLOURS.length];
+}
+
+async function load() {
+  const [graphRes, statusRes] = await Promise.all([
+    fetch('/graph').then(r => r.json()),
+    fetch('/status').then(r => r.json()),
+  ]);
+  document.getElementById('sNodes').textContent = graphRes.nodes.length;
+  document.getElementById('sEdges').textContent = graphRes.edges.length;
+  document.getElementById('sComms').textContent = graphRes.communities.length;
+  document.getElementById('statusPill').textContent =
+    `${statusRes.documents_indexed.length} docs · ${statusRes.total_chunks} chunks`;
+
+  // Build a node-id → display map so single-node themes can be named after their idea.
+  const displayByNodeId = new Map(graphRes.nodes.map(n => [n.id, n.display]));
+  // Single-node "themes" have no DeepSeek-generated title — surface the lone idea name instead.
+  function themeName(c) {
+    if (c.title && c.title.trim()) return c.title;
+    if (c.size === 1) {
+      // The /graph endpoint doesn't return community→node mapping, so derive from nodes.
+      const node = graphRes.nodes.find(n => n.community === c.id);
+      if (node) return `Just one idea: ${node.display}`;
+    }
+    return 'Unnamed theme';
+  }
+
+  // Community list in sidebar — sort by size desc, show meaningful ones first.
+  const cl = document.getElementById('commList');
+  cl.innerHTML = '';
+  const sorted = [...graphRes.communities].sort((a, b) => b.size - a.size);
+  for (const c of sorted) {
+    const div = document.createElement('div');
+    div.className = 'community';
+    const label = c.size === 1 ? '1 idea' : `${c.size} ideas`;
+    div.innerHTML = `
+      <div class="title"><span class="swatch" style="background:${colourFor(c.id)}"></span>${themeName(c)}</div>
+      <div class="size">${label}</div>
+    `;
+    div.onclick = () => network && focusCommunity(c.id);
+    cl.appendChild(div);
+  }
+
+  if (!graphRes.nodes.length) {
+    document.getElementById('empty').style.display = 'flex';
+    document.getElementById('empty').textContent = 'Your knowledge map is empty. Upload a document on the Chat page and Vaaani will draw the constellation for you.';
+    return;
+  }
+
+  const nodes = new vis.DataSet(graphRes.nodes.map(n => ({
+    id: n.id,
+    label: n.display,
+    title: `${n.display}\nKind: ${n.type}\nTheme: ${n.community ?? '—'}`,
+    color: { background: colourFor(n.community), border: '#fff', highlight: { background: '#fff', border: colourFor(n.community) } },
+    font: { color: '#1f2a1f', size: 13, face: 'Inter', strokeWidth: 3, strokeColor: '#fff3d5' },
+    community: n.community,
+  })));
+
+  const edges = new vis.DataSet(graphRes.edges.map((e, i) => ({
+    id: i,
+    from: e.source,
+    to: e.target,
+    label: e.type,
+    color: { color: '#bfa86f', highlight: '#4d694e' },
+    font: { color: '#5d7459', size: 10, strokeWidth: 3, strokeColor: '#fff3d5', align: 'middle' },
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+    smooth: { type: 'continuous' },
+  })));
+
+  const container = document.getElementById('graph');
+  const data = { nodes, edges };
+  const options = {
+    nodes: { shape: 'dot', size: 16, borderWidth: 2 },
+    edges: { width: 1 },
+    interaction: { hover: true, dragNodes: true, zoomView: true },
+    physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -60, springLength: 120 }, stabilization: { iterations: 200 } },
+    layout: { improvedLayout: true },
+  };
+  window.network = new vis.Network(container, data, options);
+
+  network.on('click', (params) => {
+    if (params.nodes.length === 0) {
+      nodes.update(graphRes.nodes.map(n => ({ id: n.id, color: { background: colourFor(n.community), border: '#fff' } })));
+      return;
+    }
+    const id = params.nodes[0];
+    const connected = new Set(network.getConnectedNodes(id));
+    connected.add(id);
+    nodes.update(graphRes.nodes.map(n => ({
+      id: n.id,
+      color: connected.has(n.id)
+        ? { background: colourFor(n.community), border: '#fff' }
+        : { background: '#e0cc93', border: '#bfa86f' },
+    })));
+  });
+}
+
+function focusCommunity(cid) {
+  if (!window.network) return;
+  const ids = [];
+  network.body.data.nodes.forEach(n => { if (n.community === cid) ids.push(n.id); });
+  if (ids.length) network.fit({ nodes: ids, animation: { duration: 600 } });
+}
+
+// ===== FEYNMAN OVERLAY =====
+// Activated when /graph-view is opened with ?topic=...&covered=...&missed=...
+// from the Explain-back modal. Recolours nodes by coverage state, dims the
+// rest of the constellation, and zooms to the subgraph.
+
+function parseFeynmanParams() {
+  const q = new URLSearchParams(window.location.search);
+  const topic = q.get('topic');
+  if (!topic) return null;
+  const split = (s) => (s || '').split(',').map(x => x.trim()).filter(Boolean);
+  return {
+    topic,
+    topicDisplay: q.get('topic_display') || topic,
+    covered: new Set(split(q.get('covered'))),
+    missed: new Set(split(q.get('missed'))),
+    pct: q.get('pct') ? parseFloat(q.get('pct')) : null,
+  };
+}
+
+function applyFeynmanOverlay(graphRes, nodes, network, params) {
+  // Compute the highlighted set — anything mentioned in either bucket.
+  const highlighted = new Set([...params.covered, ...params.missed, params.topic]);
+
+  // Override colours: covered = solid olive, missed = cream + dashed olive
+  // border, everything else dimmed to background panel tone.
+  const updates = graphRes.nodes.map(n => {
+    if (params.covered.has(n.id)) {
+      return {
+        id: n.id,
+        color: {
+          background: '#4d694e', border: '#3c5340',
+          highlight: { background: '#3c5340', border: '#4d694e' },
+        },
+        borderWidth: 3,
+        font: { color: '#fff3d5', size: 14, face: 'Inter', strokeWidth: 0 },
+        shapeProperties: { borderDashes: false },
+      };
+    }
+    if (params.missed.has(n.id)) {
+      return {
+        id: n.id,
+        color: {
+          background: '#f7e9c2', border: '#4d694e',
+          highlight: { background: '#fbedc6', border: '#3c5340' },
+        },
+        borderWidth: 2,
+        font: { color: '#3c5340', size: 13, face: 'Inter', strokeWidth: 3, strokeColor: '#fff3d5' },
+        shapeProperties: { borderDashes: [4, 3] },
+      };
+    }
+    // Out-of-subgraph: dim heavily so the focus stays on the topic neighbourhood.
+    return {
+      id: n.id,
+      color: { background: '#f0dda8', border: '#bfa86f' },
+      borderWidth: 1,
+      font: { color: '#bfa86f', size: 11, face: 'Inter', strokeWidth: 2, strokeColor: '#fff3d5' },
+      opacity: 0.45,
+    };
+  });
+
+  // The topic node itself: ring it so it pops even within the covered/missed mix.
+  updates.push({
+    id: params.topic,
+    color: { background: '#4d694e', border: '#a06a1e' },
+    borderWidth: 5,
+    font: { color: '#fff3d5', size: 16, face: 'Inter', strokeWidth: 0 },
+  });
+  nodes.update(updates);
+
+  // Dim the out-of-subgraph edges; brighten the subgraph edges.
+  const edgeUpdates = graphRes.edges.map((e, i) => {
+    const both = highlighted.has(e.source) && highlighted.has(e.target);
+    return {
+      id: i,
+      color: both ? { color: '#4d694e' } : { color: '#e0cc93' },
+      width: both ? 2 : 1,
+    };
+  });
+  network.body.data.edges.update(edgeUpdates);
+
+  // Zoom to the subgraph neighbourhood.
+  const focusIds = [...highlighted].filter(id => graphRes.nodes.some(n => n.id === id));
+  if (focusIds.length) {
+    network.once('stabilizationIterationsDone', () => {
+      network.fit({ nodes: focusIds, animation: { duration: 700 } });
+    });
+    // Also try a fit on next tick in case stabilization already finished.
+    setTimeout(() => network.fit({ nodes: focusIds, animation: { duration: 700 } }), 250);
+  }
+
+  renderFeynmanBanner(params);
+}
+
+function renderFeynmanBanner(params) {
+  const existing = document.getElementById('feynmanBanner');
+  if (existing) existing.remove();
+  const banner = document.createElement('div');
+  banner.id = 'feynmanBanner';
+  banner.className = 'feynman-banner';
+  const pctHTML = params.pct != null
+    ? `<span class="pct">${params.pct}%</span>`
+    : '';
+  banner.innerHTML = `
+    <div>
+      <div class="head">Explain-back overlay</div>
+      <div class="label"><b>${escapeHtmlGV(params.topicDisplay)}</b> · ${params.covered.size} covered / ${params.covered.size + params.missed.size} in subgraph</div>
+    </div>
+    ${pctHTML}
+    <div class="swatch-row">
+      <span class="sw"><span class="dot covered"></span>covered</span>
+      <span class="sw"><span class="dot missed"></span>missed</span>
+      <span class="sw"><span class="dot dimmed"></span>outside</span>
+    </div>
+    <button class="x" id="feynmanBannerClear">Clear</button>
+  `;
+  document.querySelector('main > div:last-child').appendChild(banner);
+  document.getElementById('feynmanBannerClear').addEventListener('click', () => {
+    const url = new URL(window.location.href);
+    ['topic','topic_display','covered','missed','pct'].forEach(k => url.searchParams.delete(k));
+    window.location.href = url.toString();
+  });
+}
+
+function escapeHtmlGV(s) {
+  return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+// Hook overlay into the existing load() flow without forking it.
+const _origLoad = load;
+load = async function patchedLoad() {
+  await _origLoad();
+  const params = parseFeynmanParams();
+  if (!params || !window.network) return;
+  // Wait briefly so the DataSets exist; vis-network is async during layout.
+  const graphRes = await fetch('/graph').then(r => r.json());
+  const nodes = window.network.body.data.nodes;
+  applyFeynmanOverlay(graphRes, nodes, window.network, params);
+};
+
+load();
+</script>
+</body>
+</html>
