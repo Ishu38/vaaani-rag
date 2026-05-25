@@ -1819,20 +1819,28 @@ async function upload(ev) {
   const names = [];
   for (const f of files) {
     const fd = new FormData(); fd.append('file', f);
-    const t = addTyping(`ingesting ${f.name} — extracting entities + building graph`);
+    const t = addTyping(`uploading ${f.name}…`);
     try {
-      const r = await fetch('/ingest', { method: 'POST', body: fd });
-      t.remove();
+      const r = await fetch('/ingest/async', { method: 'POST', body: fd });
       if (!r.ok) {
+        t.remove();
         addAssistant({ answer: `Upload of ${f.name} failed: HTTP ${r.status} ${await r.text()}`, sources: [] });
         continue;
       }
-      const j = await r.json();
-      chunks += j.chunks_added || 0;
-      triples += j.triples_added || 0;
-      comms = j.communities || comms;
-      total = j.total_chunks || total;
-      names.push(j.filename || f.name);
+      const queued = await r.json();
+      const job = await pollIngestJob(queued.job_id, t, f.name);
+      t.remove();
+      if (job.status === 'complete') {
+        chunks += job.chunks_added || 0;
+        triples += job.triples_added || 0;
+        comms = job.communities || comms;
+        total = job.total_chunks || total;
+        names.push(job.filename || f.name);
+      } else if (job.status === 'failed') {
+        addAssistant({ answer: `Ingest of ${f.name} failed: ${job.error || 'unknown error'}`, sources: [] });
+      } else {
+        addAssistant({ answer: `Ingest of ${f.name} did not finish in time. Try a smaller file or retry.`, sources: [] });
+      }
     } catch (e) {
       t.remove();
       addAssistant({ answer: `Upload of ${f.name} failed: ${e.message}`, sources: [] });
@@ -1846,6 +1854,43 @@ async function upload(ev) {
     refreshStatus();
   }
   ev.target.value = '';
+}
+
+const _PHASE_LABEL = {
+  queued: 'queued — waiting for ingest worker',
+  extracting: 'extracting text + chunking',
+  embedding: 'embedding + writing vector index',
+  reloading: 'reloading retriever',
+  done: 'done',
+  error: 'failed',
+};
+
+async function pollIngestJob(jobId, typingNode, filename, maxSeconds = 1800) {
+  // Poll every 2s for up to 30 min — longer than CF's edge timeout because
+  // each poll request is short; the upload itself returned a job_id in <1s.
+  const started = Date.now();
+  let last = null;
+  while ((Date.now() - started) / 1000 < maxSeconds) {
+    await new Promise(r => setTimeout(r, 2000));
+    try {
+      const r = await fetch(`/ingest/status/${jobId}`);
+      if (!r.ok) {
+        if (r.status === 404) return { status: 'failed', error: 'job lost (server restart?)' };
+        continue;
+      }
+      const job = await r.json();
+      last = job;
+      const phase = _PHASE_LABEL[job.phase] || job.phase || 'processing';
+      const elapsed = Math.round((Date.now() - started) / 1000);
+      if (typingNode && typingNode.firstChild && typingNode.firstChild.nodeType === Node.TEXT_NODE) {
+        // First child of addTyping() is a Text node with the label; the dots span follows.
+        // Update only the text node so the animated dots survive.
+        typingNode.firstChild.nodeValue = `ingesting ${filename} — ${phase} (${elapsed}s) `;
+      }
+      if (job.status === 'complete' || job.status === 'failed') return job;
+    } catch (e) { /* network blip — keep polling */ }
+  }
+  return last || { status: 'failed', error: 'polling timed out' };
 }
 
 async function refreshStatus() {

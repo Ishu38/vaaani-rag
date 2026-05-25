@@ -336,7 +336,11 @@ def audio_file(filename: str) -> FileResponse:
 
 @app.post("/ingest")
 def ingest_endpoint(file: UploadFile = File(...)) -> dict:
-    """Accept an uploaded document, write it to data/raw/, and re-ingest."""
+    """Accept an uploaded document, write it to data/raw/, and re-ingest.
+
+    Synchronous — runs to completion in-request. Best for small files (<5 MB).
+    For larger uploads use /ingest/async + /ingest/status/{job_id} to avoid
+    Cloudflare's 100s edge timeout. Frontend uses /ingest/async by default."""
     name = Path(file.filename or "upload.bin").name
     ext = Path(name).suffix.lower()
     if ext not in SUPPORTED_EXT:
@@ -352,6 +356,104 @@ def ingest_endpoint(file: UploadFile = File(...)) -> dict:
         "chunks_added": summary["chunks_added"],
         "total_chunks": summary["total_chunks"],
     }
+
+
+# ---- Async ingest -----------------------------------------------------------
+# In-memory job tracker. Survives within a single uvicorn process, lost on
+# restart — acceptable for V1 because ingest jobs complete in seconds-to-minutes
+# and a user retry is fine. For multi-worker uvicorn or zero-loss durability,
+# move this to SQLite with a small status table.
+
+import threading as _threading
+import uuid as _uuid
+from concurrent.futures import ThreadPoolExecutor as _Pool
+
+_INGEST_JOBS: dict[str, dict] = {}
+_INGEST_LOCK = _threading.Lock()
+# Single worker so ingest serializes (turbovec index is not write-concurrent-safe).
+_INGEST_POOL = _Pool(max_workers=1, thread_name_prefix="ingest")
+
+
+def _update_job(job_id: str, **patch) -> None:
+    with _INGEST_LOCK:
+        if job_id in _INGEST_JOBS:
+            _INGEST_JOBS[job_id].update(patch)
+
+
+def _run_ingest_job(job_id: str, filename: str) -> None:
+    """Background worker — runs the actual ingest pipeline."""
+    import time as _time
+    _update_job(job_id, status="running", phase="extracting", started_at=_time.time())
+    try:
+        _update_job(job_id, phase="embedding")
+        summary = ingest(RAW_DIR, INDEX_PATH, METADATA_PATH)
+        _update_job(job_id, phase="reloading")
+        retriever.reload()
+        _update_job(
+            job_id,
+            status="complete",
+            phase="done",
+            completed_at=_time.time(),
+            chunks_added=summary.get("chunks_added", 0),
+            total_chunks=summary.get("total_chunks", 0),
+            triples_added=summary.get("triples_added", 0),
+            communities=summary.get("communities", 0),
+            filename=filename,
+        )
+    except Exception as e:
+        _update_job(
+            job_id,
+            status="failed",
+            phase="error",
+            completed_at=_time.time(),
+            error=str(e)[:500],
+        )
+
+
+@app.post("/ingest/async", status_code=202)
+def ingest_async(file: UploadFile = File(...)) -> dict:
+    """Queue a document ingest job. Returns 202 + job_id immediately; client
+    polls /ingest/status/{job_id} for progress. Avoids Cloudflare's 100s
+    edge-timeout that kills sync ingest of larger PDFs."""
+    name = Path(file.filename or "upload.bin").name
+    ext = Path(name).suffix.lower()
+    if ext not in SUPPORTED_EXT:
+        raise HTTPException(400, f"Unsupported file type: {ext}. Allowed: {sorted(SUPPORTED_EXT)}")
+    dest = RAW_DIR / name
+    with dest.open("wb") as out:
+        shutil.copyfileobj(file.file, out)
+    size_bytes = dest.stat().st_size
+
+    job_id = _uuid.uuid4().hex[:16]
+    with _INGEST_LOCK:
+        _INGEST_JOBS[job_id] = {
+            "job_id": job_id,
+            "status": "queued",
+            "phase": "queued",
+            "filename": name,
+            "size_bytes": size_bytes,
+            "queued_at": __import__("time").time(),
+        }
+        # Bound the job dict — keep only last 50, drop oldest finished jobs.
+        if len(_INGEST_JOBS) > 50:
+            done = sorted(
+                ((k, v) for k, v in _INGEST_JOBS.items() if v["status"] in ("complete", "failed")),
+                key=lambda kv: kv[1].get("completed_at", 0),
+            )
+            for k, _ in done[: max(0, len(_INGEST_JOBS) - 50)]:
+                _INGEST_JOBS.pop(k, None)
+    _INGEST_POOL.submit(_run_ingest_job, job_id, name)
+    return {"job_id": job_id, "status": "queued", "filename": name, "size_bytes": size_bytes}
+
+
+@app.get("/ingest/status/{job_id}")
+def ingest_status(job_id: str) -> dict:
+    """Poll for the status of an async ingest job."""
+    with _INGEST_LOCK:
+        job = _INGEST_JOBS.get(job_id)
+    if not job:
+        raise HTTPException(404, f"Unknown job_id: {job_id}")
+    return dict(job)
 
 
 def _resolve_user(cookie: str | None) -> dict | None:
