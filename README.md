@@ -1,6 +1,10 @@
-# rag-assistant
+# Vaaani Graph-RAG (rag-assistant)
 
-Local-first personal RAG assistant.
+**© 2025-2026 Neil Shankar Ray. All rights reserved.**
+Licensed under the Business Source License 1.1 — see [LICENSE](LICENSE).
+"Vaaani" is a trademark of Neil Shankar Ray (TM application pending, India).
+
+Local-first personal RAG assistant + school-org Socratic study platform.
 
 - **Embeddings**: `sentence-transformers/all-MiniLM-L6-v2` (dim=384)
 - **Vector store**: `turbovec` (`TurboQuantIndex`, 4-bit quantization)

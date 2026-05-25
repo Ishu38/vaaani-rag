@@ -199,6 +199,54 @@
 .concept-row .c-bar { width: 70px; height: 4px; background: var(--c-bg); border-radius: 999px; overflow: hidden; }
 .concept-row .c-bar span { display:block; height:100%; background: var(--c-accent); }
 .concept-row.struggling .c-bar span { background: #d49457; }
+
+/* Try-it-yourself demo widget (public preview only) */
+.demo-widget {
+  max-width: 1180px; margin: 24px auto 0;
+  background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 16px; padding: 28px;
+}
+.demo-widget .dw-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+.demo-widget .dw-head h2 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--c-text); margin: 0; text-transform: none; }
+.demo-widget .dw-head .dw-scope { font-size: 11px; color: var(--c-muted); background: var(--c-bg-2); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--c-border); }
+.demo-widget .dw-intro { font-size: 13px; color: var(--c-muted-strong); margin-bottom: 16px; line-height: 1.55; }
+.demo-form { display: flex; gap: 10px; }
+.demo-form textarea {
+  flex: 1; min-height: 72px; max-height: 200px;
+  background: var(--c-bg-2); border: 1px solid var(--c-border);
+  color: var(--c-text); padding: 12px 14px; border-radius: 10px;
+  font: inherit; font-size: 13.5px; outline: none; resize: vertical;
+  font-family: inherit;
+}
+.demo-form textarea:focus { border-color: var(--c-accent); }
+.demo-form button {
+  padding: 0 24px; min-width: 100px;
+  background: var(--c-accent); color: white; border: 0;
+  border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.demo-form button:hover:not(:disabled) { background: #3d5a3e; }
+.demo-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+.demo-suggestions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.demo-suggestions button {
+  background: transparent; border: 1px dashed var(--c-border);
+  padding: 5px 11px; border-radius: 999px; font-size: 11.5px;
+  color: var(--c-muted-strong); cursor: pointer; font-family: inherit;
+}
+.demo-suggestions button:hover { border-color: var(--c-accent); color: var(--c-text); }
+
+.demo-result {
+  margin-top: 18px; padding: 16px 18px;
+  background: var(--c-bg-2); border: 1px solid var(--c-border);
+  border-radius: 10px; font-size: 13.5px; line-height: 1.65;
+  color: var(--c-text); white-space: pre-wrap;
+}
+.demo-result.blocked { background: rgba(212,108,87,0.06); border-color: rgba(212,108,87,0.3); }
+.demo-result .dr-label { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--c-accent); margin-bottom: 8px; }
+.demo-result.blocked .dr-label { color: #a64a37; }
+.demo-meta { font-size: 11px; color: var(--c-muted); margin-top: 10px; }
+.demo-error { color: #a64a37; font-size: 12.5px; margin-top: 10px; }
 </style>
 </head>
 <body class="auth-shell">
@@ -368,6 +416,26 @@ function renderPublicPreview() {
         </div>
       </div>
 
+      <div class="demo-widget">
+        <div class="dw-head">
+          <h2>Try the Socratic assistant yourself — no sign-in needed</h2>
+          <span class="dw-scope">scope: CBSE Class 8 Science</span>
+        </div>
+        <p class="dw-intro">Ask a question below. Vaaani will respond Socratically — guiding you through reasoning instead of dumping the answer. If you try an exam-style "give me the answer" prompt, you'll see the guardrail fire in real time.</p>
+        <div class="demo-form">
+          <textarea id="demoQ" placeholder="e.g. Why does ice float on water?" maxlength="600"></textarea>
+          <button id="demoBtn" type="button">Ask</button>
+        </div>
+        <div class="demo-suggestions">
+          <button data-q="Why does ice float on water?">💡 Why does ice float?</button>
+          <button data-q="Can you explain photosynthesis with a real example?">🌱 Explain photosynthesis</button>
+          <button data-q="Difference between physical and chemical change?">⚗ Physical vs chemical change</button>
+          <button data-q="Q3. State Newton's three laws of motion. (5 marks)">🛡 Try an exam-style prompt</button>
+        </div>
+        <div id="demoOut"></div>
+        <div class="demo-meta" id="demoMeta"></div>
+      </div>
+
       <div class="preview-cta">
         <h2>Set up your school in 60 seconds</h2>
         <p>Create your school (or join one with your invite code), then invite teachers, students, and parents — each gets their own view. Admins manage guardrails. Teachers see student usage. Parents see their linked child's progress on web + Telegram.</p>
@@ -383,9 +451,61 @@ function renderPublicPreview() {
       </div>
 
       <div class="preview-disclaimer">
-        Sample data shown for product walkthrough. Real schools see only their own students, queries, and guardrail events. Vaaani is licensed under Business Source 1.1; commercial school deployment is via subscription.
+        Sample data shown for product walkthrough. Real schools see only their own students, queries, and guardrail events. Vaaani is licensed under Business Source 1.1; commercial school deployment is via subscription. <strong>© 2025-2026 Neil Shankar Ray.</strong> "Vaaani" — TM application pending (India).
       </div>
     </div>`;
+
+  bindDemoWidget();
+}
+
+function bindDemoWidget() {
+  const btn = document.getElementById('demoBtn');
+  const ta  = document.getElementById('demoQ');
+  const out = document.getElementById('demoOut');
+  const meta = document.getElementById('demoMeta');
+  if (!btn || !ta) return;
+
+  async function askDemo(q) {
+    if (!q || q.trim().length < 3) return;
+    btn.disabled = true;
+    btn.textContent = 'Thinking…';
+    out.innerHTML = '';
+    meta.textContent = '';
+    try {
+      const r = await fetch('/demo-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q }),
+      });
+      const data = await r.json();
+      if (!r.ok) {
+        out.innerHTML = `<div class="demo-error">${escapeHtml(data.detail || 'Request failed.')}</div>`;
+        return;
+      }
+      const isBlocked = !!data.blocked;
+      out.innerHTML = `<div class="demo-result ${isBlocked ? 'blocked' : ''}">
+        <div class="dr-label">${isBlocked ? '🛡 Socratic guardrail engaged' : '✓ Socratic response'}</div>
+        ${escapeHtml(data.answer)}
+      </div>`;
+      meta.textContent = `${data.remaining} free questions remaining (resets in 24h). To keep chatting, save history, or upload textbooks — create your school free.`;
+    } catch (e) {
+      out.innerHTML = `<div class="demo-error">Network error — please try again.</div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Ask';
+    }
+  }
+
+  btn.addEventListener('click', () => askDemo(ta.value));
+  ta.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { askDemo(ta.value); }
+  });
+  document.querySelectorAll('.demo-suggestions button').forEach(b => {
+    b.addEventListener('click', () => {
+      ta.value = b.getAttribute('data-q');
+      askDemo(ta.value);
+    });
+  });
 }
 
 function render() {
