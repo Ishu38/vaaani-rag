@@ -28,15 +28,12 @@ if [ -z "${JWT_SECRET:-}" ]; then
 fi
 
 # ---- GitHub OAuth -----------------------------------------------------
-# Buttons stay hidden on login/signup until both vars are non-empty.
-# Create an OAuth app at https://github.com/settings/developers
+# Production: values come from systemd EnvironmentFile (/etc/vaaani-rag/env).
+# Local dev: set them in a gitignored .env you source manually, or export
+# them in your shell before launching this script. DO NOT hardcode the
+# client secret in this file — it lives in the repo.
 #   - Homepage URL:           http://127.0.0.1:8765
 #   - Authorization callback: http://127.0.0.1:8765/auth/github/callback
-# Then uncomment + fill in:
-#
-export GITHUB_CLIENT_ID=Ov23lixAhKMp04WjoWiu
-export GITHUB_CLIENT_SECRET=ef1524e4a949ac219c94e697919be68c6d43947c
-export GITHUB_REDIRECT_URI=http://127.0.0.1:8765/auth/github/callback
 # -----------------------------------------------------------------------
 
 # ---- SMTP (real email delivery) ---------------------------------------
