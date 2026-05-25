@@ -416,26 +416,6 @@ function renderPublicPreview() {
         </div>
       </div>
 
-      <div class="demo-widget">
-        <div class="dw-head">
-          <h2>Try the Socratic assistant yourself — no sign-in needed</h2>
-          <span class="dw-scope">scope: CBSE Class 8 Science</span>
-        </div>
-        <p class="dw-intro">Ask a question below. Vaaani will respond Socratically — guiding you through reasoning instead of dumping the answer. If you try an exam-style "give me the answer" prompt, you'll see the guardrail fire in real time.</p>
-        <div class="demo-form">
-          <textarea id="demoQ" placeholder="e.g. Why does ice float on water?" maxlength="600"></textarea>
-          <button id="demoBtn" type="button">Ask</button>
-        </div>
-        <div class="demo-suggestions">
-          <button data-q="Why does ice float on water?">💡 Why does ice float?</button>
-          <button data-q="Can you explain photosynthesis with a real example?">🌱 Explain photosynthesis</button>
-          <button data-q="Difference between physical and chemical change?">⚗ Physical vs chemical change</button>
-          <button data-q="Q3. State Newton's three laws of motion. (5 marks)">🛡 Try an exam-style prompt</button>
-        </div>
-        <div id="demoOut"></div>
-        <div class="demo-meta" id="demoMeta"></div>
-      </div>
-
       <div class="preview-cta">
         <h2>Set up your school in 60 seconds</h2>
         <p>Create your school (or join one with your invite code), then invite teachers, students, and parents — each gets their own view. Admins manage guardrails. Teachers see student usage. Parents see their linked child's progress on web + Telegram.</p>
@@ -455,57 +435,6 @@ function renderPublicPreview() {
       </div>
     </div>`;
 
-  bindDemoWidget();
-}
-
-function bindDemoWidget() {
-  const btn = document.getElementById('demoBtn');
-  const ta  = document.getElementById('demoQ');
-  const out = document.getElementById('demoOut');
-  const meta = document.getElementById('demoMeta');
-  if (!btn || !ta) return;
-
-  async function askDemo(q) {
-    if (!q || q.trim().length < 3) return;
-    btn.disabled = true;
-    btn.textContent = 'Thinking…';
-    out.innerHTML = '';
-    meta.textContent = '';
-    try {
-      const r = await fetch('/demo-chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: q }),
-      });
-      const data = await r.json();
-      if (!r.ok) {
-        out.innerHTML = `<div class="demo-error">${escapeHtml(data.detail || 'Request failed.')}</div>`;
-        return;
-      }
-      const isBlocked = !!data.blocked;
-      out.innerHTML = `<div class="demo-result ${isBlocked ? 'blocked' : ''}">
-        <div class="dr-label">${isBlocked ? '🛡 Socratic guardrail engaged' : '✓ Socratic response'}</div>
-        ${escapeHtml(data.answer)}
-      </div>`;
-      meta.textContent = `${data.remaining} free questions remaining (resets in 24h). To keep chatting, save history, or upload textbooks — create your school free.`;
-    } catch (e) {
-      out.innerHTML = `<div class="demo-error">Network error — please try again.</div>`;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Ask';
-    }
-  }
-
-  btn.addEventListener('click', () => askDemo(ta.value));
-  ta.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { askDemo(ta.value); }
-  });
-  document.querySelectorAll('.demo-suggestions button').forEach(b => {
-    b.addEventListener('click', () => {
-      ta.value = b.getAttribute('data-q');
-      askDemo(ta.value);
-    });
-  });
 }
 
 function render() {

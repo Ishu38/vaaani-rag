@@ -157,8 +157,14 @@ def root() -> FileResponse:
 
 
 @app.get("/app")
-def chat_app() -> FileResponse:
-    """Serve the chat assistant SPA."""
+def chat_app(vaaani_session: str | None = Cookie(default=None, alias="vaaani_session")):
+    """Serve the chat assistant SPA. Requires authentication — anonymous
+    visitors are redirected to /login. Vaaani's chat is not a public free
+    surface; the public surface is /dashboard's preview."""
+    from fastapi.responses import RedirectResponse
+    user = _resolve_user(vaaani_session)
+    if not user:
+        return RedirectResponse(url="/login?next=/app", status_code=302)
     if not FRONTEND_INDEX.exists():
         raise HTTPException(404, "frontend/index.html not found")
     return FileResponse(FRONTEND_INDEX)
@@ -615,97 +621,6 @@ def _run_intent(
         "hermes_corrections": [
             {"name": c.name, "reason": c.reason} for c in hermes_plan.corrections
         ],
-    }
-
-
-# ---- Anonymous demo chat (rate-limited, no auth) ----
-# Single-shot Socratic Q&A for prospective school admins to try the assistant
-# from the public dashboard preview without signing up. Hard limits to keep
-# token cost bounded under abuse:
-#   - per-IP: 5 queries / 24h window (in-memory, resets on restart)
-#   - per-query: 600 char input cap, 350 token output cap
-#   - hardcoded curriculum scope (CBSE Class 8 Science) + strict Socratic mode
-# Not a substitute for the authed /chat; this is a try-before-buy demo.
-
-import time as _t
-_DEMO_RATE: dict[str, list[float]] = {}
-_DEMO_WINDOW_S = 86400
-_DEMO_MAX_PER_WINDOW = 5
-
-def _demo_rate_ok(ip: str) -> tuple[bool, int]:
-    now = _t.time()
-    hits = [t for t in _DEMO_RATE.get(ip, []) if now - t < _DEMO_WINDOW_S]
-    _DEMO_RATE[ip] = hits
-    if len(hits) >= _DEMO_MAX_PER_WINDOW:
-        return False, 0
-    return True, _DEMO_MAX_PER_WINDOW - len(hits)
-
-
-class DemoChatRequest(BaseModel):
-    query: str
-
-
-@app.post("/demo-chat")
-def demo_chat(req: DemoChatRequest, request: Request):
-    """Public, rate-limited Socratic Q&A for the dashboard preview."""
-    ip = (request.client.host if request.client else "anon") or "anon"
-    fwd = request.headers.get("x-forwarded-for", "").split(",")[0].strip()
-    if fwd:
-        ip = fwd
-    ok, remaining = _demo_rate_ok(ip)
-    if not ok:
-        raise HTTPException(
-            status_code=429,
-            detail=f"You've reached the demo limit of {_DEMO_MAX_PER_WINDOW} questions in 24 hours. Create a free school to keep chatting.",
-        )
-    q = (req.query or "").strip()[:600]
-    if len(q) < 3:
-        raise HTTPException(status_code=400, detail="Ask a longer question — at least a few words.")
-
-    demo_guardrails = {
-        "curriculum": "CBSE Class 8 Science (demo scope)",
-        "allowed_subjects": ["science", "physics", "chemistry", "biology"],
-        "socratic_level": "strict",
-        "allow_direct_answers": False,
-    }
-    guardrail = build_guardrail_prompt(demo_guardrails)
-    universal = build_universal_guardrail_prompt()
-    system = guardrail + "\n\n" + universal + "\n\nYou are a free-trial Socratic tutor preview. Keep replies under 180 words. Always end with a follow-up question that helps the student think."
-
-    messages = [
-        {"role": "system", "content": system},
-        {"role": "user", "content": q},
-    ]
-
-    from llm import call_deepseek
-    try:
-        resp = call_deepseek(messages, stream=False)
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"LLM call failed: {e}")
-
-    # Record the hit BEFORE returning so a failed downstream call doesn't burn the quota
-    _DEMO_RATE.setdefault(ip, []).append(_t.time())
-
-    answer = ""
-    try:
-        answer = resp["choices"][0]["message"]["content"]
-    except Exception:
-        answer = "Sorry — the model returned an unexpected shape. Try again."
-
-    # Check guardrail violation, log silently
-    violation = check_guardrail_violation(q, answer, demo_guardrails)
-    log_guardrail_event(
-        user_id=None,
-        school_id=None,
-        event_type=("violation" if violation else "demo_query"),
-        detail=f"demo ip={ip} remaining={remaining-1}",
-    )
-
-    return {
-        "answer": answer,
-        "remaining": remaining - 1,
-        "curriculum": demo_guardrails["curriculum"],
-        "blocked": bool(violation),
     }
 
 
