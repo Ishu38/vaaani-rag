@@ -153,6 +153,52 @@
 .tag.parent { background: rgba(212,169,87,0.12); color: #8a6520; }
 
 #guardrailStatus, #joinStatus, #createStatus { margin-top: 10px; }
+
+/* ---- Public preview banner + CTAs ---- */
+.preview-banner {
+  max-width: 1180px; margin: 0 auto 18px;
+  padding: 10px 18px;
+  background: rgba(212,169,87,0.10);
+  border: 1px solid rgba(212,169,87,0.35);
+  border-radius: 10px;
+  font-size: 13px; color: #8a6520; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+}
+.preview-banner .dot { width: 8px; height: 8px; border-radius: 50%; background: #c39752; display: inline-block; }
+.preview-banner strong { font-weight: 700; }
+
+.preview-cta {
+  max-width: 1180px; margin: 32px auto 0;
+  padding: 28px 32px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  text-align: center;
+}
+.preview-cta h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+.preview-cta p { font-size: 14px; color: var(--c-muted-strong); margin-bottom: 22px; max-width: 520px; margin-left:auto; margin-right:auto; }
+.preview-cta .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.preview-disclaimer {
+  max-width: 1180px; margin: 18px auto 0;
+  padding: 12px 18px;
+  font-size: 12px; color: var(--c-muted);
+  text-align: center;
+}
+
+/* Insight panels for preview */
+.concept-list { display: flex; flex-direction: column; gap: 8px; }
+.concept-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; background: var(--c-bg-2);
+  border: 1px solid var(--c-border); border-radius: 8px;
+  font-size: 13px;
+}
+.concept-row .c-name { flex: 1; color: var(--c-text); font-weight: 500; }
+.concept-row .c-count { color: var(--c-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.concept-row .c-bar { width: 70px; height: 4px; background: var(--c-bg); border-radius: 999px; overflow: hidden; }
+.concept-row .c-bar span { display:block; height:100%; background: var(--c-accent); }
+.concept-row.struggling .c-bar span { background: #d49457; }
 </style>
 </head>
 <body class="auth-shell">
@@ -188,11 +234,137 @@ const state = { user: null, schools: [], activeSchool: null, activeDashboard: nu
 
 async function init() {
   state.user = await Auth.me();
-  if (!state.user) { window.location = '/login'; return; }
+  if (!state.user) { renderPublicPreview(); return; }
 
   const r = await Auth.json('/auth/schools');
   state.schools = (r.ok && r.data && r.data.schools) ? r.data.schools : [];
   render();
+  if (state.schools.length > 0) {
+    const sid = state.activeSchool?.id || state.schools[0].id;
+    loadDashboard(sid);
+  }
+}
+
+function renderPublicPreview() {
+  // Seeded demo data — realistic numbers for a single Indian private school
+  // running a Class 8 Science pilot. Banner makes the preview status explicit.
+  const demo = {
+    school_name: "Demo: Saraswati Vidya Mandir",
+    blocked: 47,
+    active: 32,
+    enrolled: 40,
+    queries_week: 421,
+    curriculum: "CBSE Class 8 Science",
+    queries: [
+      { who: "Riya M.",  when: "today, 14:22", text: "Why does ice float on water if it's the solid form?",         intent: "concept",  tokens: 380 },
+      { who: "Arjun K.", when: "today, 13:51", text: "Q3. State Newton's three laws of motion. (5 marks)",         intent: "blocked",  tokens: 0,   blocked: true },
+      { who: "Priya N.", when: "today, 12:08", text: "Can you explain photosynthesis with a real example?",         intent: "concept",  tokens: 412 },
+      { who: "Karan S.", when: "today, 11:34", text: "Difference between physical and chemical change?",            intent: "concept",  tokens: 296 },
+      { who: "Sneha B.", when: "today, 10:55", text: "How does a refrigerator work — is it the same as AC?",        intent: "concept",  tokens: 358 },
+      { who: "Aditya P.", when: "yesterday",    text: "Solve all questions from textbook exercise 5.",               intent: "blocked",  tokens: 0,   blocked: true },
+      { who: "Meera D.", when: "yesterday",    text: "What's the difference between mass and weight?",              intent: "concept",  tokens: 244 },
+      { who: "Rohan T.", when: "yesterday",    text: "Why do plants need sunlight even though they make food?",     intent: "concept",  tokens: 318 },
+    ],
+    top_concepts: [
+      { name: "Photosynthesis",          count: 18, weight: 100 },
+      { name: "Newton's Laws of Motion", count: 12, weight: 67 },
+      { name: "States of Matter",        count: 9,  weight: 50 },
+      { name: "Chemical Reactions",      count: 7,  weight: 39 },
+      { name: "Solar System",            count: 5,  weight: 28 },
+    ],
+    struggling: [
+      { name: "Balancing chemical equations", reasks: 8, weight: 100 },
+      { name: "Force, friction & pressure",   reasks: 6, weight: 75 },
+      { name: "Reflection of light",          reasks: 4, weight: 50 },
+    ],
+  };
+
+  const queryItems = demo.queries.map(q => `
+    <div class="query-item" ${q.blocked ? 'style="border-color:rgba(212,108,87,0.4);background:rgba(212,108,87,0.05);"' : ''}>
+      <div class="q-student"><span>${q.who}</span><span class="q-time">${q.when}</span></div>
+      <div class="q-text">${escapeHtml(q.text)}</div>
+      <div class="q-meta">
+        ${q.blocked
+          ? '<span style="background:rgba(212,108,87,0.12);color:#a64a37;border-color:rgba(212,108,87,0.3);">🛡 blocked — exam-style</span>'
+          : `<span>${q.intent}</span><span>${q.tokens} tokens</span>`}
+      </div>
+    </div>`).join('');
+
+  const conceptRows = demo.top_concepts.map(c => `
+    <div class="concept-row">
+      <span class="c-name">${escapeHtml(c.name)}</span>
+      <span class="c-bar"><span style="width:${c.weight}%"></span></span>
+      <span class="c-count">${c.count}×</span>
+    </div>`).join('');
+
+  const strugglingRows = demo.struggling.map(c => `
+    <div class="concept-row struggling">
+      <span class="c-name">${escapeHtml(c.name)}</span>
+      <span class="c-bar"><span style="width:${c.weight}%"></span></span>
+      <span class="c-count">${c.reasks} re-asks</span>
+    </div>`).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="preview-banner">
+      <span class="dot"></span>
+      <span><strong>Demo Preview.</strong> This is what your school's admin sees after you sign in and create your school. The numbers below are seeded sample data, not live users.</span>
+    </div>
+
+    <div class="dash-head">
+      <h1>School Dashboard</h1>
+      <p>${demo.school_name} · scope locked to <strong>${demo.curriculum}</strong> · this week</p>
+    </div>
+
+    <div class="dash-wrap">
+      <div class="overview-stats">
+        <div class="ov-tile highlight">
+          <div class="ov-val">${demo.blocked}</div>
+          <div class="ov-label">🛡 Cheating attempts blocked</div>
+        </div>
+        <div class="ov-tile">
+          <div class="ov-val">${demo.active}<span class="ov-unit">/${demo.enrolled}</span></div>
+          <div class="ov-label">Active students (week)</div>
+        </div>
+        <div class="ov-tile">
+          <div class="ov-val" style="font-size:18px;letter-spacing:0.01em;">${demo.curriculum}</div>
+          <div class="ov-label">Curriculum scope</div>
+        </div>
+        <div class="ov-tile">
+          <div class="ov-val">${demo.queries_week}</div>
+          <div class="ov-label">Questions answered</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-card">
+          <h2>Recent student queries (last 24h)</h2>
+          <div class="query-feed">${queryItems}</div>
+          <p style="margin-top:12px;font-size:11.5px;color:var(--c-muted);">
+            Queries flagged 🛡 were exam-style prompts caught by server-side Socratic guardrails — students never saw a direct answer.
+          </p>
+        </div>
+        <div class="dash-card">
+          <h2>Top concepts this week</h2>
+          <div class="concept-list">${conceptRows}</div>
+          <h2 style="margin-top:24px;">⚠ Where students need help</h2>
+          <p style="font-size:11.5px;color:var(--c-muted);margin-bottom:10px;">Concepts asked repeatedly across multiple students — flag these in your next class.</p>
+          <div class="concept-list">${strugglingRows}</div>
+        </div>
+      </div>
+
+      <div class="preview-cta">
+        <h2>Set up your school in 60 seconds</h2>
+        <p>Create your school (or join one with your invite code), share the code with students or teachers, and Vaaani's Socratic study assistant becomes available to them on web + Telegram.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/signup?next=/dashboard" style="padding:12px 24px;font-size:14px;">Create my school free</a>
+          <a class="btn btn-ghost"   href="/login?next=/dashboard"  style="padding:12px 24px;font-size:14px;">I have an account</a>
+        </div>
+      </div>
+
+      <div class="preview-disclaimer">
+        Sample data shown for product walkthrough. Real schools see only their own students, queries, and guardrail events. Vaaani is licensed under Business Source 1.1; commercial school deployment is via subscription.
+      </div>
+    </div>`;
 }
 
 function render() {
