@@ -4,6 +4,22 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Vaaani · Graph-RAG Assistant</title>
+<meta name="theme-color" content="#4d694e" />
+
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Vaaani" />
+<meta name="mobile-web-app-capable" content="yes" />
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -105,6 +121,18 @@
   }
   .btn-ghost:hover { border-color: var(--border-strong); }
 
+  /* Scope-to-document selector — sits beside the Socratic toggle */
+  .scope-select {
+    padding: 5px 10px; border-radius: 6px;
+    background: var(--panel); color: var(--text);
+    border: 1px solid var(--border);
+    cursor: pointer; font-size: 12px;
+    max-width: 180px; outline: none;
+    transition: border-color .15s, color .15s;
+  }
+  .scope-select:hover, .scope-select:focus { border-color: var(--border-strong); }
+  .scope-select.active { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
   /* Socratic toggle — compact */
   .socratic-toggle {
     display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
@@ -197,6 +225,21 @@
     font-weight: 500;
   }
   .chip.intent { color: var(--accent); border-color: rgba(77,105,78,0.4); }
+
+  /* Fidelity-warning band — honest grounding gap surface. */
+  .fidelity-warn {
+    margin: 10px 0 4px; padding: 8px 12px; border-radius: 8px;
+    background: rgba(212,169,87,0.10); border: 1px solid rgba(212,169,87,0.45);
+    font-size: 12.5px; color: var(--warn);
+  }
+  .fidelity-warn-title { font-weight: 600; }
+  .fidelity-warn details { margin-top: 6px; }
+  .fidelity-warn summary { cursor: pointer; font-size: 11.5px; opacity: 0.85; user-select: none; }
+  .fidelity-warn summary:hover { opacity: 1; }
+  .fidelity-warn-line {
+    margin-top: 4px; padding: 4px 8px; border-left: 2px solid rgba(212,169,87,0.6);
+    font-size: 12px; line-height: 1.45; color: var(--muted-strong); font-style: italic;
+  }
   .chip.entity { color: var(--muted-strong); }
   .chip.entity::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%;
     background: var(--accent); margin-right: 6px; vertical-align: middle; opacity: 0.6; }
@@ -654,6 +697,9 @@
     <a href="/account">Account</a>
   </div>
   <div class="nav-right">
+    <select id="scopeSelect" class="scope-select" title="Scope chat to one document (or all)">
+      <option value="">All sources</option>
+    </select>
     <label class="socratic-toggle" title="Socratic Mode — assistant teaches by asking">
       <input type="checkbox" id="socraticToggle" />
       <span class="track"><span class="thumb"></span></span>
@@ -749,7 +795,7 @@
     <label class="feynman-label">Your explanation</label>
     <textarea id="feynmanText" class="feynman-text" rows="6" placeholder="Explain the topic the way you'd teach a friend who's never seen it. Two to five sentences usually surfaces the most gaps."></textarea>
     <div class="feynman-actions">
-      <span class="feynman-hint" id="feynmanHint">k = 2 hops · diff runs through DeepSeek (~3 s)</span>
+      <span class="feynman-hint" id="feynmanHint">k = 2 hops · diff runs through the assistant (~3 s)</span>
       <button id="feynmanRun" class="btn btn-primary" type="button">Diff against graph</button>
     </div>
     <div id="feynmanResult" class="feynman-result" hidden></div>
@@ -796,7 +842,7 @@
       <label class="upload" for="fileInput" title="Upload document">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
       </label>
-      <input id="fileInput" type="file" accept=".pdf,.txt,.md,.docx" multiple onchange="upload(event)" />
+      <input id="fileInput" type="file" accept=".pdf,.txt,.md,.docx,.png,.jpg,.jpeg,.webp,.pptx,.html,.htm" multiple onchange="upload(event)" />
       <input id="q" type="text" placeholder="Ask about your textbooks, problem sets, or essays…" autocomplete="off" />
       <button class="send" id="sendBtn" onclick="send()" title="Send message">
         <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
@@ -1725,6 +1771,27 @@ function addAssistant(data) {
   }
   for (const c of data.communities || []) wrap.appendChild(renderCommunity(c));
 
+  // Fidelity warnings — surface honest grounding gaps from the backend
+  // citation_fidelity check. The list is already computed and returned;
+  // hiding it has been the main reason "looks accurate" felt unreliable.
+  const warnings = data.fidelity_warnings || [];
+  if (warnings.length) {
+    const band = el('div', { class: 'fidelity-warn' });
+    const title = el('div', { class: 'fidelity-warn-title' });
+    title.textContent = warnings.length === 1
+      ? '⚠ 1 claim in this answer isn’t grounded in the retrieved sources'
+      : `⚠ ${warnings.length} claims in this answer aren’t grounded in the retrieved sources`;
+    band.appendChild(title);
+    const det = el('details');
+    det.appendChild(el('summary', {}, 'Show ungrounded sentences'));
+    for (const w of warnings) {
+      const line = el('div', { class: 'fidelity-warn-line' }, w.replace(/^⚠️\s*/, ''));
+      det.appendChild(line);
+    }
+    band.appendChild(det);
+    wrap.appendChild(band);
+  }
+
   const meta = el('div', { class: 'meta' });
   if (data.intent) meta.appendChild(el('span', { class: 'chip intent' }, `intent: ${data.intent}${data.graph_mode ? ' · ' + data.graph_mode : ''}`));
   for (const e of data.entities || []) meta.appendChild(el('span', { class: 'chip entity' }, `◆ ${e}`));
@@ -1787,26 +1854,128 @@ function addTyping(label = 'thinking') {
   return t;
 }
 
+// Parse a single SSE frame ("event: x\ndata: {...}"). Returns
+// {event, data} or null if the frame can't be parsed.
+function parseSseFrame(frame) {
+  let event = 'message';
+  let dataLines = [];
+  for (const line of frame.split('\n')) {
+    if (!line || line.startsWith(':')) continue;
+    if (line.startsWith('event:')) event = line.slice(6).trim();
+    else if (line.startsWith('data:')) dataLines.push(line.slice(5).trim());
+  }
+  if (!dataLines.length) return null;
+  try { return { event, data: JSON.parse(dataLines.join('\n')) }; }
+  catch { return null; }
+}
+
+// Streaming chat. Posts to /chat/stream and parses SSE frames as bytes
+// arrive. The token stream paints into a lightweight "streaming bubble"
+// so the user sees the answer materialise; the 'done' frame swaps that
+// for the fully-rendered assistant message (KaTeX math, figures, source
+// chips, rating row). Streaming keeps Cloudflare's 100 s edge timeout
+// from firing on long DeepSeek responses (524 fix).
 async function send() {
   const q = qEl.value.trim();
   if (!q) return;
   qEl.value = '';
   qEl._lastQuery = q;
   addUser(q);
-  const t = addTyping();
+  const typing = addTyping();
+  let streamBubble = null;
+  let streamTextNode = null;
+  let streamedText = '';
+
+  const ensureBubble = () => {
+    if (streamBubble) return;
+    typing.remove();
+    streamBubble = el('div', { class: 'msg assistant' });
+    streamTextNode = document.createTextNode('');
+    streamBubble.appendChild(streamTextNode);
+    log.appendChild(streamBubble);
+  };
+
   try {
-    const r = await fetch('/chat', {
+    const r = await fetch('/chat/stream', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: q, conversation_history: [], socratic: socraticEl.checked }),
+      headers: { 'Content-Type': 'application/json', 'Accept': 'text/event-stream' },
+      body: JSON.stringify({
+        query: q,
+        conversation_history: [],
+        socratic: socraticEl.checked,
+        // Empty / null = no filter (search whole corpus). Otherwise a single-
+        // element list because the chip is a single-select today; the backend
+        // already accepts a list so multi-select can land later.
+        source_filter: (function() {
+          const sel = document.getElementById('scopeSelect');
+          return sel && sel.value ? [sel.value] : null;
+        })(),
+      }),
     });
-    t.remove();
-    if (!r.ok) { addAssistant({ answer: `Error: ${r.status} ${await r.text()}`, sources: [] }); return; }
-    const data = await r.json();
-    data.query = q;
-    addAssistant(data);
+    if (!r.ok) {
+      typing.remove();
+      const body = await r.text().catch(() => '');
+      addAssistant({ answer: `Error: ${r.status} ${body}`, sources: [] });
+      return;
+    }
+
+    const reader = r.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    let finalised = false;
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      let idx;
+      while ((idx = buf.indexOf('\n\n')) !== -1) {
+        const frame = buf.slice(0, idx);
+        buf = buf.slice(idx + 2);
+        const parsed = parseSseFrame(frame);
+        if (!parsed) continue;
+        if (parsed.event === 'open') {
+          // Server ack — connection alive. Keep the typing dots until
+          // the first token (or retrieval frame) lands.
+        } else if (parsed.event === 'retrieval') {
+          // Could paint early intent/entity chips here; we defer to
+          // the 'done' frame so the meta row renders consistently.
+        } else if (parsed.event === 'token') {
+          ensureBubble();
+          streamedText += parsed.data.delta || '';
+          // Strip markdown artefacts as we stream (cleanText is idempotent
+          // and cheap enough to run on every delta).
+          streamTextNode.nodeValue = cleanText(streamedText);
+          log.scrollTop = log.scrollHeight;
+        } else if (parsed.event === 'done') {
+          finalised = true;
+          if (streamBubble) streamBubble.remove();
+          typing.remove();
+          const data = parsed.data || {};
+          data.query = q;
+          addAssistant(data);
+          refreshStatus();
+        } else if (parsed.event === 'error') {
+          finalised = true;
+          if (streamBubble) streamBubble.remove();
+          typing.remove();
+          addAssistant({ answer: `Error: ${parsed.data.detail || 'stream failed'}`, sources: [] });
+        }
+      }
+    }
+
+    if (!finalised) {
+      // Stream closed without a done/error frame — surface what we have.
+      if (streamBubble) streamBubble.remove();
+      typing.remove();
+      addAssistant({
+        answer: streamedText || 'Stream ended unexpectedly.',
+        sources: [], query: q,
+      });
+    }
   } catch (e) {
-    t.remove();
+    typing.remove();
+    if (streamBubble) streamBubble.remove();
     addAssistant({ answer: `Network error: ${e.message}`, sources: [] });
   }
 }
@@ -1838,8 +2007,25 @@ async function upload(ev) {
         names.push(job.filename || f.name);
       } else if (job.status === 'failed') {
         addAssistant({ answer: `Ingest of ${f.name} failed: ${job.error || 'unknown error'}`, sources: [] });
+      } else if (job.status === 'graph_pending' || job.phase === 'extracting' || job.phase === 'vectors_done') {
+        // Phase 1 done → file is already searchable via vector search.
+        // Phase 2 (entity extraction) is still running but we no longer
+        // block on it — the user can chat immediately and the knowledge
+        // graph will populate in the background.
+        const x = job.extracted || 0, xt = job.extract_total || 0;
+        const xs = xt ? ` (entity extraction continues: ${x}/${xt})` : ' (deep extraction continues in the background)';
+        addAssistant({
+          answer: `Ingested ${f.name} — it's searchable now${xs}. Ask a question whenever you're ready.`,
+          sources: [],
+        });
+        chunks += job.chunks_added || 0;
+        total = job.total_chunks || total;
+        names.push(job.filename || f.name);
       } else {
-        addAssistant({ answer: `Ingest of ${f.name} did not finish in time. Try a smaller file or retry.`, sources: [] });
+        addAssistant({
+          answer: `Ingest of ${f.name} is still running — the file is searchable from vector search; the knowledge graph is being built in the background. Refresh in a few minutes to see communities.`,
+          sources: [],
+        });
       }
     } catch (e) {
       t.remove();
@@ -1858,9 +2044,11 @@ async function upload(ev) {
 
 const _PHASE_LABEL = {
   queued: 'queued — waiting for ingest worker',
-  extracting: 'extracting text + chunking',
-  embedding: 'embedding + writing vector index',
+  vectors: 'starting ingest',
+  embedding: 'reading PDF + embedding chunks',
   reloading: 'reloading retriever',
+  vectors_done: 'file is now searchable — deep extraction continues',
+  extracting: 'extracting entities + relations',
   done: 'done',
   error: 'failed',
 };
@@ -1882,12 +2070,20 @@ async function pollIngestJob(jobId, typingNode, filename, maxSeconds = 1800) {
       last = job;
       const phase = _PHASE_LABEL[job.phase] || job.phase || 'processing';
       const elapsed = Math.round((Date.now() - started) / 1000);
+      // Inline extraction progress so the user can see X/Y chunks done.
+      const xCount = job.extract_total
+        ? `  [${job.extracted || 0}/${job.extract_total}]`
+        : '';
       if (typingNode && typingNode.firstChild && typingNode.firstChild.nodeType === Node.TEXT_NODE) {
         // First child of addTyping() is a Text node with the label; the dots span follows.
         // Update only the text node so the animated dots survive.
-        typingNode.firstChild.nodeValue = `ingesting ${filename} — ${phase} (${elapsed}s) `;
+        typingNode.firstChild.nodeValue = `ingesting ${filename} — ${phase}${xCount} (${elapsed}s) `;
       }
-      if (job.status === 'complete' || job.status === 'failed') return job;
+      // Return as soon as Phase 1 (vectors) is done — file is searchable.
+      // Phase 2 (entity extraction) continues in the background and is
+      // surfaced as job.status='graph_pending' with extracted/extract_total
+      // counts, which the caller reports as a non-blocking "still running".
+      if (job.status === 'complete' || job.status === 'failed' || job.status === 'graph_pending') return job;
     } catch (e) { /* network blip — keep polling */ }
   }
   return last || { status: 'failed', error: 'polling timed out' };
@@ -1902,10 +2098,38 @@ async function refreshStatus() {
     parts.push(`${s.total_chunks} chunks`);
     if (s.graph_nodes != null && s.graph_nodes > 0) parts.push(`${s.graph_nodes} entities`);
     statusPill.textContent = parts.join(' · ');
+    populateScopeSelect(s.documents_indexed || []);
   } catch {
     statusPill.textContent = 'offline';
   }
 }
+
+/* Keep the scope dropdown in sync with the corpus. Preserves the user's
+   current selection across refreshes so they don't lose their filter on
+   a status poll. */
+function populateScopeSelect(docs) {
+  const sel = document.getElementById('scopeSelect');
+  if (!sel) return;
+  const prev = sel.value;
+  const wanted = new Set(docs);
+  // Trim docs to a readable label (filename only, drop common z-lib suffixes).
+  const labelOf = (d) => {
+    let label = d.split('/').pop();
+    if (label.length > 40) label = label.slice(0, 37) + '…';
+    return label;
+  };
+  sel.innerHTML = '<option value="">All sources</option>'
+    + docs.map(d => `<option value="${d.replace(/"/g, '&quot;')}">${labelOf(d)}</option>`).join('');
+  if (prev && wanted.has(prev)) sel.value = prev;
+  sel.classList.toggle('active', !!sel.value);
+}
+
+/* Highlight the chip when a scope is set. */
+document.addEventListener('change', (e) => {
+  if (e.target && e.target.id === 'scopeSelect') {
+    e.target.classList.toggle('active', !!e.target.value);
+  }
+});
 
 qEl.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
 refreshStatus();

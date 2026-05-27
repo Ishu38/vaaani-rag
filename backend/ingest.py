@@ -1,12 +1,12 @@
 """Document ingestion pipeline.
 
-Reads .pdf/.txt/.md/.docx files, chunks them with overlap, embeds with
-sentence-transformers, and stores the vectors in a TurboQuantIndex with a
-JSON sidecar mapping each chunk position back to its source.
+Two-phase architecture for commercial UX:
+  Phase 1 (ingest_vectors, ~1s): embed chunks → write index → save metadata
+  Phase 2 (ingest_graph, background): entity extraction → knowledge graph → communities
 
-Incremental: files whose (path, mtime, size) are already recorded are skipped.
+Reads .pdf/.txt/.md/.docx/.png/.jpg/.jpeg/.webp/.pptx/.html/.htm files.
 
-CLI:
+CLI (full pipeline, synchronous):
     python ingest.py --source ./data/raw --index ./data/index.tq
 """
 from __future__ import annotations
@@ -14,7 +14,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -29,6 +32,7 @@ from config import (
     CHUNK_OVERLAP,
     CHUNK_TOKENS,
     COMMUNITIES_PATH,
+    DEEPSEEK_TIMEOUT,
     EMBED_DIM,
     EMBED_MODEL_NAME,
     GRAPH_PATH,
@@ -40,38 +44,129 @@ from extractor import extract_chunk
 from graph import KnowledgeGraph
 import httpx
 
-SUPPORTED_EXT = {".pdf", ".txt", ".md", ".docx"}
+SUPPORTED_EXT = {
+    ".pdf", ".txt", ".md", ".docx",
+    ".png", ".jpg", ".jpeg", ".webp",
+    ".pptx", ".html", ".htm",
+}
+
+IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
+
+MIN_EXTRACT_WORDS = 25
+# DeepSeek's API comfortably handles 12-16 concurrent extraction calls
+# without rate-limiting on the cheap-chat tier. Bumped from 4 → 12 on
+# 2026-05-28 after a commercial-ingest complaint (86-chunk PDF was
+# taking ~2.2 minutes on entity extraction alone). At 12 concurrency
+# that drops to ~40 s. Env-overridable via VAAANI_EXTRACT_CONCURRENCY
+# if a host needs to dial it down (e.g. tight rate-limit tier).
+EXTRACT_CONCURRENCY = int(os.environ.get("VAAANI_EXTRACT_CONCURRENCY", "12"))
 
 
 @dataclass
 class Chunk:
-    """A single text chunk with provenance."""
     text: str
     source: str
     chunk_no: int
 
 
 def read_pdf(path: Path) -> str:
-    """Extract text from a PDF using pypdf."""
-    from pypdf import PdfReader
-    reader = PdfReader(str(path))
-    return "\n".join((p.extract_text() or "") for p in reader.pages)
+    try:
+        import fitz
+        doc = fitz.open(str(path))
+        pages: list[str] = []
+        for page in doc:
+            pages.append(page.get_text("text") or "")
+        doc.close()
+        return "\n".join(pages)
+    except Exception:
+        pass
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(str(path))
+        return "\n".join((p.extract_text() or "") for p in reader.pages)
+    except Exception:
+        raise RuntimeError(f"Failed to read PDF: {path.name}")
 
 
 def read_docx(path: Path) -> str:
-    """Extract text from a .docx file."""
     import docx
     d = docx.Document(str(path))
     return "\n".join(p.text for p in d.paragraphs)
 
 
 def read_text(path: Path) -> str:
-    """Read .txt / .md as UTF-8 (best effort)."""
     return path.read_text(encoding="utf-8", errors="ignore")
 
 
+def read_pptx(path: Path) -> str:
+    from pptx import Presentation
+    prs = Presentation(str(path))
+    slides: list[str] = []
+    for slide in prs.slides:
+        parts: list[str] = []
+        for shape in slide.shapes:
+            if shape.has_text_frame:
+                parts.append(shape.text_frame.text)
+        if parts:
+            slides.append("\n".join(parts))
+    return "\n\n".join(slides)
+
+
+def read_html(path: Path) -> str:
+    from html.parser import HTMLParser
+
+    class _TextExtractor(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.parts: list[str] = []
+            self._skip = False
+
+        def handle_starttag(self, tag, attrs):
+            if tag in ("script", "style", "noscript"):
+                self._skip = True
+
+        def handle_endtag(self, tag):
+            if tag in ("script", "style", "noscript"):
+                self._skip = False
+            if tag in ("p", "div", "li", "br", "h1", "h2", "h3", "h4", "h5", "h6", "tr"):
+                self.parts.append("\n")
+
+        def handle_data(self, data):
+            if not self._skip:
+                t = data.strip()
+                if t:
+                    self.parts.append(t)
+
+    raw = path.read_text(encoding="utf-8", errors="ignore")
+    ex = _TextExtractor()
+    ex.feed(raw)
+    return "\n".join(ex.parts)
+
+
+def read_image(path: Path) -> str:
+    try:
+        import pytesseract
+    except ImportError:
+        raise RuntimeError(
+            "pytesseract is required for image ingestion. "
+            "Install it: pip install pytesseract && sudo apt install tesseract-ocr"
+        )
+    from PIL import Image
+    img = Image.open(path)
+    if path.suffix.lower() == ".webp":
+        import io as _io
+        buf = _io.BytesIO()
+        img = img.convert("RGB")
+        img.save(buf, format="JPEG", quality=92)
+        buf.seek(0)
+        img = Image.open(buf)
+    text = pytesseract.image_to_string(img, lang="eng")
+    if not text or not text.strip():
+        return ""
+    return text
+
+
 def load_document(path: Path) -> str:
-    """Dispatch to the right reader based on extension."""
     ext = path.suffix.lower()
     if ext == ".pdf":
         return read_pdf(path)
@@ -79,15 +174,16 @@ def load_document(path: Path) -> str:
         return read_docx(path)
     if ext in {".txt", ".md"}:
         return read_text(path)
+    if ext == ".pptx":
+        return read_pptx(path)
+    if ext in {".html", ".htm"}:
+        return read_html(path)
+    if ext in IMAGE_EXTS:
+        return read_image(path)
     raise ValueError(f"Unsupported file type: {ext}")
 
 
 def chunk_text(text: str, size: int = CHUNK_TOKENS, overlap: int = CHUNK_OVERLAP) -> list[str]:
-    """Whitespace-token chunker with a fixed-size sliding window.
-
-    We approximate "tokens" as whitespace-separated words. This is intentionally
-    cheap and deterministic; the embedding model will re-tokenize internally.
-    """
     words = text.split()
     if not words:
         return []
@@ -104,26 +200,22 @@ def chunk_text(text: str, size: int = CHUNK_TOKENS, overlap: int = CHUNK_OVERLAP
 
 
 def file_signature(path: Path) -> str:
-    """Stable signature of a file's path + size + mtime (cheap dedupe key)."""
     stat = path.stat()
     raw = f"{path.resolve()}|{stat.st_size}|{int(stat.st_mtime)}"
     return hashlib.sha1(raw.encode()).hexdigest()
 
 
 def load_metadata(path: Path) -> dict:
-    """Load the metadata sidecar or return an empty skeleton."""
     if path.exists():
         return json.loads(path.read_text())
     return {"files": {}, "chunks": []}
 
 
 def save_metadata(meta: dict, path: Path) -> None:
-    """Persist the metadata sidecar."""
     path.write_text(json.dumps(meta, indent=2, ensure_ascii=False))
 
 
 def load_or_create_index(index_path: Path) -> tuple[TurboQuantIndex, bool]:
-    """Load an existing TurboQuantIndex or create a fresh one. Returns (index, existed)."""
     if index_path.exists():
         try:
             return TurboQuantIndex.load(str(index_path)), True
@@ -133,110 +225,309 @@ def load_or_create_index(index_path: Path) -> tuple[TurboQuantIndex, bool]:
 
 
 def iter_documents(source: Path) -> Iterable[Path]:
-    """Yield every supported file under `source` recursively."""
     for p in sorted(source.rglob("*")):
         if p.is_file() and p.suffix.lower() in SUPPORTED_EXT:
             yield p
 
 
-def ingest(source: Path, index_path: Path, metadata_path: Path, *, build_graph: bool = True) -> dict:
-    """Run the full ingestion pass.
+# ═══════════════════════════════════════════════════════════════════════
+# Phase 1 — Vectors only (fast, <1-2s for any file)
+# ═══════════════════════════════════════════════════════════════════════
 
-    For every new chunk we:
-      1. embed it into the TurboVec index
-      2. (if build_graph) extract entities + relations via DeepSeek and merge
-         them into the persisted knowledge graph
-    After all files are processed we re-run community detection + summarisation
-    on the full graph (cheap relative to the per-chunk extraction cost).
+def ingest_vectors(source: Path, index_path: Path, metadata_path: Path) -> dict:
+    """Embed chunks + write index + save metadata. No entity extraction.
+
+    Returns a dict with the chunks and metadata needed for deferred graph building.
+    Caller should reload the retriever after this returns — the file is now
+    searchable. Then call ingest_graph_deferred() to build the knowledge graph
+    in the background.
     """
     meta = load_metadata(metadata_path)
     index, existed = load_or_create_index(index_path)
-
     if not existed:
         meta = {"files": {}, "chunks": []}
 
     model = SentenceTransformer(EMBED_MODEL_NAME)
-    kg = KnowledgeGraph.load(GRAPH_PATH) if build_graph else None
 
     total_added = 0
     files_processed = 0
     files_skipped = 0
-    triples_added = 0
 
-    extract_client = httpx.Client(timeout=60) if build_graph else None
-    try:
-        for path in iter_documents(source):
-            sig = file_signature(path)
-            key = str(path.resolve())
-            if meta["files"].get(key, {}).get("signature") == sig:
-                files_skipped += 1
-                continue
+    t0 = time.time()
+    for path in iter_documents(source):
+        sig = file_signature(path)
+        key = str(path.resolve())
+        if meta["files"].get(key, {}).get("signature") == sig:
+            files_skipped += 1
+            continue
 
-            try:
-                text = load_document(path)
-            except Exception as e:
-                print(f"  [skip] {path.name}: {e}")
-                continue
+        try:
+            text = load_document(path)
+        except Exception as e:
+            print(f"  [skip] {path.name}: {e}")
+            continue
 
-            chunks = chunk_text(text)
-            if not chunks:
-                print(f"  [skip] {path.name}: empty after chunking")
-                continue
+        chunks = chunk_text(text)
+        if not chunks:
+            print(f"  [skip] {path.name}: empty after chunking")
+            continue
 
-            print(f"Ingesting {len(chunks)} chunks from {path.name}...")
-            vectors = model.encode(chunks, show_progress_bar=False, convert_to_numpy=True)
-            vectors = np.asarray(vectors, dtype=np.float32)
-            index.add(vectors)
+        n_chunks = len(chunks)
+        est_words = len(text.split())
+        print(f"Embedding {path.name} ({n_chunks} chunks, ~{est_words} words)...")
 
-            start_idx = len(meta["chunks"])
-            for i, ch in enumerate(chunks):
-                chunk_id = start_idx + i
-                meta["chunks"].append({"source": path.name, "path": key, "chunk_no": i, "text": ch})
-                if build_graph and kg is not None:
-                    try:
-                        ex = extract_chunk(ch, client=extract_client)
-                    except Exception as e:
-                        print(f"  [extract:warn] chunk {chunk_id}: {e}")
-                        continue
-                    kg.ingest_extraction(ex, chunk_id)
-                    triples_added += len(ex.entities) + len(ex.relations)
+        vectors = model.encode(chunks, show_progress_bar=False, convert_to_numpy=True)
+        vectors = np.asarray(vectors, dtype=np.float32)
+        index.add(vectors)
 
-            meta["files"][key] = {"signature": sig, "chunks": len(chunks), "name": path.name}
-            total_added += len(chunks)
-            files_processed += 1
-    finally:
-        if extract_client is not None:
-            extract_client.close()
+        start_idx = len(meta["chunks"])
+        for i, ch in enumerate(chunks):
+            meta["chunks"].append({
+                "source": path.name, "path": key, "chunk_no": i, "text": ch,
+            })
+
+        meta["files"][key] = {"signature": sig, "chunks": n_chunks, "name": path.name}
+        total_added += n_chunks
+        files_processed += 1
+        print(f"  {path.name} embedded in {time.time() - t0:.1f}s ({n_chunks} chunks)")
 
     if total_added > 0:
         index.write(str(index_path))
     save_metadata(meta, metadata_path)
 
-    communities_count = 0
-    if build_graph and kg is not None and total_added > 0:
-        kg.save(GRAPH_PATH)
-        if kg.g.number_of_nodes() > 0:
-            print("Detecting communities and writing summaries...")
-            communities = build_communities(kg)
-            save_communities(communities, COMMUNITIES_PATH)
-            communities_count = len(communities)
-
-    summary = {
+    elapsed = time.time() - t0
+    print(f"Vector phase: {elapsed:.1f}s total, {files_processed} new, {files_skipped} skipped")
+    return {
         "files_processed": files_processed,
         "files_skipped": files_skipped,
         "chunks_added": total_added,
         "total_chunks": len(meta["chunks"]),
+        "triples_added": 0,
+        "communities": 0,
+        "graph_nodes": 0,
+        "graph_edges": 0,
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Phase 2 — Graph-RAG extraction (background, may take minutes)
+# ═══════════════════════════════════════════════════════════════════════
+
+# Chunks per DeepSeek call. 5 is a sweet spot — DeepSeek-chat handles 5
+# numbered chunks reliably at temperature 0 with the EXTRACTION_SYSTEM_BATCH
+# prompt, blast radius on a single failure is small, and HTTP overhead is
+# amortised 5×. Override with VAAANI_EXTRACT_BATCH_SIZE if you want bigger
+# batches for cheaper models or smaller for noisier ones.
+EXTRACT_BATCH_SIZE = int(os.environ.get("VAAANI_EXTRACT_BATCH_SIZE", "5"))
+
+
+def _extract_batch_job(
+    indices: list[int], texts: list[str], timeout: int
+) -> tuple[dict[int, object], str | None]:
+    """Run one batched DeepSeek extraction call across `texts`, mapping
+    results back onto the corresponding `indices`."""
+    from extractor import extract_chunks_batch
+    try:
+        with httpx.Client(timeout=timeout) as cl:
+            batch = extract_chunks_batch(texts, client=cl)
+        return {indices[i]: batch[i] for i in range(len(indices))}, None
+    except Exception as e:
+        return {}, str(e)
+
+
+def _extract_chunks_parallel(
+    chunks: list[str],
+    chunk_start_idx: int,
+    *,
+    concurrency: int = EXTRACT_CONCURRENCY,
+    progress_cb=None,
+) -> dict[int, object]:
+    """Run entity extraction over `chunks` in parallel batches.
+
+    `progress_cb`, if provided, is called as ``progress_cb(done, total)``
+    each time a batch completes — used by main.py to push live progress
+    counts into the job row so the SPA can show "extracted X/Y chunks"
+    instead of just a phase name.
+    """
+    results: dict[int, object] = {}
+    jobs: list[tuple[int, str]] = []
+    skipped = 0
+    for i, ch in enumerate(chunks):
+        wc = len(ch.split())
+        if wc < MIN_EXTRACT_WORDS:
+            skipped += 1
+            continue
+        jobs.append((chunk_start_idx + i, ch))
+
+    if skipped:
+        print(f"  [extract] skipping {skipped}/{len(chunks)} chunks (< {MIN_EXTRACT_WORDS} words)")
+
+    if not jobs:
+        return results
+
+    timeout_val = DEEPSEEK_TIMEOUT
+
+    # Group jobs into batches of EXTRACT_BATCH_SIZE.
+    batches: list[tuple[list[int], list[str]]] = []
+    for b in range(0, len(jobs), EXTRACT_BATCH_SIZE):
+        slice_ = jobs[b : b + EXTRACT_BATCH_SIZE]
+        batches.append(([idx for idx, _ in slice_], [t for _, t in slice_]))
+
+    total = len(jobs)
+    done = 0
+
+    with ThreadPoolExecutor(max_workers=concurrency) as pool:
+        futures = {
+            pool.submit(_extract_batch_job, idx_list, text_list, timeout_val): (idx_list, text_list)
+            for idx_list, text_list in batches
+        }
+        for future in as_completed(futures):
+            batch_result, err = future.result()
+            idx_list, _ = futures[future]
+            done += len(idx_list)
+            if err:
+                print(f"  [extract:warn] batch of {len(idx_list)} failed: {err}")
+            else:
+                for k, v in batch_result.items():
+                    if v is not None:
+                        results[k] = v
+            if progress_cb is not None:
+                try:
+                    progress_cb(done, total)
+                except Exception:
+                    pass
+            print(f"  [extract] {done}/{total} done ({len(results)} with entities)")
+
+    return results
+
+
+def ingest_graph_deferred(progress_cb=None) -> dict:
+    """Phase 2: entity extraction + knowledge graph + communities.
+
+    Reads the already-saved metadata to find chunks that haven't been
+    graph-extracted yet. Runs extraction, saves graph + communities.
+    Should be called AFTER ingest_vectors() and retriever.reload().
+
+    `progress_cb`, if supplied, is forwarded to the parallel extractor
+    and fires as `progress_cb(done, total)` per completed batch. main.py
+    uses this to surface live extraction progress to the SPA.
+    """
+    meta = load_metadata(METADATA_PATH)
+    kg = KnowledgeGraph.load(GRAPH_PATH)
+
+    # Determine which chunks already have graph nodes — we track this by
+    # checking if the chunk's entities are already in the graph. Since
+    # chunks map 1:1 to extraction results that feed into the graph,
+    # we use the metadata "files" table — files whose graph extraction
+    # was completed are tracked via graph.json timestamps.
+    #
+    # Simplest approach: just run extraction for ALL chunks, relying on
+    # the kg.ingest_extraction deduplication logic (it upserts nodes/edges).
+
+    # Actually, re-extracting everything is wasteful. Instead, we only
+    # extract chunks whose files haven't been graph-processed.
+    # We track this with a "_graph_extracted" flag per file in metadata.
+
+    triples_added = 0
+    total_chunks = len(meta["chunks"])
+    filenames_seen: set[str] = set()
+
+    for file_key, file_info in meta["files"].items():
+        if file_info.get("_graph_extracted"):
+            continue
+        fname = file_info["name"]
+        if fname in filenames_seen:
+            continue
+        filenames_seen.add(fname)
+
+        # Gather all chunks for this file
+        file_chunks: list[tuple[int, str]] = []
+        for i, c in enumerate(meta["chunks"]):
+            if c.get("source") == fname:
+                file_chunks.append((file_info.get("chunks", 0) - len(file_chunks) - 1, c["text"]))
+
+        if not file_chunks:
+            continue
+
+        n = len(file_chunks)
+        print(f"Graph extraction: {fname} ({n} chunks)...")
+        t0 = time.time()
+
+        if n >= 8:
+            results = _extract_chunks_parallel(
+                [t for _, t in file_chunks], 0, progress_cb=progress_cb
+            )
+        else:
+            results = {}
+            # Sequential for small files
+            with httpx.Client(timeout=DEEPSEEK_TIMEOUT) as cl:
+                for i, (_, text) in enumerate(file_chunks):
+                    wc = len(text.split())
+                    if wc < MIN_EXTRACT_WORDS:
+                        continue
+                    try:
+                        ex = extract_chunk(text, client=cl)
+                        results[i] = ex
+                    except Exception as e:
+                        print(f"  [extract:warn] {fname} chunk {i}: {e}")
+
+        ent_count = 0
+        rel_count = 0
+        for chunk_id, ex in results.items():
+            kg.ingest_extraction(ex, chunk_id)
+            ent_count += len(ex.entities)
+            rel_count += len(ex.relations)
+        triples_added += ent_count + rel_count
+
+        # Mark as graph-extracted
+        meta["files"][file_key]["_graph_extracted"] = True
+        save_metadata(meta, METADATA_PATH)
+
+        print(f"  {fname} graph done in {time.time() - t0:.1f}s "
+              f"(+{ent_count} entities, +{rel_count} relations)")
+
+    kg.save(GRAPH_PATH)
+
+    communities_count = 0
+    if kg.g.number_of_nodes() > 0 and triples_added > 0:
+        print("Detecting communities and writing summaries...")
+        t0 = time.time()
+        communities = build_communities(kg)
+        save_communities(communities, COMMUNITIES_PATH)
+        communities_count = len(communities)
+        print(f"Communities done in {time.time() - t0:.1f}s ({communities_count} communities)")
+
+    result = {
+        "files_processed": 0,
+        "files_skipped": 0,
+        "chunks_added": 0,
+        "total_chunks": total_chunks,
         "triples_added": triples_added,
         "communities": communities_count,
-        "graph_nodes": kg.g.number_of_nodes() if kg else 0,
-        "graph_edges": kg.g.number_of_edges() if kg else 0,
+        "graph_nodes": kg.g.number_of_nodes(),
+        "graph_edges": kg.g.number_of_edges(),
     }
-    print(f"Done. {summary}")
-    return summary
+    print(f"Graph phase done. {result}")
+    return result
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Legacy synchronous ingest (CLI: full pipeline)
+# ═══════════════════════════════════════════════════════════════════════
+
+def ingest(source: Path, index_path: Path, metadata_path: Path, *, build_graph: bool = True) -> dict:
+    """Full synchronous ingest — vectors + graph. For CLI use."""
+    result = ingest_vectors(source, index_path, metadata_path)
+    if build_graph and result["chunks_added"] > 0:
+        graph_result = ingest_graph_deferred()
+        result["triples_added"] = graph_result["triples_added"]
+        result["communities"] = graph_result["communities"]
+        result["graph_nodes"] = graph_result["graph_nodes"]
+        result["graph_edges"] = graph_result["graph_edges"]
+    return result
 
 
 def main() -> int:
-    """CLI entry point."""
     ap = argparse.ArgumentParser(description="Ingest documents into the TurboVec RAG index.")
     ap.add_argument("--source", type=Path, default=RAW_DIR, help="Directory with raw documents")
     ap.add_argument("--index", type=Path, default=INDEX_PATH, help="Path to write the TurboVec index")

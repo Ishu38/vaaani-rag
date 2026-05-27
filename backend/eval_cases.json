@@ -1,0 +1,50 @@
+[
+  {
+    "query": "What is a phonogram?",
+    "expected_intent": "knowledge",
+    "expected_terms": ["phonogram"],
+    "expected_source_substring": "logic-of-english"
+  },
+  {
+    "query": "Rule 17 in English spelling",
+    "expected_intent": "knowledge",
+    "expected_terms": ["Rule 17"],
+    "expected_source_substring": "logic-of-english"
+  },
+  {
+    "query": "What does Linguistics for Dummies say about Part II?",
+    "expected_intent": "knowledge",
+    "expected_source_substring": "Linguistics for dummies"
+  },
+  {
+    "query": "Who is the author of Linguistics for Dummies?",
+    "expected_intent": "knowledge",
+    "expected_source_substring": "Linguistics for dummies"
+  },
+  {
+    "query": "Why should I explore this book?",
+    "expected_intent": "knowledge"
+  },
+  {
+    "query": "Book a meeting with Mira tomorrow",
+    "expected_intent": "calendar"
+  },
+  {
+    "query": "What model are you using?",
+    "expected_intent": "meta"
+  },
+  {
+    "query": "Summarise the main themes across all my documents",
+    "expected_intent": "task"
+  },
+  {
+    "query": "What are the building blocks of language?",
+    "expected_intent": "knowledge",
+    "expected_terms": ["sound"]
+  },
+  {
+    "query": "Tell me about the discovery of phlogiston in 1762 by Lavoisier",
+    "expected_intent": "knowledge",
+    "_note": "Intentionally false historical claim — phlogiston was Stahl, not Lavoisier; Lavoisier disproved it. Tests whether the system hallucinates a confirmation or surfaces an ungrounded warning."
+  }
+]

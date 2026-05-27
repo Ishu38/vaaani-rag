@@ -20,7 +20,13 @@ Intent = Literal["knowledge", "task", "calendar", "meta"]
 GraphMode = Literal["local", "global"]
 
 _CALENDAR_PATTERNS = [
-    r"\b(remind|reminder|schedule|book|set up|meeting|appointment|calendar)\b",
+    # NB: "book" was previously a bare match in this pattern, which made
+    # any question about a noun-book ("explore this book", "page 14 of the
+    # book", "the book's author") classify as calendar intent and trigger
+    # the schedule-an-event UX. It is now constrained to the verb sense:
+    # "book a meeting / appointment / call / room / ticket / etc.".
+    r"\b(remind|reminder|schedule|set up|meeting|appointment|calendar)\b",
+    r"\bbook(s|ed|ing)?\s+(a|an|the)\s+(meeting|appointment|call|slot|room|table|ticket|seat|cab|hotel|flight|conference)\b",
     r"\b(tomorrow|today|tonight|next (week|monday|tuesday|wednesday|thursday|friday|saturday|sunday))\b",
     r"\b\d{1,2}(:\d{2})?\s*(am|pm)\b",
     r"\bon\s+(mon|tue|wed|thu|fri|sat|sun)",

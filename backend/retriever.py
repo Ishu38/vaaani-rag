@@ -107,26 +107,63 @@ class Retriever:
         vecs = self.model.encode(list(texts), show_progress_bar=False, convert_to_numpy=True)
         return np.asarray(vecs, dtype=np.float32)
 
-    def search(self, query: str, k: int = TOP_K) -> list[dict]:
-        """Return up to `k` chunks as [{text, source, score}] for `query`."""
+    def search(self, query: str, k: int = TOP_K, *, source_filter: set[str] | None = None) -> list[dict]:
+        """Return up to `k` chunks as [{text, source, score}] for `query`.
+
+        Source-filename overlap boost: when the query contains tokens that
+        appear in a chunk's source filename, that chunk's score is
+        multiplied by SOURCE_HIT_BOOST.
+
+        Hard source filter: if ``source_filter`` is a non-empty set, only
+        chunks whose ``source`` field is in that set are returned. This
+        backs the per-document "scope chip" in the UI.
+        """
         if not query.strip() or self.index is None:
             return []
         chunks = self.metadata.get("chunks", [])
         if not chunks:
             return []
         qv = np.ascontiguousarray(self.embed([query]), dtype=np.float32)
-        scores, indices = self.index.search(qv, k=min(k, len(chunks)))
-        # turbovec returns batched results; pull the single-query row.
+        # Pull a wider candidate set so the source-boost re-ranking has room.
+        wide_k = min(max(k * 4, k), len(chunks))
+        scores, indices = self.index.search(qv, k=wide_k)
         if hasattr(scores, "ndim") and scores.ndim == 2:
             scores = scores[0]
             indices = indices[0]
+
+        # Tokenise the query into significant words (≥4 chars, alphabetic).
+        # Short words like "the", "of", "in" would match every PDF filename
+        # and defeat the point of the boost.
+        import re as _re
+        query_tokens = {
+            t.lower() for t in _re.findall(r"[A-Za-z]{4,}", query)
+        }
+        SOURCE_HIT_BOOST = 1.35  # +35% to chunks whose source filename overlaps query
+
         out: list[dict] = []
         for score, idx in zip(scores, indices):
             if idx < 0 or idx >= len(chunks):
                 continue
             ch = chunks[idx]
-            out.append({"text": ch["text"], "source": ch["source"], "score": float(score)})
-        return out
+            # Hard scope filter — drop chunks not in the allowed source set.
+            if source_filter and ch["source"] not in source_filter:
+                continue
+            adj = float(score)
+            if query_tokens:
+                src_tokens = {
+                    t.lower() for t in _re.findall(r"[A-Za-z]{4,}", ch["source"])
+                }
+                if query_tokens & src_tokens:
+                    adj *= SOURCE_HIT_BOOST
+            out.append({
+                "text": ch["text"],
+                "source": ch["source"],
+                "score": adj,
+            })
+
+        # Re-rank by adjusted score, trim to k.
+        out.sort(key=lambda r: r["score"], reverse=True)
+        return out[:k]
 
     def chunk_by_id(self, chunk_id: int) -> dict | None:
         """Return the metadata for a given chunk_id, or None if out of range."""
@@ -136,7 +173,7 @@ class Retriever:
             return {"text": ch["text"], "source": ch["source"], "chunk_id": chunk_id}
         return None
 
-    def local_graph_search(self, query: str, k: int = TOP_K) -> dict:
+    def local_graph_search(self, query: str, k: int = TOP_K, *, source_filter: set[str] | None = None) -> dict:
         """Local Graph-RAG: vector hits + 1-hop entity neighbourhood + community context.
 
         Returns a dict with:
@@ -144,8 +181,12 @@ class Retriever:
           - entities: matched + neighbour entity display names
           - communities: at most one community summary for the dominant matched community
           - edges: human-readable edge descriptions among matched entities
+
+        ``source_filter`` (optional): set of source filenames to restrict
+        retrieval to. Passes through to ``search()`` and additionally
+        drops graph-expanded chunks whose source isn't in the set.
         """
-        vector_hits = self.search(query, k=k)
+        vector_hits = self.search(query, k=k, source_filter=source_filter)
         chunks_by_id: dict[int, dict] = {}
         # seed with vector hits (assign synthetic ids from metadata position)
         kg = self.kg
@@ -165,8 +206,13 @@ class Retriever:
             neighbour_keys |= kg.neighbors(k_, hops=LOCAL_HOPS)
         for cid in kg.chunks_for_nodes(neighbour_keys):
             ch = self.chunk_by_id(cid)
-            if ch is not None and cid not in chunks_by_id:
-                chunks_by_id[cid] = {**ch, "score": 0.0}
+            if ch is None or cid in chunks_by_id:
+                continue
+            # Scope-chip respected on graph-expansion too — otherwise the
+            # filter leaks via the entity neighborhood.
+            if source_filter and ch["source"] not in source_filter:
+                continue
+            chunks_by_id[cid] = {**ch, "score": 0.0}
 
         # Edge descriptions among matched entities (small N).
         edges: list[str] = []
@@ -175,12 +221,37 @@ class Retriever:
             for j in range(i + 1, len(m)):
                 edges.extend(kg.describe_edge(m[i], m[j]))
 
-        # Dominant community: count nodes per community across matched + neighbours.
+        # Dominant community — restricted to the source documents that
+        # actually answered the query. Previously this counted nodes across
+        # the whole corpus's communities, which surfaced a community from a
+        # different book when that book happened to be larger. Now we
+        # derive per-node sources from chunk_ids → chunks_meta[i]["source"]
+        # and only count nodes whose sources overlap the answering set.
+        answering_sources = {ch.get("source") for ch in chunks_by_id.values() if ch.get("source")}
+
+        def _node_sources(nk: str) -> set[str]:
+            if not kg.g.has_node(nk):
+                return set()
+            cids = kg.g.nodes[nk].get("chunk_ids", []) or []
+            return {
+                chunks_meta[c]["source"]
+                for c in cids
+                if 0 <= c < len(chunks_meta) and "source" in chunks_meta[c]
+            }
+
         comm_counts: dict[int, int] = {}
         for nk in neighbour_keys:
             cid = self.community_idx.get(nk)
-            if cid is not None:
-                comm_counts[cid] = comm_counts.get(cid, 0) + 1
+            if cid is None:
+                continue
+            if answering_sources:
+                ns = _node_sources(nk)
+                if ns and not (ns & answering_sources):
+                    # Node lives entirely outside the answering sources →
+                    # don't let it sway the dominant-community vote.
+                    continue
+            comm_counts[cid] = comm_counts.get(cid, 0) + 1
+
         communities: list[Community] = []
         if comm_counts:
             top_cid = max(comm_counts, key=comm_counts.get)
