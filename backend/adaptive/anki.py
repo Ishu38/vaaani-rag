@@ -142,15 +142,67 @@ def _build_deck_name() -> str:
     return f"Vaaani Study Pack · {datetime.utcnow().strftime('%Y-%m-%d')}"
 
 
-def build_apkg_for_user(user_id: int) -> tuple[bytes, str, dict]:
+def _source_to_subject_tag(src: str) -> str:
+    """Derive a short, Anki-searchable subject tag from a source filename.
+
+    NCERT-style filenames (kemh110, jemh101, leep212) follow the pattern
+    {l|j}{stage}{subj}{nn} where the first non-digit letter cluster after
+    the level digit roughly encodes the subject. We use it as a hint and
+    fall back to "general" when nothing matches. The point isn't perfect
+    classification — it's that a student can filter their Anki deck with
+    `tag:subject_math` instead of scrolling through 500 mixed cards.
+    """
+    name = (src or "").lower()
+    # Quick NCERT/textbook heuristics — extend freely.
+    if any(k in name for k in ("kemh", "jemh", "math", "algebra", "calculus", "geometry")):
+        return "subject_math"
+    if any(k in name for k in ("phys", "kemp", "jemp")):
+        return "subject_physics"
+    if any(k in name for k in ("chem", "kemc", "jemc")):
+        return "subject_chemistry"
+    if any(k in name for k in ("bio", "kemb", "jemb", "zoolog", "botan")):
+        return "subject_biology"
+    if any(k in name for k in ("linguistic", "phonogr", "english", "grammar", "spell", "literacy")):
+        return "subject_english"
+    if any(k in name for k in ("literature", "poetry", "novel", "fiction", "drama", "shakespeare", "british", "american_lit")):
+        return "subject_literature"
+    if any(k in name for k in ("history", "hist", "civics", "polit", "geograph")):
+        return "subject_socialstudies"
+    if any(k in name for k in ("philosoph", "ethics", "logic_text", "epistemo")):
+        return "subject_philosophy"
+    if any(k in name for k in ("psycholog", "neurolog", "cogniti")):
+        return "subject_psychology"
+    if any(k in name for k in ("econ", "account", "commerce", "business")):
+        return "subject_commerce"
+    if any(k in name for k in ("comp", "cs", "program", "algorithm", "data")):
+        return "subject_compsci"
+    return "subject_general"
+
+
+def build_apkg_for_user(user_id: int, *, source_filter: set[str] | None = None) -> tuple[bytes, str, dict]:
     """Build an .apkg containing one card per node with usable material.
-    Returns (apkg_bytes, suggested_filename, stats_dict)."""
+    Returns (apkg_bytes, suggested_filename, stats_dict).
+
+    ``source_filter`` (optional): when supplied, the deck only contains
+    cards backed by a cloze passage from those source filenames. Recall
+    cards (which have no source passage) are excluded under a filter
+    because they'd otherwise leak content from outside the selected
+    scope. The deck name is also rewritten to reflect the source.
+    """
     nodes = _gather_user_nodes(user_id)
     if not nodes:
         raise ValueError("no nodes in graph yet — ingest at least one document")
 
     graph_nodes, _ = spaced._graph()
     deck_name = _build_deck_name()
+    if source_filter:
+        # Pick a readable short name when filtering to a single source.
+        if len(source_filter) == 1:
+            only = next(iter(source_filter))
+            short = re.sub(r"\.[^.]+$", "", only)[:60]
+            deck_name = f"Vaaani · {short} · {datetime.utcnow().strftime('%Y-%m-%d')}"
+        else:
+            deck_name = f"Vaaani · {len(source_filter)} sources · {datetime.utcnow().strftime('%Y-%m-%d')}"
     deck = genanki.Deck(
         deck_id=abs(hash(("vaaani", user_id, deck_name))) % (1 << 31),
         name=deck_name,
@@ -174,13 +226,19 @@ def build_apkg_for_user(user_id: int) -> tuple[bytes, str, dict]:
 
         # Try a cloze first; if the corpus has no verbatim sentence,
         # build a recall card instead.
-        cloze = spaced._find_cloze_passage(display)
+        cloze = spaced._find_cloze_passage(display, source_filter=source_filter)
         if cloze:
             raw, _placeholder, src = cloze
             anki_text = _to_anki_cloze(raw, display)
             if anki_text is None:
                 n_skipped += 1
                 continue
+            # Subject tag (e.g. "subject_math") + source tag (e.g.
+            # "source_kemh110") let the student filter their deck in
+            # Anki with `tag:subject_math` or `deck:Vaaani tag:source_kemh110`.
+            if src:
+                tags.append(_source_to_subject_tag(src))
+                tags.append(_safe_tag(f"source_{re.sub(r'.[^.]+$', '', src)}"))
             deck.add_note(genanki.Note(
                 model=_CLOZE_MODEL,
                 fields=[anki_text, src or "", description or ""],
@@ -192,7 +250,10 @@ def build_apkg_for_user(user_id: int) -> tuple[bytes, str, dict]:
 
         # Recall fallback: only generate when the node has at least
         # one neighbour and a description, otherwise the card is empty.
-        if not description:
+        # When a source filter is active we skip the recall fallback
+        # entirely — recall cards have no source passage so they'd leak
+        # entities from outside the chosen scope into the deck.
+        if not description or source_filter:
             n_skipped += 1
             continue
         deck.add_note(genanki.Note(

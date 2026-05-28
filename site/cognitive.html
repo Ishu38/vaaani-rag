@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Cognitive X-Ray — Vaaani</title>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fff3d5; --panel:#fbedc6; --border:#e0cc93; --text:#2563eb; --muted:#7a8b6f; --accent:#2563eb; --warn:#a06a1e; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; }
+  nav { display:flex; justify-content:space-between; padding:16px 32px; border-bottom:1px solid var(--border); background:rgba(255,243,213,0.85); backdrop-filter:blur(12px); }
+  nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:14px; }
+  nav a:hover { color:var(--text); }
+  main { max-width:900px; margin:40px auto; padding:0 24px; }
+  h2 { font-size:24px; font-weight:700; margin-bottom:8px; }
+  .muted { color:var(--muted); font-size:14px; margin-bottom:32px; }
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:24px; }
+  .card h3 { font-size:16px; margin-bottom:12px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
+  .stat { text-align:center; padding:16px; }
+  .stat .value { font-size:32px; font-weight:800; }
+  .stat .label { font-size:12px; color:var(--muted); margin-top:4px; }
+  .error-bar { margin:8px 0; }
+  .error-bar .name { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; }
+  .error-bar .fill { height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+  .error-bar .fill div { height:100%; background:var(--accent); border-radius:4px; transition:width .5s; }
+  .tag { display:inline-block; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:500; margin:4px; }
+  .tag.green { background:#d4edda; color:#155724; }
+  .tag.amber { background:#fff3cd; color:#856404; }
+  .tag.red { background:#f8d7da; color:#721c24; }
+  #loading { text-align:center; padding:60px; color:var(--muted); }
+  #error { color:var(--warn); text-align:center; padding:20px; }
+  #radar { display:block; margin:0 auto; }
+  .bias-banner { padding:12px 16px; border-radius:8px; margin:12px 0; font-size:13px; }
+  .bias-banner.warn { background:#fff3cd; border:1px solid #ffc107; color:#856404; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="/app" style="font-weight:700;font-size:16px;">← Vaaani</a>
+  <div style="display:flex;gap:24px">
+    <a href="/app">Chat</a>
+    <a href="/graph-view">Graph</a>
+    <a href="/cognitive" style="color:var(--text);font-weight:600;">Cognitive X-Ray</a>
+    <a href="/simulation">Simulation</a>
+  </div>
+</nav>
+<main>
+  <h2>Cognitive X-Ray</h2>
+  <p class="muted">MRI scan of your mathematical thinking. Understand not just what you got wrong, but why.</p>
+  <div id="loading">Loading your cognitive fingerprint...</div>
+  <div id="error" style="display:none"></div>
+  <div id="content" style="display:none">
+    <div class="card">
+      <h3>Overall Profile</h3>
+      <div class="grid" id="stats-grid"></div>
+    </div>
+    <div class="card" id="bias-card" style="display:none"></div>
+    <div class="card">
+      <h3>Error Breakdown</h3>
+      <canvas id="radar" width="600" height="400"></canvas>
+    </div>
+    <div class="card">
+      <h3>Detailed Error Types</h3>
+      <div id="error-bars"></div>
+    </div>
+    <div class="card">
+      <h3>Topic Weaknesses</h3>
+      <div id="topic-weaknesses"></div>
+    </div>
+    <div class="card">
+      <h3>Confidence Calibration</h3>
+      <div id="calibration"></div>
+    </div>
+  </div>
+</main>
+<script>
+(async function(){
+  try {
+    const r = await fetch('/cognitive/fingerprint');
+    if(!r.ok) throw new Error(await r.text());
+    const data = await r.json();
+    document.getElementById('loading').style.display='none';
+    document.getElementById('content').style.display='block';
+    render(data);
+  } catch(e) {
+    document.getElementById('loading').style.display='none';
+    document.getElementById('error').style.display='block';
+    document.getElementById('error').textContent = 'Sign in to view your cognitive profile. ' + e.message;
+  }
+})();
+
+function render(d) {
+  const s = d.summary||{};
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat"><div class="value">${s.accuracy||0}%</div><div class="label">Accuracy</div></div>
+    <div class="stat"><div class="value">${s.total_analyzed||0}</div><div class="label">Questions Analyzed</div></div>
+    <div class="stat"><div class="value">${s.error_frequency||0}</div><div class="label">Errors Detected</div></div>
+    <div class="stat"><div class="value">${d.resilience_score||'0.5'}</div><div class="label">Resilience Score</div></div>
+  `;
+
+  if(d.biases && Object.keys(d.biases).length){
+    document.getElementById('bias-card').style.display='block';
+    let desc = d.biases.description||d.biases.tendency||'Patterns detected in your solving style.';
+    document.getElementById('bias-card').innerHTML = `<h3>Cognitive Bias Profile</h3><div class="bias-banner warn">${desc}</div>`;
+  }
+
+  // Error bars
+  const eb = d.error_breakdown||{};
+  const max = Math.max(...Object.values(eb),1);
+  document.getElementById('error-bars').innerHTML = Object.entries(eb).map(([k,v])=>`
+    <div class="error-bar">
+      <div class="name"><span>${k}</span><span>${v}</span></div>
+      <div class="fill"><div style="width:${(v/max*100)}%"></div></div>
+    </div>
+  `).join('');
+
+  // Topic weaknesses
+  const tw = d.topics||{};
+  document.getElementById('topic-weaknesses').innerHTML = Object.entries(tw).slice(0,8).map(([t,info])=>{
+    let cls = info.error_count>5?'red':info.error_count>2?'amber':'green';
+    return `<span class="tag ${cls}">${t} (${info.error_count||0})</span>`;
+  }).join('') || '<p class="muted">No topic data yet. Keep solving!</p>';
+
+  // Confidence calibration
+  const cal = d.confidence_calibration||{};
+  document.getElementById('calibration').innerHTML = Object.entries(cal).map(([lvl,stats])=>{
+    return `<div style="margin:8px 0;font-size:13px">Confidence ${lvl}: <b>${stats.accuracy||0}%</b> accurate (${stats.total} answers)</div>`;
+  }).join('') || '<p class="muted">No calibration data yet.</p>';
+
+  // Simple radar chart (canvas)
+  drawRadar(eb);
+}
+
+function drawRadar(data){
+  const c=document.getElementById('radar');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  const labels=Object.keys(data).slice(0,6);
+  const values=labels.map(k=>data[k]||0);
+  const maxV=Math.max(...values,1);
+  const cx=300,cy=200,r=150;
+  ctx.clearRect(0,0,600,400);
+  // Grid
+  for(let l=1;l<=4;l++){
+    ctx.beginPath();
+    for(let i=0;i<labels.length;i++){
+      const a=-Math.PI/2+(2*Math.PI*i/labels.length);
+      const x=cx+(r*l/4)*Math.cos(a),y=cy+(r*l/4)*Math.sin(a);
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.closePath(); ctx.strokeStyle='#e0cc93'; ctx.stroke();
+  }
+  // Axes
+  for(let i=0;i<labels.length;i++){
+    const a=-Math.PI/2+(2*Math.PI*i/labels.length);
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    ctx.strokeStyle='#e0cc93'; ctx.stroke();
+    ctx.fillStyle='#2563eb'; ctx.font='11px Inter';
+    ctx.fillText(labels[i].slice(0,10),cx+(r+15)*Math.cos(a)-20,cy+(r+15)*Math.sin(a)+4);
+  }
+  // Data
+  ctx.beginPath();
+  for(let i=0;i<values.length;i++){
+    const a=-Math.PI/2+(2*Math.PI*i/values.length);
+    const v=values[i]/maxV*r;
+    i?ctx.lineTo(cx+v*Math.cos(a),cy+v*Math.sin(a)):ctx.moveTo(cx+v*Math.cos(a),cy+v*Math.sin(a));
+  }
+  ctx.closePath(); ctx.fillStyle='rgba(77,105,78,0.25)'; ctx.fill();
+  ctx.strokeStyle='#2563eb'; ctx.lineWidth=2; ctx.stroke();
+}
+</script>
+</body>
+</html>

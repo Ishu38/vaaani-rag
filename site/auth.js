@@ -58,13 +58,39 @@ const Auth = {
 /** Show user name / signed-in state in any nav with #navAuth. Falls back to "Sign in". */
 async function paintNavAuth() {
   const slot = document.getElementById('navAuth');
-  if (!slot) return;
   const user = await Auth.me();
-  if (user) {
-    slot.innerHTML = `<a class="btn btn-primary" href="/account">${escapeHtml(user.name || user.email)} <span class="arr">→</span></a>`;
-  } else {
-    slot.innerHTML = `<a class="btn btn-ghost" href="/login">Sign in</a> <a class="btn btn-primary" href="/signup">Get started <span class="arr">→</span></a>`;
+  if (slot) {
+    if (user) {
+      slot.innerHTML = `<a class="btn btn-primary" href="/account">${escapeHtml(user.name || user.email)} <span class="arr">→</span></a>`;
+    } else {
+      slot.innerHTML = `<a class="btn btn-ghost" href="/login">Sign in</a> <a class="btn btn-primary" href="/signup">Get started <span class="arr">→</span></a>`;
+    }
   }
+  paintAuthGatedSurfaces(!!user);
+}
+
+/**
+ * Hide app-only surfaces from signed-out visitors:
+ *   - footer "Product" column links (Chat / Knowledge map / Status) that
+ *     otherwise advertise gated routes to anonymous users
+ *   - the "Launch the assistant" CTA, relabelled to "Open your chat" for
+ *     signed-in users (no point inviting them to launch what they're in)
+ * Any element tagged [data-auth="in"] is shown only when signed in;
+ * [data-auth="out"] is shown only when signed out.
+ */
+function paintAuthGatedSurfaces(signedIn) {
+  document.querySelectorAll('[data-auth="in"]').forEach((el) => {
+    el.style.display = signedIn ? '' : 'none';
+  });
+  document.querySelectorAll('[data-auth="out"]').forEach((el) => {
+    el.style.display = signedIn ? 'none' : '';
+  });
+  document.querySelectorAll('[data-auth-label-in]').forEach((el) => {
+    if (signedIn) {
+      const label = el.getAttribute('data-auth-label-in');
+      if (label) el.textContent = label;
+    }
+  });
 }
 
 function escapeHtml(s) {

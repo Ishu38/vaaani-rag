@@ -52,6 +52,22 @@
         <input id="password" name="password" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters" />
         <span class="hint">A verification email will be sent to confirm this address.</span>
       </div>
+      <div class="field">
+        <label for="date_of_birth">Date of birth</label>
+        <input id="date_of_birth" name="date_of_birth" type="date" required max="" placeholder="YYYY-MM-DD" />
+        <span class="hint">Required under India's DPDP Act 2023 §9. If you are under 18, we will ask for parental consent.</span>
+      </div>
+      <div class="field" id="parentSection" style="display:none;">
+        <div style="background:rgba(160,106,30,0.08);border:1px solid rgba(160,106,30,0.3);border-radius:8px;padding:14px 16px;margin:8px 0 14px;font-size:13px;color:#4d3a18;line-height:1.55;">
+          You are under 18. We need your <strong>parent or lawful guardian</strong>'s email so we can request their consent before activating your account. They will receive a link to confirm.
+        </div>
+        <label for="parent_email">Parent / guardian email</label>
+        <input id="parent_email" name="parent_email" type="email" autocomplete="off" placeholder="parent@example.com" />
+        <label for="parent_name" style="margin-top:12px;">Parent / guardian name <span style="color:var(--c-muted)">(optional)</span></label>
+        <input id="parent_name" name="parent_name" type="text" autocomplete="off" />
+        <label for="parent_phone" style="margin-top:12px;">Parent / guardian phone <span style="color:var(--c-muted)">(optional)</span></label>
+        <input id="parent_phone" name="parent_phone" type="tel" autocomplete="off" placeholder="+91-…" />
+      </div>
       <div class="auth-actions">
         <button class="btn btn-primary" type="submit" id="submitBtn">Create account</button>
         <div class="divider">or</div>
@@ -79,7 +95,7 @@
   </div>
 </main>
 
-<script src="/auth.js"></script>
+<script src="/auth.js?v=20260526a"></script>
 <script>
   Auth.wireGoogleButton(document.getElementById('googleBtn'));
   Auth.wireGithubButton(document.getElementById('githubBtn'));
@@ -87,23 +103,72 @@
   const form = document.getElementById('signupForm');
   const status = document.getElementById('status');
   const submit = document.getElementById('submitBtn');
+  const dobInput = document.getElementById('date_of_birth');
+  const parentSection = document.getElementById('parentSection');
+
+  // Clamp the date picker to today so a DOB in the future is impossible.
+  dobInput.max = new Date().toISOString().slice(0, 10);
+
+  function isMinor(dobStr) {
+    if (!dobStr) return false;
+    const dob = new Date(dobStr);
+    if (isNaN(dob)) return false;
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    return age < 18;
+  }
+
+  // Show / hide the parent-contact block as DOB changes.
+  dobInput.addEventListener('change', () => {
+    const minor = isMinor(dobInput.value);
+    parentSection.style.display = minor ? 'block' : 'none';
+    document.getElementById('parent_email').required = minor;
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    const dob = dobInput.value;
+    if (!dob) {
+      Auth.setStatus(status, 'err', 'Date of birth is required.');
+      return;
+    }
+    const minor = isMinor(dob);
+    const parentEmail = document.getElementById('parent_email').value.trim();
+    if (minor && !parentEmail) {
+      Auth.setStatus(status, 'err', 'Parent / guardian email is required for under-18 signups.');
+      return;
+    }
     Auth.setStatus(status, 'info', 'Creating your account…');
     submit.disabled = true;
     const body = {
       name: form.name.value.trim() || null,
       email: form.email.value.trim(),
       password: form.password.value,
+      date_of_birth: dob,
     };
+    if (minor) {
+      body.parent_email = parentEmail;
+      body.parent_name = document.getElementById('parent_name').value.trim() || null;
+      body.parent_phone = document.getElementById('parent_phone').value.trim() || null;
+    }
     const r = await Auth.json('/auth/signup', { method: 'POST', body: JSON.stringify(body) });
     submit.disabled = false;
     if (!r.ok) {
       Auth.setStatus(status, 'err', (r.data && r.data.detail) || 'Sign-up failed. Please try again.');
       return;
     }
-    Auth.setStatus(status, 'ok', 'Account created. Check your email (or server logs in dev) for the verification link. Redirecting…');
+    if (r.data && r.data.next === 'parental-consent-pending') {
+      // Under-18 path — no session was issued. Show what to do next.
+      Auth.setStatus(status, 'ok',
+        'Account created. We have emailed ' + (body.parent_email) +
+        ' a verifiable consent request. Your account stays locked until your parent confirms (link expires in 7 days).');
+      submit.disabled = true;
+      submit.textContent = 'Waiting for parental consent';
+      return;
+    }
+    Auth.setStatus(status, 'ok', 'Account created. Check your email for the verification link. Redirecting…');
     setTimeout(() => { window.location = '/account?welcome=1'; }, 900);
   });
 </script>

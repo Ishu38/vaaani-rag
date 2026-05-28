@@ -47,24 +47,59 @@ MATH_TYPESETTING = (
     "Answers without delimited math will not render correctly for the user."
 )
 
-# Diagram-output directive. The model emits inline JSON specs which the backend
-# converts to PNGs. Limited to single-variable functions of x; use sparingly
-# (one plot per answer is usually enough) so the reply doesn't become a slideshow.
-PLOT_SYNTAX = (
-    "DIAGRAMS — when a graph would help the student understand the answer "
-    "(e.g. they ask 'what does sin(x) look like?', or you need to show "
-    "a parabola, an exponential, an integration region, a curve's behaviour), "
-    "emit a plot spec INLINE in your answer using this exact format:\n\n"
-    "[[PLOT:{\"expr\":\"sin(x)\",\"x_min\":-3.14159,\"x_max\":3.14159,"
-    "\"title\":\"y = sin(x)\"}]]\n\n"
-    "Place the marker on its own line where you want the figure to appear. "
-    "Fields: expr (required, function of x using sin/cos/tan/exp/log/sqrt/abs/"
-    "pi/e and operators + - * / **), x_min, x_max (numbers), title, x_label, "
-    "y_label (optional strings). Use ** for powers (x**2 not x^2). The "
-    "expression must depend only on the variable x. Use plots only when they "
-    "genuinely add understanding — one per answer at most. If you can't "
-    "express the diagram as y = f(x) (e.g. geometric figures, free-body "
-    "diagrams), do not use this syntax — describe the figure in words instead."
+# Diagram-output directives. The model emits inline JSON specs which the backend
+# converts to PNGs. Five marker types supported — use the right one for the need.
+# Place each marker on its own line where the figure should appear. One diagram
+# per answer is best; never emit more than two markers in one reply.
+DIAGRAM_SYNTAX = (
+    "DIAGRAMS — you can embed figures INLINE in your answer using these markers. "
+    "Place each marker on its own line. Use at most 2 diagrams per reply.\n\n"
+
+    "1. FUNCTION PLOT — for curves, parabolas, trig waves, exponentials, "
+    "integration regions, derivative visuals:\n"
+    "[[PLOT:{\"expr\":\"sin(x)\",\"x_min\":-3.14,\"x_max\":3.14,\"title\":\"y = sin(x)\"}]]\n"
+    "Fields: expr (required, function of x with sin/cos/tan/exp/log/sqrt/abs/pi/E + - * / **), "
+    "x_min, x_max (numbers, default -10, 10), title, x_label, y_label (strings). "
+    "Optional fill_between: [a, b] to shade area under curve. "
+    "Optional expr2: second function for comparison (dashed blue line).\n\n"
+
+    "2. CHART — for bar charts, histograms, scatter plots, box plots, pie charts:\n"
+    "[[CHART:{\"type\":\"bar\",\"labels\":[\"A\",\"B\",\"C\"],\"values\":[3,7,5],\"title\":\"Results\"}]]\n"
+    "[[CHART:{\"type\":\"histogram\",\"data\":[1,2,2,3,3,3,4,5],\"bins\":6}]]\n"
+    "[[CHART:{\"type\":\"scatter\",\"x\":[1,2,3,4],\"y\":[2,4,6,8]}]]\n"
+    "Types: bar, histogram, scatter, boxplot, pie. Fields: type (required), "
+    "labels, values/data, bins (for histogram), title, x_label, y_label.\n\n"
+
+    "3. DOT GRAPH — for flowcharts, relationship diagrams, concept maps, "
+    "syntax trees, theorem proof steps, Venn-like diagrams. Use DOT language:\n"
+    "[[DOT:{\"graph\":\"digraph { rankdir=TB; A [label=\\\"Start\\\"]; A -> B; B -> C [label=\\\"Condition\\\"]; }\",\"title\":\"Flowchart\"}]]\n"
+    "Fields: graph (required, DOT source string — use digraph for directed, graph for undirected; "
+    "nodes with [label=\"...\"]; edges with A -> B or A -- B; use \\\" inside labels). "
+    "Optional title.\n\n"
+
+    "4. CIRCUIT — for electrical circuit diagrams in physics (Current Electricity, "
+    "Kirchhoff's laws, Wheatstone bridge, etc.):\n"
+    "[[CIRCUIT:{\"elements\":[{\"type\":\"battery\",\"label\":\"V\",\"value\":\"12V\"},{\"type\":\"resistor\",\"label\":\"R1\",\"value\":\"10Ω\"},{\"type\":\"line\"},{\"type\":\"ground\"}],\"title\":\"Circuit\"}]]\n"
+    "Element types: resistor, capacitor, inductor, battery, diode, led, ground, "
+    "switch, ammeter, voltmeter, line. Each element: type (required), label, value, "
+    "direction (right/left/up/down). Elements placed left-to-right by default.\n\n"
+
+    "5. GEOMETRY — for triangles, circles, vectors, ray optics diagrams:\n"
+    "[[GEOM:{\"type\":\"triangle\",\"vertices\":[[0,0],[4,0],[2,3]],\"labels\":[\"A\",\"B\",\"C\"],\"show_angles\":true,\"right_angle\":false}]]\n"
+    "[[GEOM:{\"type\":\"circle\",\"center\":[0,0],\"radius\":5,\"show_axes\":true}]]\n"
+    "[[GEOM:{\"type\":\"vectors\",\"vectors\":[[0,0,3,2],[0,0,1,4]]}]]\n"
+    "[[GEOM:{\"type\":\"ray_optics\",\"kind\":\"convex_lens\"}]]\n"
+    "Types: triangle (with vertices, labels, show_angles, right_angle), "
+    "circle (center, radius, show_axes), vectors (list of [x,y,dx,dy]), "
+    "ray_optics (kind: convex_lens or concave_lens).\n\n"
+
+    "CHOOSE THE RIGHT MARKER: "
+    "- Any y=f(x) curve → PLOT "
+    "- Data, distributions, comparisons → CHART "
+    "- Flowcharts, trees, concept maps, syntax → DOT "
+    "- Electrical circuits → CIRCUIT "
+    "- Geometric shapes, vectors, optics → GEOM "
+    "If a diagram doesn't fit any type, describe it in words instead."
 )
 
 SOCRATIC_PREFIX = (
@@ -135,6 +170,16 @@ SYSTEM_META = (
 SYSTEM_STRUCTURED_SUFFIX = (
     "\n\nIMPORTANT: respond with VALID JSON only, no prose, no markdown fences. "
     'Schema: {"columns": ["..."], "rows": [["..."], ...], "notes": "optional"}'
+)
+
+SYSTEM_COT = (
+    "\n\nREASONING REQUIREMENT: think step by step. Before presenting any "
+    "answer, break the problem down into logical stages. Number your steps. "
+    "Show the reasoning chain explicitly — derive formulas before plugging in "
+    "numbers, state assumptions, and verify units at each stage. "
+    "For problems: list what is given and what is to find first. "
+    "For explanations: build from first principles, not from the conclusion. "
+    "End with a clearly marked final answer or summary."
 )
 
 
@@ -226,6 +271,12 @@ def build_prompt(
     if guardrail_prompt:
         system = guardrail_prompt + "\n\n" + system
 
+    # Direct-mode (non-Socratic) knowledge queries: enforce chain-of-thought
+    # step-by-step reasoning. Socratic mode asks questions instead, and
+    # structured/JSON mode already has a rigid output format.
+    if intent == "knowledge" and not socratic and not structured:
+        system = system + SYSTEM_COT
+
     if structured:
         system = system + SYSTEM_STRUCTURED_SUFFIX
     else:
@@ -241,7 +292,7 @@ def build_prompt(
     # Without this order the model drops the formatting/diagram instructions
     # under longer prompts.
     if not structured:
-        system = system + "\n\n" + MATH_TYPESETTING + "\n\n" + PLOT_SYNTAX
+        system = system + "\n\n" + MATH_TYPESETTING + "\n\n" + DIAGRAM_SYNTAX
 
     user_parts: list[str] = []
     if memory_block:

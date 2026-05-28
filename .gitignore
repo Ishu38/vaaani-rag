@@ -16,6 +16,14 @@ data/memory.json
 data/raw/
 data/hermes/
 data/cache/
+data/cognitive.db
+data/cognitive.db-*
+data/simulation.db
+data/simulation.db-*
+data/jobs.db
+data/jobs.db-*
+data/guardrail_events.jsonl
+data/figures/
 
 # Secrets / env
 .env

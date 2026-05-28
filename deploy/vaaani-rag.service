@@ -15,6 +15,7 @@ WorkingDirectory=/opt/vaaani-rag
 EnvironmentFile=/etc/vaaani-rag/env
 # PORT is read by run.sh (defaults to 8765 if unset).
 Environment=PORT=8766
+Environment=MPLCONFIGDIR=/tmp/vaaani-mpl
 Environment=PYTHONUNBUFFERED=1
 # run.sh exec's uvicorn, so Type=exec works correctly (PID == uvicorn).
 ExecStart=/opt/vaaani-rag/run.sh

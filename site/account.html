@@ -97,10 +97,56 @@
         <button class="btn btn-ghost" type="button" id="logoutBtn">Sign out</button>
       </div>
     </div>
+
+    <!-- ============================================================
+         DPDP §11/§12 — data rights panel
+         Always rendered for signed-in users. Under-18 accounts also
+         see consent state + withdraw button.
+         ============================================================ -->
+    <div class="auth-card" style="margin-top: 28px;" id="dpdpPanel">
+      <span class="auth-eyebrow">// Your data rights (DPDP Act 2023)</span>
+      <h2 style="margin: 8px 0 6px; font-size: 22px; letter-spacing: -0.015em;">Your data, your control</h2>
+      <p class="auth-sub">Vaaani is built to honour every right India's Digital Personal Data Protection Act 2023 grants you. The buttons below act immediately.</p>
+
+      <div id="consentBlock" style="display:none; margin: 16px 0 8px;"></div>
+
+      <div class="profile-grid" style="grid-template-columns: 1fr; gap: 12px; margin-top: 14px;">
+        <div class="profile-row" style="grid-template-columns: 1fr auto; padding: 14px 16px; border: 1px solid var(--c-border); border-radius: 8px;">
+          <div>
+            <div class="profile-label">Right to access (§11)</div>
+            <div style="font-size: 13.5px; color: var(--c-muted-strong); margin-top: 2px;">Download everything we store about you as a single JSON file.</div>
+          </div>
+          <button class="btn btn-ghost" type="button" id="exportBtn">Download my data</button>
+        </div>
+        <div class="profile-row" style="grid-template-columns: 1fr auto; padding: 14px 16px; border: 1px solid var(--c-border); border-radius: 8px;">
+          <div>
+            <div class="profile-label">Right to grievance (§13)</div>
+            <div style="font-size: 13.5px; color: var(--c-muted-strong); margin-top: 2px;">Reach our grievance officer — response within 7 working days.</div>
+          </div>
+          <a class="btn btn-ghost" href="mailto:neilshankarray@vaaani.in">Contact officer</a>
+        </div>
+        <div class="profile-row" style="grid-template-columns: 1fr auto; padding: 14px 16px; border: 1px solid rgba(176,64,80,0.3); border-radius: 8px; background: rgba(176,64,80,0.04);">
+          <div>
+            <div class="profile-label" style="color:#8a3040;">Right to erasure (§12)</div>
+            <div style="font-size: 13.5px; color: var(--c-muted-strong); margin-top: 2px;">Soft-delete the account. Hard-deletion within 30 days. Stored chunks of any documents you uploaded are scheduled for deletion too. <strong>This is not reversible after 30 days.</strong></div>
+          </div>
+          <button class="btn btn-ghost" type="button" id="deleteBtn" style="color:#8a3040;border-color:rgba(176,64,80,0.4);">Delete my account</button>
+        </div>
+      </div>
+
+      <details style="margin-top: 18px; font-size: 13px; color: var(--c-muted-strong);">
+        <summary style="cursor: pointer; font-weight: 600; color: var(--c-text);">View DPDP audit history</summary>
+        <div id="auditList" style="margin-top: 10px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 11.5px; max-height: 240px; overflow-y: auto; padding: 10px; background: var(--c-panel); border-radius: 6px;">Loading…</div>
+      </details>
+
+      <p style="margin-top: 18px; font-size: 12px; color: var(--c-muted);">
+        See the full <a href="/privacy" style="color: var(--c-accent);">privacy notice</a> for what we collect, why, and where it lives. Questions: <a href="mailto:neilshankarray@vaaani.in">neilshankarray@vaaani.in</a>.
+      </p>
+    </div>
   </section>
 </main>
 
-<script src="/auth.js"></script>
+<script src="/auth.js?v=20260526a"></script>
 <script>
   const $ = s => document.querySelector(s);
 
@@ -212,7 +258,102 @@
     setTimeout(load, 600);
   });
 
+  // -------- DPDP rights: export, delete, audit, consent state --------
+  async function loadConsentBlock() {
+    const r = await Auth.json('/auth/consent/status');
+    if (!r.ok || !r.data) return;
+    const d = r.data;
+    const block = document.getElementById('consentBlock');
+    if (!d.is_minor) { block.style.display = 'none'; return; }
+    let html = '';
+    if (d.consent_status === 'granted') {
+      html = `<div style="background:rgba(77,105,78,0.08);border:1px solid rgba(77,105,78,0.3);border-radius:8px;padding:14px 16px;font-size:13.5px;line-height:1.55;">
+        <strong>Parental consent on file.</strong> Granted ${escapeHtml(d.active_consent ? d.active_consent.granted_at : '')}
+        by ${escapeHtml(d.active_consent ? d.active_consent.parent_email : '')} (text version ${escapeHtml(d.active_consent ? d.active_consent.consent_text_version : '')}).
+        <div style="margin-top:10px;"><button class="btn btn-ghost" type="button" id="withdrawBtn" style="color:#8a3040;border-color:rgba(176,64,80,0.4);">Withdraw consent</button></div>
+      </div>`;
+    } else if (d.consent_status === 'pending') {
+      html = `<div style="background:rgba(160,106,30,0.08);border:1px solid rgba(160,106,30,0.3);border-radius:8px;padding:14px 16px;font-size:13.5px;line-height:1.55;">
+        <strong>Awaiting parental consent.</strong> We have emailed ${escapeHtml(d.active_consent ? d.active_consent.parent_email : 'your parent')} a verifiable consent link. Until they confirm, your chat and uploads are disabled.
+      </div>`;
+    } else if (d.consent_status === 'withdrawn') {
+      html = `<div style="background:rgba(176,64,80,0.08);border:1px solid rgba(176,64,80,0.3);border-radius:8px;padding:14px 16px;font-size:13.5px;line-height:1.55;">
+        <strong>Parental consent withdrawn.</strong> Vaaani has stopped processing your data. Contact <a href="mailto:neilshankarray@vaaani.in">neilshankarray@vaaani.in</a> to restore access.
+      </div>`;
+    }
+    block.innerHTML = html;
+    block.style.display = 'block';
+    const wb = document.getElementById('withdrawBtn');
+    if (wb) wb.addEventListener('click', withdrawConsent);
+  }
+
+  async function withdrawConsent() {
+    if (!confirm('Withdraw parental consent? Vaaani will stop processing this account immediately. The data export below remains available for 30 days.')) return;
+    const r = await Auth.json('/auth/consent/withdraw', { method: 'POST', body: JSON.stringify({}) });
+    if (!r.ok) {
+      alert('Withdraw failed: ' + (r.data && r.data.detail || r.status));
+      return;
+    }
+    alert('Consent withdrawn. You will be signed out.');
+    await Auth.json('/auth/logout', { method: 'POST' });
+    window.location = '/';
+  }
+
+  document.getElementById('exportBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('exportBtn');
+    btn.disabled = true; btn.textContent = 'Exporting…';
+    try {
+      const r = await fetch('/auth/data-export', { credentials: 'same-origin' });
+      if (!r.ok) throw new Error('export failed (' + r.status + ')');
+      const blob = await r.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'vaaani-data-export.json';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert('Export failed: ' + e.message);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Download my data';
+      loadAudit();
+    }
+  });
+
+  document.getElementById('deleteBtn').addEventListener('click', async () => {
+    const me = await Auth.me();
+    if (!me) return;
+    const typed = prompt('Type your email to confirm permanent deletion:\n\n' + me.email);
+    if (!typed || typed.trim().toLowerCase() !== me.email.trim().toLowerCase()) {
+      alert('Email did not match. Account NOT deleted.');
+      return;
+    }
+    if (!confirm('Are you absolutely sure? This will block all access immediately and erase your data within 30 days.')) return;
+    const r = await Auth.json('/auth/data-delete', {
+      method: 'POST',
+      body: JSON.stringify({ confirm_email: typed.trim() }),
+    });
+    if (!r.ok) {
+      alert('Deletion failed: ' + (r.data && r.data.detail || r.status));
+      return;
+    }
+    alert('Account soft-deleted. Hard scrub within 30 days. Signing you out.');
+    window.location = '/';
+  });
+
+  async function loadAudit() {
+    const r = await Auth.json('/auth/dpdp/audit');
+    const list = document.getElementById('auditList');
+    if (!r.ok) { list.textContent = 'Could not load.'; return; }
+    const evs = (r.data && r.data.events) || [];
+    if (!evs.length) { list.textContent = 'No DPDP events recorded yet.'; return; }
+    list.innerHTML = evs.map(e =>
+      `<div>[${escapeHtml(e.created_at)}] ${escapeHtml(e.event_type)} ${escapeHtml(e.detail || '')}</div>`
+    ).join('');
+  }
+
   load();
+  loadConsentBlock();
+  loadAudit();
 </script>
 </body>
 </html>

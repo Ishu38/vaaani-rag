@@ -281,15 +281,23 @@ def invalidate_chunks_cache() -> None:
     _CHUNKS_CACHE = None
 
 
-def _find_cloze_passage(display: str) -> tuple[str, str, str] | None:
+def _find_cloze_passage(display: str, *, source_filter: set[str] | None = None) -> tuple[str, str, str] | None:
     """Return (raw_passage, cloze_passage, doc_name) or None if no match.
     Picks the chunk where the term has the most balanced context (a
-    sentence of ~12-40 words around the first mention)."""
+    sentence of ~12-40 words around the first mention).
+
+    ``source_filter`` (optional set of filenames): when supplied, only
+    chunks whose ``source`` is in the set are eligible. Used by the
+    Review modal's per-source scope chip and by /anki/export?source=…
+    so the deck only contains cards from the chosen documents.
+    """
     if not display:
         return None
     pattern = re.compile(rf"\b{re.escape(display)}\b", re.IGNORECASE)
     best: tuple[int, str, str, str] | None = None  # (score, raw, cloze, source)
     for ch in _chunks():
+        if source_filter and ch.get("source") not in source_filter:
+            continue
         text = ch.get("text", "")
         if not text or not pattern.search(text):
             continue
@@ -346,14 +354,14 @@ def _build_recall_prompt(node_id: str, display: str) -> dict:
     }
 
 
-def build_review_item(node_id: str, display: str) -> dict:
+def build_review_item(node_id: str, display: str, *, source_filter: set[str] | None = None) -> dict:
     """Top-level: return a review card payload ready for the UI."""
     nodes, adj = _graph()
     n = nodes.get(node_id, {})
     descriptions = n.get("descriptions") or []
     if not display:
         display = n.get("display", node_id)
-    cloze = _find_cloze_passage(display)
+    cloze = _find_cloze_passage(display, source_filter=source_filter)
     if cloze:
         raw, cloze_text, src = cloze
         return {
@@ -376,8 +384,26 @@ def build_review_item(node_id: str, display: str) -> dict:
 #  Public entry points
 # =========================================================================
 
-def next_review(user_id: int) -> dict | None:
-    """Pick the next due item (graph-aware) and build its review card."""
+def next_review(user_id: int, *, source_filter: set[str] | None = None) -> dict | None:
+    """Pick the next due item (graph-aware) and build its review card.
+
+    ``source_filter`` (optional): when supplied, the picker scans candidates
+    in graph-aware priority order and returns the first one that has a
+    cloze passage available in the filtered sources. If none do, returns
+    None — UI surfaces "no review material in this source" gracefully.
+    """
+    # When a source filter is in play we may need to skip the top-priority
+    # candidate (if it has no cloze in the chosen source) and walk down.
+    if source_filter:
+        candidates = _due_candidates(user_id, limit=40) or _seed_candidates(user_id, limit=40)
+        for cand in candidates:
+            item = build_review_item(cand["topic"], cand["display"], source_filter=source_filter)
+            if item.get("mode") == "cloze" and item.get("source") in source_filter:
+                item["mastery"] = round(float(cand.get("mastery", 2.0)), 2)
+                item["interval_days"] = round(float(cand.get("interval_days", 1.0)), 2)
+                item["due_at"] = cand.get("due_at", "")
+                return item
+        return None
     pick = select_next(user_id)
     if pick is None:
         return None

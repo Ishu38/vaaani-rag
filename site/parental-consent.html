@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Parental consent for your child's Vaaani account — required under India's Digital Personal Data Protection Act 2023, §9." />
+<title>Parental consent — Vaaani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+<link rel="stylesheet" href="/auth.css" />
+<style>
+  .consent-card { max-width: 720px; }
+  .child-summary {
+    background: var(--c-panel, #fbedc6);
+    border: 1px solid var(--c-border, #e0cc93);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 18px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .child-summary strong { color: var(--c-text, #2563eb); }
+  .consent-text {
+    background: #fefaef;
+    border: 1px solid rgba(60, 83, 64, 0.12);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 14px 0 22px;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    max-height: 380px;
+    overflow-y: auto;
+    color: #2a3a2b;
+  }
+  .consent-meta {
+    font-size: 11.5px;
+    color: var(--c-muted, #7a8b6f);
+    margin: 6px 0 18px;
+    letter-spacing: 0.04em;
+  }
+  .consent-form label.checkbox {
+    display: flex; gap: 10px; align-items: flex-start;
+    cursor: pointer; padding: 10px 0;
+    font-size: 13.5px; line-height: 1.5; color: var(--c-text-strong, #2a3a2b);
+  }
+  .consent-form label.checkbox input { margin-top: 3px; }
+  .consent-form input[type=text] {
+    width: 100%; padding: 11px 14px;
+    background: var(--c-panel, #fbedc6);
+    border: 1px solid var(--c-border, #e0cc93);
+    border-radius: 8px; font: inherit; font-size: 14px;
+    margin-top: 6px;
+  }
+  .consent-form .field { margin: 14px 0; }
+  .consent-form .field-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-muted, #7a8b6f); }
+  .pill-state {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    margin-left: 8px; vertical-align: middle;
+  }
+  .pill-state.pending { background: rgba(160,106,30,0.12); color: #8a6520; border: 1px solid rgba(160,106,30,0.3); }
+  .pill-state.granted { background: rgba(77,105,78,0.12); color: #2563eb; border: 1px solid rgba(77,105,78,0.32); }
+  .pill-state.expired, .pill-state.withdrawn { background: rgba(176,64,80,0.10); color: #8a3040; border: 1px solid rgba(176,64,80,0.3); }
+</style>
+</head>
+<body class="auth-shell">
+
+<nav class="nav scrolled" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/privacy">Privacy</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="auth-main">
+  <div class="auth-card consent-card" id="card">
+    <span class="auth-eyebrow">// Parental consent (DPDP §9)</span>
+    <h1 id="title">Reviewing consent request…</h1>
+    <p class="auth-sub" id="subtitle">One moment.</p>
+    <div class="status-msg" id="status" style="display:none;"></div>
+
+    <div id="body" style="display:none;">
+      <div class="child-summary" id="childSummary"></div>
+
+      <div class="consent-text" id="consentText"></div>
+      <div class="consent-meta" id="consentMeta"></div>
+
+      <form class="consent-form" id="consentForm" onsubmit="return false;">
+        <div class="field">
+          <span class="field-label">Your name (parent / lawful guardian)</span>
+          <input type="text" id="parentName" autocomplete="name" placeholder="e.g. Asha Sharma" />
+        </div>
+        <label class="checkbox">
+          <input type="checkbox" id="agreeIdentity" />
+          <span>I confirm I am the <strong>parent or lawful guardian</strong> of the child named above.</span>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" id="agreeText" />
+          <span>I have <strong>read and understood</strong> the consent text above, and I consent to Vaaani processing my child's data on the terms stated.</span>
+        </label>
+        <div class="auth-actions" style="margin-top: 20px;">
+          <button class="btn btn-primary" type="button" id="confirmBtn" disabled>Confirm consent</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<script src="/auth.js?v=20260526a"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
+  const title = document.getElementById('title');
+  const subtitle = document.getElementById('subtitle');
+  const statusEl = document.getElementById('status');
+  const body = document.getElementById('body');
+  const childSummary = document.getElementById('childSummary');
+  const consentText = document.getElementById('consentText');
+  const consentMeta = document.getElementById('consentMeta');
+  const parentName = document.getElementById('parentName');
+  const agreeIdentity = document.getElementById('agreeIdentity');
+  const agreeText = document.getElementById('agreeText');
+  const confirmBtn = document.getElementById('confirmBtn');
+
+  function paintStatus(kind, msg) { Auth.setStatus(statusEl, kind, msg); }
+  function pill(state) { return `<span class="pill-state ${state}">${state}</span>`; }
+
+  function paintAlreadyResolved(state, lookup) {
+    const labels = {
+      granted: 'Consent already granted.',
+      withdrawn: 'Consent was withdrawn.',
+      expired: 'This consent link has expired.',
+    };
+    title.innerHTML = (labels[state] || 'Consent state: ' + state) + ' ' + pill(state);
+    subtitle.textContent = state === 'granted'
+      ? `Your child's account is active. You can withdraw consent at any time by emailing neilshankarray@vaaani.in or asking your child to use the withdraw button in their account settings.`
+      : state === 'withdrawn'
+      ? `Vaaani has stopped processing this child's data. To restore access, contact neilshankarray@vaaani.in.`
+      : `Ask your child to request a fresh consent email from the Vaaani sign-up screen, or contact neilshankarray@vaaani.in.`;
+  }
+
+  async function load() {
+    if (!token) {
+      title.textContent = 'No consent token in URL.';
+      subtitle.textContent = 'Open the link in the email we sent you.';
+      return;
+    }
+    try {
+      const r = await fetch('/auth/consent/lookup/' + encodeURIComponent(token));
+      if (r.status === 404) {
+        title.textContent = 'Invalid or expired consent link.';
+        subtitle.textContent = 'Ask your child to request a fresh consent email, or contact neilshankarray@vaaani.in.';
+        return;
+      }
+      if (!r.ok) throw new Error('Lookup failed (' + r.status + ')');
+      const d = await r.json();
+      if (d.status && d.status !== 'pending') {
+        paintAlreadyResolved(d.status, d);
+        return;
+      }
+      title.textContent = 'Parental consent required';
+      subtitle.textContent = 'You have been asked to grant consent under India’s Digital Personal Data Protection Act 2023, §9.';
+      const dob = d.child && d.child.date_of_birth ? d.child.date_of_birth : 'not provided';
+      const childName = d.child && d.child.name ? d.child.name : '(name not on file)';
+      const emailHint = d.child && d.child.email_hint ? d.child.email_hint : '(unknown)';
+      childSummary.innerHTML = `
+        <div><strong>Child:</strong> ${escapeHtml(childName)}</div>
+        <div><strong>Account email:</strong> ${escapeHtml(emailHint)}</div>
+        <div><strong>Date of birth:</strong> ${escapeHtml(dob)}</div>
+        <div><strong>Consent requested:</strong> ${escapeHtml(d.requested_at || '')}</div>
+        <div><strong>Link expires:</strong> ${escapeHtml(d.expires_at || '')}</div>
+      `;
+      consentText.textContent = d.consent_text || '(consent text missing)';
+      consentMeta.textContent = 'Consent text version: ' + (d.consent_text_version || '?') + '  ·  Your parent email on file: ' + (d.parent_email || '');
+      body.style.display = 'block';
+    } catch (e) {
+      title.textContent = 'Could not load consent details.';
+      subtitle.textContent = e.message;
+    }
+  }
+
+  function syncButton() {
+    confirmBtn.disabled = !(agreeIdentity.checked && agreeText.checked);
+  }
+  agreeIdentity.addEventListener('change', syncButton);
+  agreeText.addEventListener('change', syncButton);
+
+  confirmBtn.addEventListener('click', async () => {
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Confirming…';
+    paintStatus('', '');
+    try {
+      const r = await fetch('/auth/consent/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, parent_name: parentName.value.trim() || null }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.detail || ('Confirm failed (' + r.status + ')'));
+      title.innerHTML = 'Consent confirmed. ' + pill('granted');
+      subtitle.textContent = 'Your child can now sign in. To withdraw consent, email neilshankarray@vaaani.in or use the withdraw button in your child’s account.';
+      body.style.display = 'none';
+      paintStatus('ok', 'Recorded. Version ' + (d.consent && d.consent.consent_text_version || '?') + ' at ' + (d.consent && d.consent.granted_at || ''));
+    } catch (e) {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Confirm consent';
+      paintStatus('err', e.message);
+    }
+  });
+
+  load();
+</script>
+</body>
+</html>

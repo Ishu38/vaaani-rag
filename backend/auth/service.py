@@ -36,6 +36,7 @@ def _hash_otp(code: str) -> str:
 
 def _row_to_user(row) -> dict:
     """Project a sqlite3.Row into a JSON-friendly user dict (sans secrets)."""
+    keys = row.keys()
     return {
         "id": row["id"],
         "email": row["email"],
@@ -45,8 +46,15 @@ def _row_to_user(row) -> dict:
         "email_verified_at": row["email_verified_at"],
         "phone_verified_at": row["phone_verified_at"],
         "google_linked": bool(row["google_sub"]),
-        "github_linked": bool(row["github_id"]) if "github_id" in row.keys() else False,
+        "github_linked": bool(row["github_id"]) if "github_id" in keys else False,
         "created_at": row["created_at"],
+        # DPDP fields — read by auth/dpdp.allow_processing() and the SPA's
+        # consent modal. All optional so older rows (pre-2026-05-26) still
+        # round-trip cleanly with consent_status defaulting to 'not_required'.
+        "date_of_birth": row["date_of_birth"] if "date_of_birth" in keys else None,
+        "consent_status": (row["consent_status"] if "consent_status" in keys else None) or "not_required",
+        "active_consent_id": row["active_consent_id"] if "active_consent_id" in keys else None,
+        "deleted_at": row["deleted_at"] if "deleted_at" in keys else None,
     }
 
 
@@ -74,17 +82,31 @@ def _get_raw_by_email(email: str):
 
 # ---------------- signup ----------------
 
-def create_user_with_password(email: str, password: str, name: str | None = None) -> dict:
-    """Insert a new password-based user. Raises ValueError if email taken."""
+def create_user_with_password(
+    email: str,
+    password: str,
+    name: str | None = None,
+    date_of_birth: str | None = None,
+) -> dict:
+    """Insert a new password-based user. Raises ValueError if email taken.
+
+    `date_of_birth` is ISO YYYY-MM-DD. Under-18s are marked consent_status =
+    'pending' so the DPDP gate refuses /chat /ingest until a parent grants
+    consent via the magic-link flow (see auth/dpdp.py).
+    """
+    from .dpdp import is_minor  # local import — avoid module-load cycle
     email = email.strip().lower()
     name = (name or "").strip() or None
+    dob = (date_of_birth or "").strip() or None
     if get_user_by_email(email):
         raise ValueError("An account with that email already exists.")
     pw = hash_password(password)
+    consent_status = "pending" if is_minor(dob) else "not_required"
     with connect() as c:
         c.execute(
-            "INSERT INTO users (email, password_hash, name, plan) VALUES (?,?,?,?)",
-            (email, pw, name, DEFAULT_PLAN),
+            "INSERT INTO users (email, password_hash, name, plan, date_of_birth, consent_status) "
+            "VALUES (?,?,?,?,?,?)",
+            (email, pw, name, DEFAULT_PLAN, dob, consent_status),
         )
     user = get_user_by_email(email)
     assert user is not None

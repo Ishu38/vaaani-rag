@@ -116,5 +116,15 @@ TTS_MP3_BITRATE = "80k"
 AUDIO_DIR.mkdir(parents=True, exist_ok=True)
 TTS_VOICES_DIR.mkdir(parents=True, exist_ok=True)
 
+# ----- Ingest limits -----
+# Maximum upload size for /ingest endpoints. Cloudflare free tier = 100 MB;
+# we cap at 50 MB to keep chunk counts bounded and leave headroom.
+MAX_UPLOAD_BYTES = 50 * 1024 * 1024  # 50 MB
+
+# File extensions that go through OCR (image → text) rather than direct text
+# extraction. Tesseract handles PNG, JPEG; WEBP gets Pillow-converted to JPEG
+# first. These are included in SUPPORTED_EXT by ingest.py.
+IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
+
 for p in (RAW_DIR, DATA_DIR):
     p.mkdir(parents=True, exist_ok=True)

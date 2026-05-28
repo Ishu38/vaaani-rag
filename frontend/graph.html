@@ -9,23 +9,25 @@
 <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 <style>
   :root {
-    --bg: #fff3d5;
-    --panel: #fbedc6;
-    --panel-2: #f0dda8;
-    --border: #e0cc93;
-    --border-strong: #bfa86f;
-    --text: #4d694e;
-    --muted: #7a8b6f;
-    --muted-strong: #5d7459;
-    --accent: #4d694e;
-    --accent-glow: rgba(77,105,78,0.35);
+    /* Adobe Spectrum-inspired professional palette (2026-05-28).
+       Same tokens as frontend/index.html so the two views feel like one app. */
+    --bg:            #fafafa;
+    --panel:         #ffffff;
+    --panel-2:       #f4f4f5;
+    --border:        #e4e4e7;
+    --border-strong: #d4d4d8;
+    --text:          #18181b;
+    --muted:         #71717a;
+    --muted-strong:  #3f3f46;
+    --accent:        #2563eb;
+    --accent-glow:   rgba(37, 99, 235, 0.15);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
     font-family: 'Inter', -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   body {
     background:
-      radial-gradient(ellipse 1100px 500px at 50% -15%, rgba(77,105,78,0.06), transparent 65%),
+      radial-gradient(ellipse 1100px 500px at 50% -15%, rgba(37,99,235,0.04), transparent 65%),
       var(--bg);
     display: flex; flex-direction: column; min-height: 100vh;
     letter-spacing: -0.005em;
@@ -34,7 +36,7 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 32px; gap: 24px;
     backdrop-filter: blur(14px);
-    background: rgba(255,243,213,0.75);
+    background: rgba(250,250,250,0.85);
     border-bottom: 1px solid var(--border);
   }
   .brand { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
@@ -56,7 +58,7 @@
   main { flex: 1; display: grid; grid-template-columns: 280px 1fr; gap: 0; min-height: 0; }
   aside {
     border-right: 1px solid var(--border); padding: 20px 18px; overflow-y: auto;
-    background: rgba(247,233,194,0.5);
+    background: rgba(244,244,245,0.6);
   }
   aside .intro {
     background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
@@ -79,14 +81,28 @@
   aside .community .size { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
   aside .community .swatch { display: inline-block; width: 10px; height: 10px;
     border-radius: 50%; margin-right: 6px; vertical-align: middle; }
-  #graph { width: 100%; height: 100%; }
+  /* The #graph container MUST be height-constrained or vis-network's canvas
+     grows to fit its scattered nodes — we measured 17455 px in the wild,
+     which puts every node off-screen and the camera at y=-3169 staring at
+     emptiness. Calc against viewport with a nav allowance keeps the canvas
+     bounded to one screenful. The wrapper around #graph also needs the
+     same constraint (otherwise its height: auto wins). */
+  #graphWrap { position: relative; width: 100%; height: calc(100vh - 60px); min-height: 0; overflow: hidden; }
+  #graph     { width: 100%; height: 100%; }
+  /* The empty / "pick a theme" placeholder overlays the canvas so both can
+     coexist. Without position:absolute the two block-level 100%-height
+     children stack vertically and push the hint off-screen. pointer-events:
+     none lets clicks fall through to the canvas underneath. */
   .empty {
-    display: flex; align-items: center; justify-content: center; height: 100%;
-    color: var(--muted); font-size: 14px; text-align: center; padding: 40px;
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 15px; text-align: center; padding: 40px;
+    pointer-events: none;
+    z-index: 2;
   }
   .legend {
     position: absolute; right: 20px; bottom: 20px;
-    background: rgba(251,237,198,0.95); border: 1px solid var(--border);
+    background: rgba(255,255,255,0.95); border: 1px solid var(--border);
     border-radius: 6px; padding: 12px 14px; font-size: 11.5px; max-width: 260px;
     backdrop-filter: blur(8px); color: var(--muted-strong);
   }
@@ -100,7 +116,7 @@
     background: var(--bg); border: 1px solid var(--accent);
     border-radius: 10px; padding: 12px 18px;
     display: flex; align-items: center; gap: 16px;
-    box-shadow: 0 12px 32px rgba(77,105,78,0.18);
+    box-shadow: 0 12px 32px rgba(37,99,235,0.15);
     z-index: 5; max-width: 90%;
   }
   .feynman-banner .head {
@@ -160,7 +176,7 @@
     <div id="commList"></div>
   </aside>
 
-  <div style="position: relative;">
+  <div id="graphWrap">
     <div id="graph"></div>
     <div id="empty" class="empty" style="display:none;">
       No graph yet. Ingest documents from the Chat page to build the knowledge graph.
@@ -190,6 +206,9 @@ async function load() {
     fetch('/graph').then(r => r.json()),
     fetch('/status').then(r => r.json()),
   ]);
+  // Expose for focusCommunity() / renderCommunityPanel() — they need to
+  // look up community summaries + node display names by id.
+  window.graphRes = graphRes;
   document.getElementById('sNodes').textContent = graphRes.nodes.length;
   document.getElementById('sEdges').textContent = graphRes.edges.length;
   document.getElementById('sComms').textContent = graphRes.communities.length;
@@ -231,36 +250,47 @@ async function load() {
     return;
   }
 
-  const nodes = new vis.DataSet(graphRes.nodes.map(n => ({
-    id: n.id,
-    label: n.display,
-    title: `${n.display}\nKind: ${n.type}\nTheme: ${n.community ?? '—'}`,
-    color: { background: colourFor(n.community), border: '#fff', highlight: { background: '#fff', border: colourFor(n.community) } },
-    font: { color: '#1f2a1f', size: 13, face: 'Inter', strokeWidth: 3, strokeColor: '#fff3d5' },
-    community: n.community,
-  })));
+  // 2026-05-28: with corpora producing thousands of nodes / hundreds of
+  // communities, rendering the entire constellation upfront is both
+  // unreadable AND slow (improvedLayout gives up; forceAtlas2 churns).
+  // New model: start the canvas EMPTY. The sidebar IS the index. Clicking
+  // a community renders just that community's nodes + their 1-hop graph
+  // neighbours as the full canvas. Tiny "Show all" button is available
+  // for users who want the messy overview.
+  // Pre-index neighbours per node for O(1) 1-hop expansion later.
+  window._neighbours = new Map();
+  for (const e of graphRes.edges) {
+    if (!window._neighbours.has(e.source)) window._neighbours.set(e.source, new Set());
+    if (!window._neighbours.has(e.target)) window._neighbours.set(e.target, new Set());
+    window._neighbours.get(e.source).add(e.target);
+    window._neighbours.get(e.target).add(e.source);
+  }
+  window._nodeById = new Map(graphRes.nodes.map(n => [n.id, n]));
 
-  const edges = new vis.DataSet(graphRes.edges.map((e, i) => ({
-    id: i,
-    from: e.source,
-    to: e.target,
-    label: e.type,
-    color: { color: '#bfa86f', highlight: '#4d694e' },
-    font: { color: '#5d7459', size: 10, strokeWidth: 3, strokeColor: '#fff3d5', align: 'middle' },
-    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-    smooth: { type: 'continuous' },
-  })));
+  const nodes = new vis.DataSet([]);   // start empty
+  const edges = new vis.DataSet([]);   // start empty
+  window._nodesDS = nodes;
+  window._edgesDS = edges;
 
   const container = document.getElementById('graph');
   const data = { nodes, edges };
   const options = {
     nodes: { shape: 'dot', size: 16, borderWidth: 2 },
-    edges: { width: 1 },
+    edges: { width: 1, smooth: { type: 'continuous' } },
     interaction: { hover: true, dragNodes: true, zoomView: true },
-    physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -60, springLength: 120 }, stabilization: { iterations: 200 } },
+    physics: {
+      solver: 'forceAtlas2Based',
+      forceAtlas2Based: { gravitationalConstant: -80, springLength: 120, avoidOverlap: 0.3 },
+      stabilization: { iterations: 150 },
+    },
     layout: { improvedLayout: true },
   };
   window.network = new vis.Network(container, data, options);
+
+  // Show the "pick a theme" hint until the user clicks a community.
+  const emptyEl = document.getElementById('empty');
+  emptyEl.style.display = 'flex';
+  emptyEl.textContent = `${graphRes.nodes.length.toLocaleString()} ideas across ${graphRes.communities.length.toLocaleString()} themes. Pick one on the left to see its constellation.`;
 
   network.on('click', (params) => {
     if (params.nodes.length === 0) {
@@ -280,10 +310,171 @@ async function load() {
 }
 
 function focusCommunity(cid) {
-  if (!window.network) return;
-  const ids = [];
-  network.body.data.nodes.forEach(n => { if (n.community === cid) ids.push(n.id); });
-  if (ids.length) network.fit({ nodes: ids, animation: { duration: 600 } });
+  if (!window.graphRes) return;
+
+  // 1. Find every node whose community === cid.
+  const coreIds = new Set();
+  for (const n of window.graphRes.nodes) {
+    if (n.community === cid) coreIds.add(n.id);
+  }
+
+  // 2. Expand by 1 hop so the user sees how this community connects to the
+  //    rest of the corpus (and so an isolated singleton has at least its
+  //    immediate context visible).
+  const expanded = new Set(coreIds);
+  for (const id of coreIds) {
+    const nbrs = window._neighbours.get(id);
+    if (nbrs) for (const n of nbrs) expanded.add(n);
+  }
+
+  // 3. Build the subgraph datasets from scratch.
+  const nodePayload = [];
+  for (const id of expanded) {
+    const n = window._nodeById.get(id);
+    if (!n) continue;
+    const isCore = coreIds.has(id);
+    nodePayload.push({
+      id: n.id,
+      label: n.display,
+      title: `${n.display}\nKind: ${n.type}\nTheme: ${n.community ?? '—'}`,
+      color: isCore
+        ? { background: colourFor(n.community), border: '#fff' }
+        : { background: '#f4f4f5', border: '#d4d4d8' },
+      font: { color: '#1f2a1f', size: 13, face: 'Inter', strokeWidth: 3, strokeColor: '#ffffff' },
+      community: n.community,
+    });
+  }
+  const edgePayload = [];
+  let edgeId = 0;
+  for (const e of window.graphRes.edges) {
+    if (expanded.has(e.source) && expanded.has(e.target)) {
+      edgePayload.push({
+        id: edgeId++,
+        from: e.source, to: e.target, label: e.type,
+        color: { color: '#d4d4d8', highlight: '#2563eb' },
+        font: { color: '#71717a', size: 10, strokeWidth: 3, strokeColor: '#ffffff', align: 'middle' },
+        arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+        smooth: { type: 'continuous' },
+      });
+    }
+  }
+  console.log('[focusCommunity]', cid, 'core:', coreIds.size, 'expanded:', expanded.size, 'edges:', edgePayload.length);
+
+  // 4. Hide placeholder.
+  const emptyEl = document.getElementById('empty');
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  // 5. Destroy any existing network and create a fresh one with the
+  //    subgraph as initial data. This bypasses ALL the "did the empty
+  //    network auto-restart physics after a DataSet add" gotchas. It does
+  //    cost a small flicker between selections but that's an acceptable
+  //    trade for guaranteed-paint behaviour across vis-network versions.
+  if (window.network) {
+    try { window.network.destroy(); } catch (_) { /* noop */ }
+  }
+  const container = document.getElementById('graph');
+  const nodes = new vis.DataSet(nodePayload);
+  const edges = new vis.DataSet(edgePayload);
+  window._nodesDS = nodes;
+  window._edgesDS = edges;
+  const subOptions = {
+    nodes: { shape: 'dot', size: nodePayload.length > 200 ? 10 : 16, borderWidth: 2 },
+    edges: { width: nodePayload.length > 200 ? 0.6 : 1, smooth: { type: 'continuous' } },
+    interaction: { hover: true, dragNodes: true, zoomView: true },
+    physics: {
+      solver: 'forceAtlas2Based',
+      forceAtlas2Based: { gravitationalConstant: -60, springLength: 110, avoidOverlap: 0.3 },
+      stabilization: { iterations: nodePayload.length > 200 ? 100 : 200 },
+    },
+    layout: { improvedLayout: nodePayload.length < 500 },
+  };
+  window.network = new vis.Network(container, { nodes, edges }, subOptions);
+
+  // 6. Fit on stabilization, plus fallback after 3 s for tiny subgraphs
+  //    where stabilization may complete before the listener attaches.
+  let fitDone = false;
+  const finish = () => {
+    if (fitDone) return;
+    fitDone = true;
+    try { window.network.fit({ animation: { duration: 600 } }); } catch (_) {}
+    try { window.network.setOptions({ physics: { enabled: false } }); } catch (_) {}
+  };
+  window.network.once('stabilizationIterationsDone', finish);
+  setTimeout(finish, 3000);
+
+  // 7. Side panel with summary + entity chips.
+  renderCommunityPanel(cid, [...coreIds]);
+}
+
+function renderCommunityPanel(cid, ids) {
+  // graphRes is captured in load(); pull the matching community + names.
+  if (!window.graphRes) return;
+  const community = (graphRes.communities || []).find(c => c.id === cid);
+  if (!community) return;
+  const displayById = new Map((graphRes.nodes || []).map(n => [n.id, n.display]));
+  const memberNames = ids.map(id => displayById.get(id) || id).slice(0, 30);
+
+  console.log('[community-panel] render', cid, 'members:', ids.length);
+  const PANEL_W = 340;
+  const PANEL_GAP = 24;
+  let panel = document.getElementById('communityPanel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'communityPanel';
+    // We attach to documentElement (html) and explicitly compute `left` in
+    // JS because vis-network applies a transform to its canvas wrapper —
+    // any `position: fixed; right: …` ends up anchored to that wrapper,
+    // not the viewport, and the panel lands at x ≈ -229. Computing left
+    // from window.innerWidth bypasses the containing-block issue entirely.
+    panel.style.cssText = [
+      'position:fixed', 'top:80px', `width:${PANEL_W}px`, 'max-height:75vh',
+      'overflow-y:auto', 'padding:14px 16px', 'background:#ffffff',
+      'border:1px solid #d4d4d8', 'border-radius:10px',
+      'box-shadow:0 6px 24px rgba(37, 99, 235,0.25)', 'z-index:9999',
+      'font-size:13px', 'color:#18181b', 'font-family:Inter,system-ui,sans-serif',
+    ].join(';');
+    document.documentElement.appendChild(panel);
+    // Re-anchor on viewport resize so it follows the right edge.
+    const reposition = () => {
+      panel.style.left = (window.innerWidth - PANEL_W - PANEL_GAP) + 'px';
+    };
+    reposition();
+    window.addEventListener('resize', reposition);
+    panel._reposition = reposition;
+  } else {
+    panel.style.left = (window.innerWidth - PANEL_W - PANEL_GAP) + 'px';
+  }
+  const swatch = `<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${colourFor(cid)};vertical-align:middle;margin-right:6px;"></span>`;
+  const closeBtn = `<button id="closeCommPanel" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;">×</button>`;
+  const findingsHtml = (community.findings || []).length
+    ? `<div style="margin-top:10px;font-weight:600;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;">Key findings</div>
+       <ul style="margin:6px 0 0;padding-left:18px;line-height:1.5;">${(community.findings || []).map(f => `<li>${_esc(f)}</li>`).join('')}</ul>`
+    : '';
+  const memberHtml = memberNames.length
+    ? `<div style="margin-top:10px;font-weight:600;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;">Entities (${ids.length})</div>
+       <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;">${memberNames.map(n => `<span style="padding:2px 8px;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;font-size:11px;">${_esc(n)}</span>`).join('')}${ids.length > 30 ? ` <span style="color:var(--muted);font-size:11px;">+${ids.length - 30} more</span>` : ''}</div>`
+    : '<div style="margin-top:10px;color:var(--muted);font-style:italic;">No member entities in graph (stale community).</div>';
+  panel.innerHTML = `
+    ${closeBtn}
+    <div style="font-weight:700;font-size:14px;margin-bottom:4px;">${swatch}${_esc(community.title || 'Unnamed theme')}</div>
+    <div style="color:var(--muted);font-size:11px;margin-bottom:8px;">${community.size} ${community.size === 1 ? 'idea' : 'ideas'}</div>
+    ${community.summary ? `<div style="line-height:1.5;color:var(--muted-strong);">${_esc(community.summary)}</div>` : ''}
+    ${findingsHtml}
+    ${memberHtml}
+  `;
+  document.getElementById('closeCommPanel').onclick = () => {
+    panel.remove();
+    // Restore full-colour view.
+    const ds = network.body.data.nodes;
+    const restored = [];
+    ds.forEach(n => restored.push({ id: n.id, color: { background: colourFor(n.community), border: '#fff' }, opacity: 1 }));
+    ds.update(restored);
+  };
+}
+
+function _esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 // ===== FEYNMAN OVERLAY =====
@@ -332,7 +523,7 @@ function applyFeynmanOverlay(graphRes, nodes, network, params) {
           highlight: { background: '#fbedc6', border: '#3c5340' },
         },
         borderWidth: 2,
-        font: { color: '#3c5340', size: 13, face: 'Inter', strokeWidth: 3, strokeColor: '#fff3d5' },
+        font: { color: '#3c5340', size: 13, face: 'Inter', strokeWidth: 3, strokeColor: '#ffffff' },
         shapeProperties: { borderDashes: [4, 3] },
       };
     }
@@ -341,7 +532,7 @@ function applyFeynmanOverlay(graphRes, nodes, network, params) {
       id: n.id,
       color: { background: '#f0dda8', border: '#bfa86f' },
       borderWidth: 1,
-      font: { color: '#bfa86f', size: 11, face: 'Inter', strokeWidth: 2, strokeColor: '#fff3d5' },
+      font: { color: '#bfa86f', size: 11, face: 'Inter', strokeWidth: 2, strokeColor: '#ffffff' },
       opacity: 0.45,
     };
   });

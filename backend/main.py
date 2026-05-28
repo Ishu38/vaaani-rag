@@ -312,6 +312,24 @@ def privacy_page() -> FileResponse:
     return _serve_site("privacy.html")
 
 
+@app.get("/cognitive")
+def cognitive_page() -> FileResponse:
+    """Cognitive X-Ray — detect thinking flaws in a learner's reasoning.
+    Pairs with the cognitive_router (/cognitive/analyze, /fingerprint, etc.)
+    for the API surface. Page-route added 2026-05-28 so the chat nav can
+    link to it directly with /cognitive."""
+    return _serve_site("cognitive.html")
+
+
+@app.get("/simulation")
+def simulation_page() -> FileResponse:
+    """Pressure Simulation — exam-style time-boxed practice. Pairs with
+    the simulation_router (/simulation/start, /answer, /report, etc.)
+    for the API surface. Page-route added 2026-05-28 so the chat nav
+    can link to it directly with /simulation."""
+    return _serve_site("simulation.html")
+
+
 @app.get("/dashboard")
 def school_dashboard_page() -> FileResponse:
     """Serve the teacher/school-admin dashboard."""
@@ -1291,7 +1309,16 @@ def graph_endpoint(vaaani_session: str | None = Cookie(default=None, alias="vaaa
             for u, v, data in kg.g.edges(data=True)
         ],
         "communities": [
-            {"id": c.id, "title": c.title, "size": c.size}
+            # 2026-05-28: summary + findings added so /graph-view can show
+            # a meaningful side panel when the user clicks a community
+            # tile, instead of a silent camera-fit zoom that looks broken.
+            {
+                "id": c.id,
+                "title": c.title,
+                "size": c.size,
+                "summary": c.summary,
+                "findings": c.findings,
+            }
             for c in retriever.communities
         ],
     }

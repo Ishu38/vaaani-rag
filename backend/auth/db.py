@@ -199,6 +199,59 @@ def _additive_migrate(conn: sqlite3.Connection) -> None:
         conn.execute("CREATE INDEX IF NOT EXISTS ix_psl_parent ON parent_student_links(parent_user_id, school_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS ix_psl_student ON parent_student_links(student_user_id, school_id)")
 
+    # 2026-05-26 — DPDP Act 2023 scaffolding. Adds DOB + consent_status to
+    # users, plus parental_consents (one row per child / version) and an
+    # immutable dpdp_audit_log. Verifiable parent identity (Aadhaar/DigiLocker)
+    # is NOT wired here — see [[feedback_vaaani_cf_streaming]] sibling notes.
+    if "date_of_birth" not in cols:
+        conn.execute("ALTER TABLE users ADD COLUMN date_of_birth TEXT")  # ISO YYYY-MM-DD
+    if "consent_status" not in cols:
+        # not_required = 18+ at signup; pending = under-18 awaiting parent;
+        # granted = parent confirmed; withdrawn = parent revoked.
+        conn.execute("ALTER TABLE users ADD COLUMN consent_status TEXT NOT NULL DEFAULT 'not_required'")
+    if "active_consent_id" not in cols:
+        conn.execute("ALTER TABLE users ADD COLUMN active_consent_id INTEGER")
+    if "deleted_at" not in cols:
+        # Soft-delete marker for §12 erasure. Hard rows scrubbed by a separate job;
+        # marking deleted_at suspends all auth + DPDP-gated access immediately.
+        conn.execute("ALTER TABLE users ADD COLUMN deleted_at TEXT")
+
+    if "parental_consents" not in tables:
+        conn.execute("""
+            CREATE TABLE parental_consents (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                child_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                parent_name TEXT,
+                parent_email TEXT NOT NULL,
+                parent_phone TEXT,
+                consent_token TEXT NOT NULL UNIQUE,
+                consent_text_version TEXT NOT NULL,
+                requested_at TEXT NOT NULL DEFAULT (datetime('now')),
+                granted_at TEXT,
+                withdrawn_at TEXT,
+                parent_ip TEXT,
+                parent_user_agent TEXT,
+                expires_at TEXT NOT NULL
+            )
+        """)
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_pc_token ON parental_consents(consent_token)")
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_pc_child ON parental_consents(child_user_id)")
+
+    if "dpdp_audit_log" not in tables:
+        conn.execute("""
+            CREATE TABLE dpdp_audit_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+                event_type TEXT NOT NULL,
+                detail TEXT,
+                actor_ip TEXT,
+                actor_user_agent TEXT,
+                created_at TEXT NOT NULL DEFAULT (datetime('now'))
+            )
+        """)
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_dpdp_audit_user ON dpdp_audit_log(user_id, created_at)")
+        conn.execute("CREATE INDEX IF NOT EXISTS ix_dpdp_audit_event ON dpdp_audit_log(event_type, created_at)")
+
 
 def init_db(path: Path = USERS_DB_PATH) -> None:
     """Create tables on first call + run any additive migrations. Idempotent."""

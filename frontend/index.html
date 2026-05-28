@@ -30,21 +30,24 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"></script>
 <style>
   :root {
-    --bg: #fff3d5;
-    --bg-2: #f7e9c2;
-    --panel: #fbedc6;
-    --panel-2: #f0dda8;
-    --border: #e0cc93;
-    --border-strong: #bfa86f;
-    --text: #4d694e;
-    --muted: #7a8b6f;
-    --muted-strong: #5d7459;
-    --accent: #4d694e;
-    --accent-soft: #6a8a6b;
-    --accent-glow: rgba(77, 105, 78, 0.35);
-    --user: #f0dda8;
-    --assistant: #fbedc6;
-    --warn: #a06a1e;
+    /* Adobe Spectrum-inspired professional palette (2026-05-28).
+       Cool-neutral grayscale (Tailwind zinc) + indigo accent + amber warn.
+       Replaces the warm-cream community-zine palette. */
+    --bg:             #fafafa;   /* zinc-50  — page background */
+    --bg-2:           #f4f4f5;   /* zinc-100 — subtle alt sections */
+    --panel:          #ffffff;   /* pure white — cards, assistant bubble */
+    --panel-2:        #f4f4f5;   /* zinc-100 — user bubble, hover surfaces */
+    --border:         #e4e4e7;   /* zinc-200 — default dividers */
+    --border-strong:  #d4d4d8;   /* zinc-300 — emphasised borders */
+    --text:           #18181b;   /* zinc-900 — primary text */
+    --muted:          #71717a;   /* zinc-500 — secondary text */
+    --muted-strong:   #3f3f46;   /* zinc-700 — emphasised secondary */
+    --accent:         #2563eb;   /* indigo-600 — primary action / brand */
+    --accent-soft:    #3b82f6;   /* indigo-500 — hover */
+    --accent-glow:    rgba(37, 99, 235, 0.15);
+    --user:           #f4f4f5;   /* zinc-100 — user message bubble */
+    --assistant:      #ffffff;   /* white — assistant message bubble */
+    --warn:           #b45309;   /* amber-700 — fidelity / warnings */
   }
   * { box-sizing: border-box; }
   html, body {
@@ -54,7 +57,7 @@
   }
   body {
     background:
-      radial-gradient(ellipse 1100px 500px at 50% -15%, rgba(77,105,78,0.08), transparent 65%),
+      radial-gradient(ellipse 1100px 500px at 50% -15%, rgba(37, 99, 235,0.08), transparent 65%),
       var(--bg);
     min-height: 100vh;
     display: flex; flex-direction: column;
@@ -67,7 +70,7 @@
     padding: 16px 32px; gap: 24px;
     position: sticky; top: 0; z-index: 50;
     backdrop-filter: blur(14px);
-    background: rgba(255,243,213,0.75);
+    background: rgba(250,250,250,0.85);
     border-bottom: 1px solid var(--border);
   }
   .brand {
@@ -224,12 +227,12 @@
     transition: border-color .15s, color .15s;
     font-weight: 500;
   }
-  .chip.intent { color: var(--accent); border-color: rgba(77,105,78,0.4); }
+  .chip.intent { color: var(--accent); border-color: rgba(37, 99, 235,0.4); }
 
   /* Fidelity-warning band — honest grounding gap surface. */
   .fidelity-warn {
     margin: 10px 0 4px; padding: 8px 12px; border-radius: 8px;
-    background: rgba(212,169,87,0.10); border: 1px solid rgba(212,169,87,0.45);
+    background: rgba(180,83,9,0.06); border: 1px solid rgba(180,83,9,0.30);
     font-size: 12.5px; color: var(--warn);
   }
   .fidelity-warn-title { font-weight: 600; }
@@ -366,7 +369,7 @@
   /* ===== LISTEN MODAL ===== */
   .listen-modal {
     position: fixed; inset: 0; z-index: 200;
-    background: rgba(77,105,78,0.18); backdrop-filter: blur(6px);
+    background: rgba(37,99,235,0.15); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center;
     padding: 24px;
   }
@@ -375,7 +378,7 @@
     background: var(--bg); border: 1px solid var(--border-strong);
     border-radius: 12px; width: 100%; max-width: 560px;
     padding: 24px 28px 22px;
-    box-shadow: 0 24px 60px rgba(77,105,78,0.25);
+    box-shadow: 0 24px 60px rgba(37, 99, 235,0.25);
   }
   .listen-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
   .listen-head h3 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
@@ -448,7 +451,7 @@
     font-size: 12.5px; padding: 5px 9px; border-radius: 4px; line-height: 1.4;
     border: 1px solid var(--border);
   }
-  .feynman-item.covered { background: rgba(77,105,78,0.10); color: var(--text); border-color: rgba(77,105,78,0.35); }
+  .feynman-item.covered { background: rgba(37, 99, 235,0.10); color: var(--text); border-color: rgba(37, 99, 235,0.35); }
   .feynman-item.missed { background: var(--panel-2); color: var(--muted-strong); border-color: var(--border-strong); border-style: dashed; }
   .feynman-item .arr { color: var(--muted); margin: 0 4px; }
   .feynman-item .type-tag { font-size: 10.5px; color: var(--muted); margin-left: 6px; }
@@ -489,7 +492,7 @@
   }
   .int-card.disabled { cursor: default; opacity: 0.85; }
   .int-card:not(.disabled):hover {
-    border-color: rgba(77,105,78,0.35);
+    border-color: rgba(37, 99, 235,0.35);
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(60, 83, 64, 0.06);
   }
@@ -521,7 +524,7 @@
     border: 1px solid rgba(60, 83, 64, 0.18);
     white-space: nowrap;
   }
-  .int-card .badge.live    { color: var(--accent); border-color: rgba(77,105,78,0.32); background: rgba(77,105,78,0.05); }
+  .int-card .badge.live    { color: var(--accent); border-color: rgba(37, 99, 235,0.32); background: rgba(37, 99, 235,0.05); }
   .int-card .badge.linked  { color: #fefaef; background: var(--accent); border-color: var(--accent); }
   .int-card .badge.soon    { color: #8a6520; border-color: rgba(160,106,30,0.28); background: rgba(160,106,30,0.05); }
   .int-card .desc {
@@ -558,7 +561,7 @@
   .youtube-card #youtubeUrl:focus { outline: none; border-color: var(--accent); }
   .youtube-result {
     margin-top: 14px; padding: 12px 14px;
-    background: rgba(77,105,78,0.08); border: 1px solid rgba(77,105,78,0.3);
+    background: rgba(37, 99, 235,0.08); border: 1px solid rgba(37, 99, 235,0.3);
     border-radius: 8px; font-size: 13px; line-height: 1.55; color: var(--text);
   }
   .youtube-result.err {
@@ -642,7 +645,7 @@
   }
   .review-reveal-btn:hover { border-color: var(--accent); }
   .review-answer {
-    background: rgba(77,105,78,0.08); border: 1px solid rgba(77,105,78,0.3);
+    background: rgba(37, 99, 235,0.08); border: 1px solid rgba(37, 99, 235,0.3);
     border-radius: 8px; padding: 14px 16px; font-size: 14px; line-height: 1.55;
     color: var(--text); margin-bottom: 14px;
   }
@@ -655,8 +658,8 @@
   .review-grade .key { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; }
   .review-grade.again:hover  { border-color: #b04050; background: rgba(176,64,80,0.08); }
   .review-grade.hard:hover   { border-color: #a06a1e; background: rgba(160,106,30,0.08); }
-  .review-grade.good:hover   { border-color: var(--accent); background: rgba(77,105,78,0.08); }
-  .review-grade.easy:hover   { border-color: var(--accent); background: rgba(77,105,78,0.15); }
+  .review-grade.good:hover   { border-color: var(--accent); background: rgba(37, 99, 235,0.08); }
+  .review-grade.easy:hover   { border-color: var(--accent); background: rgba(37, 99, 235,0.15); }
   .review-grade:disabled { opacity: 0.5; cursor: progress; }
   .review-empty { color: var(--muted); font-size: 14px; padding: 30px 0; text-align: center; line-height: 1.6; }
   .review-empty a { color: var(--accent); }
@@ -692,7 +695,9 @@
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/app" class="active">Chat</a>
-    <a href="/graph-view">Graph</a>
+    <a href="/graph-view" target="_blank" rel="noopener" title="Knowledge map of every concept in your library — new tab">Graph ↗</a>
+    <a href="/cognitive" target="_blank" rel="noopener" title="Cognitive X-Ray — detect thinking flaws in your reasoning">X-Ray ↗</a>
+    <a href="/simulation" target="_blank" rel="noopener" title="Pressure Simulation — train under exam-style time pressure">Exam ↗</a>
     <a href="/pricing">Pricing</a>
     <a href="/account">Account</a>
   </div>
@@ -700,7 +705,10 @@
     <select id="scopeSelect" class="scope-select" title="Scope chat to one document (or all)">
       <option value="">All sources</option>
     </select>
-    <label class="socratic-toggle" title="Socratic Mode — assistant teaches by asking">
+    <!-- Socratic toggle restored 2026-05-28 for teaching contexts where
+         the instructor wants Vaaani to guide-by-question rather than
+         answer outright. Default OFF; one click to flip. -->
+    <label class="socratic-toggle" title="Socratic Mode — assistant teaches by asking guiding questions instead of answering directly">
       <input type="checkbox" id="socraticToggle" />
       <span class="track"><span class="thumb"></span></span>
       <span class="label">Socratic</span>
@@ -708,15 +716,6 @@
     <span class="pill" id="statusPill">—</span>
     <button class="icon-btn" id="reviewBtn" title="Spaced-repetition review" aria-label="Review">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-    </button>
-    <button class="icon-btn" id="feynmanBtn" title="Explain back — diff your explanation against the graph" aria-label="Explain back">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a4 4 0 0 1-4 4H8l-5 4V5a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>
-    </button>
-    <button class="icon-btn" id="listenBtn" title="Listen — narration + podcast" aria-label="Listen">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14M15.5 8.5a4 4 0 0 1 0 7"/></svg>
-    </button>
-    <button class="icon-btn" id="integrationsBtn" title="Integrations — what's connected" aria-label="Integrations">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17.5h7M17.5 14v7"/></svg>
     </button>
     <button class="icon-btn primary" title="Upload a document" aria-label="Upload" onclick="document.getElementById('fileInput').click()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -772,6 +771,15 @@
       <button class="listen-x" id="reviewClose" aria-label="Close">×</button>
     </div>
     <div id="reviewStats" class="review-stats">—</div>
+    <!-- Scope chip: filter the review queue + Anki export to a single source.
+         Populated from /status documents_indexed (same list as the chat
+         scope dropdown). Survives across grade rounds via localStorage. -->
+    <div id="reviewScopeRow" style="display:flex; align-items:center; gap:8px; margin: 8px 0 14px; font-size:12px; color: var(--muted);">
+      <span style="text-transform:uppercase; letter-spacing:0.08em; font-size:10px;">Scope</span>
+      <select id="reviewScope" style="flex:1; padding:6px 8px; border-radius:6px; background: var(--panel); color: var(--text); border: 1px solid var(--border); font-size:12px; max-width:380px; outline:none;">
+        <option value="">All sources</option>
+      </select>
+    </div>
     <div id="reviewBody" class="review-body">
       <div class="review-empty">Loading…</div>
     </div>
@@ -963,7 +971,7 @@ function openListen() {
 }
 function closeListen() { listenModal.hidden = true; }
 
-listenBtn.addEventListener('click', openListen);
+listenBtn && listenBtn.addEventListener('click', openListen);
 listenClose.addEventListener('click', closeListen);
 listenModal.addEventListener('click', (e) => { if (e.target === listenModal) closeListen(); });
 document.querySelectorAll('.listen-mode').forEach((btn) => {
@@ -1050,7 +1058,7 @@ const integrationsModal = document.getElementById('integrationsModal');
 const integrationsClose = document.getElementById('integrationsClose');
 const integrationsGrid = document.getElementById('integrationsGrid');
 
-integrationsBtn.addEventListener('click', openIntegrations);
+integrationsBtn && integrationsBtn.addEventListener('click', openIntegrations);
 integrationsClose.addEventListener('click', () => { integrationsModal.hidden = true; });
 integrationsModal.addEventListener('click', (e) => { if (e.target === integrationsModal) integrationsModal.hidden = true; });
 
@@ -1403,7 +1411,38 @@ const reviewModal = document.getElementById('reviewModal');
 const reviewClose = document.getElementById('reviewClose');
 const reviewBody = document.getElementById('reviewBody');
 const reviewStats = document.getElementById('reviewStats');
+const reviewScopeEl = document.getElementById('reviewScope');
 let reviewCurrentItem = null;
+
+// Restore the user's last-picked scope across opens of the modal.
+const REVIEW_SCOPE_KEY = 'vaaani.reviewScope';
+reviewScopeEl.value = localStorage.getItem(REVIEW_SCOPE_KEY) || '';
+reviewScopeEl.addEventListener('change', () => {
+  localStorage.setItem(REVIEW_SCOPE_KEY, reviewScopeEl.value);
+  // Re-pull the next card under the new scope without closing the modal.
+  if (!reviewModal.hidden) openReview();
+});
+
+// Build the `?source=…` query the backend expects when a scope is set.
+function reviewSourceQuery() {
+  const v = reviewScopeEl.value;
+  return v ? `?source=${encodeURIComponent(v)}` : '';
+}
+
+async function populateReviewScope() {
+  try {
+    const r = await fetch('/status');
+    const s = await r.json();
+    const docs = s.documents_indexed || [];
+    const prev = reviewScopeEl.value;
+    reviewScopeEl.innerHTML = '<option value="">All sources</option>'
+      + docs.map(d => {
+          const label = d.length > 50 ? d.slice(0, 47) + '…' : d;
+          return `<option value="${d.replace(/"/g, '&quot;')}">${label}</option>`;
+        }).join('');
+    if (prev && docs.includes(prev)) reviewScopeEl.value = prev;
+  } catch (_) { /* fall back to All sources */ }
+}
 
 reviewBtn.addEventListener('click', openReview);
 reviewClose.addEventListener('click', () => { reviewModal.hidden = true; });
@@ -1414,8 +1453,9 @@ async function openReview() {
   reviewBody.innerHTML = '<div class="review-empty">Loading…</div>';
   reviewStats.textContent = '—';
   document.getElementById('reviewAnki').hidden = true;
+  await populateReviewScope();
   try {
-    const res = await fetch('/learning/review/next');
+    const res = await fetch('/learning/review/next' + reviewSourceQuery());
     if (res.status === 401) {
       reviewBody.innerHTML = '<div class="review-empty">Sign in to use spaced review.<br/><br/><a href="/login">Sign in</a> or <a href="/signup">create an account</a> — your review history is per-user.</div>';
       return;
@@ -1459,7 +1499,9 @@ async function downloadAnkiDeck() {
   btn.disabled = true;
   btn.textContent = 'Building deck…';
   try {
-    const res = await fetch('/learning/anki/export');
+    // Respect the same scope the user picked for the review queue —
+    // download a per-source deck rather than a single mega-mix.
+    const res = await fetch('/learning/anki/export' + reviewSourceQuery());
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.detail || `export failed (${res.status})`);
@@ -1541,7 +1583,7 @@ async function gradeAndAdvance(item, grade) {
   const buttons = document.querySelectorAll('.review-grade');
   buttons.forEach((b) => b.disabled = true);
   try {
-    const res = await fetch('/learning/review/grade', {
+    const res = await fetch('/learning/review/grade' + reviewSourceQuery(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ node_id: item.node_id, display: item.display, grade }),
@@ -1572,7 +1614,7 @@ const feynmanResult = document.getElementById('feynmanResult');
 const feynmanHint = document.getElementById('feynmanHint');
 let feynmanTopicsLoaded = false;
 
-feynmanBtn.addEventListener('click', openFeynman);
+feynmanBtn && feynmanBtn.addEventListener('click', openFeynman);
 feynmanClose.addEventListener('click', () => { feynmanModal.hidden = true; });
 feynmanModal.addEventListener('click', (e) => { if (e.target === feynmanModal) feynmanModal.hidden = true; });
 feynmanRun.addEventListener('click', runFeynman);
@@ -1729,6 +1771,65 @@ function addUser(text) {
   hideHero();
   log.appendChild(el('div', { class: 'msg user' }, text));
   log.scrollTop = log.scrollHeight;
+  persistChatTurn({ role: 'user', text });
+}
+
+// ============================================================
+//  Chat session persistence
+//  Reason: navigating to /graph-view (or any full-page link)
+//  used to wipe the in-memory chat. Now we mirror every turn
+//  into localStorage and rehydrate on load. Bounded to the
+//  last 40 turns so the storage quota can't run away.
+// ============================================================
+const CHAT_STORE_KEY  = 'vaaani.chat.thread.v1';
+const CHAT_MAX_TURNS  = 40;
+
+function persistChatTurn(turn) {
+  try {
+    const raw = localStorage.getItem(CHAT_STORE_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    arr.push({ ...turn, at: Date.now() });
+    if (arr.length > CHAT_MAX_TURNS) arr.splice(0, arr.length - CHAT_MAX_TURNS);
+    localStorage.setItem(CHAT_STORE_KEY, JSON.stringify(arr));
+  } catch (_) { /* quota, JSON error — ignore, persistence is best-effort */ }
+}
+
+function clearPersistedChat() {
+  try { localStorage.removeItem(CHAT_STORE_KEY); } catch (_) {}
+}
+
+/* Rehydrate prior turns into the chat log. Called once at startup.
+   Restores them as plain text bubbles (no source pills / fidelity
+   warnings — we don't re-call the backend to reconstruct those).
+   The user sees the conversation history; new turns from now on
+   carry the full chrome again. */
+function rehydrateChat() {
+  let arr = [];
+  try {
+    const raw = localStorage.getItem(CHAT_STORE_KEY);
+    if (raw) arr = JSON.parse(raw);
+  } catch (_) { return; }
+  if (!Array.isArray(arr) || arr.length === 0) return;
+  hideHero();
+  for (const t of arr) {
+    if (t.role === 'user') {
+      log.appendChild(el('div', { class: 'msg user' }, t.text || ''));
+    } else if (t.role === 'assistant') {
+      const wrap = el('div', { class: 'msg assistant' });
+      wrap.appendChild(renderAssistantBody(t.text || '', []));
+      log.appendChild(wrap);
+    }
+  }
+  // Subtle "restored" hint so the user knows the thread came back.
+  const hint = el('div', { class: 'msg system' });
+  hint.style.cssText = 'font-size: 11.5px; color: var(--muted); padding: 8px 12px; border-top: 1px dashed var(--border); margin: 12px 0 0; text-align: center;';
+  hint.textContent = `↑ ${arr.length} message${arr.length === 1 ? '' : 's'} restored from your last session · `;
+  const clearBtn = el('a', { href: '#' }, 'start fresh');
+  clearBtn.style.cssText = 'color: var(--accent); cursor: pointer; text-decoration: underline;';
+  clearBtn.onclick = (e) => { e.preventDefault(); clearPersistedChat(); location.reload(); };
+  hint.appendChild(clearBtn);
+  log.appendChild(hint);
+  log.scrollTop = log.scrollHeight;
 }
 
 // Build the assistant's text body, splitting on [[FIG:id]] sentinels so each
@@ -1804,13 +1905,10 @@ function addAssistant(data) {
     meta.appendChild(chip);
   }
   for (const m of data.memory_used || []) meta.appendChild(el('span', { class: 'chip memory' }, `🧠 ${m}`));
-  // Hermes corrections — show what the self-correcting layer adjusted before
-  // calling the LLM. Reason goes into a tooltip so the meta row stays compact.
-  for (const h of data.hermes_corrections || []) {
-    const chip = el('span', { class: 'chip hermes' }, h.name.replace(/_/g, ' '));
-    if (h.reason) chip.title = h.reason;
-    meta.appendChild(chip);
-  }
+  // Hermes self-correction chips were a power-user diagnostic that
+  // confused prospects (2026-05-28 commercial strip). The Hermes layer
+  // still runs server-side and improves answers — we just don't surface
+  // every "broaden_retrieval" / "upgrade_graph_global" tag in the chrome.
   if (meta.childNodes.length) wrap.appendChild(meta);
 
   // Rating row: appears for signed-in users on knowledge answers with at least one topic.
@@ -1823,6 +1921,9 @@ function addAssistant(data) {
   }
 
   log.appendChild(wrap);
+  // Mirror the assistant answer to localStorage so navigating away
+  // (e.g. opening the Graph view) and coming back still shows it.
+  if (data.answer) persistChatTurn({ role: 'assistant', text: data.answer });
   // KaTeX auto-render: typeset any $...$ / $$...$$ math the model emitted.
   // Safe no-op if the CDN script hasn't loaded yet (e.g. first paint).
   if (window.renderMathInElement) {
@@ -2093,11 +2194,12 @@ async function refreshStatus() {
   try {
     const r = await fetch('/status');
     const s = await r.json();
-    const parts = [];
-    parts.push(`${s.documents_indexed.length} docs`);
-    parts.push(`${s.total_chunks} chunks`);
-    if (s.graph_nodes != null && s.graph_nodes > 0) parts.push(`${s.graph_nodes} entities`);
-    statusPill.textContent = parts.join(' · ');
+    // 2026-05-28 commercial strip: prospects don't care about chunk
+    // counts or graph entity totals — those are internal plumbing.
+    // Just show "N books indexed" (or "1 book"). The full breakdown
+    // is still in /status if a power user wants it via curl.
+    const n = (s.documents_indexed || []).length;
+    statusPill.textContent = n === 0 ? 'no books yet' : (n === 1 ? '1 book indexed' : `${n} books indexed`);
     populateScopeSelect(s.documents_indexed || []);
   } catch {
     statusPill.textContent = 'offline';
@@ -2133,6 +2235,10 @@ document.addEventListener('change', (e) => {
 
 qEl.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
 refreshStatus();
+// Restore any prior conversation from localStorage. Runs after the
+// DOM is ready (this script is at the bottom of <body>) and before
+// the user's first new turn, so the thread appears seamlessly.
+rehydrateChat();
 </script>
 </body>
 </html>

@@ -4,14 +4,29 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="description" content="Vaaani is a Socratic AI study assistant for Physics, Mathematics, English Literature, and Persuasive Writing. Upload your textbooks. Ask questions. Learn deeply." />
-<meta name="theme-color" content="#0a0a0c" />
+<meta name="theme-color" content="#2563eb" />
 <title>Vaaani — A Socratic AI study assistant</title>
+
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Vaaani" />
+<meta name="mobile-web-app-capable" content="yes" />
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    });
+  }
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/style.css?v=20260524b" />
+<link rel="stylesheet" href="/style.css?v=20260528-cursor" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -85,7 +100,7 @@
   <div class="hero-float-card hf-graph">
     <div class="hf-pill">Knowledge graph</div>
     <svg class="hf-mini-graph" viewBox="0 0 160 110" aria-hidden="true">
-      <g stroke="#bfa86f" stroke-width="0.7" fill="none">
+      <g stroke="#d4d4d8" stroke-width="0.7" fill="none">
         <line x1="80" y1="55" x2="35" y2="25"/>
         <line x1="80" y1="55" x2="130" y2="25"/>
         <line x1="80" y1="55" x2="40" y2="90"/>
@@ -94,13 +109,13 @@
         <line x1="125" y1="90" x2="130" y2="25"/>
       </g>
       <g>
-        <circle cx="80" cy="55" r="6" fill="#4d694e"/>
-        <circle cx="35" cy="25" r="4" fill="#6a8a6b"/>
-        <circle cx="130" cy="25" r="4" fill="#6a8a6b"/>
-        <circle cx="40" cy="90" r="4" fill="#6a8a6b"/>
-        <circle cx="125" cy="90" r="4" fill="#6a8a6b"/>
+        <circle cx="80" cy="55" r="6" fill="#2563eb"/>
+        <circle cx="35" cy="25" r="4" fill="#3b82f6"/>
+        <circle cx="130" cy="25" r="4" fill="#3b82f6"/>
+        <circle cx="40" cy="90" r="4" fill="#3b82f6"/>
+        <circle cx="125" cy="90" r="4" fill="#3b82f6"/>
       </g>
-      <text x="80" y="78" text-anchor="middle" font-size="9" fill="#3c5340" font-weight="600" font-family="Inter">Derivative</text>
+      <text x="80" y="78" text-anchor="middle" font-size="9" fill="#1e40af" font-weight="600" font-family="Inter">Derivative</text>
     </svg>
   </div>
 
@@ -409,8 +424,9 @@
     <h2 class="section-title big reveal">Stop retrieving.<br/><span class="serif accent-text">Start understanding.</span></h2>
     <p class="section-sub reveal">Launch Vaaani, upload your first PDF, and ask it anything about what you just uploaded.</p>
     <div class="hero-cta reveal" style="justify-content: center;">
-      <a class="btn btn-primary lg" href="/app">Launch the assistant <span class="arr">→</span></a>
-      <a class="btn btn-ghost lg" href="/graph-view">See a live constellation</a>
+      <a class="btn btn-primary lg" href="/app" data-auth-label-in="Open your chat ">Launch the assistant <span class="arr">→</span></a>
+      <a class="btn btn-ghost lg" href="/graph-view" data-auth="in">See a live constellation</a>
+      <a class="btn btn-ghost lg" href="/signup" data-auth="out">Create a free account <span class="arr">→</span></a>
     </div>
   </div>
 </section>
@@ -431,9 +447,13 @@
     </div>
     <div class="footer-col">
       <h5>Product</h5>
-      <a href="/app">Chat</a>
       <a href="/graph-view">Knowledge map</a>
-      <a href="/status">Status</a>
+      <a href="/pricing">Pricing</a>
+    </div>
+    <div class="footer-col">
+      <h5>Legal</h5>
+      <a href="/privacy">Privacy notice</a>
+      <a href="mailto:neilshankarray@vaaani.in">Grievance officer</a>
     </div>
     <div class="footer-col">
       <h5>Learn</h5>
@@ -454,7 +474,7 @@
   </div>
 </footer>
 
-<script src="/auth.js"></script>
+<script src="/auth.js?v=20260526a"></script>
 <script src="/main.js?v=20260524b"></script>
 </body>
 </html>

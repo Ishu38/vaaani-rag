@@ -76,29 +76,51 @@ class GradeBody(BaseModel):
     grade: str = Field(..., pattern="^(again|hard|good|easy)$")
 
 
+def _parse_source_filter(source: str | None) -> set[str] | None:
+    """Accept either a single 'source=foo.pdf' or comma-separated
+    'source=foo.pdf,bar.pdf'. Empty / missing → no filter (whole corpus)."""
+    if not source:
+        return None
+    parts = [s.strip() for s in source.split(",") if s.strip()]
+    return set(parts) if parts else None
+
+
 @router.get("/review/next")
-def review_next(vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME)):
-    """Pull the next due review item, chosen by graph-distance interleaving."""
+def review_next(
+    source: str | None = None,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Pull the next due review item, chosen by graph-distance interleaving.
+
+    ``source`` (query param): optional filename(s) — comma-separated for
+    multi-source. When supplied, the picker only returns cards backed by
+    a cloze passage from those sources. Lets the Review modal scope the
+    queue to one book at a time.
+    """
     user = _require_user(vaaani_session)
-    item = spaced.next_review(user["id"])
+    sf = _parse_source_filter(source)
+    item = spaced.next_review(user["id"], source_filter=sf)
     return {
         "stats": spaced.session_stats(user["id"]),
         "item": item,
+        "source_filter": list(sf) if sf else None,
     }
 
 
 @router.post("/review/grade")
 def review_grade(
     body: GradeBody,
+    source: str | None = None,
     vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
 ):
     """Apply a grade to the current card and return the next one in a single round-trip."""
     user = _require_user(vaaani_session)
+    sf = _parse_source_filter(source)
     try:
         updated = spaced.grade_node(user["id"], body.node_id, body.display, body.grade)
     except ValueError as e:
         raise HTTPException(400, str(e))
-    nxt = spaced.next_review(user["id"])
+    nxt = spaced.next_review(user["id"], source_filter=sf)
     return {
         "graded": updated,
         "stats": spaced.session_stats(user["id"]),
@@ -121,11 +143,21 @@ def anki_preview(vaaani_session: Optional[str] = Cookie(default=None, alias=COOK
 
 
 @router.get("/anki/export")
-def anki_export_apkg(vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME)):
-    """Build + stream an .apkg file the user can import into Anki."""
+def anki_export_apkg(
+    source: str | None = None,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Build + stream an .apkg file the user can import into Anki.
+
+    ``source`` (query param): optional filename(s) — when supplied, the
+    deck only contains cards backed by passages from those documents.
+    Lets the user download a per-book Anki deck rather than a single
+    mega-mix of everything in their library.
+    """
     user = _require_user(vaaani_session)
+    sf = _parse_source_filter(source)
     try:
-        data, filename, stats = anki_export.build_apkg_for_user(user["id"])
+        data, filename, stats = anki_export.build_apkg_for_user(user["id"], source_filter=sf)
     except ValueError as e:
         raise HTTPException(400, str(e))
     headers = {

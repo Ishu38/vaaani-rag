@@ -182,23 +182,45 @@ def build_communities(kg: KnowledgeGraph, *, progress: bool = True) -> list[Comm
             if progress:
                 print(f"  [community:skip-summary] {i}: {len(nodes)} nodes")
         return communities
-    with httpx.Client(timeout=DEEPSEEK_TIMEOUT) as client:
-        for i, nodes in enumerate(parts):
-            if not nodes:
-                continue
-            title, summary, findings = "", "", []
-            if len(nodes) >= 2:
-                try:
-                    title, summary, findings = summarise_community(kg, nodes, client=client)
-                except Exception as e:
-                    if progress:
-                        print(f"  [community:warn] {i}: {e}")
-            communities.append(
-                Community(id=i, nodes=nodes, title=title, summary=summary, findings=findings, size=len(nodes))
-            )
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    # Parallel community summarisation — same 4-worker pool as chunk extraction.
+    def _summarise_one(i: int, nodes: list[str]) -> tuple[int, str, str, list[str], list[str], str | None]:
+        if len(nodes) < 2:
+            return (i, "", "", [], nodes, None)
+        try:
+            with httpx.Client(timeout=DEEPSEEK_TIMEOUT) as cl:
+                title, summary, findings = summarise_community(kg, nodes, client=cl)
+            return (i, title, summary, findings, nodes, None)
+        except Exception as e:
+            return (i, "", "", [], nodes, str(e))
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futures = {
+            pool.submit(_summarise_one, i, nodes): i
+            for i, nodes in enumerate(parts) if nodes
+        }
+        results_by_id: dict[int, tuple] = {}
+        done_count = 0
+        total = len(futures)
+        for future in as_completed(futures):
+            done_count += 1
+            i, title, summary, findings, nodes, err = future.result()
+            results_by_id[i] = (title, summary, findings, nodes, err)
             if progress:
                 tname = title or f"community-{i}"
-                print(f"  [community] {i}: {len(nodes)} nodes — {tname}")
+                status = f" — {tname}" if title else (" (error)" if err else "")
+                if done_count % max(1, total // 10) == 0 or done_count == total:
+                    print(f"  [community] {done_count}/{total}{status}")
+
+    for i in sorted(results_by_id):
+        title, summary, findings, nodes, err = results_by_id[i]
+        if err and progress:
+            print(f"  [community:warn] {i}: {err}")
+        communities.append(
+            Community(id=i, nodes=nodes, title=title, summary=summary, findings=findings, size=len(nodes))
+        )
+
     return communities
 
 

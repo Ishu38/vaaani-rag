@@ -2,33 +2,448 @@
   {
     "id": 0,
     "nodes": [
+      "a",
+      "ab",
+      "af2",
+      "ap",
+      "apollonius",
+      "archimedes",
+      "axis",
+      "axis of symmetry",
+      "beam",
+      "center",
+      "centre",
+      "circle",
+      "conic section",
+      "conic sections",
+      "conjugate axis",
+      "coordinate axes",
+      "directrix",
+      "double-napped right circular cone",
+      "eccentricity",
+      "ellipse",
+      "equation of hyperbola",
+      "example 10",
+      "example 11",
+      "example 9",
+      "f1",
+      "f2",
+      "foci",
+      "focus",
+      "generator",
+      "hyperbola",
+      "latus rectum",
+      "line x + y = 2",
+      "major axis",
+      "minor axis",
+      "nappes",
+      "o",
+      "p",
+      "parabola",
+      "parabolic mirror",
+      "pb",
+      "point (-1,1)",
+      "point (2, -2)",
+      "point (2,3)",
+      "point (3,4)",
+      "point (4,1)",
+      "point (6,5)",
+      "radius",
+      "semi-major axis",
+      "semi-minor axis",
+      "the conic",
+      "transverse axis",
+      "vertex",
+      "vertices"
+    ],
+    "title": "Conic Sections: Definitions, Properties, and History",
+    "summary": "This community details the fundamental concepts of conic sections—circles, ellipses, parabolas, and hyperbolas—which are curves derived from intersecting a double-napped right circular cone with a plane. It defines their key geometric properties, such as foci, directrices, axes, and eccentricity, and includes historical context from ancient Greek mathematicians Apollonius and Archimedes.",
+    "findings": [
+      "The four conic sections (circle, ellipse, parabola, hyperbola) are all derived from the Double-napped right circular cone, which consists of a Vertex, Axis, Generator, and Nappes.",
+      "A parabola is defined by a focus and a directrix, has an axis of symmetry, and its latus rectum length is 4a; an ellipse is defined by two foci and has a major and minor axis, with a latus rectum perpendicular to the major axis through a focus.",
+      "Apollonius named the parabola and hyperbola, authored \"The Conic\" about conic sections in 200 B.C., and both he and Archimedes studied conic sections.",
+      "For an ellipse, the sum of distances from any point P on the ellipse to the two foci (F1 and F2) is constant, and the centre O is the midpoint of the segment joining the foci.",
+      "The eccentricity (e) is a parameter that describes the shape of an ellipse, relating the distance from the centre to a focus and to a vertex.",
+      "A beam supported 12 m apart with a 3 cm deflection at its centre is shaped as a parabola, and a parabolic mirror has its focus at 5 cm from the vertex with a depth of 45 cm."
+    ],
+    "size": 53
+  },
+  {
+    "id": 1,
+    "nodes": [
+      "0",
+      "acceleration",
+      "chain rule",
+      "chord pq",
+      "constant function",
+      "continuity",
+      "decreasing function",
+      "derivative",
+      "derivative definition",
+      "differential calculus",
+      "distance function s = 4.9t^2",
+      "example 15",
+      "f",
+      "f(x) = 1/x",
+      "f(x) = 10x",
+      "f(x) = a",
+      "f(x) = x^2",
+      "fig 12.1",
+      "first principle of derivative",
+      "g(x) = |x|",
+      "implicit differentiation",
+      "increasing function",
+      "lagrange's mean value theorem",
+      "logarithmic differentiation",
+      "normal",
+      "parametric differentiation",
+      "power rule",
+      "product rule",
+      "quotient rule",
+      "rolle's theorem",
+      "second derivative",
+      "second order derivative",
+      "slope of tangent line",
+      "table 12.1",
+      "tangent",
+      "velocity"
+    ],
+    "title": "Core Concepts of Differential Calculus",
+    "summary": "This community centers on the fundamental principles and techniques of differential calculus, primarily focused on the concept of the derivative and its applications. It binds together the formal definition of the derivative, various differentiation rules (product, quotient, chain, power), and key theorems (Rolle's, Lagrange's) that govern differentiable functions. The entities also illustrate the derivative's role in describing rates of change, slopes of tangents, and function behavior.",
+    "findings": [
+      "The derivative is defined as the limit of the difference quotient: f'(x) = lim(h→0) [f(x+h) - f(x)]/h, and is also known as the first principle of derivative.",
+      "The derivative gives the slope of the tangent line to a curve at a point and equals velocity (rate of change of position) and acceleration (rate of change of velocity).",
+      "Key differentiation rules include the product rule ((uv)' = u'v + uv'), quotient rule ((u/v)' = (u'v - uv')/v²), chain rule (d/dx f(g(x)) = f'(g(x))·g'(x)), and power rule (d/dx(x^n) = nx^(n-1)).",
+      "Rolle's Theorem and Lagrange's Mean Value Theorem both involve the derivative, with Lagrange's stating there exists c in (a,b) such that f'(c) = (f(b)-f(a))/(b-a) for continuous and differentiable functions.",
+      "Specialized differentiation methods include implicit differentiation (using the chain rule), parametric differentiation (dy/dx = (dy/dt)/(dx/dt)), and logarithmic differentiation (taking natural logs for functions of the form f(x)^g(x)).",
+      "The derivative characterizes function behavior: a positive derivative indicates an increasing function, a negative derivative indicates a decreasing function, and the second derivative equals acceleration."
+    ],
+    "size": 36
+  },
+  {
+    "id": 2,
+    "nodes": [
+      "degenerated conic sections",
+      "distance between parallel lines",
+      "general linear equation",
+      "horizontal line l",
+      "inclination",
+      "intercept form",
+      "line",
+      "line x - 7y + 5 = 0",
+      "line x/3 + y/4 = 1",
+      "origin",
+      "pair of intersecting straight lines",
+      "parallel lines",
+      "perpendicular distance",
+      "perpendicular lines",
+      "point",
+      "point a",
+      "point-slope form",
+      "pq",
+      "pr",
+      "slope",
+      "slope-intercept form",
+      "standard equations of an ellipse",
+      "straight line",
+      "tangent function",
+      "two-point form",
+      "vertical line",
+      "x-axis",
+      "x-intercept",
+      "y-axis",
+      "y-intercept"
+    ],
+    "title": "Lines, Slopes, and Degenerated Conics",
+    "summary": "This community focuses on the geometric and algebraic properties of straight lines, including their slopes, intercepts, and various equation forms. It also connects lines to degenerated conic sections, which occur when a plane cuts through the vertex of a cone, resulting in points, intersecting lines, or a single straight line.",
+    "findings": [
+      "The slope of a line is defined as the tangent of its inclination (angle with the positive x-axis) and is a key property used in slope-intercept and point-slope forms.",
+      "Parallel lines have equal slopes, while perpendicular lines have slopes that are negative reciprocals of each other.",
+      "The general linear equation (Ax + By + C = 0) represents a line, and the intercept form (x/a + y/b = 1) is a special case of it.",
+      "Degenerated conic sections include a point (when α < β ≤ 90°), a pair of intersecting straight lines (when 0 ≤ β < α), and a straight line (when β = α).",
+      "The x-axis and y-axis are perpendicular, and the origin lies on both axes.",
+      "The line x - 7y + 5 = 0 is perpendicular to the x-axis, and the line x/3 + y/4 = 1 has a measurable distance from the x-axis."
+    ],
+    "size": 30
+  },
+  {
+    "id": 3,
+    "nodes": [
+      "binomial theorem",
+      "directrix x = -2",
+      "example 1",
+      "example 13",
+      "example 14",
+      "example 2",
+      "example 3",
+      "example 4",
+      "example 5",
+      "example 6",
+      "fig 5.1",
+      "fig 5.2",
+      "focus (2,0)",
+      "leibnitz rule",
+      "m1",
+      "m2",
+      "rule 1",
+      "rule 2",
+      "sandwich theorem",
+      "tan θ",
+      "tan φ",
+      "theorem 5",
+      "theorem 6",
+      "theorem 7",
+      "y^2 = 8x",
+      "α1",
+      "α2",
+      "θ",
+      "φ"
+    ],
+    "title": "Mathematics Examples and Derivative Theorems",
+    "summary": "This community centers on a collection of mathematical examples and theorems primarily focused on solving inequalities, analyzing lines and conic sections (parabolas, ellipses, circles), and computing derivatives. The entities are bound by their use in illustrating algebraic rules, geometric properties, and foundational calculus theorems, including the binomial theorem, sandwich theorem, and derivative rules.",
+    "findings": [
+      "Examples 1-6 demonstrate solving linear inequalities using Rule 1 (adding/subtracting numbers) and Rule 2 (multiplying/dividing by positive or negative numbers), with Examples 5 and 6 illustrated by figures Fig 5.1 and Fig 5.2.",
+      "The angle θ between two lines depends on slopes m1 and m2, and is related to the difference between inclinations α2 and α1; the obtuse angle φ is supplementary to θ.",
+      "Theorem 5 (limits of sin x/x and (1-cos x)/x) is proved by the sandwich theorem and includes the Leibnitz rule; Theorem 6 (derivative of x^n) is proved by the binomial theorem.",
+      "Theorem 7 (derivative of a polynomial) depends on Theorem 5 and Theorem 6, and is applied in Example 13 (ellipse equation) and Example 14 (area of triangle formed by lines).",
+      "Example 6 uses the focus (2,0) and directrix x=-2 to find the equation of a parabola, while Example 5 solves the parabola y^2 = 8x."
+    ],
+    "size": 29
+  },
+  {
+    "id": 4,
+    "nodes": [
+      "bayes theorem",
+      "bayes' theorem",
+      "bernoulli trials",
+      "binomial distribution",
+      "conditional probability",
+      "constraints",
+      "corner point theorem",
+      "diet problem",
+      "discrete random variable",
+      "event",
+      "expectation",
+      "feasible region",
+      "graphical method",
+      "independent events",
+      "isc",
+      "linear programming",
+      "manufacturing",
+      "multiplication theorem",
+      "objective function",
+      "optimal solution",
+      "probability",
+      "probability distribution",
+      "random variables",
+      "sample space",
+      "standard deviation",
+      "total probability",
+      "transportation",
+      "variance"
+    ],
+    "title": "Probability and Linear Programming for ISC",
+    "summary": "This community combines two distinct mathematical topics—probability and linear programming—both of which are examined by the Indian School Certificate (ISC) board. The probability sub-community covers foundational concepts like conditional probability, Bayes' theorem, random variables, and the binomial distribution, while the linear programming sub-community focuses on optimization through feasible regions, constraints, and objective functions.",
+    "findings": [
+      "Linear programming involves defining a feasible region from constraints and an objective function, with the optimal solution found at a corner point of the feasible region (corner point theorem).",
+      "Specific applications of linear programming include the diet problem (minimizing cost with nutritional constraints), manufacturing (maximizing profit with resource constraints), and transportation (minimizing shipping costs).",
+      "Probability includes the sample space, events, and Bayes' theorem, with conditional probability extended by Bayes' theorem and supported by the total probability rule.",
+      "The binomial distribution is based on Bernoulli trials and is a type of random variable, while discrete random variables are described by probability distributions.",
+      "Key properties of random variables include expectation (mean), variance (spread), and standard deviation (derived from variance).",
+      "The ISC board examines both linear programming and probability as part of its curriculum."
+    ],
+    "size": 28
+  },
+  {
+    "id": 5,
+    "nodes": [
+      "achilles",
       "coelus",
+      "earth",
       "eastern gates",
       "hours",
       "hyperion",
       "hyperion's palace",
+      "ixion",
       "jove",
+      "ocean",
+      "olympus",
       "phantoms",
       "planet orb of fire",
+      "saturn",
       "tellus",
+      "thea",
       "titans",
       "two fair argent wings",
       "zephyrs"
     ],
-    "title": "Hyperion's Titan Realm and Divine Conflict",
-    "summary": "This community centers on the Titan god Hyperion, his domain, and his relationships with other divine entities. Hyperion rules over the Titans, opposes the rebel god Jove, and interacts with various deities and personifications within his celestial palace and the broader cosmos.",
+    "title": "Fallen Titans and Their Cosmic Struggle",
+    "summary": "This community centers on the fallen Titan gods Saturn and Hyperion, their family ties, and their struggle for power in a cosmos where divine rule has been disrupted. The entities are bound by themes of loss, rebellion, and the fading of an old order, with Saturn deposed and Hyperion still ruling but fearing his own fall. Key relationships include Saturn’s interactions with Thea and Earth, Hyperion’s rule over the Titans and opposition to Jove, and the cosmic setting of Olympus and Hyperion’s palace.",
     "findings": [
-      "Hyperion rules over the Titans and resides in his grand palace, which is described as a bright bastion with pyramids, obelisks, courts, arches, domes, and fiery galleries.",
-      "Hyperion is in direct conflict with Jove (the rebel thunderer), whom he opposes and threatens, while also swearing by the earth goddess Tellus.",
-      "Hyperion rides a planet orb of fire (likely the sun) that possesses two fair argent wings, which expand at his approach.",
-      "Coelus, the sky god and Hyperion's father, advises Hyperion and speaks to him in a low voice from universal space, expressing concern about the feud among the gods.",
-      "Hyperion's actions cause reactions from other entities: he scares the Hours, causes pale cold Phantoms to appear after his speech, and is served by Zephyrs who blow solemn tubes.",
-      "Hyperion flees to and opens the eastern gates, suggesting movement between realms or domains."
+      "Saturn has lost dominion over Earth and Ocean, and his word once made the rebel three (likely Jove and allies) quake at Olympus, but he is now fallen and unsceptred, listening to Earth.",
+      "Hyperion, a Titan god associated with the sun, still rules over the Titans and resides in his grand palace, but he fears the fall of Saturn and opposes Jove, the rebel thunderer.",
+      "Thea, spouse of Hyperion and companion to Saturn, weeps at Saturn’s feet and urges him to rally their friends; she could have defeated Achilles or stopped Ixion, but does not act on these abilities.",
+      "Coelus, father of Hyperion and Saturn, advises Hyperion from universal space, expressing concern about the feud among the gods.",
+      "Hyperion rides the planet orb of fire, which possesses two fair argent wings that expand at his approach, and he is served by Zephyrs and scares the Hours.",
+      "The Titans are a group with some self-hid or prison-bound, groaning for old allegiance, while pale, cold phantoms appear after Hyperion’s speech."
+    ],
+    "size": 19
+  },
+  {
+    "id": 6,
+    "nodes": [
+      "example 20",
+      "exercise 12.1",
+      "f(x)",
+      "fig 12.6",
+      "fig 12.7",
+      "function",
+      "g(x)",
+      "illustration 10",
+      "illustration 9",
+      "indeterminate form",
+      "left hand limit",
+      "limit",
+      "polynomial function",
+      "rational function",
+      "right hand limit",
+      "table 12.10",
+      "table 12.11",
+      "table 12.12",
+      "theorem 1"
+    ],
+    "title": "Limits, Functions, and Graphical Illustrations",
+    "summary": "This community centers on the mathematical concept of limits, including their left-hand and right-hand components, and how they apply to functions like f(x) and g(x). It includes examples, figures, and tables that illustrate limit behavior, such as cases where limits exist or do not exist, and covers related topics like indeterminate forms and the algebra of limits.",
+    "findings": [
+      "The concept of a limit is composed of left-hand and right-hand limits, which are parts of the overall limit.",
+      "Figures 12.6 and 12.7 depict examples where the limit of f(x) does not exist at 0 (Illustration 9) and exists at 1 (Illustration 10), respectively.",
+      "Tables 12.10, 12.11, and 12.12 show values of f(x) for limits approaching infinity, at 0, and at 1.",
+      "Indeterminate forms arise in limit evaluation, and Theorem 1 describes the algebra of limits.",
+      "Polynomial and rational functions are types of functions that have the property of limits.",
+      "Exercise 12.1 contains limit evaluation exercises, and Example 20 computes a derivative of f(x) from first principles."
+    ],
+    "size": 19
+  },
+  {
+    "id": 7,
+    "nodes": [
+      "albert einstein",
+      "ampere-maxwell law",
+      "circular motion",
+      "conservation",
+      "e = mc^2",
+      "em spectrum",
+      "em waves",
+      "energy",
+      "friction",
+      "mass",
+      "mechanics",
+      "newton's laws",
+      "power",
+      "rotational motion",
+      "speed of light",
+      "theory of special relativity",
+      "work"
+    ],
+    "title": "Physics Foundations: Mechanics and Relativity",
+    "summary": "This community encompasses fundamental concepts in classical mechanics and the groundbreaking theory of special relativity. It binds together the principles governing motion, forces, and energy with the revolutionary ideas introduced by Albert Einstein. The entities span from Newton's Laws to the famous mass-energy equivalence equation.",
+    "findings": [
+      "Mechanics is a broad branch that includes Newton's Laws, friction, work, energy, power, circular motion, conservation principles, and rotational motion.",
+      "Albert Einstein published the Theory of Special Relativity in 1905, which introduced the equation E = mc².",
+      "The equation E = mc² relates mass and energy, and includes the speed of light as a constant.",
+      "The electromagnetic spectrum classifies EM waves, which are described by the Ampere-Maxwell law and have the property of traveling at the speed of light (c = 3×10⁸ m/s)."
+    ],
+    "size": 17
+  },
+  {
+    "id": 8,
+    "nodes": [
+      "a.l. cauchy",
+      "area under curve",
+      "calculus",
+      "d'alembert",
+      "f.l. griffin",
+      "g.w. leibnitz",
+      "instantaneous rate of change",
+      "issac newton",
+      "j.l. lagrange",
+      "john perry",
+      "karl weierstrass",
+      "linear approximation",
+      "mathematics",
+      "tangent line",
+      "whitehead"
+    ],
+    "title": "Founders and Foundations of Calculus",
+    "summary": "This community centers on the development and teaching of calculus, a branch of mathematics that addresses instantaneous rate of change and area under a curve. It includes the inventors of calculus, key contributors who refined its concepts, and educators who promoted its teaching.",
+    "findings": [
+      "Calculus was co-invented by Issac Newton and G.W. Leibnitz.",
+      "A.L. Cauchy contributed to calculus by using D'Alembert's limit concept to give a foundation for calculus.",
+      "Calculus addresses two core questions: instantaneous rate of change and area under a curve.",
+      "Instantaneous rate of change is equal to the slope of the tangent line.",
+      "John Perry promoted the teaching of calculus in schools around 1900, and F.L. Griffin pioneered teaching it to first-year students.",
+      "WHITEHEAD authored a quote about calculus."
+    ],
+    "size": 15
+  },
+  {
+    "id": 9,
+    "nodes": [
+      "astronomical telescope",
+      "compound microscope",
+      "laws of reflection",
+      "lens formula",
+      "lens maker's formula",
+      "mirror formula",
+      "power of lens",
+      "prism",
+      "ray optics",
+      "refractive index",
+      "simple microscope",
+      "total internal reflection"
+    ],
+    "title": "Core Concepts in Ray Optics",
+    "summary": "This community is centered on the topic of Ray Optics, which is the branch of optics that studies light as rays. It encompasses the fundamental laws and formulas governing reflection, refraction, and the behavior of light through lenses, mirrors, and prisms, as well as the principles behind common optical instruments.",
+    "findings": [
+      "Ray Optics includes the Laws of reflection, which state that the angle of incidence equals the angle of reflection.",
+      "The community contains formulas for lenses (Lens formula: 1/f = 1/v - 1/u) and mirrors (Mirror formula: 1/f = 1/v + 1/u with sign convention).",
+      "The Refractive index (n = c/v) and Snell's law (n₁ sin i = n₂ sin r) are part of Ray Optics, along with Total internal reflection (critical angle sin i_c = 1/n).",
+      "Optical instruments such as the Simple microscope (magnification m = 1 + D/f), Compound microscope (magnification m = (L/f₀)(1 + D/f_e)), and Astronomical telescope (magnification m = f₀/f_e) are included.",
+      "The Prism is covered, with its deviation formula δ = i + e - A and minimum deviation formula.",
+      "The Power of a lens (P = 1/f in meters, unit dioptre) and the Lens maker's formula (1/f = (n-1)(1/R₁ - 1/R₂)) are also part of this community."
     ],
     "size": 12
   },
   {
-    "id": 1,
+    "id": 10,
+    "nodes": [
+      "analytic geometry",
+      "c. lame",
+      "clairaut",
+      "cramer",
+      "gottfried wilhelm leibniz",
+      "isaac newton",
+      "l'hospital",
+      "la geometrie",
+      "monge",
+      "pierre de fermat",
+      "rene descartes",
+      "s.f. lacroix"
+    ],
+    "title": "Pioneers of Analytic Geometry",
+    "summary": "This community centers on the historical development of analytic geometry, a branch of mathematics that uses coordinates to study geometry. It includes key figures from the 17th to 19th centuries who contributed foundational concepts, formulas, and textbooks, with René Descartes and Pierre de Fermat as early discoverers.",
+    "findings": [
+      "René Descartes authored \"La Geometrie\" in 1637, a foundational work associated with analytic geometry.",
+      "Pierre de Fermat discovered the fundamental principles of analytic geometry before Descartes.",
+      "Isaac Newton used analytic geometry, including the method of undetermined coefficients and various coordinate systems.",
+      "Gottfried Wilhelm Leibniz contributed the terms 'abscissa', 'ordinate', and 'coordinate' to analytic geometry.",
+      "Clairaut gave the first distance formula in 1729 and the intercept form of a linear equation.",
+      "Monge gave the modern 'point-slope' form of a line equation and the perpendicularity condition in 1781."
+    ],
+    "size": 12
+  },
+  {
+    "id": 11,
     "nodes": [
       "deepseek",
       "deepseek-chat",
@@ -46,95 +461,1398 @@
     "findings": [
       "TurboVec is a Rust vector index developed by Ryan Codrai that implements Google Research's TurboQuant quantization algorithm.",
       "The deepseek-chat model, released by DeepSeek, is compatible with OpenAI's API endpoint.",
-      "Vaaani Graph-RAG assistant uses TurboVec, sentence-transformers, and DeepSeek's deepseek-chat model as its core components."
+      "Vaaani Graph-RAG assistant uses TurboVec, sentence-transformers, and DeepSeek's deepseek-chat model as its core components.",
+      "TurboQuant was developed by Google Research and is implemented in the TurboVec product."
     ],
     "size": 10
   },
   {
-    "id": 2,
+    "id": 12,
     "nodes": [
-      "acceleration",
-      "chain rule",
-      "derivative",
-      "implicit differentiation",
-      "product rule",
-      "quotient rule",
-      "second derivative",
-      "slope of tangent line",
-      "velocity"
+      "algebra",
+      "binary operations",
+      "determinants",
+      "functions",
+      "inverse of matrix",
+      "inverse trigonometric functions",
+      "isc mathematics (class 12)",
+      "matrices",
+      "relations",
+      "relations and functions"
     ],
-    "title": "Core Derivative Rules and Applications",
-    "summary": "This community centers on the concept of the derivative and its fundamental rules for computation, including the product, quotient, and chain rules. It also covers key applications of derivatives, such as finding the slope of a tangent line and relating to velocity and acceleration, as well as the technique of implicit differentiation.",
+    "title": "ISC Class 12 Mathematics Syllabus Overview",
+    "summary": "This community represents the core topics of the ISC Mathematics syllabus for Class 12, structured into two main sections: Relations and Functions, and Algebra. It encompasses foundational concepts such as relations, functions, binary operations, inverse trigonometric functions, matrices, determinants, and the inverse of a matrix.",
     "findings": [
-      "The derivative gives the slope of the tangent line.",
-      "The derivative equals velocity, and the second derivative equals acceleration.",
-      "The product rule, quotient rule, and chain rule are all used for finding derivatives.",
-      "The chain rule is used in implicit differentiation."
+      "The ISC Mathematics (Class 12) syllabus is divided into two primary topics: Relations and Functions and Algebra.",
+      "Relations and Functions covers relations, functions, binary operations, and inverse trigonometric functions.",
+      "Algebra covers matrices, determinants, and the inverse of a matrix.",
+      "Binary operations are defined by properties including commutativity, associativity, identity element, and inverse.",
+      "Functions include injective (one-one), surjective (onto), bijective, composition, and invertible functions.",
+      "Matrices include types such as row, column, zero, square, diagonal, scalar, identity, symmetric, and skew-symmetric, along with operations and transpose."
+    ],
+    "size": 10
+  },
+  {
+    "id": 13,
+    "nodes": [
+      "degree",
+      "differential equations",
+      "general solution",
+      "homogeneous",
+      "integrating factor",
+      "linear",
+      "order",
+      "particular solution",
+      "variable separable"
+    ],
+    "title": "Methods and Solutions for Differential Equations",
+    "summary": "This community centers on differential equations, their fundamental properties (order and degree), and the types of solutions they yield (general and particular). It also details three primary solution methods—variable separable, homogeneous, and linear—with the linear method specifically utilizing an integrating factor.",
+    "findings": [
+      "Differential equations are characterized by their order (highest derivative) and degree (power of the highest derivative).",
+      "Solutions to differential equations include general solutions (with arbitrary constants) and particular solutions (with constants determined by initial conditions).",
+      "The variable separable method solves equations of the form dy/dx = f(x)g(y).",
+      "The homogeneous method solves equations of the form dy/dx = F(y/x) using the substitution y = vx.",
+      "The linear method solves equations of the form dy/dx + Py = Q and requires an integrating factor, defined as IF = e^(∫Pdx)."
     ],
     "size": 9
   },
   {
-    "id": 3,
+    "id": 14,
     "nodes": [
-      "area under curve",
-      "calculus",
-      "indeterminate form",
-      "instantaneous rate of change",
-      "limit",
-      "linear approximation",
-      "slope",
-      "tangent line"
+      "analytical geometry",
+      "area of triangle formula",
+      "coordinate geometry",
+      "distance formula",
+      "equation of the circle",
+      "la géométry",
+      "mid-point formula",
+      "rené descartes",
+      "section formula"
     ],
-    "title": "Calculus: Rates of Change and Area",
-    "summary": "This community centers on the foundational concepts of calculus, which addresses two core questions: instantaneous rate of change and area under a curve. The entities are bound by their roles in defining and calculating these ideas, with the tangent line and limit serving as key tools.",
+    "title": "Foundations of Coordinate Geometry",
+    "summary": "This community centers on coordinate geometry (also known as analytical geometry), a mathematical field that merges algebra and geometry. It was introduced by René Descartes in his 1637 book *La Géométry* and includes key formulas for distance, midpoints, section division, and area of triangles, which are used to derive geometric representations like the equation of a circle.",
     "findings": [
-      "Calculus addresses the questions of instantaneous rate of change and area under a curve.",
-      "Instantaneous rate of change equals the slope of the tangent line.",
-      "Limits are used to find instantaneous rate of change.",
-      "Indeterminate forms arise in the evaluation of limits.",
-      "Linear approximation uses the tangent line to approximate a function near a point."
+      "René Descartes authored *La Géométry* and introduced analytical geometry, which is synonymous with coordinate geometry.",
+      "The distance formula is a core part of coordinate geometry and is used to derive the equation of a circle.",
+      "The section formula, mid-point formula, and area of triangle formula are all part of coordinate geometry.",
+      "The equation of a circle is expressed as (x - h)^2 + (y - k)^2 = r^2, with center (h, k) and radius r."
+    ],
+    "size": 9
+  },
+  {
+    "id": 15,
+    "nodes": [
+      "diode",
+      "full-wave bridge rectifier",
+      "half-wave rectifier",
+      "led",
+      "light emission",
+      "rectification",
+      "voltage regulation",
+      "zener diode"
+    ],
+    "title": "Diode-Based Rectifiers and Regulation",
+    "summary": "This community centers on diodes and their applications in rectification and voltage regulation. It includes various diode types (standard, Zener, LED) and rectifier circuits (half-wave, full-wave bridge) that convert AC to DC.",
+    "findings": [
+      "Diodes are used for rectification, converting AC to DC.",
+      "Half-wave rectifiers use one diode and perform rectification with ~40.6% efficiency and ripple frequency equal to input frequency.",
+      "Full-wave bridge rectifiers use four diodes and perform rectification with ~81.2% efficiency and ripple frequency twice the input frequency.",
+      "Zener diodes are a type of diode used for voltage regulation via reverse breakdown.",
+      "LEDs are a type of diode used for light emission when forward biased."
     ],
     "size": 8
   },
   {
-    "id": 4,
+    "id": 16,
     "nodes": [
-      "achilles",
-      "earth",
-      "ixion",
-      "ocean",
-      "olympus",
-      "saturn",
-      "thea"
+      "cos x",
+      "cot x",
+      "example 16",
+      "example 17",
+      "example 21",
+      "sin 2x",
+      "sin x",
+      "tan x"
     ],
-    "title": "The Fallen Titan and His Consort",
-    "summary": "This community centers on the fallen Titan king Saturn and his companion Thea, set in a post-cosmic overthrow landscape. Saturn has lost dominion over Earth and Ocean, and his presence affects Olympus, while Thea urges him to rally their allies. Thea’s immense power is highlighted by her ability to defeat Achilles or stop Ixion, contrasting with Saturn’s current state of quiet despair.",
+    "title": "Derivative Examples for Trigonometric Functions",
+    "summary": "This community focuses on examples that compute derivatives of trigonometric functions, including sin x, tan x, sin 2x, and cot x. The relations show how these functions are expressed in terms of each other, such as sin 2x being expressed as 2 sin x cos x and cot x being expressed as cos x / sin x.",
     "findings": [
-      "Saturn has lost dominion over both Earth and Ocean, and his presence affects Olympus.",
-      "Thea accompanies Saturn, speaks to him, weeps at his feet, and urges him to rally their friends.",
-      "Thea possesses the power to defeat Achilles or stop Ixion, indicating her formidable strength.",
-      "Saturn listens to Earth, his ancient mother, seeking comfort from her.",
-      "Saturn is described as a gray-hair’d, fallen god, quiet as a stone, with unsceptred, realmless eyes closed."
+      "Example 16 computes the derivative of sin x.",
+      "Example 17 computes the derivative of tan x.",
+      "Example 21 computes the derivatives of sin 2x and cot x.",
+      "sin 2x is expressed in terms of sin x and cos x.",
+      "cot x is expressed in terms of cos x, sin x, and tan x."
     ],
-    "size": 7
+    "size": 8
   },
   {
-    "id": 5,
+    "id": 17,
+    "nodes": [
+      "huygens' principle",
+      "polarization",
+      "rayleigh criterion",
+      "single slit diffraction",
+      "wave optics",
+      "young's double slit experiment"
+    ],
+    "title": "Core Principles of Wave Optics",
+    "summary": "This community centers on Wave Optics, the branch of optics that models light as a wave. It is unified by key phenomena and principles derived from this wave model, including Huygens' principle, interference, diffraction, and polarization.",
+    "findings": [
+      "Wave Optics is a broad topic that includes Huygens' principle, which states that every point on a wavefront acts as a source of secondary wavelets.",
+      "The community covers Young's double slit experiment, which defines interference conditions and fringe width as β = λD/d.",
+      "Single slit diffraction is included, with its first minimum condition a sin θ = λ and central maximum width 2λD/a.",
+      "The Rayleigh criterion, which sets the limit of resolution for microscopes and telescopes, is part of Wave Optics.",
+      "Polarization is included, governed by Brewster's law (tan i_p = n) and Malus's law (I = I₀ cos²θ)."
+    ],
+    "size": 6
+  },
+  {
+    "id": 18,
+    "nodes": [
+      "davisson-germer experiment",
+      "de broglie wavelength",
+      "photoelectric effect",
+      "photon",
+      "stopping potential",
+      "work function"
+    ],
+    "title": "Wave-Particle Duality and Quantum Phenomena",
+    "summary": "This community explores the wave-particle duality of matter and light, focusing on key experiments and concepts that established quantum theory. It connects the photoelectric effect, which demonstrates the particle nature of light, with the de Broglie wavelength and the Davisson-Germer experiment, which confirmed the wave nature of electrons.",
+    "findings": [
+      "The photoelectric effect involves photons and depends on the work function, with the stopping potential given by eV_s = K_max = hν - φ₀.",
+      "Photons have energy E = hν and momentum p = h/λ, linking them to the de Broglie wavelength concept.",
+      "The de Broglie wavelength is defined as λ = h/p, and for an electron, it is λ = 12.27/√V Å.",
+      "The Davisson-Germer experiment confirmed the de Broglie wavelength, providing experimental evidence for the wave nature of electrons."
+    ],
+    "size": 6
+  },
+  {
+    "id": 19,
+    "nodes": [
+      "balmer series",
+      "bohr radius",
+      "bohr's model",
+      "lyman series",
+      "paschen series",
+      "rydberg constant"
+    ],
+    "title": "Bohr's Model and Spectral Series",
+    "summary": "This community centers on Bohr's Model of the hydrogen atom, which explains the spectral series of hydrogen. The model defines the Bohr radius and accounts for the Lyman, Balmer, and Paschen series, with the Rydberg constant used in calculations for the Balmer series.",
+    "findings": [
+      "Bohr's Model defines the Bohr radius (a₀ = 0.529 Å), the radius of the hydrogen atom in its ground state.",
+      "Bohr's Model explains the Balmer series (transitions to n=2, visible region), Lyman series (transitions to n=1, UV region), and Paschen series (transitions to n=3, IR region).",
+      "The Rydberg constant (R = 1.097×10⁷ m⁻¹) is used in the Balmer series."
+    ],
+    "size": 6
+  },
+  {
+    "id": 20,
+    "nodes": [
+      "definite integrals",
+      "fundamental theorem of calculus",
+      "integral calculus",
+      "integration by parts",
+      "liate rule",
+      "substitution"
+    ],
+    "title": "Core Techniques of Integral Calculus",
+    "summary": "This community centers on Integral Calculus, the branch of mathematics concerned with accumulation and area. It is bound together by the core techniques and theorems used to evaluate integrals, including the Fundamental Theorem of Calculus, integration by parts, and substitution.",
+    "findings": [
+      "The Fundamental Theorem of Calculus provides the basis for evaluating Definite Integrals by relating them to antiderivatives.",
+      "Integration by parts is a key technique within Integral Calculus that uses the LIATE rule to choose the variable 'u'.",
+      "Integral Calculus includes the methods of Integration by parts and Substitution, as well as the Fundamental Theorem of Calculus.",
+      "The LIATE rule (Logarithmic, Inverse trig, Algebraic, Trigonometric, Exponential) guides the selection of 'u' in the integration by parts formula."
+    ],
+    "size": 6
+  },
+  {
+    "id": 21,
+    "nodes": [
+      "87",
+      "92",
+      "94",
+      "95",
+      "grade a",
+      "sunita"
+    ],
+    "title": "Sunita's Grade A Examination Marks",
+    "summary": "This community centers on student Sunita and her pursuit of a grade A, which requires an average of 90 or more across five examinations. Sunita has scored 87, 92, 94, and 95 in her first four exams, and her goal is to achieve the grade A threshold.",
+    "findings": [
+      "Sunita has completed four examinations with scores of 87, 92, 94, and 95.",
+      "The grade A requirement is an average of 90 or more across five examinations.",
+      "Sunita's current total after four exams is 368 (87+92+94+95).",
+      "To achieve grade A, Sunita needs a total of at least 450 across five exams (90 average × 5).",
+      "Sunita requires a minimum score of 82 on her fifth examination to reach the grade A threshold (450 - 368 = 82)."
+    ],
+    "size": 6
+  },
+  {
+    "id": 22,
+    "nodes": [
+      "amplifier",
+      "bipolar junction transistor (bjt)",
+      "common base (cb)",
+      "common collector (cc)",
+      "common emitter (ce)"
+    ],
+    "title": "BJT Configurations and Amplifier Use",
+    "summary": "This community centers on the Bipolar Junction Transistor (BJT) and its three standard circuit configurations: common base, common emitter, and common collector. The common emitter configuration is specifically linked to amplification, serving as an amplifier.",
+    "findings": [
+      "The Bipolar Junction Transistor (BJT) has three configurations: common base (CB), common emitter (CE), and common collector (CC).",
+      "The common emitter (CE) configuration is used as an amplifier.",
+      "The common base (CB) configuration has a current gain defined as α = I_C/I_E.",
+      "The common emitter (CE) configuration has a current gain defined as β = I_C/I_B.",
+      "The BJT includes NPN and PNP types."
+    ],
+    "size": 5
+  },
+  {
+    "id": 23,
+    "nodes": [
+      "double inequalities",
+      "inequalities",
+      "quadratic inequalities",
+      "slack inequalities",
+      "strict inequalities"
+    ],
+    "title": "Types and Subtypes of Inequalities",
+    "summary": "This community focuses on the classification of inequalities, with \"inequalities\" as the overarching concept. It identifies several specific subtypes, including double, quadratic, slack, and strict inequalities, each defined by distinct properties or examples.",
+    "findings": [
+      "Double inequalities, such as 3 < x < 5, are a subtype of inequalities.",
+      "Strict inequalities, including examples (5), (6), (9), (10), and (14), are a subtype of inequalities.",
+      "Slack inequalities, including examples (7), (8), (11), (12), and (13), are a subtype of inequalities.",
+      "Quadratic inequalities, such as (13) and (14) when a ≠ 0, are a subtype of inequalities in one variable x."
+    ],
+    "size": 5
+  },
+  {
+    "id": 24,
+    "nodes": [
+      "30x < 200",
+      "linear inequalities",
+      "linear inequalities in one variable",
+      "linear inequalities in two variables",
+      "solution set"
+    ],
+    "title": "Linear Inequalities and Their Solution Sets",
+    "summary": "This community focuses on linear inequalities, which are mathematical statements comparing expressions using inequality symbols. It distinguishes between linear inequalities in one variable and those in two variables, and illustrates the concept of a solution set through a specific example.",
+    "findings": [
+      "Linear inequalities are categorized into two subtypes: linear inequalities in one variable and linear inequalities in two variables.",
+      "The inequality 30x < 200 is an example of a linear inequality in one variable, taken from Section 6.2.",
+      "The solution set for 30x < 200 is {0, 1, 2, 3, 4, 5, 6}, representing the values of x that satisfy the inequality."
+    ],
+    "size": 5
+  },
+  {
+    "id": 25,
+    "nodes": [
+      "junction",
+      "line 2x – 3y + 4 = 0",
+      "line 3x + 4y – 5 = 0",
+      "line 6x – 7y + 8 = 0",
+      "person"
+    ],
+    "title": "Intersection of Two Paths",
+    "summary": "This community describes a person standing at a junction formed by the intersection of two straight lines. The person's goal is to reach a third, distinct line, which is not part of the junction.",
+    "findings": [
+      "The junction is the intersection point of the lines 2x – 3y + 4 = 0 and 3x + 4y – 5 = 0.",
+      "A person is currently located at this junction.",
+      "The person wants to reach the line 6x – 7y + 8 = 0.",
+      "The target line is separate from the two lines that define the junction."
+    ],
+    "size": 5
+  },
+  {
+    "id": 26,
+    "nodes": [
+      "average velocity",
+      "instantaneous velocity",
+      "slope of the tangent",
+      "t = 2 seconds",
+      "table 12.3"
+    ],
+    "title": "Estimating Instantaneous Velocity at t=2",
+    "summary": "This community focuses on the relationship between average and instantaneous velocity at a specific time, t=2 seconds. The instantaneous velocity is defined as the slope of the tangent to the position-time curve at that instant, and its value is estimated using average velocities from decreasing time intervals.",
+    "findings": [
+      "The instantaneous velocity at t=2 seconds is estimated to be between 19.551 m/s and 19.649 m/s.",
+      "The instantaneous velocity at a specific instant equals the slope of the tangent to the position-time curve.",
+      "Average velocities are computed over time intervals that start at t=2 seconds.",
+      "Table 12.3 lists the values of average velocities for decreasing time intervals that end at t=2 seconds."
+    ],
+    "size": 5
+  },
+  {
+    "id": 27,
+    "nodes": [
+      "equivalence relation",
+      "reflexive",
+      "symmetric",
+      "transitive"
+    ],
+    "title": "Properties Defining an Equivalence Relation",
+    "summary": "This community centers on the concept of an equivalence relation and the three fundamental properties that define it. An equivalence relation is a specific type of binary relation that must simultaneously satisfy the conditions of being reflexive, symmetric, and transitive.",
+    "findings": [
+      "An equivalence relation is defined by requiring three specific properties: reflexivity, symmetry, and transitivity.",
+      "Reflexivity means every element in the set must be related to itself, i.e., (a,a) ∈ R for all a.",
+      "Symmetry requires that if a is related to b, then b must also be related to a, i.e., (a,b) ∈ R implies (b,a) ∈ R.",
+      "Transitivity demands that if a is related to b and b is related to c, then a must be related to c, i.e., (a,b) ∈ R and (b,c) ∈ R implies (a,c) ∈ R.",
+      "All three properties are necessary conditions for a relation to be classified as an equivalence relation."
+    ],
+    "size": 4
+  },
+  {
+    "id": 28,
+    "nodes": [
+      "bijective",
+      "injective",
+      "invertible function",
+      "surjective"
+    ],
+    "title": "Properties of Bijective and Invertible Functions",
+    "summary": "This community centers on the concept of bijective functions and their relationship to invertibility. It defines bijectivity as the combination of injectivity and surjectivity, and establishes that a function is invertible if and only if it is bijective.",
+    "findings": [
+      "A bijective function requires both the injective property (one-to-one) and the surjective property (onto).",
+      "An invertible function is equivalent to a bijective function.",
+      "Injectivity ensures that equal outputs imply equal inputs: f(x₁) = f(x₂) ⇒ x₁ = x₂.",
+      "Surjectivity guarantees that every element in the codomain has a preimage in the domain."
+    ],
+    "size": 4
+  },
+  {
+    "id": 29,
+    "nodes": [
+      "adjoint",
+      "cofactor matrix",
+      "determinant",
+      "matrix inverse"
+    ],
+    "title": "Matrix Inverse via Adjoint and Determinant",
+    "summary": "This community centers on the mathematical relationships between the adjoint, cofactor matrix, determinant, and matrix inverse. These concepts are bound together by the process of computing a matrix inverse, which relies on the determinant and the adjoint.",
+    "findings": [
+      "The adjoint of a matrix is defined as the transpose of the cofactor matrix.",
+      "The existence of a matrix inverse depends on the determinant being non-zero.",
+      "The matrix inverse is computed via the adjoint divided by the determinant."
+    ],
+    "size": 4
+  },
+  {
+    "id": 30,
+    "nodes": [
+      "first derivative test",
+      "local maximum",
+      "local minimum",
+      "second derivative test"
+    ],
+    "title": "Calculus Tests for Local Extrema",
+    "summary": "This community focuses on two primary methods for identifying local maxima and minima of functions: the First Derivative Test and the Second Derivative Test. Both tests are used to determine the nature of critical points, specifically whether they are local maxima or local minima.",
+    "findings": [
+      "The First Derivative Test determines local maxima and minima by analyzing the sign change of the derivative at a critical point.",
+      "The Second Derivative Test determines local maxima and minima by evaluating the second derivative at a critical point.",
+      "A local maximum is characterized by a zero first derivative and a negative second derivative.",
+      "A local minimum is characterized by a zero first derivative and a positive second derivative.",
+      "Both the First Derivative Test and the Second Derivative Test are used to determine local maxima.",
+      "Both the First Derivative Test and the Second Derivative Test are used to determine local minima."
+    ],
+    "size": 4
+  },
+  {
+    "id": 31,
+    "nodes": [
+      "activity",
+      "half-life",
+      "mean life",
+      "radioactive decay law"
+    ],
+    "title": "Radioactive Decay Law and Key Quantities",
+    "summary": "This community centers on the fundamental radioactive decay law and the key quantities derived from it. The law, expressed as N = N₀e^(-λt), mathematically describes the exponential decrease of radioactive nuclei over time. From this law, the concepts of half-life, mean life, and activity are defined.",
+    "findings": [
+      "The radioactive decay law, N = N₀e^(-λt), is the foundational relationship that defines the other concepts in this community.",
+      "Half-life is defined by the law as T_(1/2) = ln2/λ, representing the time for half of the radioactive nuclei to decay.",
+      "Mean life is defined by the law as τ = 1/λ, representing the average lifetime of a radioactive nucleus.",
+      "Activity is defined by the law as R = λN, with units of becquerel or curie, representing the rate of decay."
+    ],
+    "size": 4
+  },
+  {
+    "id": 32,
+    "nodes": [
+      "area of triangle",
+      "collinear",
+      "median",
+      "triangle"
+    ],
+    "title": "Triangle Geometry and Its Properties",
+    "summary": "This community centers on the geometric concept of a triangle, including its area calculation and related features. It connects the triangle shape to formulas for area, the property of collinearity, and the median segment.",
+    "findings": [
+      "The area of a triangle is calculated using the formula 1/2 |x1(y2-y3)+x2(y3-y1)+x3(y1-y2)|, which applies to triangles.",
+      "Collinearity is a property related to triangles, describing points that lie on a single straight line.",
+      "A median is a line segment from a vertex to the midpoint of the opposite side, and it is part of a triangle."
+    ],
+    "size": 4
+  },
+  {
+    "id": 33,
+    "nodes": [
+      "(3, 3)",
+      "(4, 0)",
+      "(–2, –1)",
+      "(–3, 2)"
+    ],
+    "title": "Closed Polygon of Four Points",
+    "summary": "This community consists of four distinct points in a coordinate plane that are connected in a cyclic sequence. The relations form a closed loop, indicating these points are vertices of a quadrilateral shape.",
+    "findings": [
+      "The point (-2, -1) is connected to (4, 0).",
+      "The point (4, 0) is connected to (3, 3).",
+      "The point (3, 3) is connected to (-3, 2).",
+      "The point (-3, 2) is connected back to (-2, -1), completing the cycle."
+    ],
+    "size": 4
+  },
+  {
+    "id": 34,
+    "nodes": [
+      "skew-symmetric matrix",
+      "symmetric matrix",
+      "transpose"
+    ],
+    "title": "Symmetric and Skew-Symmetric Matrix Properties",
+    "summary": "This community focuses on the definitions and relationships between symmetric and skew-symmetric matrices, both of which are defined through the transpose operation. A symmetric matrix equals its own transpose, while a skew-symmetric matrix equals the negative of its transpose, with the latter having zero diagonal elements.",
+    "findings": [
+      "A symmetric matrix A satisfies A = Aᵀ, meaning a_ij = a_ji.",
+      "A skew-symmetric matrix A satisfies A = -Aᵀ, meaning a_ij = -a_ji, and all diagonal elements are zero.",
+      "Both symmetric and skew-symmetric matrices are defined in relation to the transpose operation.",
+      "The transpose operation has properties: (Aᵀ)ᵀ = A, (AB)ᵀ = BᵀAᵀ, and (kA)ᵀ = kAᵀ."
+    ],
+    "size": 3
+  },
+  {
+    "id": 35,
+    "nodes": [
+      "cross product",
+      "dot product",
+      "vector"
+    ],
+    "title": "Vector Operations: Dot and Cross Products",
+    "summary": "This community centers on the mathematical concept of a vector and two fundamental operations defined upon it: the dot product and the cross product. Both operations are performed on vectors but yield different types of results.",
+    "findings": [
+      "A vector is defined as a quantity possessing both magnitude and direction.",
+      "The dot product is a scalar product operation performed on vectors.",
+      "The cross product is a vector product operation performed on vectors.",
+      "Both the dot product and the cross product are operations that act on vectors."
+    ],
+    "size": 3
+  },
+  {
+    "id": 36,
+    "nodes": [
+      "direction cosines",
+      "direction ratios",
+      "line in 3d"
+    ],
+    "title": "Direction Cosines and Ratios in 3D Lines",
+    "summary": "This community focuses on the mathematical concepts of direction cosines and direction ratios, which are fundamental for describing the orientation of lines in three-dimensional space. Direction cosines are the cosines of the angles a line makes with the coordinate axes, while direction ratios are numbers proportional to these cosines. These concepts are directly applied in the vector and Cartesian representations of a line in 3D.",
+    "findings": [
+      "Direction cosines are defined as l, m, n, representing the cosines of the angles a line makes with the x, y, and z axes, respectively, and satisfy the identity l² + m² + n² = 1.",
+      "Direction ratios are numbers proportional to the direction cosines and provide an alternative way to define a line's direction without requiring the squared sum to equal one.",
+      "The representation of a line in 3D uses direction ratios in both its vector form (r = a + λb) and Cartesian form ((x-x₁)/a = (y-y₁)/b = (z-z₁)/c), where the ratios (a, b, c) define the line's direction."
+    ],
+    "size": 3
+  },
+  {
+    "id": 37,
+    "nodes": [
+      "bag",
+      "black ball",
+      "white ball"
+    ],
+    "title": "Bag of Colored Balls",
+    "summary": "This community centers on a bag that holds a specific collection of balls distinguished by color. The bag contains both white and black balls, with a known total count of 4 white and 5 black balls.",
+    "findings": [
+      "The bag contains 4 white balls and 5 black balls.",
+      "The bag is the container for both white and black balls.",
+      "The total number of balls in the bag is 9 (4 white + 5 black)."
+    ],
+    "size": 3
+  },
+  {
+    "id": 38,
+    "nodes": [
+      "defective item",
+      "factory a",
+      "factory b"
+    ],
+    "title": "Defect Rates in Factory Production",
+    "summary": "This community focuses on two factories, Factory A and Factory B, which both produce defective items. Their production volumes and defect rates are key to understanding overall defect contributions.",
+    "findings": [
+      "Factory A produces 60% of all items and has a 2% defect rate.",
+      "Factory B produces 40% of all items and has a 3% defect rate.",
+      "Both factories are sources of defective items, with Factory A contributing a larger share of total production but a lower defect rate than Factory B."
+    ],
+    "size": 3
+  },
+  {
+    "id": 39,
+    "nodes": [
+      "meter bridge",
+      "potentiometer",
+      "wheatstone bridge"
+    ],
+    "title": "Bridge Circuits for Resistance and EMF Measurement",
+    "summary": "This community focuses on electrical measurement devices that utilize bridge circuits and potentiometric principles. The entities are bound by their shared purpose of measuring electrical quantities like unknown resistance, EMF, and internal resistance through null-balance techniques.",
+    "findings": [
+      "The Wheatstone Bridge is a circuit specifically designed for measuring unknown resistance, operating under the balanced condition where R1/R2 = R3/R4 and no current flows through the galvanometer.",
+      "The Meter Bridge is a practical application of the Wheatstone Bridge, used as a device to find unknown resistance.",
+      "The Potentiometer is a related device used to measure EMF and internal resistance, distinct from the bridge circuits but connected through the broader context of electrical measurement."
+    ],
+    "size": 3
+  },
+  {
+    "id": 40,
+    "nodes": [
+      "cyclotron",
+      "lorentz force",
+      "velocity selector"
+    ],
+    "title": "Lorentz Force Applications in Particle Devices",
+    "summary": "This community centers on the Lorentz force as a foundational principle for two key devices: the cyclotron and the velocity selector. Both devices utilize the interaction of magnetic and electric fields on moving charged particles, as described by the Lorentz force equation.",
+    "findings": [
+      "The Lorentz force is used in the operation of a cyclotron, which accelerates charged particles using a magnetic field.",
+      "The Lorentz force is also used in a velocity selector, a device that employs crossed electric and magnetic fields to filter particles by speed.",
+      "The Lorentz force equation is given as F = q(v × B) and F = q(E + v × B), encompassing both magnetic and electric field contributions."
+    ],
+    "size": 3
+  },
+  {
+    "id": 41,
+    "nodes": [
+      "ammeter",
+      "moving coil galvanometer",
+      "voltmeter"
+    ],
+    "title": "Galvanometer Conversion to Meters",
+    "summary": "This community centers on the Moving Coil Galvanometer as a foundational instrument for detecting small currents. It is converted into two distinct measuring devices: an Ammeter for current and a Voltmeter for voltage.",
+    "findings": [
+      "A Moving Coil Galvanometer is an instrument for detecting small currents.",
+      "An Ammeter is a device for measuring current, made by adding a shunt to a galvanometer.",
+      "A Voltmeter is a device for measuring voltage, made by adding a series resistor to a galvanometer.",
+      "The Moving Coil Galvanometer is converted into an Ammeter.",
+      "The Moving Coil Galvanometer is converted into a Voltmeter."
+    ],
+    "size": 3
+  },
+  {
+    "id": 42,
+    "nodes": [
+      "ac generator",
+      "faraday's law",
+      "lenz's law"
+    ],
+    "title": "Electromagnetic Induction and AC Generation",
+    "summary": "This community centers on the fundamental principles of electromagnetic induction and their application in electrical power generation. It connects Faraday's Law and Lenz's Law as core electromagnetic theories, with the AC Generator serving as a practical device built upon these laws.",
+    "findings": [
+      "Faraday's Law mathematically defines induced electromotive force as ε = -dΦ/dt, establishing the quantitative basis for electromagnetic induction.",
+      "Lenz's Law is included within Faraday's Law, specifying that induced current opposes the change in magnetic flux producing it.",
+      "The AC Generator is based on Faraday's Law, converting mechanical energy into AC electrical energy through electromagnetic induction.",
+      "The negative sign in Faraday's Law (ε = -dΦ/dt) directly reflects Lenz's Law's principle of opposition to flux change."
+    ],
+    "size": 3
+  },
+  {
+    "id": 43,
+    "nodes": [
+      "displacement current",
+      "electromagnetic waves",
+      "maxwell's equations"
+    ],
+    "title": "Maxwell's Equations and Electromagnetic Wave Prediction",
+    "summary": "This community centers on the foundational role of Maxwell's equations in electromagnetism, specifically highlighting the inclusion of displacement current. The displacement current is a key addition that enables the prediction of electromagnetic waves as oscillating fields.",
+    "findings": [
+      "Maxwell's equations include the concept of displacement current.",
+      "Displacement current is defined as current due to a changing electric field.",
+      "Electromagnetic waves are predicted by Maxwell's equations.",
+      "Electromagnetic waves consist of oscillating electric and magnetic fields propagating at the speed of light."
+    ],
+    "size": 3
+  },
+  {
+    "id": 44,
+    "nodes": [
+      "intrinsic semiconductor",
+      "n-type semiconductor",
+      "p-type semiconductor"
+    ],
+    "title": "Doping and Junctions in Semiconductors",
+    "summary": "This community describes the foundational types of semiconductors and their relationships through doping and junction formation. Intrinsic semiconductors serve as the base material that can be transformed into either n-type or p-type semiconductors via doping. The p-type and n-type semiconductors can then combine to form a junction, which is essential for electronic devices.",
+    "findings": [
+      "Intrinsic semiconductors are pure materials with equal electron and hole concentrations.",
+      "Doping an intrinsic semiconductor with a pentavalent impurity produces an n-type semiconductor, where electrons are the majority carriers.",
+      "Doping an intrinsic semiconductor with a trivalent impurity produces a p-type semiconductor, where holes are the majority carriers.",
+      "A p-type semiconductor forms a junction with an n-type semiconductor."
+    ],
+    "size": 3
+  },
+  {
+    "id": 45,
+    "nodes": [
+      "barrier potential",
+      "depletion region",
+      "p-n junction"
+    ],
+    "title": "The p-n Junction and Its Key Properties",
+    "summary": "This community centers on the p-n junction, a fundamental semiconductor device formed between p-type and n-type materials. It is characterized by two intrinsic features: a depletion region with no free carriers and a barrier potential that opposes current flow.",
+    "findings": [
+      "A p-n junction contains a depletion region, which is an area around the junction devoid of free charge carriers.",
+      "The p-n junction has a barrier potential, which is the voltage across the depletion region.",
+      "For silicon (Si) p-n junctions, the barrier potential is approximately 0.7V.",
+      "For germanium (Ge) p-n junctions, the barrier potential is approximately 0.3V."
+    ],
+    "size": 3
+  },
+  {
+    "id": 46,
+    "nodes": [
+      "nand gate",
+      "nor gate",
+      "universal gate"
+    ],
+    "title": "Universal Logic Gates: NAND and NOR",
+    "summary": "This community centers on the concept of universal logic gates, specifically the NAND and NOR gates. Both gates are classified as universal because they can be used to implement any Boolean logic function. The community highlights the defining characteristics of these two fundamental digital logic components.",
+    "findings": [
+      "Both NAND and NOR gates are identified as universal gates.",
+      "The NAND gate has an output defined by the Boolean expression Y = A·B (NOT AND).",
+      "The NOR gate has an output defined by the Boolean expression Y = A+B (NOT OR).",
+      "The property of being universal is shared by these two distinct gate types."
+    ],
+    "size": 3
+  },
+  {
+    "id": 47,
+    "nodes": [
+      "70",
+      "75",
+      "ravi"
+    ],
+    "title": "Ravi's Unit Test Scores",
+    "summary": "This community centers on the student Ravi and his academic performance in two unit tests. The entities represent Ravi and the specific marks he achieved, with relations linking him to those scores.",
+    "findings": [
+      "Ravi is a student who obtained a score of 70 in a unit test.",
+      "Ravi also obtained a score of 75 in another unit test.",
+      "The scores 70 and 75 are the only recorded marks for Ravi, indicating his performance in the first two unit tests."
+    ],
+    "size": 3
+  },
+  {
+    "id": 48,
+    "nodes": [
+      "example 7",
+      "focus (0,2)",
+      "vertex (0,0)"
+    ],
+    "title": "Parabola Vertex and Focus Example",
+    "summary": "This community centers on a specific example (Example 7) that demonstrates how to find the equation of a parabola given its vertex and focus. The example uses the vertex at (0,0) and the focus at (0,2) as key geometric inputs.",
+    "findings": [
+      "Example 7 involves finding the equation of a parabola with vertex (0,0) and focus (0,2).",
+      "The vertex (0,0) is a point used in the example.",
+      "The focus (0,2) is a point used in the example.",
+      "The example explicitly uses both the vertex and focus to derive the parabola's equation."
+    ],
+    "size": 3
+  },
+  {
+    "id": 49,
+    "nodes": [
+      "celsius",
+      "fahrenheit",
+      "hydrochloric acid"
+    ],
+    "title": "Temperature Conversion and Chemical Experimentation",
+    "summary": "This community centers on the relationship between Celsius and Fahrenheit temperature scales, specifically their conversion formula. It also includes hydrochloric acid, a chemical whose experimental conditions are defined using the Celsius scale.",
+    "findings": [
+      "Celsius is a temperature scale denoted by C, used as the unit for measuring hydrochloric acid's temperature in an experiment.",
+      "Fahrenheit is a temperature scale denoted by F, which is the target of conversion from Celsius.",
+      "Celsius is converted to Fahrenheit, and Fahrenheit is converted by Celsius, indicating a bidirectional conversion relationship between the two scales.",
+      "Hydrochloric acid's temperature must be kept between 30° and 35° Celsius during an experiment, as specified by its measured unit."
+    ],
+    "size": 3
+  },
+  {
+    "id": 50,
+    "nodes": [
+      "12% acid solution",
+      "30% acid solution",
+      "manufacturer"
+    ],
+    "title": "Acid Solution Mixing Problem",
+    "summary": "This community centers on a manufacturer who possesses 600 litres of a 12% acid solution. The key action involves adding a 30% acid solution to this initial mixture, likely to achieve a target concentration.",
+    "findings": [
+      "The manufacturer has 600 litres of a 12% acid solution.",
+      "A 30% acid solution is added to the 12% acid solution.",
+      "The initial solution has a 12% concentration of acid.",
+      "The added solution has a 30% concentration of acid.",
+      "The total volume of the initial solution is 600 litres.",
+      "The relation indicates a mixing process between the two solutions."
+    ],
+    "size": 3
+  },
+  {
+    "id": 51,
+    "nodes": [
+      "chronological age",
+      "iq",
+      "mental age"
+    ],
+    "title": "The IQ Formula and Its Components",
+    "summary": "This community centers on the definition and calculation of intelligence quotient (IQ). It is bound by the mathematical relationship between mental age and chronological age as the core determinants of IQ. The entities describe the fundamental formula used to derive a standardized measure of intelligence.",
+    "findings": [
+      "IQ is calculated using the formula IQ = MA/CA × 100.",
+      "IQ depends on both mental age and chronological age.",
+      "Mental age (MA) is a key component in the IQ formula.",
+      "Chronological age (CA) is a key component in the IQ formula."
+    ],
+    "size": 3
+  },
+  {
+    "id": 52,
+    "nodes": [
+      "(3, 5)",
+      "(4, 4)",
+      "(–1, –1)"
+    ],
+    "title": "Triangular Point Connectivity Network",
+    "summary": "This community consists of three distinct points in a coordinate plane that are all directly connected to each other, forming a closed triangular structure. The points are located at (3,5), (4,4), and (-1,-1), with each point having a direct connection to the other two.",
+    "findings": [
+      "Point (4,4) is directly connected to point (3,5).",
+      "Point (3,5) is directly connected to point (-1,-1).",
+      "Point (-1,-1) is directly connected to point (4,4).",
+      "The three connections form a complete triangle among the points, with each point linked to both others."
+    ],
+    "size": 3
+  },
+  {
+    "id": 53,
+    "nodes": [
+      "(–2, 3)",
+      "line parallel to x-axis",
+      "line parallel to y-axis"
+    ],
+    "title": "Lines Through a Common Point",
+    "summary": "This community describes two distinct lines, each parallel to a different axis, that both pass through the same coordinate point (–2, 3). The point serves as the intersection or common location for these two perpendicularly oriented lines.",
+    "findings": [
+      "A line parallel to the x-axis passes through the point (–2, 3).",
+      "A line parallel to the y-axis also passes through the point (–2, 3).",
+      "The point (–2, 3) is the shared location for both lines.",
+      "The two lines are perpendicular to each other, as one is horizontal and the other vertical."
+    ],
+    "size": 3
+  },
+  {
+    "id": 54,
+    "nodes": [
+      "distance between two parallel lines",
+      "line 3x - 4y + 5 = 0",
+      "line 3x - 4y + 7 = 0"
+    ],
+    "title": "Distance Between Two Parallel Lines",
+    "summary": "This community focuses on the geometric concept of calculating the distance between two parallel lines. It specifically applies the distance formula to the lines 3x - 4y + 7 = 0 and 3x - 4y + 5 = 0, which share the same coefficients for x and y.",
+    "findings": [
+      "The distance formula for parallel lines in slope-intercept form is d = |c1 - c2| / sqrt(1 + m^2).",
+      "The two lines 3x - 4y + 7 = 0 and 3x - 4y + 5 = 0 are parallel because they have identical A and B coefficients (3 and -4).",
+      "The distance between these two specific lines can be computed using the general form formula: d = |C1 - C2| / sqrt(A^2 + B^2), where C1=7 and C2=5.",
+      "The distance formula applies to both lines in this pair."
+    ],
+    "size": 3
+  },
+  {
+    "id": 55,
+    "nodes": [
+      "line 4x - y = 0",
+      "point p (4, 1)",
+      "point q (1, 4)"
+    ],
+    "title": "Distance Relations Between Points and Line",
+    "summary": "This community centers on geometric relationships involving a specific line and two points in the coordinate plane. The entities are bound by calculations of distance: the distance from point P to the line, and the distance between points P and Q.",
+    "findings": [
+      "Point P (4, 1) has a measurable distance from the line 4x - y = 0.",
+      "Point Q (1, 4) is defined as the intersection point of two lines, though only one line is specified in this community.",
+      "There is a direct distance between point P (4, 1) and point Q (1, 4)."
+    ],
+    "size": 3
+  },
+  {
+    "id": 56,
+    "nodes": [
+      "f(x) = x^3",
+      "fig 2.11",
+      "table 12.5"
+    ],
+    "title": "Limit of Cubic Function at x=1",
+    "summary": "This community centers on the cubic function f(x) = x^3 and its limit behavior near x=1. The function is supported by a graph and a table of values that illustrate the limit at that point.",
+    "findings": [
+      "The function f(x) = x^3 is used in a limit example at x=1.",
+      "Fig 2.11 depicts the graph of f(x)=x^3, showing the limit at x=1.",
+      "Table 12.5 provides tabulated values of f(x)=x^3 near x=1."
+    ],
+    "size": 3
+  },
+  {
+    "id": 57,
+    "nodes": [
+      "f(x) = 3",
+      "f(x) = 3x",
+      "x = 2"
+    ],
+    "title": "Constant and Linear Functions at x=2",
+    "summary": "This community centers on two functions, f(x)=3 and f(x)=3x, and their behavior as they approach the point x=2 on the x-axis. The relations indicate that both functions are considered in relation to this specific point.",
+    "findings": [
+      "The constant function f(x)=3 approaches the point x=2.",
+      "The linear function f(x)=3x approaches the point x=2.",
+      "Both functions are evaluated in the context of their limit behavior at x=2."
+    ],
+    "size": 3
+  },
+  {
+    "id": 58,
     "nodes": [
       "average rate of change",
       "cant line"
     ],
-    "title": "Average Rate of Change and Cant Lines",
-    "summary": "This community centers on the relationship between the mathematical concept of average rate of change and the geometric tool of a cant line. The cant line is defined as a line intersecting a curve at two points, and it is used to determine the average rate of change.",
+    "title": "Average Rate of Change and Secant Lines",
+    "summary": "This community centers on the relationship between the mathematical concept of average rate of change and a secant line (referred to as a \"cant line\"). The average rate of change is defined as the slope of the secant line that intersects a curve at two points.",
     "findings": [
-      "The average rate of change is equivalent to the slope of a cant line.",
-      "A cant line is defined as a line that intersects a curve at two points.",
-      "The cant line serves as a geometric representation for calculating the average rate of change."
+      "The average rate of change is equivalent to the slope of a secant line.",
+      "A secant line is defined as a line intersecting a curve at two points.",
+      "The secant line serves as a geometric tool to compute the average rate of change."
     ],
     "size": 2
   },
   {
-    "id": 6,
+    "id": 59,
+    "nodes": [
+      "scalar triple product",
+      "volume of parallelepiped"
+    ],
+    "title": "Scalar Triple Product and Parallelepiped Volume",
+    "summary": "This community centers on the relationship between the scalar triple product, a mathematical operation defined as a·(b×c), and the volume of a parallelepiped. The scalar triple product is directly equated to the volume of the parallelepiped formed by the three vectors involved.",
+    "findings": [
+      "The scalar triple product a·(b×c) is equal to the volume of a parallelepiped.",
+      "The scalar triple product is defined as the determinant of the components of the three vectors.",
+      "The scalar triple product is cyclic, meaning a·(b×c) = b·(c×a) = c·(a×b).",
+      "Swapping any two vectors in the scalar triple product changes its sign.",
+      "The scalar triple product is zero if the three vectors are coplanar."
+    ],
+    "size": 2
+  },
+  {
+    "id": 60,
+    "nodes": [
+      "normal vector",
+      "plane in 3d"
+    ],
+    "title": "Plane Definition via Normal Vector",
+    "summary": "This community centers on the mathematical relationship between a plane in three-dimensional space and its defining normal vector. The normal vector is a fundamental component used to represent the plane in both vector and Cartesian forms.",
+    "findings": [
+      "A plane in 3D is defined by a normal vector.",
+      "The plane can be represented in vector form as r·n = d, where n is the normal vector.",
+      "The plane can also be expressed in Cartesian form as ax+by+cz=d, which corresponds to the normal vector components (a, b, c)."
+    ],
+    "size": 2
+  },
+  {
+    "id": 61,
+    "nodes": [
+      "coulomb's law",
+      "electric field"
+    ],
+    "title": "Coulomb's Law and Electric Field",
+    "summary": "This community centers on the foundational relationship between Coulomb's law and the concept of an electric field. Coulomb's law defines the force between two point charges, which directly leads to the definition of the electric field as force per unit charge. The electric field due to a point charge is derived from Coulomb's law.",
+    "findings": [
+      "Coulomb's law mathematically expresses the electrostatic force between two point charges as F = k q₁q₂/r², with k = 9×10⁹ N·m²/C².",
+      "The electric field is defined as the force per unit charge: E = F/q.",
+      "For a point charge, the electric field is given by E = kQ/r², which is directly derived from Coulomb's law.",
+      "Coulomb's law provides the conceptual and mathematical foundation for defining the electric field."
+    ],
+    "size": 2
+  },
+  {
+    "id": 62,
+    "nodes": [
+      "dipole moment",
+      "electric dipole"
+    ],
+    "title": "Electric Dipole and Dipole Moment",
+    "summary": "This community centers on the fundamental relationship between an electric dipole and its dipole moment. The electric dipole is defined as a system of two equal and opposite charges, and its dipole moment is a vector quantity derived from this configuration.",
+    "findings": [
+      "An electric dipole consists of two equal and opposite charges, ±q, separated by a distance of 2a.",
+      "The dipole moment is a vector quantity, defined as p = q × 2a.",
+      "The dipole moment vector points from the negative charge (-q) to the positive charge (+q)."
+    ],
+    "size": 2
+  },
+  {
+    "id": 63,
+    "nodes": [
+      "electric flux",
+      "gauss's theorem"
+    ],
+    "title": "Gauss's Theorem and Electric Flux",
+    "summary": "This community centers on the relationship between Gauss's theorem and electric flux. Gauss's theorem provides a mathematical definition for electric flux, linking it to enclosed charge.",
+    "findings": [
+      "Gauss's theorem defines electric flux.",
+      "Electric flux is expressed as Φ = ∮E·dA = q_enclosed/ε₀.",
+      "The theorem relates the flux through a closed surface to the charge enclosed within it."
+    ],
+    "size": 2
+  },
+  {
+    "id": 64,
+    "nodes": [
+      "ohm's law",
+      "resistance"
+    ],
+    "title": "Ohm's Law and Resistance Relationship",
+    "summary": "This community centers on the fundamental electrical relationship defined by Ohm's law and the concept of resistance. Ohm's law establishes the mathematical connection between voltage, current, and resistance, while resistance is further characterized by its dependence on material properties and geometry.",
+    "findings": [
+      "Ohm's law is expressed as V = IR, relating voltage, current, and resistance.",
+      "Resistance is defined by the formula R = ρL/A, where ρ is resistivity, L is length, and A is cross-sectional area.",
+      "Resistivity (ρ) depends on the material and temperature.",
+      "Ohm's law defines the concept of resistance in electrical circuits."
+    ],
+    "size": 2
+  },
+  {
+    "id": 65,
+    "nodes": [
+      "emf",
+      "kirchhoff's laws"
+    ],
+    "title": "EMF and Kirchhoff's Laws in Circuits",
+    "summary": "This community centers on the relationship between electromotive force (EMF) and Kirchhoff's laws, which are fundamental principles in circuit analysis. EMF is a key concept applied within the framework of Kirchhoff's laws to analyze electrical circuits.",
+    "findings": [
+      "EMF is defined as the work done per unit charge by a source.",
+      "Kirchhoff's Current Law (KCL) states that the sum of currents entering a junction equals the sum of currents leaving it (ΣI_in = ΣI_out).",
+      "Kirchhoff's Voltage Law (KVL) states that the sum of electromotive forces (EMFs) equals the sum of voltage drops (IR) around any closed loop (Σε = ΣIR).",
+      "EMF is used in the application of Kirchhoff's laws, particularly in KVL where it appears as the source term."
+    ],
+    "size": 2
+  },
+  {
+    "id": 66,
+    "nodes": [
+      "kirchhoff's current law",
+      "kirchhoff's voltage law"
+    ],
+    "title": "Kirchhoff's Circuit Laws Summary",
+    "summary": "This community centers on Kirchhoff's two fundamental laws of electrical circuits, which together govern current and voltage behavior. They are complementary principles used to analyze complex circuits.",
+    "findings": [
+      "Kirchhoff's Current Law (KCL) states that the sum of currents entering a junction equals the sum of currents leaving that junction.",
+      "Kirchhoff's Voltage Law (KVL) states that the sum of potential differences (voltage drops) around any closed loop in a circuit is zero.",
+      "KCL and KVL are complementary laws, meaning they are used together to fully describe circuit behavior."
+    ],
+    "size": 2
+  },
+  {
+    "id": 67,
+    "nodes": [
+      "ampere's circuital law",
+      "biot-savart law"
+    ],
+    "title": "Magnetostatics: Biot-Savart and Ampere's Law",
+    "summary": "This community centers on two fundamental laws of magnetostatics that describe how electric currents generate magnetic fields. Both laws are mathematically equivalent under steady-state conditions, with the Biot-Savart law providing a direct integration approach and Ampere's Circuital Law offering a symmetry-based method.",
+    "findings": [
+      "The Biot-Savart Law gives the magnetic field contribution from a current element as dB = (μ0/4π) (I dl × r̂) / r².",
+      "Ampere's Circuital Law states that the line integral of the magnetic field B around a closed loop equals μ₀ times the enclosed current.",
+      "The two laws are related, with the Biot-Savart Law being a more general formulation that can be used to derive Ampere's Circuital Law under steady-state conditions."
+    ],
+    "size": 2
+  },
+  {
+    "id": 68,
+    "nodes": [
+      "mutual inductance",
+      "transformer"
+    ],
+    "title": "Mutual Inductance in Transformer Operation",
+    "summary": "This community centers on the foundational principle of mutual inductance, which describes how a changing current in one coil induces an electromotive force (EMF) in a neighboring coil. The transformer is a practical device that relies on this electromagnetic induction to transfer electrical energy between circuits.",
+    "findings": [
+      "Mutual inductance is defined by the equation ε1 = -M dI2/dt, where ε1 is the induced EMF in one coil due to a change in current (I2) in another coil.",
+      "A transformer is a device that transfers electrical energy between circuits through electromagnetic induction.",
+      "The transformer’s operation is based on the principle of mutual inductance."
+    ],
+    "size": 2
+  },
+  {
+    "id": 69,
+    "nodes": [
+      "binding energy",
+      "mass defect"
+    ],
+    "title": "Nuclear Binding Energy and Mass Defect",
+    "summary": "This community centers on the fundamental nuclear physics relationship between mass defect and binding energy. The mass defect, which is the mass difference between a nucleus and its constituent nucleons, directly determines the binding energy required to disassemble the nucleus.",
+    "findings": [
+      "Binding energy is defined as the energy required to disassemble a nucleus into its individual nucleons.",
+      "Mass defect is the difference between the actual mass of a nucleus and the combined mass of its separate nucleons.",
+      "The mass defect is the key factor that determines the magnitude of the binding energy for a given nucleus."
+    ],
+    "size": 2
+  },
+  {
+    "id": 70,
+    "nodes": [
+      "nuclear fission",
+      "nuclear fusion"
+    ],
+    "title": "Contrasting Nuclear Fission and Fusion",
+    "summary": "This community focuses on two fundamental nuclear processes: fission and fusion. Both involve changes in atomic nuclei and release energy, but they operate through opposite mechanisms. The key relation highlights their contrasting nature.",
+    "findings": [
+      "Nuclear fission is defined as the splitting of a heavy nucleus into lighter nuclei, releasing energy.",
+      "Nuclear fusion is defined as the combining of light nuclei into a heavier nucleus, releasing energy.",
+      "The two processes are directly contrasted with each other, representing opposite nuclear reactions."
+    ],
+    "size": 2
+  },
+  {
+    "id": 71,
+    "nodes": [
+      "switch",
+      "transistor"
+    ],
+    "title": "Transistor as Electronic Switch",
+    "summary": "This community focuses on the fundamental role of the transistor in electronics, specifically its function as a switch. The core relationship establishes that a transistor is utilized to perform the switching action, controlling the flow of current in a circuit.",
+    "findings": [
+      "The transistor is used as a switch.",
+      "The relationship between transistor and switch is one of functional application (used_as).",
+      "The transistor serves as a component that can turn a circuit on or off."
+    ],
+    "size": 2
+  },
+  {
+    "id": 72,
+    "nodes": [
+      "first law of thermodynamics",
+      "ideal gas law"
+    ],
+    "title": "Thermodynamic Laws and Gas Behavior",
+    "summary": "This community centers on fundamental thermodynamic principles, specifically the first law of thermodynamics and the ideal gas law. The first law describes energy conservation in thermodynamic systems, while the ideal gas law relates pressure, volume, temperature, and amount of gas. The first law applies to the ideal gas law, indicating that energy changes in an ideal gas system are governed by thermodynamic principles.",
+    "findings": [
+      "The first law of thermodynamics is defined by the equation ΔU = Q - W, where ΔU is change in internal energy, Q is heat added, and W is work done.",
+      "The ideal gas law is expressed as PV = nRT, linking pressure (P), volume (V), amount of substance (n), gas constant (R), and temperature (T).",
+      "The first law of thermodynamics applies to the ideal gas law, meaning energy conservation principles govern processes involving ideal gases."
+    ],
+    "size": 2
+  },
+  {
+    "id": 73,
+    "nodes": [
+      "kinematics",
+      "projectile motion"
+    ],
+    "title": "Kinematics and Projectile Motion Overview",
+    "summary": "This community focuses on the foundational physics concept of kinematics, which describes motion without reference to forces. It specifically includes the study of projectile motion, a key application of kinematic principles.",
+    "findings": [
+      "Kinematics is a branch of physics that describes motion without considering forces.",
+      "Projectile motion is a type of motion included within the study of kinematics.",
+      "Projectile motion involves an object launched into the air and influenced by gravity."
+    ],
+    "size": 2
+  },
+  {
+    "id": 74,
+    "nodes": [
+      "example 8",
+      "point (2,-3)"
+    ],
+    "title": "Parabola Through Given Point Example",
+    "summary": "This community centers on an example problem involving a parabola symmetric about the y-axis that passes through the point (2, -3). The example is defined by its relationship to this specific point, which serves as a key constraint for deriving the parabola's equation.",
+    "findings": [
+      "Example 8 involves a parabola that is symmetric about the y-axis.",
+      "The parabola passes through the point (2, -3).",
+      "The example concerns consecutive odd natural numbers with a sum less than 40, though this detail is not directly linked to the parabola equation.",
+      "The point (2, -3) is the only known coordinate through which the parabola passes, providing a condition for solving the equation."
+    ],
+    "size": 2
+  },
+  {
+    "id": 75,
+    "nodes": [
+      "b (8, 0)",
+      "p (0, –4)"
+    ],
+    "title": "Points P and B Coordinate Connection",
+    "summary": "This community consists of two distinct points, P and B, defined by their coordinates in a Cartesian plane. They are linked by a direct geometric relationship, indicating they are joined or connected.",
+    "findings": [
+      "Point P is located at coordinates (0, -4).",
+      "Point B is located at coordinates (8, 0).",
+      "The two points are directly joined by a relation, suggesting a line segment or path connects them."
+    ],
+    "size": 2
+  },
+  {
+    "id": 76,
+    "nodes": [
+      "(3,–1)",
+      "(4,–2)"
+    ],
+    "title": "Two Points Connected by a Line",
+    "summary": "This community consists of two distinct points in a coordinate plane, (3,–1) and (4,–2). They are directly linked by a relation indicating they are joined together, likely forming a line segment or a connection between them.",
+    "findings": [
+      "The point (3,–1) is joined to the point (4,–2).",
+      "The coordinates of the first point are (3, –1).",
+      "The coordinates of the second point are (4, –2).",
+      "The two points are distinct, with different x and y coordinates.",
+      "The relation between them is a direct connection, implying a geometric or graph-based link."
+    ],
+    "size": 2
+  },
+  {
+    "id": 77,
+    "nodes": [
+      "copper rod",
+      "linear function"
+    ],
+    "title": "Copper Rod Modeled by Linear Function",
+    "summary": "This community centers on a copper rod used in an experiment, which is mathematically modeled by a linear function. The linear function represents the relationship between variables in the experiment involving the rod.",
+    "findings": [
+      "The copper rod is an object used in an experiment.",
+      "The copper rod is modeled by a linear function of the form y = mx + c.",
+      "The linear function describes the behavior or properties of the copper rod in the experimental context."
+    ],
+    "size": 2
+  },
+  {
+    "id": 78,
+    "nodes": [
+      "linear relationship",
+      "milk store"
+    ],
+    "title": "Milk Store Linear Relationship Analysis",
+    "summary": "This community centers on a milk store and its exhibited linear relationship. The relationship is a key characteristic or property of the store's operations or behavior. The connection suggests a mathematical or structural pattern in the store's activities.",
+    "findings": [
+      "The milk store exhibits a linear relationship.",
+      "The linear relationship is a property or pattern associated with the store.",
+      "No other entities or relations are present in this community beyond the store and its linear relationship."
+    ],
+    "size": 2
+  },
+  {
+    "id": 79,
+    "nodes": [
+      "line 3x - 4y - 26 = 0",
+      "point (3, -5)"
+    ],
+    "title": "Point-Line Distance Calculation",
+    "summary": "This community focuses on the geometric relationship between a specific point and a line in the plane. The point (3, -5) and the line 3x - 4y - 26 = 0 are connected by a distance measurement. The entities are bound by the mathematical problem of determining how far the point lies from the given line.",
+    "findings": [
+      "The point (3, -5) has a defined distance from the line 3x - 4y - 26 = 0.",
+      "The line is expressed in general form with coefficients A=3, B=-4, and C=-26.",
+      "The distance can be computed using the formula |Ax₀ + By₀ + C| / √(A² + B²), where (x₀, y₀) is the point.",
+      "Substituting the point (3, -5) into the line equation yields 3(3) - 4(-5) - 26 = 9 + 20 - 26 = 3.",
+      "The denominator √(3² + (-4)²) = √(9 + 16) = √25 = 5.",
+      "Therefore, the distance from the point to the line is |3| / 5 = 0.6 units."
+    ],
+    "size": 2
+  },
+  {
+    "id": 80,
+    "nodes": [
+      "line 12(x+6) = 5(y-2)",
+      "point (-1, 1)"
+    ],
+    "title": "Point and Line Distance Calculation",
+    "summary": "This community focuses on the geometric relationship between a specific point and a line in the plane. The point (-1, 1) is evaluated in relation to the line given by the equation 12(x+6) = 5(y-2). The key connection is the distance from the point to this line.",
+    "findings": [
+      "The point (-1, 1) has a defined distance from the line 12(x+6) = 5(y-2).",
+      "The line equation is presented in a non-standard form, requiring conversion to standard form (e.g., Ax + By + C = 0) for distance calculation.",
+      "The distance can be computed using the formula |Ax₁ + By₁ + C| / √(A² + B²), where (x₁, y₁) = (-1, 1).",
+      "The line 12(x+6) = 5(y-2) simplifies to 12x + 72 = 5y - 10, or 12x - 5y + 82 = 0.",
+      "The distance from point (-1, 1) to this line is |12(-1) - 5(1) + 82| / √(12² + (-5)²) = | -12 - 5 + 82 | / √(144 + 25) = |65| / √169 = 65 / 13 = 5."
+    ],
+    "size": 2
+  },
+  {
+    "id": 81,
+    "nodes": [
+      "line 15x + 8y + 31 = 0",
+      "line 15x + 8y - 34 = 0"
+    ],
+    "title": "Parallel Lines in General Form",
+    "summary": "This community consists of two lines expressed in general linear form. They are bound together by a parallel relationship, indicating they have the same slope but different y-intercepts.",
+    "findings": [
+      "Both lines are defined by equations in the form \\(15x + 8y + c = 0\\), where \\(c\\) differs.",
+      "The line \\(15x + 8y - 34 = 0\\) is parallel to the line \\(15x + 8y + 31 = 0\\).",
+      "The constant terms differ: one line has \\(-34\\) and the other has \\(+31\\), confirming distinct positions in the plane."
+    ],
+    "size": 2
+  },
+  {
+    "id": 82,
+    "nodes": [
+      "line l(x+y) + p = 0",
+      "line l(x+y) - r = 0"
+    ],
+    "title": "Parallel Lines with Shared Slope",
+    "summary": "This community consists of two lines in general form, both sharing the same slope coefficient \\( l \\) for the expression \\( x+y \\). They are distinguished by their constant terms, \\( p \\) and \\( -r \\), and are explicitly related as parallel lines.",
+    "findings": [
+      "Both lines are expressed in the general form \\( l(x+y) + c = 0 \\), where \\( c \\) is either \\( p \\) or \\( -r \\).",
+      "The lines are parallel to each other, as indicated by the relation.",
+      "The constant terms differ: one line has \\( +p \\), the other has \\( -r \\).",
+      "The parameter \\( l \\) is common to both lines, confirming they share the same slope."
+    ],
+    "size": 2
+  },
+  {
+    "id": 83,
+    "nodes": [
+      "line 3x - 4y + 2 = 0",
+      "point (-2, 3)"
+    ],
+    "title": "Line and Point Verification",
+    "summary": "This community examines the geometric relationship between a specific line and a point. The key fact is that the point (-2, 3) lies on the line 3x - 4y + 2 = 0. This is a fundamental check of collinearity in coordinate geometry.",
+    "findings": [
+      "The line is defined by the equation 3x - 4y + 2 = 0 in general form.",
+      "The point has coordinates (-2, 3).",
+      "The line passes through the point (-2, 3), confirming that the point satisfies the line's equation."
+    ],
+    "size": 2
+  },
+  {
+    "id": 84,
+    "nodes": [
+      "line x - 3y + 4 = 0",
+      "point p (1, 2)"
+    ],
+    "title": "Reflection of Point Across a Line",
+    "summary": "This community focuses on the geometric transformation of reflecting a point across a given straight line. The entities involved are a specific point, P (1, 2), and a line defined by the equation x - 3y + 4 = 0, which serves as the mirror. The core relationship is the reflection of the point in the line.",
+    "findings": [
+      "The point P (1, 2) is reflected across the line x - 3y + 4 = 0.",
+      "The line x - 3y + 4 = 0 acts as the mirror for the reflection.",
+      "The reflection operation produces an image point of P (1, 2) on the opposite side of the line."
+    ],
+    "size": 2
+  },
+  {
+    "id": 85,
+    "nodes": [
+      "incident ray",
+      "point (1,2)"
+    ],
+    "title": "Incident Ray Path Through a Point",
+    "summary": "This community centers on the path of an incident ray as it passes through a specific point in space. The point (1,2) serves as a key coordinate along the ray's trajectory.",
+    "findings": [
+      "The incident ray passes through the point (1,2).",
+      "The point (1,2) is a specific location on the ray's path.",
+      "The relationship between the incident ray and the point is defined by the \"passes_through\" relation."
+    ],
+    "size": 2
+  },
+  {
+    "id": 86,
+    "nodes": [
+      "point (5,3)",
+      "reflected ray"
+    ],
+    "title": "Reflected Ray Path Through Point",
+    "summary": "This community centers on the geometric relationship between a reflected ray and a specific coordinate point. The reflected ray is defined by its path, which includes passing through the point (5,3). This establishes a direct spatial connection between the ray's trajectory and the given location.",
+    "findings": [
+      "The reflected ray has a defined path that includes passing through the point (5,3).",
+      "The point (5,3) serves as a specific coordinate location along the reflected ray's trajectory.",
+      "The relationship between the reflected ray and the point is one of spatial passage, not origin or termination."
+    ],
+    "size": 2
+  },
+  {
+    "id": 87,
+    "nodes": [
+      "circle x^2+y^2=25",
+      "point (-2.5, 3.5)"
+    ],
+    "title": "Point Location Relative to a Circle",
+    "summary": "This community centers on the geometric relationship between a specific point and a circle defined by the equation x² + y² = 25. The point (-2.5, 3.5) is evaluated to determine its position relative to this circle. The key relation is the location of the point with respect to the circle's boundary.",
+    "findings": [
+      "The circle is defined by the equation x² + y² = 25, indicating a radius of 5 centered at the origin.",
+      "The point (-2.5, 3.5) has coordinates that are tested for location relative to this circle.",
+      "The relation explicitly states that the point's location is assessed in terms of being inside, on, or outside the circle."
+    ],
+    "size": 2
+  },
+  {
+    "id": 88,
+    "nodes": [
+      "point p",
+      "rod ab"
+    ],
+    "title": "Rod AB with Internal Point P",
+    "summary": "This community centers on a rigid rod AB, 15 cm in length, positioned between coordinate axes. A specific point P lies on the rod at a distance of 6 cm from end A.",
+    "findings": [
+      "Rod AB has a total length of 15 cm.",
+      "Point P is located on rod AB.",
+      "The distance from point A to point P is 6 cm.",
+      "The rod is resting between coordinate axes, implying its endpoints contact the axes."
+    ],
+    "size": 2
+  },
+  {
+    "id": 89,
+    "nodes": [
+      "4",
+      "h(x) = (x^2 - 4)/(x - 2)"
+    ],
+    "title": "Removable Discontinuity and Limit of Rational Function",
+    "summary": "This community centers on the rational function h(x) = (x^2 - 4)/(x - 2) and its behavior near x=2. The function has a removable discontinuity at that point, with its limit approaching the value 4.",
+    "findings": [
+      "The function h(x) = (x^2 - 4)/(x - 2) has a removable discontinuity at x=2.",
+      "The limit of h(x) as x approaches 2 equals 4.",
+      "The entity \"4\" is the limit value that the function approaches."
+    ],
+    "size": 2
+  },
+  {
+    "id": 90,
+    "nodes": [
+      "f(x) = x + 10",
+      "fig 2.16"
+    ],
+    "title": "Limit Example of Linear Function",
+    "summary": "This community centers on the linear function f(x) = x + 10 and its graphical representation in a specific figure. The function is used as an example to illustrate a limit at x = 5. The figure provides a visual depiction of this function and its limit behavior.",
+    "findings": [
+      "The function f(x) = x + 10 is a linear function.",
+      "This function is used in a limit example specifically at the point x = 5.",
+      "The graph of f(x) = x + 10 is depicted in Fig 2.16.",
+      "Fig 2.16 illustrates the limit of the function at x = 5."
+    ],
+    "size": 2
+  },
+  {
+    "id": 91,
+    "nodes": [
+      "f(x) = x^2 + x",
+      "x = 1"
+    ],
+    "title": "Quadratic Function Approaching a Point",
+    "summary": "This community centers on the quadratic function f(x) = x² + x and its relationship to the specific point x = 1. The function is described as approaching this point on the x-axis.",
+    "findings": [
+      "The function f(x) = x² + x is a quadratic function.",
+      "The point x = 1 is a specific location on the x-axis.",
+      "The function f(x) = x² + x approaches the point x = 1."
+    ],
+    "size": 2
+  },
+  {
+    "id": 92,
+    "nodes": [
+      "example 18",
+      "leibnitz product rule"
+    ],
+    "title": "Derivative of sin²x via Product Rule",
+    "summary": "This community centers on a specific calculus example that demonstrates the application of the Leibnitz product rule. The example computes the derivative of sin²x, using the product rule as its core technique.",
+    "findings": [
+      "Example 18 is an event focused on computing the derivative of sin²x.",
+      "The example explicitly uses the Leibnitz product rule to perform the differentiation.",
+      "The Leibnitz product rule is a concept for differentiating products of functions, which is applied in this example."
+    ],
+    "size": 2
+  },
+  {
+    "id": 93,
     "nodes": [
       "naiad"
     ],
@@ -144,7 +1862,7 @@
     "size": 1
   },
   {
-    "id": 7,
+    "id": 94,
     "nodes": [
       "memphian sphinx"
     ],
@@ -154,7 +1872,7 @@
     "size": 1
   },
   {
-    "id": 8,
+    "id": 95,
     "nodes": [
       "titan"
     ],
@@ -164,7 +1882,7 @@
     "size": 1
   },
   {
-    "id": 9,
+    "id": 96,
     "nodes": [
       "john keats"
     ],
@@ -174,7 +1892,7 @@
     "size": 1
   },
   {
-    "id": 10,
+    "id": 97,
     "nodes": [
       "point slope form"
     ],
@@ -184,7 +1902,7 @@
     "size": 1
   },
   {
-    "id": 11,
+    "id": 98,
     "nodes": [
       "delta t"
     ],
@@ -194,9 +1912,9 @@
     "size": 1
   },
   {
-    "id": 12,
+    "id": 99,
     "nodes": [
-      "circle"
+      "higher order derivatives"
     ],
     "title": "",
     "summary": "",
@@ -204,9 +1922,1319 @@
     "size": 1
   },
   {
-    "id": 13,
+    "id": 100,
     "nodes": [
-      "higher order derivatives"
+      "equivalence classes"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 101,
+    "nodes": [
+      "composition of functions"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 102,
+    "nodes": [
+      "commutative"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 103,
+    "nodes": [
+      "associative"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 104,
+    "nodes": [
+      "identity element"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 105,
+    "nodes": [
+      "inverse"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 106,
+    "nodes": [
+      "sin⁻¹x"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 107,
+    "nodes": [
+      "cos⁻¹x"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 108,
+    "nodes": [
+      "tan⁻¹x"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 109,
+    "nodes": [
+      "cosec⁻¹x"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 110,
+    "nodes": [
+      "sec⁻¹x"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 111,
+    "nodes": [
+      "cot⁻¹x"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 112,
+    "nodes": [
+      "indefinite integrals"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 113,
+    "nodes": [
+      "partial fractions integration"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 114,
+    "nodes": [
+      "isc calculus problems"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 115,
+    "nodes": [
+      "vector algebra"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 116,
+    "nodes": [
+      "scalar"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 117,
+    "nodes": [
+      "position vector"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 118,
+    "nodes": [
+      "magnitude"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 119,
+    "nodes": [
+      "unit vector"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 120,
+    "nodes": [
+      "zero vector"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 121,
+    "nodes": [
+      "equal vectors"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 122,
+    "nodes": [
+      "collinear vectors"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 123,
+    "nodes": [
+      "coplanar vectors"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 124,
+    "nodes": [
+      "coin"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 125,
+    "nodes": [
+      "electric potential"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 126,
+    "nodes": [
+      "capacitance"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 127,
+    "nodes": [
+      "van de graaff generator"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 128,
+    "nodes": [
+      "joule's law"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 129,
+    "nodes": [
+      "diamagnetic"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 130,
+    "nodes": [
+      "paramagnetic"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 131,
+    "nodes": [
+      "ferromagnetic"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 132,
+    "nodes": [
+      "curie's law"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 133,
+    "nodes": [
+      "earth's magnetic field"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 134,
+    "nodes": [
+      "self-inductance"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 135,
+    "nodes": [
+      "sodium"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 136,
+    "nodes": [
+      "q-value"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 137,
+    "nodes": [
+      "or gate"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 138,
+    "nodes": [
+      "and gate"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 139,
+    "nodes": [
+      "not gate"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 140,
+    "nodes": [
+      "xor gate"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 141,
+    "nodes": [
+      "de morgan's theorems"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 142,
+    "nodes": [
+      "matrices and determinants"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 143,
+    "nodes": [
+      "rc circuit"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 144,
+    "nodes": [
+      "ampere's law"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 145,
+    "nodes": [
+      "carnot engine"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 146,
+    "nodes": [
+      "doppler effect"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 147,
+    "nodes": [
+      "wave equation"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 148,
+    "nodes": [
+      "speed of wave on a string"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 149,
+    "nodes": [
+      "speed of sound"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 150,
+    "nodes": [
+      "superposition principle"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 151,
+    "nodes": [
+      "standing waves"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 152,
+    "nodes": [
+      "beats frequency"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 153,
+    "nodes": [
+      "open pipe harmonics"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 154,
+    "nodes": [
+      "closed pipe harmonics"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 155,
+    "nodes": [
+      "snell's law"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 156,
+    "nodes": [
+      "thin lens formula"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 157,
+    "nodes": [
+      "magnification"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 158,
+    "nodes": [
+      "prism deviation"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 159,
+    "nodes": [
+      "young's double slit"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 160,
+    "nodes": [
+      "jee physics"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 161,
+    "nodes": [
+      "reshma"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 162,
+    "nodes": [
+      "maxwell"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 163,
+    "nodes": [
+      "algebraic solutions of linear inequalities in one variable"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 164,
+    "nodes": [
+      "graphical representation"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 165,
+    "nodes": [
+      "class xi"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 166,
+    "nodes": [
+      "boric acid"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 167,
+    "nodes": [
+      "xy-plane"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 168,
+    "nodes": [
+      "angle"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 169,
+    "nodes": [
+      "coordinate plane"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 170,
+    "nodes": [
+      "fig 9.5"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 171,
+    "nodes": [
+      "fig 9.6"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 172,
+    "nodes": [
+      "l1"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 173,
+    "nodes": [
+      "l2"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 174,
+    "nodes": [
+      "exercise 9.1"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 175,
+    "nodes": [
+      "(x1, y1)"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 176,
+    "nodes": [
+      "(h, k)"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 177,
+    "nodes": [
+      "pythagoras theorem"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 178,
+    "nodes": [
+      "30°"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 179,
+    "nodes": [
+      "3 1"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 180,
+    "nodes": [
+      "m"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 181,
+    "nodes": [
+      "fig 9.8"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 182,
+    "nodes": [
+      "fig 9.9"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 183,
+    "nodes": [
+      "perpendicular"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 184,
+    "nodes": [
+      "intercepts"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 185,
+    "nodes": [
+      "rs"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 186,
+    "nodes": [
+      "point of intersection"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 187,
+    "nodes": [
+      "line making an angle of 135° with the positive x-axis"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 188,
+    "nodes": [
+      "image of point (1,2)"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 189,
+    "nodes": [
+      "triangle formed by lines y = m1x + c1, y = m2x + c2 and x = 0"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 190,
+    "nodes": [
+      "collinear points"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 191,
+    "nodes": [
+      "horizontal line"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 192,
+    "nodes": [
+      "bertrand russell"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 193,
+    "nodes": [
+      "c (h, k)"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 194,
+    "nodes": [
+      "p(x, y)"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 195,
+    "nodes": [
+      "standard equations of parabola"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 196,
+    "nodes": [
+      "standard equations of parabolas"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 197,
+    "nodes": [
+      "fig 10.17"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 198,
+    "nodes": [
+      "fig 10.18"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 199,
+    "nodes": [
+      "fig 10.19"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 200,
+    "nodes": [
+      "exercise 10.2"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 201,
+    "nodes": [
+      "b"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 202,
+    "nodes": [
+      "c"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 203,
+    "nodes": [
+      "fig 10.24"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 204,
+    "nodes": [
+      "fig 10.25"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 205,
+    "nodes": [
+      "example 12"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 206,
+    "nodes": [
+      "equilateral hyperbola"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 207,
+    "nodes": [
+      "exercise 10.4"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 208,
+    "nodes": [
+      "parabolic reflector"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 209,
+    "nodes": [
+      "arch"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 210,
+    "nodes": [
+      "cable"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 211,
+    "nodes": [
+      "roadway"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 212,
+    "nodes": [
+      "semi-ellipse"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 213,
+    "nodes": [
+      "rod"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 214,
+    "nodes": [
+      "parabola x^2 = 12y"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 215,
+    "nodes": [
+      "racecourse"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 216,
+    "nodes": [
+      "flag posts"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 217,
+    "nodes": [
+      "equilateral triangle"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 218,
+    "nodes": [
+      "parabola y^2 = 4ax"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 219,
+    "nodes": [
+      "euclid"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 220,
+    "nodes": [
+      "sulbasutras"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 221,
+    "nodes": [
+      "isaac barrow"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 222,
+    "nodes": [
+      "cartesian"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 223,
+    "nodes": [
+      "ad locus planos et so lidos isagoge"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 224,
+    "nodes": [
+      "sir issac newton"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 225,
+    "nodes": [
+      "fig 12.3"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 226,
+    "nodes": [
+      "table 12.4"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 227,
+    "nodes": [
+      "limits and derivatives"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 228,
+    "nodes": [
+      "induction"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 229,
+    "nodes": [
+      "exercise 12.2"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 230,
+    "nodes": [
+      "x"
+    ],
+    "title": "",
+    "summary": "",
+    "findings": [],
+    "size": 1
+  },
+  {
+    "id": 231,
+    "nodes": [
+      "1905"
     ],
     "title": "",
     "summary": "",

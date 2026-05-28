@@ -34,6 +34,16 @@ class SignupBody(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=200)
     name: str | None = None
+    # ISO YYYY-MM-DD. Required for DPDP §9 age determination — the signup
+    # route 400s if missing. Caller can still create OAuth accounts without
+    # one, in which case the user falls into the safer 'is_minor=True' bucket
+    # until they fill DOB on the account page.
+    date_of_birth: str | None = None
+    # Under-18 signups must include parent contact so we can dispatch the
+    # consent magic-link immediately. Adults can omit these.
+    parent_email: EmailStr | None = None
+    parent_name: str | None = None
+    parent_phone: str | None = None
 
 
 class LoginBody(BaseModel):
@@ -82,22 +92,91 @@ def _require_user(session_cookie: str | None) -> dict:
 # ---------------- routes ----------------
 
 @router.post("/signup")
-def signup(body: SignupBody, response: Response):
-    """Create a password-based account and dispatch a verification email."""
+def signup(body: SignupBody, request: Request, response: Response):
+    """Create a password-based account and dispatch a verification email.
+
+    DPDP §9 branch: if the supplied DOB makes the user under-18, we mark the
+    account consent_status='pending', dispatch a parental consent magic-link
+    to the parent_email, and DO NOT issue a session cookie. The child has to
+    log in only AFTER the parent confirms. Adults proceed normally.
+    """
+    from . import dpdp
+    dob = (body.date_of_birth or "").strip()
+    # DOB is mandatory on the signup form — DPDP §9 needs an age to apply.
+    # We accept a missing DOB only for legacy/oauth flows handled elsewhere.
+    if not dob:
+        raise HTTPException(status_code=400, detail="Date of birth is required (DPDP §9 age verification).")
+    age = dpdp.age_from_dob(dob)
+    if age is None:
+        raise HTTPException(status_code=400, detail="Date of birth must be in YYYY-MM-DD format.")
+    if age > 130 or age < 0:
+        raise HTTPException(status_code=400, detail="Date of birth is out of range.")
+    minor = age < 18
+    if minor and not body.parent_email:
+        raise HTTPException(
+            status_code=400,
+            detail="Under-18 signups must include parent_email so we can request parental consent (DPDP §9).",
+        )
+
     try:
-        user = service.create_user_with_password(body.email, body.password, body.name)
+        user = service.create_user_with_password(
+            body.email, body.password, body.name, date_of_birth=dob,
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+    if minor:
+        # Don't set a session — child can't sign in until parent confirms.
+        actor_ip = request.client.host if request.client else None
+        try:
+            consent = dpdp.request_parental_consent(
+                user["id"],
+                body.parent_email,
+                parent_name=body.parent_name,
+                parent_phone=body.parent_phone,
+                actor_ip=actor_ip,
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        return {
+            "user": user,
+            "next": "parental-consent-pending",
+            "consent": consent,
+            "message": (
+                f"Account created. We've emailed {body.parent_email} a verifiable "
+                f"consent request — your account stays locked until your parent confirms."
+            ),
+        }
+
     _set_session(response, user["id"], user["email"])
     return {"user": user, "next": "verify-email-pending"}
 
 
 @router.post("/login")
 def login(body: LoginBody, response: Response):
-    """Authenticate with email + password; sets the session cookie."""
+    """Authenticate with email + password; sets the session cookie.
+
+    DPDP gates: refuse login for soft-deleted accounts (§12 erasure honoured)
+    and for under-18s whose parental consent is still pending or withdrawn.
+    The login surfaces an explicit reason so the SPA can route the user
+    to the right next step (resend consent / contact support).
+    """
     user = service.authenticate_password(body.email, body.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid email or password.")
+    if user.get("deleted_at"):
+        raise HTTPException(status_code=403, detail="This account has been deleted.")
+    status = user.get("consent_status") or "not_required"
+    if status == "pending":
+        raise HTTPException(
+            status_code=403,
+            detail="parental_consent_pending: your parent must confirm consent before you can sign in. Check the email we sent them.",
+        )
+    if status == "withdrawn":
+        raise HTTPException(
+            status_code=403,
+            detail="parental_consent_withdrawn: your parent has withdrawn consent. Contact neilshankarray@vaaani.in to restore access.",
+        )
     _set_session(response, user["id"], user["email"])
     return {"user": user}
 
@@ -444,3 +523,227 @@ def get_parent_dashboard(
     if role != "parent":
         raise HTTPException(status_code=403, detail="Only parent members can view the parent dashboard.")
     return school.parent_dashboard(user["id"], school_id)
+
+
+# =====================================================================
+#                 DPDP Act 2023 — parental consent + data rights
+# =====================================================================
+
+class ConsentRequestBody(BaseModel):
+    parent_email: EmailStr
+    parent_name: str | None = None
+    parent_phone: str | None = None
+
+
+class ConsentConfirmBody(BaseModel):
+    token: str = Field(..., min_length=8, max_length=200)
+    parent_name: str | None = None
+
+
+class ConsentWithdrawBody(BaseModel):
+    # Either the consent_id (parent acting from email link) or implicit
+    # (child / parent acting via session — withdraws their active consent).
+    consent_id: int | None = None
+
+
+@router.post("/consent/request")
+def consent_request(
+    body: ConsentRequestBody,
+    request: Request,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Re-issue a parental consent link for the current under-18 user.
+
+    Useful when the original email bounced or the token expired. Authenticated
+    OR allowed for users in 'pending' state (who cannot otherwise sign in).
+    """
+    from . import dpdp
+    # Allow lookup by email if the child can't sign in (consent_status='pending'
+    # blocks /login). Caller must pass their own email in the body in that case
+    # — but we keep this endpoint session-only for now to avoid open-resend
+    # enumeration. Users with bounced emails should contact support.
+    user = _require_user(vaaani_session)
+    if not dpdp.is_minor(user.get("date_of_birth")):
+        raise HTTPException(status_code=400, detail="Account is 18+, no parental consent required.")
+    actor_ip = request.client.host if request.client else None
+    consent = dpdp.request_parental_consent(
+        user["id"], body.parent_email,
+        parent_name=body.parent_name, parent_phone=body.parent_phone,
+        actor_ip=actor_ip,
+    )
+    return {"consent": consent, "message": "Parental consent email re-sent."}
+
+
+@router.get("/consent/lookup/{token}")
+def consent_lookup(token: str):
+    """Return the consent record for a token, for the parent landing page to
+    render. Returns 404 if the token is bogus. The record includes status
+    (pending/granted/withdrawn/expired) so the page can branch."""
+    from . import dpdp
+    row = dpdp.lookup_consent_by_token(token)
+    if not row:
+        raise HTTPException(status_code=404, detail="Invalid or expired consent link.")
+    from .db import connect
+    from datetime import datetime as _dt, timezone as _tz
+    child = None
+    with connect() as c:
+        r = c.execute(
+            "SELECT name, email, date_of_birth FROM users WHERE id = ?",
+            (row["child_user_id"],),
+        ).fetchone()
+        if r:
+            child = {
+                "name": r["name"],
+                # Show only the email's local-part — masks the full student
+                # address if a parent forwards the link.
+                "email_hint": (r["email"].split("@", 1)[0] + "@…") if r["email"] else None,
+                "date_of_birth": r["date_of_birth"],
+            }
+    expired = _dt.fromisoformat(row["expires_at"]) < _dt.now(_tz.utc)
+    return {
+        "child": child,
+        "parent_email": row["parent_email"],
+        "consent_text": dpdp.CONSENT_TEXT,
+        "consent_text_version": row["consent_text_version"],
+        "requested_at": row["requested_at"],
+        "granted_at": row["granted_at"],
+        "withdrawn_at": row["withdrawn_at"],
+        "expires_at": row["expires_at"],
+        "expired": expired,
+        "status": (
+            "granted" if row["granted_at"]
+            else "withdrawn" if row["withdrawn_at"]
+            else "expired" if expired
+            else "pending"
+        ),
+    }
+
+
+@router.post("/consent/confirm")
+def consent_confirm(body: ConsentConfirmBody, request: Request):
+    """Parent endpoint — confirms the consent associated with the token.
+
+    Records parent IP + user-agent for audit. After this returns 200, the
+    child account flips to consent_status='granted' and can sign in.
+    """
+    from . import dpdp
+    ip = request.client.host if request.client else None
+    ua = request.headers.get("user-agent", "")
+    try:
+        consent = dpdp.confirm_consent(body.token, body.parent_name, ip=ip, user_agent=ua)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"ok": True, "consent": consent}
+
+
+@router.post("/consent/withdraw")
+def consent_withdraw(
+    body: ConsentWithdrawBody,
+    request: Request,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Withdraw an active consent.
+
+    Two paths:
+      1. Session-authenticated child/parent → withdraws their account's
+         active_consent_id. The session is then invalidated by the next
+         request (login blocked for status='withdrawn').
+      2. Anonymous + consent_id → only allowed if the caller can prove
+         possession via a separate withdrawal token (not implemented yet —
+         we'd email a one-time withdraw link). For now this path is gated
+         by session.
+    """
+    from . import dpdp
+    user = _require_user(vaaani_session)
+    consent_id = body.consent_id or user.get("active_consent_id")
+    if not consent_id:
+        raise HTTPException(status_code=400, detail="No active consent to withdraw.")
+    ip = request.client.host if request.client else None
+    ua = request.headers.get("user-agent", "")
+    consent = dpdp.withdraw_consent(consent_id, actor_user_id=user["id"], ip=ip, user_agent=ua)
+    return {"ok": True, "consent": consent}
+
+
+@router.get("/consent/status")
+def consent_status(vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME)):
+    """Return the consent state for the current user. Used by the SPA to
+    decide whether to show the 'awaiting parent' banner or the normal UI."""
+    from . import dpdp
+    user = _require_user(vaaani_session)
+    return dpdp.consent_status_for_user(user)
+
+
+# ---------------- §11 right to access / §12 right to erase ----------------
+
+@router.get("/data-export")
+def data_export(
+    request: Request,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Return a JSON document containing everything we hold about the user.
+
+    DPDP §11 right to information about personal data. Streamed as a file
+    download so the user can keep it. We log every export to the audit log
+    so the user has a paper trail of when they exercised this right.
+    """
+    from . import dpdp
+    from fastapi.responses import JSONResponse
+    user = _require_user(vaaani_session)
+    payload = dpdp.export_user_data(user["id"])
+    ip = request.client.host if request.client else None
+    dpdp.audit(user["id"], "data_exported", "via /auth/data-export", ip=ip)
+    return JSONResponse(
+        content=payload,
+        headers={
+            "Content-Disposition": f"attachment; filename=\"vaaani-data-export-{user['id']}.json\"",
+        },
+    )
+
+
+class DataDeleteBody(BaseModel):
+    # Defensive: require the user to type their email to confirm. Prevents
+    # accidental deletion from a stale session in a shared browser.
+    confirm_email: EmailStr
+
+
+@router.post("/data-delete")
+def data_delete(
+    body: DataDeleteBody,
+    request: Request,
+    response: Response,
+    vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
+):
+    """Soft-delete the current user's account.
+
+    DPDP §12 right to erasure. We mark deleted_at immediately (all access
+    blocked from this moment); a separate scheduled job is the right place
+    to hard-scrub rows after a 30-day grace window. The current session
+    cookie is cleared so the user can't accidentally keep using the SPA.
+    """
+    from . import dpdp
+    user = _require_user(vaaani_session)
+    if body.confirm_email.strip().lower() != user["email"].strip().lower():
+        raise HTTPException(
+            status_code=400,
+            detail="confirm_email does not match the signed-in user's email.",
+        )
+    ip = request.client.host if request.client else None
+    dpdp.soft_delete_user(user["id"], ip=ip)
+    response.delete_cookie(COOKIE_NAME, path="/")
+    return {
+        "ok": True,
+        "deleted_at": dpdp._now_iso(),
+        "message": (
+            "Your account is soft-deleted: all access is blocked immediately. "
+            "Stored rows are scheduled for hard deletion within 30 days. "
+            "Contact neilshankarray@vaaani.in within this window to restore."
+        ),
+    }
+
+
+@router.get("/dpdp/audit")
+def dpdp_audit(vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME)):
+    """User-visible audit log of DPDP-relevant events on their account."""
+    from . import dpdp
+    user = _require_user(vaaani_session)
+    return {"events": dpdp.audit_history(user["id"], limit=200)}

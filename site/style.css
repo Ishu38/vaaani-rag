@@ -2,13 +2,50 @@
    Vaaani — landing site
    ========================================================= */
 
+/* ---------------------------------------------------------
+   2026-05-28 commercial strip — hide mascot-style chrome.
+   Adobe-grade refined identity: no curtain splash, no custom
+   cursor, no decorative floating cards for features that
+   have been removed (Listen, Feynman/Coverage, Integrations).
+   The Knowledge-graph floating card stays — it represents the
+   actual product. Hiding (not deleting) so GSAP scripts that
+   reference these nodes don't crash; trivial to bring back.
+   --------------------------------------------------------- */
+.intro-curtain,
+.cursor-dot,
+.cursor-ring,
+.hf-listen,
+.hf-explain,
+.hf-integrations {
+  display: none !important;
+}
+/* The custom-cursor system added `body.has-cursor { cursor: none }` on
+   the assumption that the cursor-dot/cursor-ring divs would replace
+   the native pointer. We hid those, so the native pointer must come
+   back — force `cursor: auto` on body + interactive elements with
+   higher specificity to defeat the original rules. */
+body.has-cursor,
+body.has-cursor a,
+body.has-cursor button,
+body.has-cursor input,
+body.has-cursor textarea,
+body.has-cursor select,
+body.has-cursor label {
+  cursor: auto !important;
+}
+body.has-cursor a,
+body.has-cursor button {
+  cursor: pointer !important;
+}
+
+
 /* =========================================================
    INTRO CURTAIN — fullscreen lift on first paint
    ========================================================= */
 .intro-curtain {
   position: fixed; inset: 0; z-index: 500;
   background:
-    radial-gradient(ellipse 600px 400px at 50% 40%, rgba(77,105,78,0.08), transparent 70%),
+    radial-gradient(ellipse 600px 400px at 50% 40%, rgba(37, 99, 235,0.08), transparent 70%),
     var(--c-bg);
   display: flex; align-items: center; justify-content: center;
   pointer-events: all;
@@ -27,21 +64,21 @@
 
 :root {
   /* Brand */
-  --c-bg:           #fff3d5;
-  --c-bg-2:         #f7e9c2;
-  --c-surface:      #fbedc6;
-  --c-surface-2:    #f0dda8;
-  --c-border:       #e0cc93;
-  --c-border-strong:#bfa86f;
+  --c-bg:            #fafafa;
+  --c-bg-2:          #f4f4f5;
+  --c-surface:       #ffffff;
+  --c-surface-2:     #f4f4f5;
+  --c-border:        #e4e4e7;
+  --c-border-strong: #d4d4d8;
 
-  --c-text:         #4d694e;
-  --c-muted:        #7a8b6f;
-  --c-muted-strong: #5d7459;
+  --c-text:          #18181b;
+  --c-muted:         #71717a;
+  --c-muted-strong:  #3f3f46;
 
-  --c-accent:       #4d694e;
-  --c-accent-soft:  #6a8a6b;
-  --c-accent-deep:  #3c5340;
-  --c-accent-glow:  rgba(77, 105, 78, 0.25);
+  --c-accent:        #2563eb;
+  --c-accent-soft:   #3b82f6;
+  --c-accent-deep:   #1e40af;
+  --c-accent-glow:   rgba(37, 99, 235, 0.15);
 
   /* Type */
   --font-display: 'Inter', -apple-system, "Segoe UI", system-ui, sans-serif;
@@ -93,12 +130,12 @@ ul, ol { list-style: none; }
   position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 32px; z-index: 100;
-  background: rgba(255,243,213,0.6); backdrop-filter: blur(14px);
+  background: rgba(250,250,250,0.6); backdrop-filter: blur(14px);
   border-bottom: 1px solid transparent;
   transition: background 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
 }
 .nav.scrolled {
-  background: rgba(255,243,213,0.92);
+  background: rgba(250,250,250,0.92);
   border-bottom-color: var(--c-border);
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; letter-spacing: -0.02em; color: var(--c-text); }
@@ -226,7 +263,7 @@ ul, ol { list-style: none; }
   color: #fff; flex-shrink: 0;
 }
 .hf-icon svg { width: 16px; height: 16px; }
-.hf-icon.listen { background: #4d694e; }
+.hf-icon.listen { background: #2563eb; }
 .hf-title { font-weight: 600; font-size: 12.5px; color: #2a3a2b; }
 .hf-sub   { font-size: 10.5px; color: var(--c-muted); margin-top: 1px; }
 .hf-wave {
@@ -301,7 +338,7 @@ ul, ol { list-style: none; }
   font-size: 10px; font-weight: 600;
   padding: 3px 7px; border-radius: 5px;
 }
-.hf-chip.covered { background: rgba(77,105,78,0.12); color: var(--c-accent); }
+.hf-chip.covered { background: rgba(37, 99, 235,0.12); color: var(--c-accent); }
 .hf-chip.missed  { background: transparent; color: var(--c-muted); border: 1px dashed rgba(60,83,64,0.3); }
 
 /* Integrations card — bottom-right */
@@ -404,8 +441,8 @@ section { padding: var(--space-xl) 0; position: relative; }
   width: 44px; height: 44px;
   display: flex; align-items: center; justify-content: center;
   border-radius: 10px;
-  background: rgba(77,105,78,0.08);
-  border: 1px solid rgba(77,105,78,0.18);
+  background: rgba(37, 99, 235,0.08);
+  border: 1px solid rgba(37, 99, 235,0.18);
   color: var(--c-accent);
   margin-bottom: 22px;
   transition: transform 0.4s var(--ease-out);
@@ -430,10 +467,10 @@ section { padding: var(--space-xl) 0; position: relative; }
   position: relative;
 }
 .dialog-bad { opacity: 0.85; }
-.dialog-good { border-color: rgba(77,105,78,0.4); }
+.dialog-good { border-color: rgba(37, 99, 235,0.4); }
 .dialog-good::before {
   content: ''; position: absolute; inset: -1px; border-radius: 15px;
-  background: linear-gradient(135deg, rgba(77,105,78,0.5), transparent 60%);
+  background: linear-gradient(135deg, rgba(37, 99, 235,0.5), transparent 60%);
   z-index: -1; opacity: 0.4;
 }
 .dialog-head { margin-bottom: 8px; }
@@ -482,7 +519,7 @@ section { padding: var(--space-xl) 0; position: relative; }
 .bullet-list strong { color: var(--c-text); font-weight: 600; }
 .split-visual {
   position: relative;
-  background: radial-gradient(ellipse 500px 400px at 50% 50%, rgba(77,105,78,0.08), transparent 65%);
+  background: radial-gradient(ellipse 500px 400px at 50% 50%, rgba(37, 99, 235,0.08), transparent 65%);
 }
 .big-constellation { width: 100%; height: auto; max-width: 540px; margin: 0 auto; display: block; }
 
@@ -515,7 +552,7 @@ section { padding: var(--space-xl) 0; position: relative; }
    ========================================================= */
 .final-cta {
   background:
-    radial-gradient(ellipse 900px 500px at 50% 50%, rgba(77,105,78,0.1), transparent 65%),
+    radial-gradient(ellipse 900px 500px at 50% 50%, rgba(37, 99, 235,0.1), transparent 65%),
     var(--c-bg);
   padding: 120px 32px;
 }
@@ -628,7 +665,7 @@ html.lenis, html.lenis body { height: auto; }
   transition: width 0.25s var(--ease-out), height 0.25s var(--ease-out), border-color 0.25s var(--ease-out), background 0.25s var(--ease-out);
 }
 .cursor-hover .cursor-ring {
-  width: 64px; height: 64px; border-color: var(--c-accent); background: rgba(77,105,78,0.06);
+  width: 64px; height: 64px; border-color: var(--c-accent); background: rgba(37, 99, 235,0.06);
 }
 @media (max-width: 980px) {
   .cursor-dot, .cursor-ring { display: none; }
@@ -680,7 +717,7 @@ body.has-cursor a, body.has-cursor button, body.has-cursor input, body.has-curso
   display: inline-block;
   font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--c-accent); font-weight: 600;
-  padding: 6px 14px; border: 1px solid rgba(77,105,78,0.28); border-radius: 999px;
+  padding: 6px 14px; border: 1px solid rgba(37, 99, 235,0.28); border-radius: 999px;
   margin-bottom: 32px;
 }
 .chapter-head {
@@ -693,7 +730,7 @@ body.has-cursor a, body.has-cursor button, body.has-cursor input, body.has-curso
    ========================================================= */
 .chapter-trap {
   background:
-    radial-gradient(ellipse 900px 500px at 30% 30%, rgba(77,105,78,0.06), transparent 65%),
+    radial-gradient(ellipse 900px 500px at 30% 30%, rgba(37, 99, 235,0.06), transparent 65%),
     radial-gradient(ellipse 700px 500px at 80% 70%, rgba(91,141,239,0.04), transparent 65%),
     var(--c-bg);
 }
@@ -756,7 +793,7 @@ body.has-cursor a, body.has-cursor button, body.has-cursor input, body.has-curso
 .build-line strong { color: var(--c-accent); font-weight: 600; }
 .build-line:last-child { border-bottom: 1px solid var(--c-border); }
 .build-visual {
-  background: radial-gradient(ellipse 500px 500px at 50% 50%, rgba(77,105,78,0.06), transparent 65%);
+  background: radial-gradient(ellipse 500px 500px at 50% 50%, rgba(37, 99, 235,0.06), transparent 65%);
   border-radius: 16px;
 }
 .build-svg { width: 100%; height: auto; max-width: 600px; display: block; margin: 0 auto; }
@@ -798,7 +835,7 @@ body.has-cursor a, body.has-cursor button, body.has-cursor input, body.has-curso
 .subject-panel:hover { border-color: var(--c-border-strong); }
 .subject-panel.is-center {
   border-color: var(--c-accent);
-  box-shadow: 0 0 60px rgba(77,105,78,0.08), 0 0 120px rgba(77,105,78,0.03);
+  box-shadow: 0 0 60px rgba(37, 99, 235,0.08), 0 0 120px rgba(37, 99, 235,0.03);
 }
 .subject-tag {
   font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
@@ -821,7 +858,7 @@ body.has-cursor a, body.has-cursor button, body.has-cursor input, body.has-curso
 .mini-dialog .bubble.assistant {
   background: var(--c-bg-2); border-bottom-left-radius: 2px;
   color: var(--c-muted-strong);
-  border-color: rgba(77,105,78,0.3);
+  border-color: rgba(37, 99, 235,0.3);
 }
 
 /* Respect users who don't want motion */
