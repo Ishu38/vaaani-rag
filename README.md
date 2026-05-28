@@ -4,6 +4,12 @@
 Licensed under the Business Source License 1.1 — see [LICENSE](LICENSE).
 "Vaaani" is a trademark of Neil Shankar Ray (TM application pending, India).
 
+> **IP scope.** This repository is **not patented**. Protection is
+> automatic copyright (© Neil Shankar Ray) + Business Source License 1.1
+> + the "Vaaani" trademark filing. The patented work in Neil's portfolio
+> is a separate product (MLAF gesture-grammar, Indian patent application
+> 202631020540) and is **not** part of this codebase.
+
 Local-first personal RAG assistant + school-org Socratic study platform.
 
 - **Embeddings**: `sentence-transformers/all-MiniLM-L6-v2` (dim=384)

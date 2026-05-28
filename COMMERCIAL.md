@@ -1,5 +1,11 @@
 # Commercial Licensing — Vaaani Graph-RAG
 
+> **IP scope.** This product is **not patented**. Commercial protection
+> is © Neil Shankar Ray + Business Source License 1.1 + the "Vaaani"
+> trademark filing — not a software patent. (The MLAF gesture-grammar
+> patent application 202631020540 is a separate product and is not part
+> of this repository.)
+
 ## Who needs to pay
 
 The Business Source License 1.1 (see `LICENSE`) lets you use Vaaani RAG
@@ -50,7 +56,6 @@ request.
 | Custom motor / linguistic-profile calibration | — | optional add-on |
 | Integration help (Teachmint / Fedena / hospital EMR) | — | optional add-on |
 | OEM redistribution rights | — | optional add-on |
-| Indemnity against patent claims | — | ✓ |
 
 ## The quality SLA — short version
 
@@ -111,8 +116,9 @@ Separately scoped, separately quoted:
   licence letter and any contracted dashboards / customisations.
 - SLA refund (see SLA.md) is the one exception and is automatic.
 - Either party may terminate for cause on 30 days' written notice.
-- On termination, the patent licence reverts to the free-tier
-  permitted-purposes scope.
+- On termination, your right to use Vaaani RAG in commercial settings
+  ends; the BSL 1.1 permitted-purposes scope (personal / research /
+  accredited education / disability non-profit) continues to apply.
 
 ---
 
