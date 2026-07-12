@@ -1,0 +1,107 @@
+{
+  "_description": "NCERT English Language Curriculum — Grade 1-5 phonics, morphology, and word-family requirements mapped to Vaaani Language Graph nodes.",
+  "name": "NCERT English",
+  "version": "1.0",
+  "grades": {
+    "1": {
+      "label": "Grade 1 — Introduction to Sounds and Letters",
+      "required_roots": ["tri", "uni", "bi", "octo", "cent"],
+      "required_words": [
+        "triangle", "tricycle", "trio",
+        "unicycle", "unicorn", "universe",
+        "bicycle", "binoculars", "biped",
+        "octagon", "October", "octopus",
+        "century", "centipede", "percent"
+      ],
+      "phonics_focus": ["m", "s", "f", "n", "p", "b", "t", "d"],
+      "outcomes": [
+        "Recognize and produce common consonant sounds",
+        "Identify that words can share a root piece",
+        "Build simple word families"
+      ]
+    },
+    "2": {
+      "label": "Grade 2 — Sound Builders and Pattern Hunters",
+      "required_roots": ["dent", "ped", "manu", "aqua", "sol"],
+      "required_words": [
+        "dentist", "dental", "dentures",
+        "pedal", "pedestrian", "biped",
+        "manual", "manuscript", "manicure",
+        "aquarium", "aquatic", "aqueduct",
+        "solar", "solarium", "parasol"
+      ],
+      "phonics_focus": ["sh", "ch", "th", "ng", "k", "g", "h", "l"],
+      "outcomes": [
+        "Compare and contrast minimal pairs (pin/bin)",
+        "Identify digraphs (ph, sh, ch, th, ng)",
+        "Grow word families from known roots"
+      ]
+    },
+    "3": {
+      "label": "Grade 3 — Word Detectives and Meaning Makers",
+      "required_roots": ["luna", "terr", "flor", "zoo", "nov", "mari", "astro", "aero"],
+      "required_words": [
+        "lunar", "lunatic", "lunation",
+        "terrain", "territory", "terrace",
+        "floral", "florist", "flourish",
+        "zoo", "zoology", "zooplankton",
+        "novice", "novelty", "innovate",
+        "marine", "mariner", "submarine",
+        "astronaut", "astronomy", "asteroid",
+        "aeroplane", "aerodynamics", "aerial"
+      ],
+      "phonics_focus": ["r", "w", "y", "v", "z", "j"],
+      "outcomes": [
+        "Infer word meaning from root clues",
+        "Build words from prefix + root + suffix",
+        "Cross-lingual cognate recognition"
+      ]
+    },
+    "4": {
+      "label": "Grade 4 — Meaning Makers and Origin Detectives",
+      "required_roots": ["bio", "geo", "micro", "mega", "scope", "port", "matr", "patr"],
+      "required_words": [
+        "biology", "biography", "biodegradable",
+        "geography", "geology", "geometry",
+        "microscope", "microphone", "microorganism",
+        "megaphone", "megalith", "megabyte",
+        "telescope", "microscope", "periscope",
+        "portable", "transport", "import",
+        "matriarch", "maternal", "maternity",
+        "patriarch", "paternal", "paternity"
+      ],
+      "phonics_focus": ["f/ph", "k/c/ck", "s/c"],
+      "outcomes": [
+        "Trace words to their origins (Latin, Greek)",
+        "Combine roots to form new words",
+        "Compare cognates across languages"
+      ]
+    },
+    "5": {
+      "label": "Grade 5 — Linguistic Scientists",
+      "required_roots": ["frater", "herb", "anim", "nam", "spect", "dict", "scrib", "graph", "tele", "photo", "phon", "struct", "vid", "therm"],
+      "required_words": [
+        "fraternity", "fraternal", "fraternize",
+        "herbivore", "herbal", "herbicide",
+        "animal", "animate", "animation",
+        "nominate", "denominate", "nomenclature",
+        "spectacle", "inspect", "respect",
+        "dictate", "predict", "dictionary",
+        "scribble", "describe", "prescription",
+        "graphite", "photograph", "autograph",
+        "telephone", "telescope", "television",
+        "photo", "photosynthesis", "photocopy",
+        "phonics", "symphony", "microphone",
+        "structure", "construct", "destruction",
+        "video", "evidence", "provide",
+        "thermal", "thermometer", "thermostat"
+      ],
+      "phonics_focus": ["all phonemes with IPA notation"],
+      "outcomes": [
+        "Use scientific names for linguistic concepts (phoneme, morpheme, root)",
+        "Analyze word structure systematically",
+        "Build multi-root compound words"
+      ]
+    }
+  }
+}

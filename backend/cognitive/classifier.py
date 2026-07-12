@@ -11,24 +11,27 @@ import httpx
 ERROR_TYPES = [
     "memorization_override",
     "conceptual_gap",
-    "algebraic_slip",
-    "dimensional_error",
+    "terminology_confusion",
+    "spelling_sound_conflation",
+    "l1_transfer",
+    "overgeneralisation",
     "overconfidence",
     "underconfidence",
     "impulsive",
     "shortcut_dependency",
     "fragile_understanding",
     "visualization_weakness",
-    "unit_confusion",
-    "sign_error",
     "no_error",
 ]
 
 
 CLASSIFIER_SYSTEM = (
-    "You are a cognitive diagnostic AI for JEE exam preparation. "
+    "You are a cognitive diagnostic AI for school linguistics learning "
+    "(phonetics, phonology, morphology, syntax, semantics, etymology). "
     "Your job is to diagnose *why* a student got an answer wrong, not just label it incorrect. "
-    "Diagnose the thinking pattern, not the content. "
+    "Diagnose the thinking pattern, not the content. Many students are Indian multilinguals — "
+    "consider mother-tongue transfer (l1_transfer) when the error mirrors Hindi/Bengali patterns, "
+    "and spelling_sound_conflation when the student reasons from letters instead of sounds. "
     "Respond with VALID JSON only, no markdown fences."
 )
 
@@ -54,10 +57,10 @@ Output JSON:
 {{
     "primary_error": "one of the error types above, or 'no_error' if correct",
     "explanation": "human-readable diagnosis of the thinking pattern. Be specific — mention what the student is likely doing wrong in their head.",
-    "root_cause_topic": "the foundational concept that is actually weak, e.g. 'trigonometric identities' rather than just 'calculus'",
-    "remediation": "specific next step for the student, e.g. 'Revisit the geometric interpretation of sin²x+cos²x=1 with unit circle diagrams'",
+    "root_cause_topic": "the foundational concept that is actually weak, e.g. 'phoneme vs letter distinction' rather than just 'phonology'",
+    "remediation": "specific next step for the student, e.g. 'Say the word aloud and tap once per sound before counting — spelling hides the sound count'",
     "confidence_calibration": "well_calibrated|overconfident|underconfident",
-    "error_signature": "a compact hashable signature like conceptual_gap::trig_identity::additive_bias"
+    "error_signature": "a compact hashable signature like conceptual_gap::minimal_pairs::letter_sound_conflation"
 }}"""
 
 

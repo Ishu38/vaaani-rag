@@ -103,6 +103,48 @@ def grade_node(user_id: int, node_id: str, display: str, grade: str) -> dict:
 
 
 # =========================================================================
+#  Confidence-driven mastery update (from exam simulation)
+# =========================================================================
+
+# Maps (was_correct, confidence_band) → SM-2-lite grade equivalent
+# This bridges the simulation's 0–100% confidence scale into the spaced
+# repetition queue so exam answers update mastery + intervals directly.
+#
+#   Correct + confident  → "easy"  (mastery +1.0, interval ×3.5)
+#   Correct + uncertain  → "hard"  (lucky guess, mastery −0.3, interval ×0.9)
+#   Wrong + confident    → "again" (overconfidence, mastery −1.5, interval ×0.4)
+#   Wrong + uncertain    → "hard"  (honest gap, not "again" — they knew they didn't know)
+
+def apply_confidence(
+    user_id: int,
+    node_id: str,
+    display: str,
+    confidence_0to100: int,
+    was_correct: bool,
+) -> dict:
+    """Apply a confidence-weighted grade to one node, updating mastery +
+    interval in student_skills. Called after each simulation answer.
+
+    Returns the updated skill row (same shape as grade_node).
+    """
+    if confidence_0to100 < 0 or confidence_0to100 > 100:
+        confidence_0to100 = 50
+
+    if was_correct and confidence_0to100 >= 80:
+        grade = "easy"
+    elif was_correct and confidence_0to100 < 40:
+        grade = "hard"
+    elif not was_correct and confidence_0to100 >= 70:
+        grade = "again"
+    elif not was_correct and confidence_0to100 < 30:
+        grade = "hard"
+    else:
+        grade = "good"
+
+    return grade_node(user_id, node_id, display, grade)
+
+
+# =========================================================================
 #  Graph + corpus helpers (cached at module load)
 # =========================================================================
 

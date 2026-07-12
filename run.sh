@@ -18,6 +18,7 @@ for candidate in \
 done
 export USE_TF=0
 export USE_FLAX=0
+export VAAANI_DISABLE_CONSENT=1
 # Prefer the project venv if present (prod: /opt/vaaani-rag/.venv).
 if [ -d "$HERE/.venv/bin" ]; then
   export PATH="$HERE/.venv/bin:$PATH"

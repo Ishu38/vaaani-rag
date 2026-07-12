@@ -36,7 +36,7 @@ COACH_SCRIPTS = {
     ],
     "negative_marking_trap": [
         "This question has negative marking. If you're less than 70% sure, SKIP it. A blank is better than a wrong.",
-        "Trap alert. This looks like a standard question but the numbers are tweaked. Read the units carefully.",
+        "Trap alert. This looks like a standard question but the wording is tweaked. Read every word carefully.",
     ],
 }
 

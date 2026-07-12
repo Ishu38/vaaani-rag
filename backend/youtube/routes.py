@@ -51,7 +51,7 @@ def ingest_video(
     body: IngestBody,
     vaaani_session: Optional[str] = Cookie(default=None, alias=COOKIE_NAME),
 ):
-    _require_user(vaaani_session)
+    yt_user = _require_user(vaaani_session)
     try:
         video_id = yt_client.parse_video_id(body.url)
     except ValueError as e:
@@ -69,11 +69,17 @@ def ingest_video(
 
     ts = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
     fname = f"youtube-{video_id}-{ts}.md"
-    path = RAW_DIR / fname
+    user_dir = RAW_DIR / f"u{yt_user['id']}"
+    user_dir.mkdir(parents=True, exist_ok=True)
+    path = user_dir / fname
     front = f"# YouTube transcript · {video_id}\n\n{title}\n\nhttps://youtu.be/{video_id}\n\n"
     path.write_text(front + body_md, encoding="utf-8")
 
     summary = ingest(RAW_DIR, INDEX_PATH, METADATA_PATH)
+    import scope
+    scope.record_ownership(
+        str(path.resolve()), yt_user["id"], scope.sharing_school_ids(yt_user)
+    )
     # Bust caches so the new video shows up in chat / Review / Feynman
     # without a process restart.
     try:

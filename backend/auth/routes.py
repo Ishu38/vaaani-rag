@@ -17,6 +17,7 @@ from config import APP_BASE_URL, COOKIE_NAME
 from . import github_oauth, google_oauth, school, service
 from .db import init_db
 from .security import (
+    cookie_delete_kwargs,
     cookie_settings,
     decode_session,
     issue_session,
@@ -50,6 +51,17 @@ class LoginBody(BaseModel):
     """POST /auth/login body."""
     email: EmailStr
     password: str
+
+
+class ForgotPasswordBody(BaseModel):
+    """POST /auth/forgot-password body."""
+    email: EmailStr
+
+
+class ResetPasswordBody(BaseModel):
+    """POST /auth/reset-password body."""
+    token: str = Field(..., min_length=8, max_length=200)
+    password: str = Field(..., min_length=8, max_length=200)
 
 
 class PhoneSendBody(BaseModel):
@@ -175,16 +187,49 @@ def login(body: LoginBody, response: Response):
     if status == "withdrawn":
         raise HTTPException(
             status_code=403,
-            detail="parental_consent_withdrawn: your parent has withdrawn consent. Contact neilshankarray@vaaani.in to restore access.",
+            detail="parental_consent_withdrawn: your parent has withdrawn consent. Contact iamanushka32@gmail.com to restore access.",
         )
     _set_session(response, user["id"], user["email"])
     return {"user": user}
 
 
+@router.post("/forgot-password")
+def forgot_password(body: ForgotPasswordBody):
+    """Start password recovery: email a reset link if the account exists.
+
+    Always returns the same generic response so the endpoint can't be used to
+    discover which emails have accounts (no user enumeration).
+    """
+    try:
+        service.send_password_reset(body.email)
+    except Exception:
+        pass  # never leak internal state / existence via error shape
+    return {
+        "ok": True,
+        "message": "If an account exists for that email, we've sent a link to reset the password.",
+    }
+
+
+@router.post("/reset-password")
+def reset_password(body: ResetPasswordBody, response: Response):
+    """Consume a reset token, set the new password, and sign the user in."""
+    user = service.reset_password(body.token, body.password)
+    if not user:
+        raise HTTPException(status_code=400, detail="This reset link is invalid or has expired. Request a new one.")
+    if user.get("deleted_at"):
+        raise HTTPException(status_code=403, detail="This account has been deleted.")
+    status = user.get("consent_status") or "not_required"
+    if status in ("pending", "withdrawn"):
+        # Password changed, but consent gate still applies — don't issue a session.
+        return {"ok": True, "next": "consent-" + status}
+    _set_session(response, user["id"], user["email"])
+    return {"ok": True, "user": user}
+
+
 @router.post("/logout")
 def logout(response: Response):
     """Clear the session cookie."""
-    response.delete_cookie(COOKIE_NAME, path="/")
+    response.delete_cookie(COOKIE_NAME, **cookie_delete_kwargs())
     return {"ok": True}
 
 
@@ -266,7 +311,7 @@ def google_callback(request: Request, code: str = "", state: str = ""):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Google sign-in failed: {e}")
     user = service.upsert_google_user(sub, email, name)
-    resp = RedirectResponse(url="/account?welcome=1", status_code=303)
+    resp = RedirectResponse(url="/app?welcome=1", status_code=303)
     resp.delete_cookie("oauth_state", path="/")
     token = issue_session(user["id"], user["email"])
     resp.set_cookie(value=token, **cookie_settings())
@@ -303,7 +348,7 @@ def github_callback(request: Request, code: str = "", state: str = ""):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"GitHub sign-in failed: {e}")
     user = service.upsert_github_user(gh_id, email, name)
-    resp = RedirectResponse(url="/account?welcome=1", status_code=303)
+    resp = RedirectResponse(url="/app?welcome=1", status_code=303)
     resp.delete_cookie("oauth_state", path="/")
     token = issue_session(user["id"], user["email"])
     resp.set_cookie(value=token, **cookie_settings())
@@ -729,14 +774,14 @@ def data_delete(
         )
     ip = request.client.host if request.client else None
     dpdp.soft_delete_user(user["id"], ip=ip)
-    response.delete_cookie(COOKIE_NAME, path="/")
+    response.delete_cookie(COOKIE_NAME, **cookie_delete_kwargs())
     return {
         "ok": True,
         "deleted_at": dpdp._now_iso(),
         "message": (
             "Your account is soft-deleted: all access is blocked immediately. "
             "Stored rows are scheduled for hard deletion within 30 days. "
-            "Contact neilshankarray@vaaani.in within this window to restore."
+            "Contact iamanushka32@gmail.com within this window to restore."
         ),
     }
 

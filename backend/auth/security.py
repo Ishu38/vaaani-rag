@@ -69,16 +69,52 @@ def decode_session(token: str) -> dict | None:
         return None
 
 
+def _cookie_domain_and_secure() -> dict:
+    """domain + secure flags shared by set and delete, so both always match."""
+    from config import COOKIE_DOMAIN
+    kw: dict = {}
+    if COOKIE_DOMAIN:
+        kw["domain"] = COOKIE_DOMAIN
+    if COOKIE_SECURE:
+        kw["secure"] = True
+    return kw
+
+
+def cookie_delete_kwargs() -> dict:
+    """kwargs for response.delete_cookie — MUST include every attribute
+    that was used when setting the cookie (especially domain), otherwise
+    the browser won't match and the cookie survives.  The root cause of
+    sign-out not working was that logout called delete_cookie(path="/")
+    without the domain=.vaaani.in that had been set on login."""
+    from config import COOKIE_SAMESITE
+    kw = {
+        "path": "/",
+        "httponly": True,
+        "samesite": COOKIE_SAMESITE if COOKIE_SAMESITE in ("lax", "strict", "none") else "lax",
+    }
+    kw.update(_cookie_domain_and_secure())
+    return kw
+
+
 def cookie_settings() -> dict:
-    """Common kwargs for FastAPI's `response.set_cookie`."""
-    return {
+    """Common kwargs for FastAPI's `response.set_cookie`.
+
+    In production, COOKIE_DOMAIN=.vaaani.in shares the session across the Vercel
+    frontend (app.vaaani.in) and the GCP backend (api.vaaani.in) — same-site, so
+    SameSite=Lax still works and there is no cross-site-cookie problem.
+    """
+    from config import COOKIE_DOMAIN, COOKIE_SAMESITE
+    kw = {
         "key": COOKIE_NAME,
         "httponly": True,
         "secure": COOKIE_SECURE,
-        "samesite": "lax",
+        "samesite": COOKIE_SAMESITE if COOKIE_SAMESITE in ("lax", "strict", "none") else "lax",
         "max_age": JWT_EXP_DAYS * 86400,
         "path": "/",
     }
+    if COOKIE_DOMAIN:
+        kw["domain"] = COOKIE_DOMAIN
+    return kw
 
 
 def random_token(nbytes: int = 32) -> str:

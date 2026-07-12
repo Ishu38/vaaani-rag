@@ -33,21 +33,21 @@
     /* Adobe Spectrum-inspired professional palette (2026-05-28).
        Cool-neutral grayscale (Tailwind zinc) + indigo accent + amber warn.
        Replaces the warm-cream community-zine palette. */
-    --bg:             #fafafa;   /* zinc-50  — page background */
-    --bg-2:           #f4f4f5;   /* zinc-100 — subtle alt sections */
-    --panel:          #ffffff;   /* pure white — cards, assistant bubble */
-    --panel-2:        #f4f4f5;   /* zinc-100 — user bubble, hover surfaces */
-    --border:         #e4e4e7;   /* zinc-200 — default dividers */
-    --border-strong:  #d4d4d8;   /* zinc-300 — emphasised borders */
-    --text:           #18181b;   /* zinc-900 — primary text */
-    --muted:          #71717a;   /* zinc-500 — secondary text */
-    --muted-strong:   #3f3f46;   /* zinc-700 — emphasised secondary */
-    --accent:         #2563eb;   /* indigo-600 — primary action / brand */
-    --accent-soft:    #3b82f6;   /* indigo-500 — hover */
-    --accent-glow:    rgba(37, 99, 235, 0.15);
-    --user:           #f4f4f5;   /* zinc-100 — user message bubble */
-    --assistant:      #ffffff;   /* white — assistant message bubble */
-    --warn:           #b45309;   /* amber-700 — fidelity / warnings */
+    --bg: #fafafa; /* zinc-50 — page background */
+    --bg-2: #f4f4f5; /* zinc-100 — subtle alt sections */
+    --panel: #ffffff; /* pure white — cards, assistant bubble */
+    --panel-2: #f4f4f5; /* zinc-100 — user bubble, hover surfaces */
+    --border: #e4e4e7; /* zinc-200 — default dividers */
+    --border-strong: #d4d4d8; /* zinc-300 — emphasised borders */
+    --text: #18181b; /* zinc-900 — primary text */
+    --muted: #71717a; /* zinc-500 — secondary text */
+    --muted-strong: #3f3f46; /* zinc-700 — emphasised secondary */
+    --accent: #2563eb; /* indigo-600 — primary action / brand */
+    --accent-soft: #3b82f6; /* indigo-500 — hover */
+    --accent-glow: rgba(37, 99, 235, 0.15);
+    --user: #f4f4f5; /* zinc-100 — user message bubble */
+    --assistant: #ffffff; /* white — assistant message bubble */
+    --warn: #b45309; /* amber-700 — fidelity / warnings */
   }
   * { box-sizing: border-box; }
   html, body {
@@ -73,124 +73,124 @@
     background: rgba(250,250,250,0.85);
     border-bottom: 1px solid var(--border);
   }
-  .brand {
+.brand {
     display: flex; align-items: center; gap: 10px;
     font-weight: 800; font-size: 18px; letter-spacing: -0.02em;
   }
-  .brand .v { color: var(--text); }
-  .brand .a { color: var(--accent); }
-  .brand .badge {
+.brand.v { color: var(--text); }
+.brand.a { color: var(--accent); }
+.brand.badge {
     margin-left: 8px; padding: 3px 8px; border-radius: 4px;
     background: transparent; color: var(--muted-strong);
     font-size: 10px; letter-spacing: 0.14em; font-weight: 600; text-transform: uppercase;
     border: 1px solid var(--border-strong);
   }
-  .nav-links { display: flex; gap: 28px; align-items: center; font-size: 13.5px; color: var(--muted); font-weight: 500; }
-  .nav-links a { color: var(--muted); text-decoration: none; transition: color .15s; padding: 4px 0; position: relative; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-links a.active { color: var(--text); }
-  .nav-links a.active::after {
+.nav-links { display: flex; gap: 28px; align-items: center; font-size: 13.5px; color: var(--muted); font-weight: 500; }
+.nav-links a { color: var(--muted); text-decoration: none; transition: color.15s; padding: 4px 0; position: relative; }
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--text); }
+.nav-links a.active::after {
     content: ''; position: absolute; bottom: -18px; left: 0; right: 0; height: 2px; background: var(--accent);
   }
-  .nav-right { display: flex; align-items: center; gap: 6px; }
-  .icon-btn {
+.nav-right { display: flex; align-items: center; gap: 6px; }
+.icon-btn {
     background: transparent; border: 1px solid transparent; border-radius: 8px;
     width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer; color: var(--muted-strong);
-    transition: background .15s, color .15s, border-color .15s, transform .15s;
+    transition: background.15s, color.15s, border-color.15s, transform.15s;
     padding: 0;
   }
-  .icon-btn svg { width: 18px; height: 18px; }
-  .icon-btn:hover { color: var(--text); background: var(--panel); border-color: var(--border); }
-  .icon-btn.primary { background: var(--accent); color: #fff3d5; border-color: var(--accent); }
-  .icon-btn.primary:hover { background: #3c5340; border-color: #3c5340; color: #fff3d5; transform: translateY(-1px); }
-  .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .pill {
+.icon-btn svg { width: 18px; height: 18px; }
+.icon-btn:hover { color: var(--text); background: var(--panel); border-color: var(--border); }
+.icon-btn.primary { background: var(--accent); color: #fff3d5; border-color: var(--accent); }
+.icon-btn.primary:hover { background: #3c5340; border-color: #3c5340; color: #fff3d5; transform: translateY(-1px); }
+.icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.pill {
     padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
     background: var(--panel); border: 1px solid var(--border); color: var(--muted-strong);
     font-variant-numeric: tabular-nums;
   }
-  .btn {
+.btn {
     border: none; cursor: pointer; font-family: inherit; font-weight: 500;
     padding: 8px 16px; border-radius: 6px; font-size: 13px;
-    transition: background .15s, border-color .15s;
+    transition: background.15s, border-color.15s;
   }
-  .btn-primary {
+.btn-primary {
     background: var(--accent); color: #fff;
   }
-  .btn-primary:hover { background: #3c5340; }
-  .btn-ghost {
+.btn-primary:hover { background: #3c5340; }
+.btn-ghost {
     background: var(--panel); color: var(--text); border: 1px solid var(--border);
   }
-  .btn-ghost:hover { border-color: var(--border-strong); }
+.btn-ghost:hover { border-color: var(--border-strong); }
 
   /* Scope-to-document selector — sits beside the Socratic toggle */
-  .scope-select {
+.scope-select {
     padding: 5px 10px; border-radius: 6px;
     background: var(--panel); color: var(--text);
     border: 1px solid var(--border);
     cursor: pointer; font-size: 12px;
     max-width: 180px; outline: none;
-    transition: border-color .15s, color .15s;
+    transition: border-color.15s, color.15s;
   }
-  .scope-select:hover, .scope-select:focus { border-color: var(--border-strong); }
-  .scope-select.active { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.scope-select:hover,.scope-select:focus { border-color: var(--border-strong); }
+.scope-select.active { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
   /* Socratic toggle — compact */
-  .socratic-toggle {
+.socratic-toggle {
     display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
     font-size: 12px; color: var(--muted); user-select: none;
     padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
-    background: var(--panel); transition: border-color .15s, color .15s;
+    background: var(--panel); transition: border-color.15s, color.15s;
   }
-  .socratic-toggle:hover { border-color: var(--border-strong); color: var(--text); }
-  .socratic-toggle input { display: none; }
-  .socratic-toggle .track {
+.socratic-toggle:hover { border-color: var(--border-strong); color: var(--text); }
+.socratic-toggle input { display: none; }
+.socratic-toggle .track {
     width: 26px; height: 14px; background: #e0cc93; border-radius: 999px;
-    position: relative; transition: background .2s;
+    position: relative; transition: background.2s;
   }
-  .socratic-toggle .thumb {
+.socratic-toggle .thumb {
     position: absolute; top: 2px; left: 2px;
     width: 10px; height: 10px; background: #5d7459; border-radius: 50%;
-    transition: transform .2s, background .2s;
+    transition: transform.2s, background.2s;
   }
-  .socratic-toggle input:checked + .track { background: var(--accent); }
-  .socratic-toggle input:checked + .track .thumb { transform: translateX(12px); background: #fff; }
-  .socratic-toggle.on { color: var(--text); border-color: var(--accent); }
+.socratic-toggle input:checked +.track { background: var(--accent); }
+.socratic-toggle input:checked +.track .thumb { transform: translateX(12px); background: #fff; }
+.socratic-toggle.on { color: var(--text); border-color: var(--accent); }
   /* Banner removed in favour of the toggle state itself signalling Socratic mode. */
-  .socratic-banner { display: none !important; }
+.socratic-banner { display: none!important; }
 
   /* ===== HERO (shown when chat empty) ===== */
-  .hero {
+.hero {
     text-align: center; padding: 96px 24px 48px;
-    transition: opacity .35s, max-height .35s;
+    transition: opacity.35s, max-height.35s;
     max-height: 600px; overflow: hidden;
   }
-  .hero.hidden { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; }
-  .hero .eyebrow {
+.hero.hidden { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; }
+.hero.eyebrow {
     display: inline-block; font-size: 11px; letter-spacing: 0.18em; font-weight: 600;
     color: var(--accent); text-transform: uppercase; padding: 0 0 16px;
   }
-  .hero h1 {
+.hero h1 {
     margin: 0; font-size: clamp(34px, 5vw, 56px);
     font-weight: 700; letter-spacing: -0.025em; line-height: 1.08;
     color: var(--text);
   }
-  .hero h1 .accent { color: var(--muted-strong); font-weight: 600; }
-  .hero p {
+.hero h1.accent { color: var(--muted-strong); font-weight: 600; }
+.hero p {
     max-width: 540px; margin: 20px auto 0; color: var(--muted-strong);
     font-size: 15px; line-height: 1.65;
   }
-  .hero .examples {
+.hero.examples {
     display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
     margin-top: 36px;
   }
-  .hero .examples .ex {
+.hero.examples.ex {
     padding: 7px 14px; border-radius: 6px; font-size: 12.5px;
     background: var(--panel); border: 1px solid var(--border);
-    color: var(--muted-strong); cursor: pointer; transition: border-color .15s, color .15s;
+    color: var(--muted-strong); cursor: pointer; transition: border-color.15s, color.15s;
   }
-  .hero .examples .ex:hover { border-color: var(--border-strong); color: var(--text); }
+.hero.examples.ex:hover { border-color: var(--border-strong); color: var(--text); }
 
   /* ===== CHAT LOG ===== */
   main {
@@ -202,58 +202,68 @@
     flex: 1; overflow-y: auto; padding: 32px 0; display: flex;
     flex-direction: column; gap: 24px;
   }
-  .msg {
+.msg {
     max-width: 86%; padding: 14px 18px; line-height: 1.6;
     word-wrap: break-word; font-size: 14.5px;
-    animation: fadeUp .25s ease;
+    animation: fadeUp.25s ease;
   }
   @keyframes fadeUp { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
-  .msg.user {
+.msg.user {
     align-self: flex-end; background: var(--user); color: var(--text);
     border: 1px solid var(--border);
     border-radius: 10px 10px 2px 10px;
   }
-  .msg.assistant {
+.msg.assistant {
     align-self: flex-start; background: var(--assistant);
     border: 1px solid var(--border);
     border-radius: 10px 10px 10px 2px;
     white-space: pre-wrap; max-width: 100%;
   }
-  .meta { font-size: 11px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
+.meta { font-size: 11px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border);
     display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .chip {
+.chip {
     background: transparent; border: 1px solid var(--border); border-radius: 4px;
     padding: 3px 8px; cursor: default; user-select: none; font-size: 11px; color: var(--muted-strong);
-    transition: border-color .15s, color .15s;
+    transition: border-color.15s, color.15s;
     font-weight: 500;
   }
-  .chip.intent { color: var(--accent); border-color: rgba(37, 99, 235,0.4); }
+.chip.intent { color: var(--accent); border-color: rgba(37, 99, 235,0.4); }
 
   /* Fidelity-warning band — honest grounding gap surface. */
-  .fidelity-warn {
+ .fidelity-warn {
     margin: 10px 0 4px; padding: 8px 12px; border-radius: 8px;
     background: rgba(180,83,9,0.06); border: 1px solid rgba(180,83,9,0.30);
     font-size: 12.5px; color: var(--warn);
   }
-  .fidelity-warn-title { font-weight: 600; }
-  .fidelity-warn details { margin-top: 6px; }
-  .fidelity-warn summary { cursor: pointer; font-size: 11.5px; opacity: 0.85; user-select: none; }
-  .fidelity-warn summary:hover { opacity: 1; }
-  .fidelity-warn-line {
+
+  /* Discovery Engine deep-link button — [[LINK:/path|Label]] sentinel
+     rendered as a clickable pill that sends the learner to a tool
+     (Sound Lab, Feel, Graph, Roots) as part of the mission. */
+ .discovery-link {
+    display: inline-block; background: var(--accent); color: #fff;
+    padding: 3px 14px; border-radius: 8px; font-weight: 600; font-size: 13px;
+    text-decoration: none; margin: 0 3px; transition: background .15s;
+  }
+ .discovery-link:hover { background: #1d50c4; }
+.fidelity-warn-title { font-weight: 600; }
+.fidelity-warn details { margin-top: 6px; }
+.fidelity-warn summary { cursor: pointer; font-size: 11.5px; opacity: 0.85; user-select: none; }
+.fidelity-warn summary:hover { opacity: 1; }
+.fidelity-warn-line {
     margin-top: 4px; padding: 4px 8px; border-left: 2px solid rgba(212,169,87,0.6);
     font-size: 12px; line-height: 1.45; color: var(--muted-strong); font-style: italic;
   }
-  .chip.entity { color: var(--muted-strong); }
-  .chip.entity::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+.chip.entity { color: var(--muted-strong); }
+.chip.entity::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%;
     background: var(--accent); margin-right: 6px; vertical-align: middle; opacity: 0.6; }
-  .chip.community { color: var(--warn); border-color: rgba(212,169,87,0.3); }
-  .chip.memory { color: var(--muted-strong); }
-  .chip.warn { color: var(--warn); border-color: rgba(212,169,87,0.3); }
-  .chip.hermes {
+.chip.community { color: var(--warn); border-color: rgba(212,169,87,0.3); }
+.chip.memory { color: var(--muted-strong); }
+.chip.warn { color: var(--warn); border-color: rgba(212,169,87,0.3); }
+.chip.hermes {
     color: #9c7bd6; border-color: rgba(156,123,214,0.4);
     cursor: help;
   }
-  .chip.hermes::before { content: '⚙ '; opacity: 0.85; }
+.chip.hermes::before { content: ' '; opacity: 0.85; }
 
   /* LLM-requested diagram from backend/plot.py — appears inline in the answer. */
   figure.plot {
@@ -267,86 +277,86 @@
   figure.plot figcaption {
     font-size: 12px; color: var(--muted-strong); font-style: italic; text-align: center;
   }
-  .rating-row {
+.rating-row {
     display: flex; gap: 8px; align-items: center; margin-top: 14px; padding-top: 12px;
     border-top: 1px dashed var(--border);
     font-size: 11.5px; color: var(--muted-strong); flex-wrap: wrap;
   }
-  .rating-row .label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
-  .rating-btn {
+.rating-row.label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+.rating-btn {
     background: var(--panel); border: 1px solid var(--border); color: var(--muted-strong);
     border-radius: 4px; padding: 5px 10px; cursor: pointer; font: inherit; font-size: 11.5px;
-    transition: border-color .15s, color .15s, background .15s;
+    transition: border-color.15s, color.15s, background.15s;
   }
-  .rating-btn:hover { border-color: var(--accent); color: var(--text); }
-  .rating-btn.locked { background: var(--accent); color: #fff; border-color: var(--accent); cursor: default; }
-  .rating-row.disabled .rating-btn { opacity: 0.5; cursor: not-allowed; }
-  .signed-out-hint { font-size: 11.5px; color: var(--muted); margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
-  .signed-out-hint a { color: var(--accent-soft); }
-  .chip.source { cursor: pointer; }
-  .chip.source:hover { border-color: var(--border-strong); color: var(--text); }
-  .chip details { display: inline; }
-  .chip summary { list-style: none; cursor: pointer; }
-  .src-body { display: block; margin-top: 8px; color: var(--muted); font-size: 11.5px; max-width: 540px; line-height: 1.5; }
-  .community-card {
+.rating-btn:hover { border-color: var(--accent); color: var(--text); }
+.rating-btn.locked { background: var(--accent); color: #fff; border-color: var(--accent); cursor: default; }
+.rating-row.disabled.rating-btn { opacity: 0.5; cursor: not-allowed; }
+.signed-out-hint { font-size: 11.5px; color: var(--muted); margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border); }
+.signed-out-hint a { color: var(--accent-soft); }
+.chip.source { cursor: pointer; }
+.chip.source:hover { border-color: var(--border-strong); color: var(--text); }
+.chip details { display: inline; }
+.chip summary { list-style: none; cursor: pointer; }
+.src-body { display: block; margin-top: 8px; color: var(--muted); font-size: 11.5px; max-width: 540px; line-height: 1.5; }
+.community-card {
     margin-top: 14px; padding: 14px 16px; border-radius: 8px;
     background: var(--bg-2); border: 1px solid var(--border);
     font-size: 13px; line-height: 1.55;
   }
-  .community-card .ct { color: var(--muted); font-weight: 600; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; }
-  .community-card .ck { font-weight: 600; color: var(--text); margin-bottom: 6px; }
-  .community-card ul { margin: 8px 0 0 18px; padding: 0; color: var(--muted-strong); }
-  .community-card li { margin: 3px 0; }
+.community-card.ct { color: var(--muted); font-weight: 600; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; }
+.community-card.ck { font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.community-card ul { margin: 8px 0 0 18px; padding: 0; color: var(--muted-strong); }
+.community-card li { margin: 3px 0; }
   table.rag { border-collapse: collapse; margin: 10px 0; width: 100%; font-size: 13px; }
   table.rag th, table.rag td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
   table.rag th { background: var(--panel-2); color: var(--muted-strong); font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
-  .typing {
+.typing {
     color: var(--muted); font-size: 13px;
     display: flex; align-items: center; gap: 10px;
   }
-  .typing .dots { display: inline-flex; gap: 4px; }
-  .typing .dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: pulse 1.2s infinite ease-in-out; }
-  .typing .dots span:nth-child(2) { animation-delay: .2s; }
-  .typing .dots span:nth-child(3) { animation-delay: .4s; }
-  @keyframes pulse { 0%, 80%, 100% { opacity: .25; transform: scale(.7); } 40% { opacity: 1; transform: scale(1); } }
+.typing.dots { display: inline-flex; gap: 4px; }
+.typing.dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: pulse 1.2s infinite ease-in-out; }
+.typing.dots span:nth-child(2) { animation-delay:.2s; }
+.typing.dots span:nth-child(3) { animation-delay:.4s; }
+  @keyframes pulse { 0%, 80%, 100% { opacity:.25; transform: scale(.7); } 40% { opacity: 1; transform: scale(1); } }
 
   /* ===== INPUT BAR ===== */
-  .composer { padding: 20px 0 28px; }
-  .composer .wrap {
+.composer { padding: 20px 0 28px; }
+.composer.wrap {
     display: flex; gap: 8px; align-items: center;
     background: var(--panel); border: 1px solid var(--border);
     border-radius: 8px; padding: 6px 6px 6px 14px;
-    transition: border-color .15s;
+    transition: border-color.15s;
   }
-  .composer .wrap:focus-within { border-color: var(--border-strong); }
-  .composer input[type=text] {
+.composer.wrap:focus-within { border-color: var(--border-strong); }
+.composer input[type=text] {
     flex: 1; background: transparent; border: none; color: var(--text);
     font: inherit; font-size: 14.5px; outline: none; padding: 11px 4px;
   }
-  .composer input[type=text]::placeholder { color: var(--muted); }
-  .composer .send {
+.composer input[type=text]::placeholder { color: var(--muted); }
+.composer .send {
     background: var(--accent); color: #fff; border: none; cursor: pointer;
     width: 36px; height: 36px; border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    transition: background .15s;
+    transition: background.15s;
   }
-  .composer .send:hover { background: #3c5340; }
-  .composer .send:disabled { background: var(--panel-2); color: var(--muted); cursor: not-allowed; }
-  .composer .send svg { width: 15px; height: 15px; fill: currentColor; }
-  .composer .upload {
+.composer .send:hover { background: #3c5340; }
+.composer .send:disabled { background: var(--panel-2); color: var(--muted); cursor: not-allowed; }
+.composer .send svg { width: 15px; height: 15px; fill: currentColor; }
+.composer .upload {
     width: 36px; height: 36px; border-radius: 6px;
     background: transparent; border: 1px solid var(--border); color: var(--muted);
     display: flex; align-items: center; justify-content: center; cursor: pointer;
-    transition: border-color .15s, color .15s;
+    transition: border-color.15s, color.15s;
   }
-  .composer .upload:hover { border-color: var(--border-strong); color: var(--text); }
-  .composer .upload svg { width: 14px; height: 14px; fill: currentColor; }
-  .composer .hint {
+.composer .upload:hover { border-color: var(--border-strong); color: var(--text); }
+.composer .upload svg { width: 14px; height: 14px; fill: currentColor; }
+.composer .hint {
     display: flex; justify-content: space-between; align-items: center;
     color: var(--muted); font-size: 11.5px; margin-top: 12px; padding: 0 4px;
     font-variant-numeric: tabular-nums;
   }
-  .composer .hint .kbd {
+.composer .hint .kbd {
     display: inline-block; padding: 1px 5px; border-radius: 3px;
     background: var(--panel); border: 1px solid var(--border); font-size: 10.5px;
     color: var(--muted-strong); font-family: ui-monospace, SFMono-Regular, monospace;
@@ -360,327 +370,327 @@
     color: var(--muted); font-size: 12px;
     display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
   }
-  footer.site a { color: var(--muted-strong); text-decoration: none; transition: color .15s; }
+  footer.site a { color: var(--muted-strong); text-decoration: none; transition: color.15s; }
   footer.site a:hover { color: var(--text); }
-  footer.site .row { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  footer.site .row strong { color: var(--text); font-weight: 600; }
-  footer.site .dot { color: var(--border-strong); }
+  footer.site.row { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  footer.site.row strong { color: var(--text); font-weight: 600; }
+  footer.site.dot { color: var(--border-strong); }
 
   /* ===== LISTEN MODAL ===== */
-  .listen-modal {
+.listen-modal {
     position: fixed; inset: 0; z-index: 200;
     background: rgba(37,99,235,0.15); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center;
     padding: 24px;
   }
-  .listen-modal[hidden] { display: none; }
-  .listen-card {
+.listen-modal[hidden] { display: none; }
+.listen-card {
     background: var(--bg); border: 1px solid var(--border-strong);
     border-radius: 12px; width: 100%; max-width: 560px;
     padding: 24px 28px 22px;
     box-shadow: 0 24px 60px rgba(37, 99, 235,0.25);
   }
-  .listen-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .listen-head h3 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
-  .listen-x {
+.listen-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.listen-head h3 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
+.listen-x {
     background: transparent; border: none; color: var(--muted);
     font-size: 24px; line-height: 1; cursor: pointer; padding: 4px 8px;
-    border-radius: 4px; transition: background .15s, color .15s;
+    border-radius: 4px; transition: background.15s, color.15s;
   }
-  .listen-x:hover { background: var(--panel-2); color: var(--text); }
-  .listen-sub { font-size: 13px; color: var(--muted-strong); margin: 4px 0 12px; line-height: 1.5; }
-  .listen-modes {
+.listen-x:hover { background: var(--panel-2); color: var(--text); }
+.listen-sub { font-size: 13px; color: var(--muted-strong); margin: 4px 0 12px; line-height: 1.5; }
+.listen-modes {
     display: inline-flex; gap: 4px; padding: 4px;
     background: var(--panel); border: 1px solid var(--border);
     border-radius: 8px; margin-bottom: 14px;
   }
-  .listen-mode {
+.listen-mode {
     background: transparent; border: none; cursor: pointer;
     padding: 6px 14px; border-radius: 6px;
     font: inherit; font-size: 12.5px; font-weight: 500;
-    color: var(--muted-strong); transition: background .15s, color .15s;
+    color: var(--muted-strong); transition: background.15s, color.15s;
   }
-  .listen-mode:hover { color: var(--text); }
-  .listen-mode.active { background: var(--accent); color: #fff; }
-  .listen-docs {
+.listen-mode:hover { color: var(--text); }
+.listen-mode.active { background: var(--accent); color: #fff; }
+.listen-docs {
     display: flex; flex-direction: column; gap: 8px;
     max-height: 320px; overflow-y: auto; padding-right: 4px;
   }
-  .listen-doc {
+.listen-doc {
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
     padding: 10px 14px; border-radius: 8px;
     background: var(--panel); border: 1px solid var(--border);
-    cursor: pointer; transition: border-color .15s, background .15s;
+    cursor: pointer; transition: border-color.15s, background.15s;
   }
-  .listen-doc:hover { border-color: var(--accent); background: var(--panel-2); }
-  .listen-doc .name { font-size: 13.5px; color: var(--text); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .listen-doc .meta { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; flex-shrink: 0; }
-  .listen-doc.busy { opacity: 0.6; cursor: progress; }
-  .listen-empty { color: var(--muted); font-size: 13px; padding: 16px 0; text-align: center; }
-  .listen-player { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
-  .listen-now { font-size: 12px; color: var(--muted-strong); margin-bottom: 8px; }
-  .listen-now b { color: var(--text); font-weight: 600; }
+.listen-doc:hover { border-color: var(--accent); background: var(--panel-2); }
+.listen-doc.name { font-size: 13.5px; color: var(--text); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.listen-doc.meta { font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.listen-doc.busy { opacity: 0.6; cursor: progress; }
+.listen-empty { color: var(--muted); font-size: 13px; padding: 16px 0; text-align: center; }
+.listen-player { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.listen-now { font-size: 12px; color: var(--muted-strong); margin-bottom: 8px; }
+.listen-now b { color: var(--text); font-weight: 600; }
   #listenAudio { width: 100%; }
 
   /* ===== FEYNMAN MODAL ===== */
-  .feynman-card { max-width: 620px; }
-  .feynman-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 14px 0 6px; }
-  .feynman-select, .feynman-text {
+.feynman-card { max-width: 620px; }
+.feynman-label { display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 14px 0 6px; }
+.feynman-select,.feynman-text {
     width: 100%; font: inherit; font-size: 14px; color: var(--text);
     background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
-    padding: 10px 12px; transition: border-color .15s;
+    padding: 10px 12px; transition: border-color.15s;
   }
-  .feynman-select:focus, .feynman-text:focus { outline: none; border-color: var(--accent); }
-  .feynman-text { line-height: 1.55; resize: vertical; min-height: 110px; font-family: inherit; }
-  .feynman-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
-  .feynman-hint { font-size: 11.5px; color: var(--muted); }
-  .feynman-result { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
-  .feynman-summary {
+.feynman-select:focus,.feynman-text:focus { outline: none; border-color: var(--accent); }
+.feynman-text { line-height: 1.55; resize: vertical; min-height: 110px; font-family: inherit; }
+.feynman-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
+.feynman-hint { font-size: 11.5px; color: var(--muted); }
+.feynman-result { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.feynman-summary {
     font-size: 14px; line-height: 1.55; color: var(--text);
     background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent);
     padding: 12px 14px; border-radius: 6px; margin-bottom: 14px;
   }
-  .feynman-pct { font-size: 22px; font-weight: 700; color: var(--accent); margin-right: 6px; font-variant-numeric: tabular-nums; }
-  .feynman-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .feynman-col h4 {
+.feynman-pct { font-size: 22px; font-weight: 700; color: var(--accent); margin-right: 6px; font-variant-numeric: tabular-nums; }
+.feynman-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.feynman-col h4 {
     font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--muted); margin: 0 0 8px;
   }
-  .feynman-list { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; padding-right: 4px; }
-  .feynman-item {
+.feynman-list { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; padding-right: 4px; }
+.feynman-item {
     font-size: 12.5px; padding: 5px 9px; border-radius: 4px; line-height: 1.4;
     border: 1px solid var(--border);
   }
-  .feynman-item.covered { background: rgba(37, 99, 235,0.10); color: var(--text); border-color: rgba(37, 99, 235,0.35); }
-  .feynman-item.missed { background: var(--panel-2); color: var(--muted-strong); border-color: var(--border-strong); border-style: dashed; }
-  .feynman-item .arr { color: var(--muted); margin: 0 4px; }
-  .feynman-item .type-tag { font-size: 10.5px; color: var(--muted); margin-left: 6px; }
-  .feynman-empty-section { font-size: 12px; color: var(--muted); font-style: italic; padding: 4px 0; }
-  .feynman-extras { margin-top: 14px; font-size: 12px; color: var(--muted); }
-  .feynman-extras b { color: var(--muted-strong); font-weight: 600; }
-  .feynman-graph-cta { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  .feynman-graph-cta a.btn { text-decoration: none; }
-  .feynman-graph-hint { font-size: 11.5px; color: var(--muted); }
+.feynman-item.covered { background: rgba(37, 99, 235,0.10); color: var(--text); border-color: rgba(37, 99, 235,0.35); }
+.feynman-item.missed { background: var(--panel-2); color: var(--muted-strong); border-color: var(--border-strong); border-style: dashed; }
+.feynman-item.arr { color: var(--muted); margin: 0 4px; }
+.feynman-item.type-tag { font-size: 10.5px; color: var(--muted); margin-left: 6px; }
+.feynman-empty-section { font-size: 12px; color: var(--muted); font-style: italic; padding: 4px 0; }
+.feynman-extras { margin-top: 14px; font-size: 12px; color: var(--muted); }
+.feynman-extras b { color: var(--muted-strong); font-weight: 600; }
+.feynman-graph-cta { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.feynman-graph-cta a.btn { text-decoration: none; }
+.feynman-graph-hint { font-size: 11.5px; color: var(--muted); }
 
   /* ===== INTEGRATIONS PANEL =====
      Restrained, SaaS-clean. Logo tiles keep brand colours (so Telegram
      reads as Telegram, Drive as Drive) — everything else is muted so
      the rainbow doesn't shout. Borders are near-invisible; hover lifts
      subtly without an olive glow. Modal padding is generous. */
-  .integrations-card {
+.integrations-card {
     max-width: 920px; padding: 36px 40px 32px;
   }
-  .integrations-card .listen-head h3 {
+.integrations-card.listen-head h3 {
     font-size: 24px; font-weight: 600; letter-spacing: -0.02em;
   }
-  .integrations-card .listen-sub {
+.integrations-card.listen-sub {
     font-size: 13.5px; color: var(--muted-strong); margin: 4px 0 28px;
     max-width: 540px; line-height: 1.55;
   }
-  .integrations-grid {
+.integrations-grid {
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
   }
-  @media (max-width: 720px) { .integrations-grid { grid-template-columns: 1fr; } }
-  .int-card {
+  @media (max-width: 720px) {.integrations-grid { grid-template-columns: 1fr; } }
+.int-card {
     background: #fefaef;
     border: 1px solid rgba(60, 83, 64, 0.10);
     border-radius: 14px;
     padding: 22px 22px 18px;
     display: flex; flex-direction: column; gap: 16px;
-    transition: border-color .18s, transform .18s, box-shadow .18s;
+    transition: border-color.18s, transform.18s, box-shadow.18s;
     cursor: pointer;
   }
-  .int-card.disabled { cursor: default; opacity: 0.85; }
-  .int-card:not(.disabled):hover {
+.int-card.disabled { cursor: default; opacity: 0.85; }
+.int-card:not(.disabled):hover {
     border-color: rgba(37, 99, 235,0.35);
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(60, 83, 64, 0.06);
   }
-  .int-card .head { display: flex; align-items: flex-start; gap: 14px; }
-  .int-card .logo {
+.int-card.head { display: flex; align-items: flex-start; gap: 14px; }
+.int-card.logo {
     width: 38px; height: 38px; border-radius: 9px;
     display: inline-flex; align-items: center; justify-content: center;
     flex-shrink: 0; color: #fff;
   }
-  .int-card .logo svg { width: 20px; height: 20px; }
-  .int-card .logo.telegram { background: #2aabee; }
-  .int-card .logo.photo    { background: #4d694e; }
-  .int-card .logo.whatsapp { background: #25d366; }
-  .int-card .logo.drive    { background: linear-gradient(135deg, #1fa463 0%, #ffc107 60%, #4285f4 100%); }
-  .int-card .logo.youtube  { background: #ff0000; }
-  .int-card .logo.anki     { background: #2a4f8e; }
-  .int-card .head-text { flex: 1; min-width: 0; }
-  .int-card .name-row {
+.int-card.logo svg { width: 20px; height: 20px; }
+.int-card.logo.telegram { background: #2aabee; }
+.int-card.logo.photo { background: #4d694e; }
+.int-card.logo.whatsapp { background: #25d366; }
+.int-card.logo.drive { background: linear-gradient(135deg, #1fa463 0%, #ffc107 60%, #4285f4 100%); }
+.int-card.logo.youtube { background: #ff0000; }
+.int-card.logo.anki { background: #2a4f8e; }
+.int-card.head-text { flex: 1; min-width: 0; }
+.int-card.name-row {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
     margin-bottom: 4px;
   }
-  .int-card .name {
+.int-card.name {
     font-weight: 600; font-size: 15.5px; color: #2a3a2b; letter-spacing: -0.01em;
   }
-  .int-card .badge {
+.int-card.badge {
     font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em;
     padding: 3px 9px; border-radius: 999px;
     background: transparent; color: var(--muted);
     border: 1px solid rgba(60, 83, 64, 0.18);
     white-space: nowrap;
   }
-  .int-card .badge.live    { color: var(--accent); border-color: rgba(37, 99, 235,0.32); background: rgba(37, 99, 235,0.05); }
-  .int-card .badge.linked  { color: #fefaef; background: var(--accent); border-color: var(--accent); }
-  .int-card .badge.soon    { color: #8a6520; border-color: rgba(160,106,30,0.28); background: rgba(160,106,30,0.05); }
-  .int-card .desc {
+.int-card.badge.live { color: var(--accent); border-color: rgba(37, 99, 235,0.32); background: rgba(37, 99, 235,0.05); }
+.int-card.badge.linked { color: #fefaef; background: var(--accent); border-color: var(--accent); }
+.int-card.badge.soon { color: #8a6520; border-color: rgba(160,106,30,0.28); background: rgba(160,106,30,0.05); }
+.int-card.desc {
     font-size: 13px; line-height: 1.55; color: var(--muted-strong);
   }
-  .int-card .wires-row {
+.int-card.wires-row {
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     padding-top: 14px;
     border-top: 1px solid rgba(60, 83, 64, 0.08);
   }
-  .int-card .wires-chip {
+.int-card.wires-chip {
     font-size: 11px; font-weight: 500; color: #2a3a2b;
     background: rgba(60, 83, 64, 0.06);
     padding: 4px 9px; border-radius: 6px;
     white-space: nowrap;
   }
-  .int-card .wires-sep {
+.int-card.wires-sep {
     color: var(--muted); font-size: 12px; opacity: 0.55;
   }
-  .int-card .action {
+.int-card.action {
     font-size: 12.5px; color: var(--accent); font-weight: 600;
     margin-top: -2px;
   }
-  .int-card.disabled .action { color: var(--muted); }
+.int-card.disabled.action { color: var(--muted); }
 
   /* ===== YOUTUBE MODAL ===== */
-  .youtube-card { max-width: 560px; }
-  .youtube-card #youtubeUrl {
+.youtube-card { max-width: 560px; }
+.youtube-card #youtubeUrl {
     width: 100%; padding: 11px 14px; font-size: 13px;
     background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
-    color: var(--text); transition: border-color .15s;
+    color: var(--text); transition: border-color.15s;
     margin-bottom: 14px;
   }
-  .youtube-card #youtubeUrl:focus { outline: none; border-color: var(--accent); }
-  .youtube-result {
+.youtube-card #youtubeUrl:focus { outline: none; border-color: var(--accent); }
+.youtube-result {
     margin-top: 14px; padding: 12px 14px;
     background: rgba(37, 99, 235,0.08); border: 1px solid rgba(37, 99, 235,0.3);
     border-radius: 8px; font-size: 13px; line-height: 1.55; color: var(--text);
   }
-  .youtube-result.err {
+.youtube-result.err {
     background: rgba(176,64,80,0.08); border-color: rgba(176,64,80,0.3); color: #8a3040;
   }
-  .youtube-result a { color: var(--accent); text-decoration: underline; }
+.youtube-result a { color: var(--accent); text-decoration: underline; }
 
   /* ===== TELEGRAM MODAL ===== */
-  .telegram-card { max-width: 540px; }
-  .tg-explain { font-size: 13.5px; color: var(--muted-strong); line-height: 1.6; margin-bottom: 16px; }
-  .tg-explain b { color: var(--text); font-weight: 600; }
-  .tg-code-block {
+.telegram-card { max-width: 540px; }
+.tg-explain { font-size: 13.5px; color: var(--muted-strong); line-height: 1.6; margin-bottom: 16px; }
+.tg-explain b { color: var(--text); font-weight: 600; }
+.tg-code-block {
     background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;
     padding: 16px 18px; margin: 14px 0;
     display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   }
-  .tg-code {
+.tg-code {
     font-family: monospace; font-size: 18px; font-weight: 700; letter-spacing: 0.02em;
     color: var(--accent); user-select: all;
   }
-  .tg-code-meta { font-size: 11.5px; color: var(--muted); }
-  .tg-copy-btn {
+.tg-code-meta { font-size: 11.5px; color: var(--muted); }
+.tg-copy-btn {
     background: var(--accent); color: #fff; border: none; font: inherit; font-size: 12.5px;
     font-weight: 500; padding: 6px 14px; border-radius: 6px; cursor: pointer;
-    transition: background .15s;
+    transition: background.15s;
   }
-  .tg-copy-btn:hover { background: var(--accent-deep, #3c5340); }
-  .tg-cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-  .tg-cta-row a.btn, .tg-cta-row button.btn { text-decoration: none; }
-  .tg-status-row {
+.tg-copy-btn:hover { background: var(--accent-deep, #3c5340); }
+.tg-cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.tg-cta-row a.btn,.tg-cta-row button.btn { text-decoration: none; }
+.tg-status-row {
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
     background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
     padding: 12px 14px; font-size: 13px; color: var(--text); margin-bottom: 14px;
   }
-  .tg-status-row .who { font-weight: 600; }
-  .tg-status-row .when { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
-  .tg-unlink {
+.tg-status-row.who { font-weight: 600; }
+.tg-status-row.when { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.tg-unlink {
     background: transparent; border: 1px solid var(--border); border-radius: 6px;
     font: inherit; font-size: 12px; color: var(--muted-strong); cursor: pointer;
-    padding: 5px 12px; transition: border-color .15s, color .15s;
+    padding: 5px 12px; transition: border-color.15s, color.15s;
   }
-  .tg-unlink:hover { border-color: #b04050; color: #b04050; }
-  .tg-not-configured {
+.tg-unlink:hover { border-color: #b04050; color: #b04050; }
+.tg-not-configured {
     background: rgba(176,106,30,0.08); border: 1px solid rgba(176,106,30,0.3); border-radius: 8px;
     padding: 12px 14px; font-size: 13px; color: var(--text); line-height: 1.55;
   }
-  .tg-not-configured code { background: var(--panel); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+.tg-not-configured code { background: var(--panel); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
 
 
   @media (max-width: 640px) {
-    .feynman-grid { grid-template-columns: 1fr; }
+.feynman-grid { grid-template-columns: 1fr; }
   }
 
   /* ===== REVIEW MODAL ===== */
-  .review-card { max-width: 600px; }
-  .review-stats {
+.review-card { max-width: 600px; }
+.review-stats {
     display: flex; gap: 16px; font-size: 12px; color: var(--muted);
     padding: 4px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
   }
-  .review-stats b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
-  .review-prompt-label, .review-answer-label {
+.review-stats b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.review-prompt-label,.review-answer-label {
     font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--muted); margin-bottom: 8px;
   }
-  .review-display {
+.review-display {
     font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase;
     letter-spacing: 0.12em; margin-bottom: 8px;
   }
-  .review-prompt {
+.review-prompt {
     background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
     padding: 16px 18px; font-size: 15px; line-height: 1.6; color: var(--text);
     margin-bottom: 14px;
   }
-  .review-prompt .blank { color: var(--accent); font-weight: 700; }
-  .review-source { font-size: 11.5px; color: var(--muted); margin-bottom: 14px; }
-  .review-source b { color: var(--muted-strong); font-weight: 600; }
-  .review-reveal-btn {
+.review-prompt.blank { color: var(--accent); font-weight: 700; }
+.review-source { font-size: 11.5px; color: var(--muted); margin-bottom: 14px; }
+.review-source b { color: var(--muted-strong); font-weight: 600; }
+.review-reveal-btn {
     background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
     padding: 9px 16px; font: inherit; font-size: 13px; color: var(--text);
-    cursor: pointer; transition: border-color .15s, background .15s; margin-bottom: 14px;
+    cursor: pointer; transition: border-color.15s, background.15s; margin-bottom: 14px;
   }
-  .review-reveal-btn:hover { border-color: var(--accent); }
-  .review-answer {
+.review-reveal-btn:hover { border-color: var(--accent); }
+.review-answer {
     background: rgba(37, 99, 235,0.08); border: 1px solid rgba(37, 99, 235,0.3);
     border-radius: 8px; padding: 14px 16px; font-size: 14px; line-height: 1.55;
     color: var(--text); margin-bottom: 14px;
   }
-  .review-grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .review-grade {
+.review-grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.review-grade {
     background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
     padding: 10px 6px; font: inherit; font-size: 13px; font-weight: 500;
-    color: var(--text); cursor: pointer; transition: border-color .15s, background .15s;
+    color: var(--text); cursor: pointer; transition: border-color.15s, background.15s;
   }
-  .review-grade .key { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .review-grade.again:hover  { border-color: #b04050; background: rgba(176,64,80,0.08); }
-  .review-grade.hard:hover   { border-color: #a06a1e; background: rgba(160,106,30,0.08); }
-  .review-grade.good:hover   { border-color: var(--accent); background: rgba(37, 99, 235,0.08); }
-  .review-grade.easy:hover   { border-color: var(--accent); background: rgba(37, 99, 235,0.15); }
-  .review-grade:disabled { opacity: 0.5; cursor: progress; }
-  .review-empty { color: var(--muted); font-size: 14px; padding: 30px 0; text-align: center; line-height: 1.6; }
-  .review-empty a { color: var(--accent); }
-  .review-done { color: var(--text); font-size: 14px; padding: 30px 0; text-align: center; line-height: 1.7; }
-  .review-done b { color: var(--accent); }
-  .review-anki {
+.review-grade.key { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; }
+.review-grade.again:hover { border-color: #b04050; background: rgba(176,64,80,0.08); }
+.review-grade.hard:hover { border-color: #a06a1e; background: rgba(160,106,30,0.08); }
+.review-grade.good:hover { border-color: var(--accent); background: rgba(37, 99, 235,0.08); }
+.review-grade.easy:hover { border-color: var(--accent); background: rgba(37, 99, 235,0.15); }
+.review-grade:disabled { opacity: 0.5; cursor: progress; }
+.review-empty { color: var(--muted); font-size: 14px; padding: 30px 0; text-align: center; line-height: 1.6; }
+.review-empty a { color: var(--accent); }
+.review-done { color: var(--text); font-size: 14px; padding: 30px 0; text-align: center; line-height: 1.7; }
+.review-done b { color: var(--accent); }
+.review-anki {
     margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--border);
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     font-size: 12.5px;
   }
-  .review-anki-label { color: var(--muted-strong); }
-  .review-anki-hint { color: var(--muted); }
+.review-anki-label { color: var(--muted-strong); }
+.review-anki-hint { color: var(--muted); }
 
   @media (max-width: 640px) {
     nav.top { padding: 14px 18px; gap: 12px; }
-    .nav-links { display: none; }
-    .brand { font-size: 16px; }
+.nav-links { display: none; }
+.brand { font-size: 16px; }
     main { padding: 0 16px; }
-    .msg { max-width: 94%; }
-    .hero { padding: 56px 16px 24px; }
-    .hero h1 { font-size: 32px; }
+.msg { max-width: 94%; }
+.hero { padding: 56px 16px 24px; }
+.hero h1 { font-size: 32px; }
     footer.site { padding: 18px 18px; font-size: 11.5px; flex-direction: column; text-align: center; }
   }
 </style>
@@ -695,23 +705,28 @@
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/app" class="active">Chat</a>
-    <a href="/graph-view" target="_blank" rel="noopener" title="Knowledge map of every concept in your library — new tab">Graph ↗</a>
-    <a href="/cognitive" target="_blank" rel="noopener" title="Cognitive X-Ray — detect thinking flaws in your reasoning">X-Ray ↗</a>
-    <a href="/simulation" target="_blank" rel="noopener" title="Pressure Simulation — train under exam-style time pressure">Exam ↗</a>
-    <a href="/pricing">Pricing</a>
+    <a href="/explore" title="Explore My World — point your camera at the real world and grow your language universe">Explore 📷</a>
+    <a href="/graph-view" title="Your language universe — every concept you've discovered, growing as you learn">My Universe</a>
+    <a href="/cognitive" title="Cognitive X-Ray — detect thinking flaws in your reasoning">X-Ray ↗</a>
+    <a href="/simulation" title="Pressure Simulation — train under exam-style time pressure">Exam ↗</a>
+    <a href="/ipa">IPA Chart</a>
+    <a href="/sound-lab" title="Sound Lab — synthesise and experiment with speech sounds; hear + feel them">Sound Lab 🔊</a>
     <a href="/account">Account</a>
   </div>
   <div class="nav-right">
+    <button class="icon-btn" id="helpBtn" title="How to use Vaaani" aria-label="How to use">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </button>
     <select id="scopeSelect" class="scope-select" title="Scope chat to one document (or all)">
       <option value="">All sources</option>
     </select>
     <!-- Socratic toggle restored 2026-05-28 for teaching contexts where
          the instructor wants Vaaani to guide-by-question rather than
          answer outright. Default OFF; one click to flip. -->
-    <label class="socratic-toggle" title="Socratic Mode — assistant teaches by asking guiding questions instead of answering directly">
+    <label class="socratic-toggle" title="Guided mode — Vaaani teaches by asking guiding questions instead of answering directly">
       <input type="checkbox" id="socraticToggle" />
       <span class="track"><span class="thumb"></span></span>
-      <span class="label">Socratic</span>
+      <span class="label">Guided</span>
     </label>
     <span class="pill" id="statusPill">—</span>
     <button class="icon-btn" id="reviewBtn" title="Spaced-repetition review" aria-label="Review">
@@ -831,18 +846,18 @@
 
 <main>
   <section class="hero" id="hero">
-    <span class="eyebrow">A study assistant for serious students</span>
+    <span class="eyebrow">Discover language — at your grade, at your pace</span>
     <h1>Learn it deeply.<br/><span class="accent">Not just retrieve it.</span></h1>
-    <p>Upload your textbooks, problem sets, novels, and source material. Vaaani reasons across them — and in Socratic mode, teaches you to reason for yourself. Designed for Physics, Mathematics, English Literature, and Persuasive Writing.</p>
+    <p>Vaaani leads each student to discover the sounds, word families and meanings of English for themselves — pitched to their grade and bridged from their home language. Turn on guided mode and it never hands the answer; it leads you to it.</p>
     <div class="examples">
-      <span class="ex" onclick="setQuery(this.textContent)">Walk me through this physics problem</span>
-      <span class="ex" onclick="setQuery(this.textContent)">Help me analyse the first stanza</span>
-      <span class="ex" onclick="setQuery(this.textContent)">Critique my argument and counterpoints</span>
-      <span class="ex" onclick="setQuery(this.textContent)">Explain this proof step by step</span>
+      <span class="ex" onclick="setQuery(this.textContent)">What little piece hides inside triangle, tricycle and tripod?</span>
+      <span class="ex" onclick="setQuery(this.textContent)">Which letters can all make the same sound?</span>
+      <span class="ex" onclick="setQuery(this.textContent)">Help me discover what "aqua" means</span>
+      <span class="ex" onclick="setQuery(this.textContent)">Teach me a new word family, step by step</span>
     </div>
   </section>
 
-  <div id="socraticBanner" class="socratic-banner">Socratic Mode is ON — the assistant will guide you with questions instead of giving answers directly.</div>
+  <div id="socraticBanner" class="socratic-banner">Guided mode is ON — Vaaani leads you with questions instead of giving the answer directly.</div>
   <div id="log"></div>
 
   <div class="composer">
@@ -851,7 +866,7 @@
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
       </label>
       <input id="fileInput" type="file" accept=".pdf,.txt,.md,.docx,.png,.jpg,.jpeg,.webp,.pptx,.html,.htm" multiple onchange="upload(event)" />
-      <input id="q" type="text" placeholder="Ask about your textbooks, problem sets, or essays…" autocomplete="off" />
+      <input id="q" type="text" placeholder="Ask about sounds, word families, meanings — or anything you've uploaded…" autocomplete="off" />
       <button class="send" id="sendBtn" onclick="send()" title="Send message">
         <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
       </button>
@@ -891,7 +906,7 @@ function el(tag, attrs = {}, children = []) {
   }
   for (const c of [].concat(children)) {
     if (c == null) continue;
-    e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    e.appendChild(typeof c === 'string'? document.createTextNode(c) : c);
   }
   return e;
 }
@@ -905,8 +920,8 @@ function buildRatingRow(topics, query) {
   row.className = 'rating-row';
   row.appendChild(Object.assign(document.createElement('span'), { className: 'label', textContent: 'How did that land?' }));
   const buttons = [
-    { rating: 1,  label: 'Got it' },
-    { rating: 0,  label: 'Sort of' },
+    { rating: 1, label: 'Got it' },
+    { rating: 0, label: 'Sort of' },
     { rating: -1, label: 'Confused' },
   ];
   for (const b of buttons) {
@@ -934,11 +949,11 @@ function buildRatingRow(topics, query) {
 function cleanText(s) {
   if (!s) return '';
   return String(s)
-    .replace(/\*\*(.+?)\*\*/g, '$1')   // **bold**
-    .replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '$1')  // *italic*
-    .replace(/__(.+?)__/g, '$1')        // __bold__
-    .replace(/`([^`]+)`/g, '$1')        // `code`
-    .replace(/^#{1,6}\s+/gm, '');       // # heading
+.replace(/\*\*(.+?)\*\*/g, '$1') // **bold**
+.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '$1') // *italic*
+.replace(/__(.+?)__/g, '$1') // __bold__
+.replace(/`([^`]+)`/g, '$1') // `code`
+.replace(/^#{1,6}\s+/gm, ''); // # heading
 }
 
 // Socratic toggle
@@ -950,7 +965,7 @@ function applySocratic() {
   const on = socraticEl.checked;
   socraticBanner.classList.toggle('on', on);
   socraticWrap.classList.toggle('on', on);
-  localStorage.setItem('socratic', on ? '1' : '0');
+  localStorage.setItem('socratic', on? '1' : '0');
 }
 socraticEl.addEventListener('change', applySocratic);
 applySocratic();
@@ -1004,7 +1019,7 @@ function renderListenDocs(docs) {
     const row = document.createElement('div');
     row.className = 'listen-doc';
     row.innerHTML = `<span class="name" title="${escapeAttr(d.doc_name)}">${escapeHtml(d.doc_name)}</span>
-      <span class="meta">${d.estimated_minutes} min · ${d.chunks} chunk${d.chunks === 1 ? '' : 's'}</span>`;
+      <span class="meta">${d.estimated_minutes} min · ${d.chunks} chunk${d.chunks === 1? '' : 's'}</span>`;
     row.addEventListener('click', () => narrate(d, row));
     listenDocs.appendChild(row);
   });
@@ -1015,7 +1030,7 @@ async function narrate(doc, row) {
   document.querySelectorAll('.listen-doc.busy').forEach((r) => r.classList.remove('busy'));
   row.classList.add('busy');
   const originalMeta = row.querySelector('.meta').textContent;
-  row.querySelector('.meta').textContent = listenMode === 'podcast' ? 'writing script + synthesizing…' : 'synthesizing…';
+  row.querySelector('.meta').textContent = listenMode === 'podcast'? 'writing script + synthesizing…' : 'synthesizing…';
   try {
     const res = await fetch('/audio/narrate', {
       method: 'POST',
@@ -1028,8 +1043,8 @@ async function narrate(doc, row) {
     }
     const data = await res.json();
     listenAudio.src = data.url;
-    const modeLabel = data.mode === 'podcast' ? 'Podcast' : 'Narration';
-    listenNow.innerHTML = `${modeLabel} of <b>${escapeHtml(doc.doc_name)}</b> — ${formatDuration(data.duration_s)} · ${data.cached ? 'cached' : 'freshly generated'}`;
+    const modeLabel = data.mode === 'podcast'? 'Podcast' : 'Narration';
+    listenNow.innerHTML = `${modeLabel} of <b>${escapeHtml(doc.doc_name)}</b> — ${formatDuration(data.duration_s)} · ${data.cached? 'cached' : 'freshly generated'}`;
     listenPlayer.hidden = false;
     listenAudio.play().catch(() => {/* user gesture required on some browsers — controls are exposed */});
     row.querySelector('.meta').textContent = `${formatDuration(data.duration_s)}`;
@@ -1094,11 +1109,11 @@ async function openIntegrations() {
 // brand-colored tile so the integrations panel reads as a proper SaaS
 // connect page (Stripe / Linear / Vercel) rather than a wireframe.
 const INT_LOGOS = {
-  telegram: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 4.5L18.5 19.2c-.24 1.07-.88 1.34-1.78.83l-4.92-3.63-2.37 2.28c-.26.26-.49.49-1 .49l.35-5.04 9.18-8.3c.4-.36-.09-.55-.62-.2L6.99 12.7l-4.9-1.53c-1.07-.33-1.09-1.07.22-1.59L20.4 3.3c.89-.33 1.66.2 1.3 1.2z"/></svg>',
+  telegram: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 4.5L18.5 19.2c-.24 1.07-.88 1.34-1.78.83l-4.92-3.63-2.37 2.28c-.26.26-.49.49-1.49l.35-5.04 9.18-8.3c.4-.36-.09-.55-.62-.2L6.99 12.7l-4.9-1.53c-1.07-.33-1.09-1.07.22-1.59L20.4 3.3c.89-.33 1.66.2 1.3 1.2z"/></svg>',
   photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
   whatsapp: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.78.97-.95 1.17-.18.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.18-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51-.18-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.18-1.42-.07-.13-.27-.2-.57-.35zM12 2a10 10 0 0 0-8.6 15.07l-1.4 5.12 5.24-1.38A10 10 0 1 0 12 2z"/></svg>',
   drive: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.65 14.27L4.41 19.9h11.18l3.24-5.63zM12 4.1L8.41 10.3l4.65 8.07 3.59-6.2zM20.59 16.07L17.41 10.5 14.06 4.1H21l3 5.2z"/></svg>',
-  youtube: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 7.19a2.51 2.51 0 0 0-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42a2.51 2.51 0 0 0-1.77 1.77A26.5 26.5 0 0 0 2 12a26.5 26.5 0 0 0 .42 4.81 2.51 2.51 0 0 0 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42a2.51 2.51 0 0 0 1.77-1.77A26.5 26.5 0 0 0 22 12a26.5 26.5 0 0 0-.42-4.81zM10 15V9l5 3z"/></svg>',
+  youtube: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 7.19a2.51 2.51 0 0 0-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42a2.51 2.51 0 0 0-1.77 1.77A26.5 26.5 0 0 0 2 12a26.5 26.5 0 0 0.42 4.81 2.51 2.51 0 0 0 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42a2.51 2.51 0 0 0 1.77-1.77A26.5 26.5 0 0 0 22 12a26.5 26.5 0 0 0-.42-4.81zM10 15V9l5 3z"/></svg>',
   anki: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg>',
 };
 
@@ -1111,13 +1126,13 @@ function renderIntegrations(msg, authed) {
   const cards = [
     {
       name: 'Telegram', logo: 'telegram',
-      badge: tgLink ? 'Connected' : (msg.telegram_configured ? 'Available' : 'Coming soon'),
-      badgeClass: tgLink ? 'linked' : (msg.telegram_configured ? 'live' : 'soon'),
+      badge: tgLink? 'Connected' : (msg.telegram_configured? 'Available' : 'Coming soon'),
+      badgeClass: tgLink? 'linked' : (msg.telegram_configured? 'live' : 'soon'),
       desc: tgLink
-        ? `Linked to ${escapeHtml(tgLink.username ? '@' + tgLink.username : 'chat ' + tgLink.chat_id)}. Chat, review, listen, and snap textbook photos from your phone.`
+? `Linked to ${escapeHtml(tgLink.username? '@' + tgLink.username : 'chat ' + tgLink.chat_id)}. Chat, review, listen, and snap textbook photos from your phone.`
         : 'Chat with Vaaani, snap textbook pages for OCR, run spaced review — all from inside Telegram. One-tap link with a code.',
       wires: ['Telegram chat', '↔', 'Your study graph'],
-      action: authed ? (tgLink ? 'Manage link →' : 'Connect →') : 'Sign in to connect →',
+      action: authed? (tgLink? 'Manage link →' : 'Connect →') : 'Sign in to connect →',
       onclick: () => { integrationsModal.hidden = true; openTelegram(); },
       disabled: false,
     },
@@ -1126,7 +1141,7 @@ function renderIntegrations(msg, authed) {
       badge: 'Available via Telegram', badgeClass: 'live',
       desc: 'Snap a textbook page or forward a PDF to the bot. Vaaani OCRs on the VPS — CPU-only Tesseract, no cloud API — and folds it into your study graph.',
       wires: ['Bot photo', '→', 'Tesseract OCR', '→', 'Your corpus'],
-      action: tgLink ? 'Send a photo in Telegram →' : 'Connect Telegram first →',
+      action: tgLink? 'Send a photo in Telegram →' : 'Connect Telegram first →',
       onclick: () => { integrationsModal.hidden = true; openTelegram(); },
       disabled: false,
     },
@@ -1140,7 +1155,7 @@ function renderIntegrations(msg, authed) {
     {
       name: 'Google Drive', logo: 'drive',
       badge: 'Coming soon', badgeClass: 'soon',
-      desc: 'Point Vaaani at a Drive folder — syllabus PDFs, NCERT scans, class notes — and it ingests everything recursively, with auto-resync.',
+      desc: 'Point Vaaani at a Drive folder — phonetics PDFs, grammar handouts, vocabulary lists — and it ingests everything recursively, with auto-resync.',
       wires: ['Drive folder', '→', 'Auto-ingest', '→', 'Graph + 4 modes'],
       action: '', disabled: true,
     },
@@ -1149,16 +1164,16 @@ function renderIntegrations(msg, authed) {
       badge: 'Available', badgeClass: 'live',
       desc: 'Paste a YouTube link — Vaaani pulls the transcript (no API key) and ingests it as a doc. Big lift for students who learn from YouTube tutors.',
       wires: ['YouTube URL', '→', 'Transcript', '→', 'Your corpus'],
-      action: authed ? 'Paste a link →' : 'Sign in to ingest →',
+      action: authed? 'Paste a link →' : 'Sign in to ingest →',
       onclick: () => { integrationsModal.hidden = true; openYouTube(); },
       disabled: false,
     },
     {
       name: 'Anki export', logo: 'anki',
       badge: 'Available', badgeClass: 'live',
-      desc: 'Download your spaced-review queue as a proper .apkg deck. One cloze card per topic, source + tags included. Works offline in Anki, AnkiDroid, AnkiMobile.',
+      desc: 'Download your spaced-review queue as a proper.apkg deck. One cloze card per topic, source + tags included. Works offline in Anki, AnkiDroid, AnkiMobile.',
       wires: ['Your review queue', '→', '.apkg', '→', 'Anki / AnkiDroid'],
-      action: authed ? 'Download deck →' : 'Sign in to export →',
+      action: authed? 'Download deck →' : 'Sign in to export →',
       onclick: () => { integrationsModal.hidden = true; openReview(); },
       disabled: false,
     },
@@ -1166,12 +1181,12 @@ function renderIntegrations(msg, authed) {
 
   const wiresRow = (parts) => parts.map((p) =>
     (p === '→' || p === '↔')
-      ? `<span class="wires-sep">${p}</span>`
+? `<span class="wires-sep">${p}</span>`
       : `<span class="wires-chip">${escapeHtml(p)}</span>`
   ).join('');
 
   integrationsGrid.innerHTML = cards.map((c) => `
-    <div class="int-card ${c.disabled ? 'disabled' : ''}" data-card="${escapeAttr(c.name)}">
+    <div class="int-card ${c.disabled? 'disabled' : ''}" data-card="${escapeAttr(c.name)}">
       <div class="head">
         <div class="logo ${c.logo}">${INT_LOGOS[c.logo] || ''}</div>
         <div class="head-text">
@@ -1183,12 +1198,12 @@ function renderIntegrations(msg, authed) {
         </div>
       </div>
       <div class="wires-row">${wiresRow(c.wires)}</div>
-      ${c.action ? `<div class="action">${escapeHtml(c.action)}</div>` : ''}
+      ${c.action? `<div class="action">${escapeHtml(c.action)}</div>` : ''}
     </div>`).join('');
 
   integrationsGrid.querySelectorAll('.int-card').forEach((node, i) => {
     const card = cards[i];
-    if (card.disabled || !card.onclick) return;
+    if (card.disabled ||!card.onclick) return;
     node.addEventListener('click', card.onclick);
   });
 }
@@ -1246,7 +1261,7 @@ async function runYouTubeIngest() {
     youtubeResult.className = 'youtube-result';
     youtubeResult.innerHTML = `
       Ingested <b>${escapeHtml(data.video_id)}</b> — ${data.chars.toLocaleString()} chars.
-      Added ${data.chunks_added} chunk${data.chunks_added === 1 ? '' : 's'} (${data.total_chunks} total in your corpus).
+      Added ${data.chunks_added} chunk${data.chunks_added === 1? '' : 's'} (${data.total_chunks} total in your corpus).
       Try asking about it in chat, or open Review to fold it into spaced practice.
     `;
     youtubeResult.hidden = false;
@@ -1300,8 +1315,8 @@ async function openTelegram() {
 }
 
 function renderTelegramConnected(link, botUsername) {
-  const linkedAt = link.linked_at ? new Date(link.linked_at).toLocaleString() : '';
-  const handle = link.username ? `@${escapeHtml(link.username)}` : `chat ${escapeHtml(link.chat_id)}`;
+  const linkedAt = link.linked_at? new Date(link.linked_at).toLocaleString() : '';
+  const handle = link.username? `@${escapeHtml(link.username)}` : `chat ${escapeHtml(link.chat_id)}`;
   telegramBody.innerHTML = `
     <div class="tg-status-row">
       <div>
@@ -1311,7 +1326,7 @@ function renderTelegramConnected(link, botUsername) {
       <button class="tg-unlink" id="tgUnlinkBtn">Disconnect</button>
     </div>
     <div class="tg-explain">
-      You can now use Vaaani from Telegram. Just message <b>${botUsername ? '@' + escapeHtml(botUsername) : 'the bot'}</b>:
+      You can now use Vaaani from Telegram. Just message <b>${botUsername? '@' + escapeHtml(botUsername) : 'the bot'}</b>:
       <ul style="margin: 8px 0 0 20px; padding: 0;">
         <li>Type any question — Vaaani answers from your ingested material</li>
         <li><b>/review</b> — start a spaced-review session</li>
@@ -1326,8 +1341,8 @@ function renderTelegramConnected(link, botUsername) {
 }
 
 function renderTelegramDisconnected(botUsername) {
-  const botHandle = botUsername ? `@${botUsername}` : 'the Vaaani bot';
-  const botUrl = botUsername ? `https://t.me/${botUsername}` : null;
+  const botHandle = botUsername? `@${botUsername}` : 'the Vaaani bot';
+  const botUrl = botUsername? `https://t.me/${botUsername}` : null;
   telegramBody.innerHTML = `
     <div class="tg-explain">
       Use Vaaani from your phone via Telegram — ask questions, run spaced review, listen to documents, all from the same chat. To link your account:
@@ -1339,7 +1354,7 @@ function renderTelegramDisconnected(botUsername) {
     </div>
     <button class="btn btn-primary" id="tgMintBtn" type="button">Generate link code</button>
     <div id="tgCodeArea"></div>
-    ${botUrl ? `<div class="tg-cta-row"><a class="btn btn-ghost" href="${botUrl}" target="_blank" rel="noopener">Open ${escapeHtml(botHandle)} →</a></div>` : ''}
+    ${botUrl? `<div class="tg-cta-row"><a class="btn btn-ghost" href="${botUrl}" target="_blank" rel="noopener">Open ${escapeHtml(botHandle)} →</a></div>` : ''}
   `;
   document.getElementById('tgMintBtn').addEventListener('click', mintTelegramCode);
 }
@@ -1360,9 +1375,9 @@ async function mintTelegramCode() {
       throw new Error(err.detail || `mint failed (${res.status})`);
     }
     const data = await res.json();
-    const botHandle = data.bot_username ? `@${data.bot_username}` : 'the bot';
+    const botHandle = data.bot_username? `@${data.bot_username}` : 'the bot';
     const deepLink = data.bot_username
-      ? `https://t.me/${data.bot_username}?start=${encodeURIComponent(data.code)}`
+? `https://t.me/${data.bot_username}?start=${encodeURIComponent(data.code)}`
       : null;
     area.innerHTML = `
       <div class="tg-code-block">
@@ -1373,7 +1388,7 @@ async function mintTelegramCode() {
         <button class="tg-copy-btn" id="tgCopyBtn">Copy</button>
       </div>
       ${deepLink
-        ? `<div class="tg-cta-row">
+? `<div class="tg-cta-row">
             <a class="btn btn-primary" href="${deepLink}" target="_blank" rel="noopener">Open ${escapeHtml(botHandle)} & auto-link →</a>
             <button class="btn btn-ghost" id="tgRefreshBtn" type="button">I've linked, refresh</button>
           </div>`
@@ -1426,7 +1441,7 @@ reviewScopeEl.addEventListener('change', () => {
 // Build the `?source=…` query the backend expects when a scope is set.
 function reviewSourceQuery() {
   const v = reviewScopeEl.value;
-  return v ? `?source=${encodeURIComponent(v)}` : '';
+  return v? `?source=${encodeURIComponent(v)}` : '';
 }
 
 async function populateReviewScope() {
@@ -1437,7 +1452,7 @@ async function populateReviewScope() {
     const prev = reviewScopeEl.value;
     reviewScopeEl.innerHTML = '<option value="">All sources</option>'
       + docs.map(d => {
-          const label = d.length > 50 ? d.slice(0, 47) + '…' : d;
+          const label = d.length > 50? d.slice(0, 47) + '…' : d;
           return `<option value="${d.replace(/"/g, '&quot;')}">${label}</option>`;
         }).join('');
     if (prev && docs.includes(prev)) reviewScopeEl.value = prev;
@@ -1485,7 +1500,7 @@ async function setupAnkiExport() {
     const data = await res.json();
     if (!data.candidate_nodes) return;
     block.hidden = false;
-    hint.textContent = `${data.candidate_nodes} candidate node${data.candidate_nodes === 1 ? '' : 's'} · deck "${data.deck_name}"`;
+    hint.textContent = `${data.candidate_nodes} candidate node${data.candidate_nodes === 1? '' : 's'} · deck "${data.deck_name}"`;
     btn.onclick = downloadAnkiDeck;
   } catch (_) {
     // Silent — the panel just stays hidden.
@@ -1513,7 +1528,7 @@ async function downloadAnkiDeck() {
     // Pull filename from Content-Disposition if present.
     const cd = res.headers.get('Content-Disposition') || '';
     const match = cd.match(/filename="([^"]+)"/);
-    const filename = match ? match[1] : `vaaani-study-${new Date().toISOString().slice(0,10)}.apkg`;
+    const filename = match? match[1] : `vaaani-study-${new Date().toISOString().slice(0,10)}.apkg`;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url; a.download = filename;
@@ -1535,17 +1550,17 @@ function updateReviewStats(stats) {
 }
 
 function renderReviewCard(item) {
-  const sourceLine = item.source ? `<div class="review-source">From <b>${escapeHtml(item.source)}</b></div>` : '';
+  const sourceLine = item.source? `<div class="review-source">From <b>${escapeHtml(item.source)}</b></div>` : '';
   const modeNote = item.mode === 'cloze'
-    ? '<div class="review-prompt-label">Cloze · fill in the blank</div>'
+? '<div class="review-prompt-label">Cloze · fill in the blank</div>'
     : item.mode === 'recall'
-      ? '<div class="review-prompt-label">Recall · 1-2 sentences</div>'
+? '<div class="review-prompt-label">Recall · 1-2 sentences</div>'
       : '<div class="review-prompt-label">Explain · free recall</div>';
   const prompt = item.mode === 'cloze'
-    ? item.prompt.replace(/_____/g, '<span class="blank">_____</span>')
+? item.prompt.replace(/_____/g, '<span class="blank">_____</span>')
     : renderInlineBold(item.prompt);
   reviewBody.innerHTML = `
-    <div class="review-display">${escapeHtml(item.display)}${item.type ? ' · ' + escapeHtml(item.type) : ''}</div>
+    <div class="review-display">${escapeHtml(item.display)}${item.type? ' · ' + escapeHtml(item.type) : ''}</div>
     ${modeNote}
     <div class="review-prompt">${prompt}</div>
     ${sourceLine}
@@ -1560,16 +1575,16 @@ function revealAnswer(item) {
   const revealBtn = document.getElementById('reviewReveal');
   if (revealBtn) revealBtn.style.display = 'none';
   const answerHTML = item.mode === 'cloze'
-    ? escapeHtml(item.answer || '(no source sentence)')
-    : (item.description ? escapeHtml(item.description) : '(no canonical answer — your own explanation is what matters)');
+? escapeHtml(item.answer || '(no source sentence)')
+    : (item.description? escapeHtml(item.description) : '(no canonical answer — your own explanation is what matters)');
   area.innerHTML = `
     <div class="review-answer-label">Answer</div>
     <div class="review-answer">${answerHTML}</div>
     <div class="review-grades">
       <button class="review-grade again" data-grade="again">Again<span class="key">soon</span></button>
-      <button class="review-grade hard"  data-grade="hard">Hard<span class="key">~1d</span></button>
-      <button class="review-grade good"  data-grade="good">Good<span class="key">~2x</span></button>
-      <button class="review-grade easy"  data-grade="easy">Easy<span class="key">~3.5x</span></button>
+      <button class="review-grade hard" data-grade="hard">Hard<span class="key">~1d</span></button>
+      <button class="review-grade good" data-grade="good">Good<span class="key">~2x</span></button>
+      <button class="review-grade easy" data-grade="easy">Easy<span class="key">~3.5x</span></button>
     </div>
   `;
   area.querySelectorAll('.review-grade').forEach((btn) => {
@@ -1626,13 +1641,13 @@ async function openFeynman() {
     const res = await fetch('/feynman/topics');
     if (!res.ok) throw new Error('topics load failed');
     const data = await res.json();
-    if (!data.topics || !data.topics.length) {
+    if (!data.topics ||!data.topics.length) {
       feynmanTopic.innerHTML = '<option value="">No graph yet — ingest documents first</option>';
       feynmanRun.disabled = true;
       return;
     }
     feynmanTopic.innerHTML = data.topics.map((t) =>
-      `<option value="${escapeAttr(t.id)}">${escapeHtml(t.display)} · ${t.degree} link${t.degree === 1 ? '' : 's'}${t.type ? ' · ' + escapeHtml(t.type) : ''}</option>`
+      `<option value="${escapeAttr(t.id)}">${escapeHtml(t.display)} · ${t.degree} link${t.degree === 1? '' : 's'}${t.type? ' · ' + escapeHtml(t.type) : ''}</option>`
     ).join('');
     feynmanTopicsLoaded = true;
   } catch (e) {
@@ -1676,7 +1691,7 @@ async function runFeynman() {
 
 function renderFeynmanResult(d) {
   const nodeItem = (n, klass) =>
-    `<div class="feynman-item ${klass}" title="${escapeAttr(n.description || '')}">${escapeHtml(n.display)}${n.type ? `<span class="type-tag">${escapeHtml(n.type)}</span>` : ''}</div>`;
+    `<div class="feynman-item ${klass}" title="${escapeAttr(n.description || '')}">${escapeHtml(n.display)}${n.type? `<span class="type-tag">${escapeHtml(n.type)}</span>` : ''}</div>`;
   const edgeItem = (e, klass) =>
     `<div class="feynman-item ${klass}" title="${escapeAttr(e.description || '')}">${escapeHtml(e.source_display)}<span class="arr">→</span>${escapeHtml(e.target_display)}<span class="type-tag">${escapeHtml(e.type || '')}</span></div>`;
 
@@ -1685,34 +1700,34 @@ function renderFeynmanResult(d) {
       <div class="feynman-col">
         <h4>Concepts covered (${d.nodes_covered.length})</h4>
         <div class="feynman-list">
-          ${d.nodes_covered.length ? d.nodes_covered.map((n) => nodeItem(n, 'covered')).join('')
+          ${d.nodes_covered.length? d.nodes_covered.map((n) => nodeItem(n, 'covered')).join('')
             : '<div class="feynman-empty-section">None matched.</div>'}
         </div>
       </div>
       <div class="feynman-col">
         <h4>Concepts missed (${d.nodes_missed.length})</h4>
         <div class="feynman-list">
-          ${d.nodes_missed.length ? d.nodes_missed.map((n) => nodeItem(n, 'missed')).join('')
+          ${d.nodes_missed.length? d.nodes_missed.map((n) => nodeItem(n, 'missed')).join('')
             : '<div class="feynman-empty-section">All concepts covered.</div>'}
         </div>
       </div>
       <div class="feynman-col">
         <h4>Connections covered (${d.edges_covered.length})</h4>
         <div class="feynman-list">
-          ${d.edges_covered.length ? d.edges_covered.map((e) => edgeItem(e, 'covered')).join('')
+          ${d.edges_covered.length? d.edges_covered.map((e) => edgeItem(e, 'covered')).join('')
             : '<div class="feynman-empty-section">None.</div>'}
         </div>
       </div>
       <div class="feynman-col">
         <h4>Connections missed (${d.edges_missed.length})</h4>
         <div class="feynman-list">
-          ${d.edges_missed.length ? d.edges_missed.map((e) => edgeItem(e, 'missed')).join('')
+          ${d.edges_missed.length? d.edges_missed.map((e) => edgeItem(e, 'missed')).join('')
             : '<div class="feynman-empty-section">All connections covered.</div>'}
         </div>
       </div>
     </div>`;
   const extrasHTML = d.student_extras && d.student_extras.length
-    ? `<div class="feynman-extras"><b>Mentions outside this topic:</b> ${d.student_extras.map(escapeHtml).join(', ')} — these aren't wrong, they're just not in the ${escapeHtml(d.topic_display)} ${d.k_hops}-hop neighbourhood.</div>`
+? `<div class="feynman-extras"><b>Mentions outside this topic:</b> ${d.student_extras.map(escapeHtml).join(', ')} — these aren't wrong, they're just not in the ${escapeHtml(d.topic_display)} ${d.k_hops}-hop neighbourhood.</div>`
     : '';
 
   // Build the graph-view URL with the diff state, so the constellation
@@ -1775,20 +1790,20 @@ function addUser(text) {
 }
 
 // ============================================================
-//  Chat session persistence
-//  Reason: navigating to /graph-view (or any full-page link)
-//  used to wipe the in-memory chat. Now we mirror every turn
-//  into localStorage and rehydrate on load. Bounded to the
-//  last 40 turns so the storage quota can't run away.
+// Chat session persistence
+// Reason: navigating to /graph-view (or any full-page link)
+// used to wipe the in-memory chat. Now we mirror every turn
+// into localStorage and rehydrate on load. Bounded to the
+// last 40 turns so the storage quota can't run away.
 // ============================================================
-const CHAT_STORE_KEY  = 'vaaani.chat.thread.v1';
-const CHAT_MAX_TURNS  = 40;
+const CHAT_STORE_KEY = 'vaaani.chat.thread.v1';
+const CHAT_MAX_TURNS = 40;
 
 function persistChatTurn(turn) {
   try {
     const raw = localStorage.getItem(CHAT_STORE_KEY);
-    const arr = raw ? JSON.parse(raw) : [];
-    arr.push({ ...turn, at: Date.now() });
+    const arr = raw? JSON.parse(raw) : [];
+    arr.push({...turn, at: Date.now() });
     if (arr.length > CHAT_MAX_TURNS) arr.splice(0, arr.length - CHAT_MAX_TURNS);
     localStorage.setItem(CHAT_STORE_KEY, JSON.stringify(arr));
   } catch (_) { /* quota, JSON error — ignore, persistence is best-effort */ }
@@ -1823,7 +1838,7 @@ function rehydrateChat() {
   // Subtle "restored" hint so the user knows the thread came back.
   const hint = el('div', { class: 'msg system' });
   hint.style.cssText = 'font-size: 11.5px; color: var(--muted); padding: 8px 12px; border-top: 1px dashed var(--border); margin: 12px 0 0; text-align: center;';
-  hint.textContent = `↑ ${arr.length} message${arr.length === 1 ? '' : 's'} restored from your last session · `;
+  hint.textContent = `↑ ${arr.length} message${arr.length === 1? '' : 's'} restored from your last session · `;
   const clearBtn = el('a', { href: '#' }, 'start fresh');
   clearBtn.style.cssText = 'color: var(--accent); cursor: pointer; text-decoration: underline;';
   clearBtn.onclick = (e) => { e.preventDefault(); clearPersistedChat(); location.reload(); };
@@ -1838,20 +1853,29 @@ function rehydrateChat() {
 function renderAssistantBody(answer, figures) {
   const frag = document.createDocumentFragment();
   const byId = new Map((figures || []).map(f => [f.id, f]));
-  const re = /\[\[FIG:([a-f0-9]+)\]\]/g;
+  // Combined regex: [[FIG:hex]] figures OR [[LINK:path|label]] deep links
+  const re = /\[\[FIG:([a-f0-9]+)\]\]|\[\[LINK:([^|\]]+)\|([^\]]+)\]\]/g;
   let lastIndex = 0;
   let m;
-  while ((m = re.exec(answer)) !== null) {
+  while ((m = re.exec(answer))!== null) {
     if (m.index > lastIndex) {
       frag.appendChild(document.createTextNode(cleanText(answer.slice(lastIndex, m.index))));
     }
-    const fig = byId.get(m[1]);
-    if (fig) {
-      const figEl = el('figure', { class: 'plot' });
-      const img = el('img', { src: fig.url, alt: fig.caption || 'plot' });
-      figEl.appendChild(img);
-      if (fig.caption) figEl.appendChild(el('figcaption', {}, fig.caption));
-      frag.appendChild(figEl);
+    if (m[1]) {
+      // Figure render (existing)
+      const fig = byId.get(m[1]);
+      if (fig) {
+        const figEl = el('figure', { class: 'plot' });
+        const img = el('img', { src: fig.url, alt: fig.caption || 'plot' });
+        figEl.appendChild(img);
+        if (fig.caption) figEl.appendChild(el('figcaption', {}, fig.caption));
+        frag.appendChild(figEl);
+      }
+    } else if (m[2]) {
+      // Deep link render (Discovery Engine → Sound Lab / Feel / Graph / Roots)
+      const a = el('a', { class: 'discovery-link', href: m[2].trim() });
+      a.textContent = m[3].trim();
+      frag.appendChild(a);
     }
     lastIndex = m.index + m[0].length;
   }
@@ -1880,13 +1904,13 @@ function addAssistant(data) {
     const band = el('div', { class: 'fidelity-warn' });
     const title = el('div', { class: 'fidelity-warn-title' });
     title.textContent = warnings.length === 1
-      ? '⚠ 1 claim in this answer isn’t grounded in the retrieved sources'
-      : `⚠ ${warnings.length} claims in this answer aren’t grounded in the retrieved sources`;
+? ' 1 claim in this answer isn’t grounded in the retrieved sources'
+      : ` ${warnings.length} claims in this answer aren’t grounded in the retrieved sources`;
     band.appendChild(title);
     const det = el('details');
     det.appendChild(el('summary', {}, 'Show ungrounded sentences'));
     for (const w of warnings) {
-      const line = el('div', { class: 'fidelity-warn-line' }, w.replace(/^⚠️\s*/, ''));
+      const line = el('div', { class: 'fidelity-warn-line' }, w.replace(/^\s*/, ''));
       det.appendChild(line);
     }
     band.appendChild(det);
@@ -1894,17 +1918,17 @@ function addAssistant(data) {
   }
 
   const meta = el('div', { class: 'meta' });
-  if (data.intent) meta.appendChild(el('span', { class: 'chip intent' }, `intent: ${data.intent}${data.graph_mode ? ' · ' + data.graph_mode : ''}`));
+  if (data.intent) meta.appendChild(el('span', { class: 'chip intent' }, `intent: ${data.intent}${data.graph_mode? ' · ' + data.graph_mode : ''}`));
   for (const e of data.entities || []) meta.appendChild(el('span', { class: 'chip entity' }, `◆ ${e}`));
   for (const s of data.sources || []) {
     const det = el('details');
-    det.appendChild(el('summary', {}, `📄 ${s.source}`));
+    det.appendChild(el('summary', {}, ` ${s.source}`));
     det.appendChild(el('span', { class: 'src-body' }, s.snippet || ''));
     const chip = el('span', { class: 'chip source' });
     chip.appendChild(det);
     meta.appendChild(chip);
   }
-  for (const m of data.memory_used || []) meta.appendChild(el('span', { class: 'chip memory' }, `🧠 ${m}`));
+  for (const m of data.memory_used || []) meta.appendChild(el('span', { class: 'chip memory' }, ` ${m}`));
   // Hermes self-correction chips were a power-user diagnostic that
   // confused prospects (2026-05-28 commercial strip). The Hermes layer
   // still runs server-side and improves answers — we just don't surface
@@ -1978,9 +2002,12 @@ function parseSseFrame(frame) {
 // from firing on long DeepSeek responses (524 fix).
 async function send() {
   const q = qEl.value.trim();
-  if (!q) return;
+  // Allow empty query ONLY when discovery context is active —
+  // the orchestrator generates the first mission without user input.
+  const disco = window.__DISCOVERY__;
+  if (!q && !disco) return;
   qEl.value = '';
-  qEl._lastQuery = q;
+  if (q) qEl._lastQuery = q;
   addUser(q);
   const typing = addTyping();
   let streamBubble = null;
@@ -2009,8 +2036,9 @@ async function send() {
         // already accepts a list so multi-select can land later.
         source_filter: (function() {
           const sel = document.getElementById('scopeSelect');
-          return sel && sel.value ? [sel.value] : null;
+          return sel && sel.value? [sel.value] : null;
         })(),
+        discovery_context: window.__DISCOVERY__ || null,
       }),
     });
     if (!r.ok) {
@@ -2030,7 +2058,7 @@ async function send() {
       if (done) break;
       buf += decoder.decode(value, { stream: true });
       let idx;
-      while ((idx = buf.indexOf('\n\n')) !== -1) {
+      while ((idx = buf.indexOf('\n\n'))!== -1) {
         const frame = buf.slice(0, idx);
         buf = buf.slice(idx + 2);
         const parsed = parseSseFrame(frame);
@@ -2114,7 +2142,7 @@ async function upload(ev) {
         // block on it — the user can chat immediately and the knowledge
         // graph will populate in the background.
         const x = job.extracted || 0, xt = job.extract_total || 0;
-        const xs = xt ? ` (entity extraction continues: ${x}/${xt})` : ' (deep extraction continues in the background)';
+        const xs = xt? ` (entity extraction continues: ${x}/${xt})` : ' (deep extraction continues in the background)';
         addAssistant({
           answer: `Ingested ${f.name} — it's searchable now${xs}. Ask a question whenever you're ready.`,
           sources: [],
@@ -2173,7 +2201,7 @@ async function pollIngestJob(jobId, typingNode, filename, maxSeconds = 1800) {
       const elapsed = Math.round((Date.now() - started) / 1000);
       // Inline extraction progress so the user can see X/Y chunks done.
       const xCount = job.extract_total
-        ? `  [${job.extracted || 0}/${job.extract_total}]`
+? ` [${job.extracted || 0}/${job.extract_total}]`
         : '';
       if (typingNode && typingNode.firstChild && typingNode.firstChild.nodeType === Node.TEXT_NODE) {
         // First child of addTyping() is a Text node with the label; the dots span follows.
@@ -2199,7 +2227,7 @@ async function refreshStatus() {
     // Just show "N books indexed" (or "1 book"). The full breakdown
     // is still in /status if a power user wants it via curl.
     const n = (s.documents_indexed || []).length;
-    statusPill.textContent = n === 0 ? 'no books yet' : (n === 1 ? '1 book indexed' : `${n} books indexed`);
+    statusPill.textContent = n === 0? 'no books yet' : (n === 1? '1 book indexed' : `${n} books indexed`);
     populateScopeSelect(s.documents_indexed || []);
   } catch {
     statusPill.textContent = 'offline';
@@ -2223,13 +2251,13 @@ function populateScopeSelect(docs) {
   sel.innerHTML = '<option value="">All sources</option>'
     + docs.map(d => `<option value="${d.replace(/"/g, '&quot;')}">${labelOf(d)}</option>`).join('');
   if (prev && wanted.has(prev)) sel.value = prev;
-  sel.classList.toggle('active', !!sel.value);
+  sel.classList.toggle('active',!!sel.value);
 }
 
 /* Highlight the chip when a scope is set. */
 document.addEventListener('change', (e) => {
   if (e.target && e.target.id === 'scopeSelect') {
-    e.target.classList.toggle('active', !!e.target.value);
+    e.target.classList.toggle('active',!!e.target.value);
   }
 });
 
@@ -2239,6 +2267,96 @@ refreshStatus();
 // DOM is ready (this script is at the bottom of <body>) and before
 // the user's first new turn, so the thread appears seamlessly.
 rehydrateChat();
+
+// ── Discovery Orchestrator auto-fire ─────────────────────────────────
+// When arriving from IPA/Explore/Sound Lab with URL params, build a
+// discovery context and auto-fire the first mission (empty query).
+// The full learner-profile schema (mastered_sounds, current_unit,
+// completed_missions, recent_errors, weak_patterns, unlocked_word_families,
+// native_language, age, …) is accepted via URL params so a complete
+// learner state — e.g. the Aarav profile — can drive a session:
+//
+//   /app?from=ipa&name=Aarav&grade=2&native_language=Hindi
+//     &current_unit=Sound+Builders&mastered=m,s,f,n
+//     &families=fish,man,moon&missions=41
+//     &weak=ph+→+/f/&errors=Confuses+/f/+and+/ph/|Misses+final+/m/
+//
+// Lists that may contain commas (errors, weak, asked) use '|'; simple
+// sound/word lists use ','.
+(function() {
+  const p = new URLSearchParams(location.search);
+  const from = p.get('from');
+  const discoFlag = p.get('discovery');
+  if (!from && !discoFlag) return;
+  const ctx = {};
+  if (from) ctx.source = from;
+  const set = (key, param) => { const v = p.get(param); if (v != null) ctx[key] = v; };
+  const setInt = (key, param) => { const v = p.get(param); if (v != null) { const n = parseInt(v, 10); if (!isNaN(n)) ctx[key] = n; } };
+  const setList = (key, param, sep) => { const v = p.get(param); if (v) ctx[key] = v.split(sep).map(s => s.trim()).filter(Boolean); };
+  set('name', 'name');
+  setInt('age', 'age');
+  setInt('grade', 'grade');
+  set('native_language', 'native_language'); set('l1', 'l1');
+  set('current_unit', 'current_unit'); set('current_stage', 'current_unit');
+  set('sound', 'sound'); set('topic', 'topic');
+  setList('mastered_sounds', 'mastered', ',');
+  setList('completed', 'completed', ',');
+  setList('unlocked_word_families', 'families', ',');
+  setList('unlocked_spelling_patterns', 'patterns', ',');
+  setList('unlocked_roots', 'roots', ',');
+  setInt('completed_missions', 'missions');
+  setList('weak_patterns', 'weak', '|');
+  setList('current_weak_areas', 'weak', '|');
+  setList('recent_errors', 'errors', '|');
+  setList('recently_confused_concepts', 'errors', '|');
+  setList('previously_asked_questions', 'asked', '|');
+  // Only auto-fire if the chat log is empty (fresh session)
+  if (log.children.length > 0) return;
+  window.__DISCOVERY__ = ctx;
+  send();
+  // Clear URL params so refresh doesn't re-trigger
+  history.replaceState(null, '', location.pathname);
+})();
+</script>
+<!-- Child-centric, linguistics-only "How to use" popover -->
+<div id="helpPop" class="help-pop" hidden>
+  <div class="help-card">
+    <button class="help-x" id="helpClose" aria-label="Close">×</button>
+    <h3>🌱 How to use Vaaani</h3>
+    <p class="help-sub">A discovery tutor for the <b>sounds, word-families and meanings</b> of English — at your grade, in your words.</p>
+     <ol>
+       <li><b>Just ask, then press <span class="kbd">↵</span>.</b> Try: <i>"What little piece hides inside triangle, tricycle and tripod?"</i> or <i>"Help me discover what 'aqua' means."</i></li>
+       <li><b>Turn on <span class="hl">Guided</span> 🧭.</b> Vaaani never hands you the answer — it leads you to discover it with little questions.</li>
+       <li><b>Feel the sounds.</b> Open the <a href="/evolution">Sound Lab</a> (mouth shapes) and the <a href="/ipa">IPA Chart</a> (the real symbols).</li>
+       <li><b>Grow word families.</b> Explore <a href="/roots">Word Roots</a> and trace them across languages on the <a href="/language-map">Language Map</a>.</li>
+       <li><b>Check your thinking.</b> Take the <a href="/cognitive">Cognitive X-Ray</a> and practice under pressure in the <a href="/simulation">Exam Simulator</a>.</li>
+     </ol>
+    <p class="help-foot">Sound → spelling → word-family → meaning. One discovery at a time. 🌍</p>
+  </div>
+</div>
+<style>
+.help-pop{position:fixed;inset:0;z-index:2000;display:flex;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.32)}
+.help-pop[hidden]{display:none}
+.help-card{margin-top:74px;max-width:460px;width:92%;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:14px;padding:22px 24px;box-shadow:0 14px 44px rgba(0,0,0,.22);position:relative}
+.help-card h3{margin:0 0 6px;font-size:19px}
+.help-card .help-sub{margin:0 0 14px;font-size:13px;color:var(--muted)}
+.help-card ol{margin:0;padding-left:18px;font-size:13.5px;line-height:1.7}
+.help-card li{margin-bottom:9px}
+.help-card a{color:var(--accent);font-weight:600;text-decoration:none}
+.help-card .hl{color:var(--accent);font-weight:700}
+.help-card .help-foot{margin:14px 0 0;font-size:12.5px;color:var(--muted);font-style:italic}
+.help-card .kbd{font-family:monospace;background:rgba(127,127,127,.18);border-radius:4px;padding:1px 5px;font-size:11px}
+.help-x{position:absolute;top:10px;right:14px;background:none;border:none;font-size:24px;line-height:1;cursor:pointer;color:var(--muted)}
+</style>
+<script>
+(function(){
+  const b=document.getElementById('helpBtn'), p=document.getElementById('helpPop'), x=document.getElementById('helpClose');
+  if(!b||!p)return;
+  b.addEventListener('click',()=>p.hidden=false);
+  if(x)x.addEventListener('click',()=>p.hidden=true);
+  p.addEventListener('click',e=>{ if(e.target===p) p.hidden=true; });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') p.hidden=true; });
+})();
 </script>
 </body>
 </html>

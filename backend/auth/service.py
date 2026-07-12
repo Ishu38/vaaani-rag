@@ -151,6 +151,69 @@ def send_email_verification(user_id: int, email: str) -> None:
     get_email_sender().send(email, "Verify your Vaaani account", body_text, body_html)
 
 
+PASSWORD_RESET_EXP_HOURS = 1
+
+
+def send_password_reset(email: str) -> bool:
+    """Issue a password-reset token for `email` and dispatch the reset email.
+
+    Returns True if an account existed (and mail was dispatched), False otherwise.
+    Callers MUST NOT leak this back to the client verbatim — always show the same
+    generic response to avoid revealing which emails have accounts.
+    """
+    user = get_user_by_email((email or "").strip())
+    if not user:
+        return False
+    token = random_token()
+    expires_at = (datetime.now(timezone.utc) + timedelta(hours=PASSWORD_RESET_EXP_HOURS)).isoformat()
+    with connect() as c:
+        c.execute(
+            "INSERT INTO password_reset_tokens (token, user_id, expires_at) VALUES (?,?,?)",
+            (token, user["id"], expires_at),
+        )
+    link = f"{APP_BASE_URL.rstrip('/')}/reset-password?token={token}"
+    body_text = (
+        f"We received a request to reset your Vaaani password.\n\n"
+        f"Click the link below to choose a new password:\n{link}\n\n"
+        f"This link expires in {PASSWORD_RESET_EXP_HOURS} hour(s). "
+        f"If you didn't request this, ignore this email — your password stays unchanged."
+    )
+    body_html = (
+        f"<p>We received a request to reset your <strong>Vaaani</strong> password.</p>"
+        f"<p>Click the link below to choose a new password:</p>"
+        f"<p><a href='{link}'>{link}</a></p>"
+        f"<p>This link expires in {PASSWORD_RESET_EXP_HOURS} hour(s). "
+        f"If you didn't request this, you can safely ignore this email.</p>"
+    )
+    get_email_sender().send(email, "Reset your Vaaani password", body_text, body_html)
+    return True
+
+
+def reset_password(token: str, new_password: str) -> dict | None:
+    """Consume a reset token and set a new password. Returns the user or None."""
+    if not token:
+        return None
+    with connect() as c:
+        row = c.execute(
+            "SELECT * FROM password_reset_tokens WHERE token = ?", (token,)
+        ).fetchone()
+        if not row or row["used_at"] is not None:
+            return None
+        if datetime.fromisoformat(row["expires_at"]) < datetime.now(timezone.utc):
+            return None
+        c.execute(
+            "UPDATE users SET password_hash = ? WHERE id = ?",
+            (hash_password(new_password), row["user_id"]),
+        )
+        c.execute("UPDATE password_reset_tokens SET used_at = ? WHERE token = ?", (_now_iso(), token))
+        # Invalidate any other outstanding reset tokens for this user.
+        c.execute(
+            "UPDATE password_reset_tokens SET used_at = ? WHERE user_id = ? AND used_at IS NULL",
+            (_now_iso(), row["user_id"]),
+        )
+    return get_user_by_id(row["user_id"])
+
+
 def verify_email_token(token: str) -> dict | None:
     """Consume an email verification token; mark the user verified. Returns user dict or None."""
     if not token:

@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Vaaani Sound Lab — synthesise real speech sounds. Drag inside the vowel space and hear the vowel morph; toggle voicing; experiment with consonants. All on your device." />
+<title>Sound Lab — Vaaani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+<style>
+  .lab-wrap{max-width:760px;margin:0 auto;padding:calc(var(--nav-h) + 24px) 18px 80px}
+  .lab-head h1{font-size:clamp(28px,6vw,44px);line-height:1.05;margin:.2em 0}
+  .lab-head .serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic}
+  .lab-sub{opacity:.75;max-width:52ch;margin:.4em 0 1.4em}
+  .readout{display:flex;gap:16px;flex-wrap:wrap;align-items:baseline;margin:.4em 0 1em}
+  .readout .sym{font-size:40px;line-height:1;font-weight:700}
+  .readout .word{opacity:.7}
+  .readout .fmt{font-variant-numeric:tabular-nums;opacity:.6;font-size:13px}
+  .narrate{border:1px solid rgba(120,120,160,.25);border-radius:12px;padding:12px 16px;margin:0 0 14px;font-size:13.5px;line-height:1.55;background:rgba(120,120,200,.06)}
+  .n-what{font-weight:600}
+  .n-why{opacity:.75;margin-top:2px}
+  .n-cross{margin-top:6px;font-weight:700;color:#2563eb;min-height:0}
+  .n-cross:empty{display:none}
+  .ipa-link{font-size:13px;color:#6366f1;text-decoration:none;font-weight:600;white-space:nowrap}
+  .ipa-link:hover{text-decoration:underline}
+  /* vowel pad */
+  .pad{position:relative;width:100%;aspect-ratio:5/4;border-radius:18px;
+       background:radial-gradient(120% 120% at 20% 15%, rgba(99,102,241,.18), transparent 60%),
+                  radial-gradient(120% 120% at 85% 90%, rgba(16,185,129,.16), transparent 60%);
+       border:1px solid rgba(128,128,128,.28);touch-action:none;cursor:crosshair;overflow:hidden;user-select:none}
+  .pad .axis{position:absolute;font-size:11px;letter-spacing:.04em;opacity:.55;text-transform:uppercase}
+  .ax-front{left:8px;top:8px}.ax-back{right:8px;top:8px}
+  .ax-close{left:8px;top:26px}.ax-open{left:8px;bottom:8px}
+  .dot{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;
+       display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;
+       background:rgba(255,255,255,.9);color:#111;border:1px solid rgba(0,0,0,.15);cursor:pointer;
+       box-shadow:0 2px 6px rgba(0,0,0,.15)}
+  .handle{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;
+          background:#6366f1;border:3px solid #fff;box-shadow:0 0 0 3px rgba(99,102,241,.4);pointer-events:none;
+          transition:opacity .15s}
+  .hint{font-size:13px;opacity:.65;margin:10px 2px 0}
+  .controls{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:20px 0 8px}
+  .seg{display:inline-flex;border:1px solid rgba(128,128,128,.3);border-radius:10px;overflow:hidden}
+  .seg button{padding:9px 16px;background:transparent;border:0;font:inherit;cursor:pointer;color:inherit}
+  .seg button.on{background:#6366f1;color:#fff}
+  .pitch{display:flex;align-items:center;gap:10px;font-size:14px}
+  .pitch input{accent-color:#6366f1}
+  .cons{margin-top:26px}
+  .cons h2{font-size:20px;margin:.2em 0}
+  .cons-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .cons-row button{padding:12px 18px;border-radius:12px;border:1px solid rgba(128,128,128,.3);
+                   background:transparent;color:inherit;font:inherit;font-weight:600;font-size:18px;cursor:pointer}
+  .cons-row button:active{background:#6366f1;color:#fff}
+  .voicechip{display:inline-flex;align-items:center;gap:8px;font-size:14px;margin-left:6px}
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/ipa">IPA Chart</a>
+    <a href="/graph-view">My Universe</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="lab-wrap">
+  <div class="lab-head">
+    <h1>Change one thing about your mouth.<br/><span class="serif">Hear a new sound appear.</span></h1>
+    <p class="lab-sub">This isn't a recording — your device is <b>synthesising the sound live</b> from the shape of a mouth.
+      Drag the dot inside the box: up/down changes how open your jaw is, left/right changes where your tongue sits.
+      Every spot is a real vowel. Nothing leaves your device.</p>
+  </div>
+
+  <div class="readout">
+    <span class="sym" id="roSym">ə</span>
+    <span class="word" id="roWord">the middle sound in <i>sofa</i></span>
+    <span class="fmt" id="roFmt">F1 500 · F2 1500 Hz</span>
+    <a class="ipa-link" id="ipaLink" href="/ipa?s=%C9%99">📖 name it on the IPA chart →</a>
+  </div>
+
+  <div class="narrate" id="narrate" aria-live="polite">
+    <div class="n-what" id="nWhat">Drag the dot and I'll tell you what your mouth just did — and why the sound changed.</div>
+    <div class="n-why" id="nWhy"></div>
+    <div class="n-cross" id="nCross"></div>
+  </div>
+
+  <div class="pad" id="pad">
+    <span class="axis ax-front">◀ tongue front</span>
+    <span class="axis ax-back">tongue back ▶</span>
+    <span class="axis ax-close">▲ mouth closed</span>
+    <span class="axis ax-open">▼ mouth open</span>
+    <div class="handle" id="handle" style="left:50%;top:41%"></div>
+  </div>
+  <p class="hint">Press and drag inside the box to morph the vowel. Tap a labelled dot to hear a known vowel. 🔊 turn your volume up.</p>
+
+  <div class="controls">
+    <div class="seg" id="voiceSeg">
+      <button data-v="1" class="on">🗣️ Voiced</button>
+      <button data-v="0">🤫 Whisper</button>
+    </div>
+    <div class="seg" id="feelSeg">
+      <button data-f="0" class="on">🔊 Hear</button>
+      <button data-f="1">📳 Hear + Feel</button>
+    </div>
+    <label class="pitch">Pitch
+      <input type="range" id="pitch" min="90" max="260" value="140" />
+      <span id="pitchVal">140 Hz</span>
+    </label>
+  </div>
+
+  <div class="cons">
+    <h2>Now try consonants</h2>
+    <p class="lab-sub" style="margin:.3em 0 0">Same trick, different air. Tap one — then flip the switch and feel how <b>voicing</b> turns
+      <i>s</i>→<i>z</i>, <i>f</i>→<i>v</i>. (This is the same voicing you feel buzz in <a href="/feel">Feel the Sound</a>.)</p>
+    <label class="voicechip"><input type="checkbox" id="consVoiced" /> add voice</label>
+    <div class="cons-row" id="consRow">
+      <button data-c="s"  data-hz="6500">s / z</button>
+      <button data-c="sh" data-hz="3200">ʃ / ʒ (sh)</button>
+      <button data-c="f"  data-hz="8000">f / v</button>
+      <button data-c="th" data-hz="7000">θ / ð (th)</button>
+    </div>
+  </div>
+</main>
+
+<script>
+// ─────────────────────────── vowel data ───────────────────────────
+// Classic formant targets (Hz). Each spot in the pad is synthesised live.
+const VOWELS = [
+  {s:'i', f1:270, f2:2290, w:'as in <i>see</i>'},
+  {s:'ɪ', f1:390, f2:1990, w:'as in <i>sit</i>'},
+  {s:'e', f1:530, f2:1840, w:'as in <i>bed</i>'},
+  {s:'æ', f1:660, f2:1720, w:'as in <i>cat</i>'},
+  {s:'ə', f1:500, f2:1500, w:'as in <i>sofa</i>'},
+  {s:'ɑ', f1:730, f2:1090, w:'as in <i>father</i>'},
+  {s:'ɔ', f1:570, f2:840,  w:'as in <i>dog</i>'},
+  {s:'o', f1:490, f2:910,  w:'as in <i>go</i>'},
+  {s:'ʊ', f1:440, f2:1020, w:'as in <i>book</i>'},
+  {s:'u', f1:300, f2:870,  w:'as in <i>blue</i>'},
+];
+const F1_MIN=250, F1_MAX=850, F2_MIN=700, F2_MAX=2500, F3=2600;
+
+const posOf = (f1,f2) => ({
+  x: (F2_MAX - f2) / (F2_MAX - F2_MIN) * 100,       // left = front (high F2)
+  y: (f1 - F1_MIN) / (F1_MAX - F1_MIN) * 100,        // top  = close (low F1)
+});
+const fmtOf = (xPct,yPct) => ({
+  f2: F2_MAX - (xPct/100) * (F2_MAX - F2_MIN),
+  f1: F1_MIN + (yPct/100) * (F1_MAX - F1_MIN),
+});
+function nearestVowel(f1,f2){
+  let best=VOWELS[0], bd=1e9;
+  for(const v of VOWELS){ const d=((v.f1-f1)/300)**2+((v.f2-f2)/1500)**2; if(d<bd){bd=d;best=v;} }
+  return best;
+}
+
+// ─────────────────────────── audio engine ─────────────────────────
+let ac, master, vGain, nGain, fFilters=[], started=false, f0=140, srcOsc;
+let fricBP, fricG, buzzLP, buzzG;
+// FEEL: render voicing as a haptic pulse on the device (same actuator mapping as
+// the Feel the Sound patent feature) — voiced = sustained buzz, voiceless = tick.
+const canVibrate = 'vibrate' in navigator;
+let feelOn = false;
+function feel(isVoiced){ if(feelOn && canVibrate) navigator.vibrate(isVoiced ? 320 : 14); }
+function initAudio(){
+  if(started) return;
+  ac = new (window.AudioContext||window.webkitAudioContext)();
+  master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+
+  // Voiced glottal source (harmonic-rich saw) and a noise source (for whisper/fricatives).
+  srcOsc = ac.createOscillator(); srcOsc.type='sawtooth'; srcOsc.frequency.value=f0;
+  vGain = ac.createGain(); vGain.gain.value=0.9; srcOsc.connect(vGain);
+
+  const buf = ac.createBuffer(1, ac.sampleRate*2, ac.sampleRate);
+  const dd = buf.getChannelData(0); for(let i=0;i<dd.length;i++) dd[i]=Math.random()*2-1;
+  const noise = ac.createBufferSource(); noise.buffer=buf; noise.loop=true;
+  nGain = ac.createGain(); nGain.gain.value=0; noise.connect(nGain);
+
+  // Parallel formant bank (F1,F2,F3) fed by whichever source is active.
+  const Q=[10,13,15], amp=[1.0,0.55,0.28];
+  for(let i=0;i<3;i++){
+    const bp=ac.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=Q[i];
+    const g=ac.createGain(); g.gain.value=amp[i];
+    vGain.connect(bp); nGain.connect(bp); bp.connect(g); g.connect(master);
+    fFilters.push(bp);
+  }
+
+  // Dedicated fricative path (noise → single bandpass) + optional glottal buzz.
+  fricBP=ac.createBiquadFilter(); fricBP.type='bandpass'; fricBP.Q.value=3;
+  fricG=ac.createGain(); fricG.gain.value=0.0001; noise.connect(fricBP); fricBP.connect(fricG); fricG.connect(ac.destination);
+  buzzLP=ac.createBiquadFilter(); buzzLP.type='lowpass'; buzzLP.frequency.value=400;
+  buzzG=ac.createGain(); buzzG.gain.value=0.0001; srcOsc.connect(buzzLP); buzzLP.connect(buzzG); buzzG.connect(ac.destination);
+
+  srcOsc.start(); noise.start();
+  started=true;
+}
+function setFormants(f1,f2){
+  if(!started) return;
+  const t=ac.currentTime;
+  fFilters[0].frequency.setTargetAtTime(f1, t, 0.02);
+  fFilters[1].frequency.setTargetAtTime(f2, t, 0.02);
+  fFilters[2].frequency.setTargetAtTime(F3, t, 0.02);
+}
+let voiced=true;
+function vowelOn(){
+  initAudio(); ac.resume();
+  vGain.gain.setTargetAtTime(voiced?0.9:0.0, ac.currentTime, 0.01);
+  nGain.gain.setTargetAtTime(voiced?0.0:0.5, ac.currentTime, 0.01);   // whisper = noise through formants
+  master.gain.setTargetAtTime(0.9, ac.currentTime, 0.01);
+  feel(voiced);                                                        // HEAR + FEEL together
+}
+function vowelOff(){ if(started) master.gain.setTargetAtTime(0, ac.currentTime, 0.04); }
+
+function playFric(hz, withVoice){
+  initAudio(); ac.resume();
+  const t=ac.currentTime;
+  fricBP.frequency.setValueAtTime(hz, t);
+  fricG.gain.cancelScheduledValues(t);
+  fricG.gain.setValueAtTime(0.0001, t);
+  fricG.gain.exponentialRampToValueAtTime(0.5, t+0.03);
+  fricG.gain.exponentialRampToValueAtTime(0.0001, t+0.5);
+  if(withVoice){
+    buzzG.gain.cancelScheduledValues(t);
+    buzzG.gain.setValueAtTime(0.0001, t);
+    buzzG.gain.exponentialRampToValueAtTime(0.22, t+0.03);
+    buzzG.gain.exponentialRampToValueAtTime(0.0001, t+0.5);
+  }
+  feel(withVoice);                                                     // HEAR + FEEL together
+}
+
+// ─────────────────────────── UI wiring ────────────────────────────
+const pad=document.getElementById('pad'), handle=document.getElementById('handle');
+const roSym=document.getElementById('roSym'), roWord=document.getElementById('roWord'), roFmt=document.getElementById('roFmt');
+
+// place the labelled vowel dots
+for(const v of VOWELS){
+  const p=posOf(v.f1,v.f2);
+  const el=document.createElement('div'); el.className='dot'; el.textContent=v.s;
+  el.style.left=p.x+'%'; el.style.top=p.y+'%';
+  el.addEventListener('pointerdown', e=>{ e.stopPropagation(); jumpTo(v); });
+  pad.appendChild(el);
+}
+function updateReadout(f1,f2){
+  const v=nearestVowel(f1,f2);
+  roSym.textContent=v.s; roWord.innerHTML=v.w;
+  roFmt.textContent=`F1 ${Math.round(f1)} · F2 ${Math.round(f2)} Hz`;
+  const il=document.getElementById('ipaLink'); if(il) il.href='/ipa?s='+encodeURIComponent(v.s);
+  narrate(f1,f2,v);
+}
+
+// ── Live articulatory narration: WHAT moved, HOW the sound changed, WHY ──
+// F1 tracks jaw openness (open mouth = high F1); F2 tracks tongue frontness
+// (front tongue = high F2). Pure articulatory phonetics — computed, not fetched.
+let narrPrev=null, narrLastT=0;
+const nWhat=document.getElementById('nWhat'), nWhy=document.getElementById('nWhy'), nCross=document.getElementById('nCross');
+function narrate(f1,f2,v){
+  const now=performance.now();
+  if(!narrPrev){ narrPrev={f1,f2,sym:v.s}; return; }
+  if(now-narrLastT<160) return;               // readable pace, not a firehose
+  const d1=f1-narrPrev.f1, d2=f2-narrPrev.f2;
+  if(Math.abs(d1)<12 && Math.abs(d2)<18){      // barely moved — keep last text
+    if(v.s!==narrPrev.sym){ crossMsg(v); narrPrev.sym=v.s; }
+    return;
+  }
+  const parts=[], whys=[];
+  if(Math.abs(d1)>=12){
+    if(d1>0){ parts.push('your jaw is OPENING — F1 rises'); whys.push('a more open mouth makes the back cavity resonate at a higher pitch'); }
+    else    { parts.push('your jaw is CLOSING — F1 falls'); whys.push('a nearly-closed mouth lowers the first resonance'); }
+  }
+  if(Math.abs(d2)>=18){
+    if(d2>0){ parts.push('your tongue slides FORWARD — F2 rises'); whys.push('fronting the tongue shrinks the front cavity, so its resonance jumps up — that is the “brightness” you hear'); }
+    else    { parts.push('your tongue pulls BACK — F2 falls'); whys.push('backing the tongue enlarges the front cavity, so the sound gets darker'); }
+  }
+  nWhat.textContent='What changed: ' + parts.join('; ') + '.';
+  nWhy.textContent='Why: ' + whys.join('. ') + '.';
+  if(v.s!==narrPrev.sym) crossMsg(v);
+  narrPrev={f1,f2,sym:v.s}; narrLastT=now;
+}
+function crossMsg(v){
+  nCross.textContent='◈ You just arrived in /'+v.s+'/ territory — '+v.w.replace(/<[^>]+>/g,'')+'. Say it out loud: can your mouth find this exact spot?';
+}
+function applyPos(xPct,yPct){
+  xPct=Math.max(0,Math.min(100,xPct)); yPct=Math.max(0,Math.min(100,yPct));
+  handle.style.left=xPct+'%'; handle.style.top=yPct+'%';
+  const {f1,f2}=fmtOf(xPct,yPct);
+  setFormants(f1,f2); updateReadout(f1,f2);
+}
+function jumpTo(v){
+  const p=posOf(v.f1,v.f2); handle.style.left=p.x+'%'; handle.style.top=p.y+'%';
+  setFormants(v.f1,v.f2); updateReadout(v.f1,v.f2);
+  vowelOn(); setTimeout(vowelOff, 650);
+}
+let dragging=false;
+function padXY(e){
+  const r=pad.getBoundingClientRect();
+  return { x:(e.clientX-r.left)/r.width*100, y:(e.clientY-r.top)/r.height*100 };
+}
+pad.addEventListener('pointerdown', e=>{ dragging=true; pad.setPointerCapture(e.pointerId);
+  const {x,y}=padXY(e); applyPos(x,y); vowelOn(); });
+pad.addEventListener('pointermove', e=>{ if(!dragging) return; const {x,y}=padXY(e); applyPos(x,y); });
+pad.addEventListener('pointerup',  ()=>{ dragging=false; vowelOff(); });
+pad.addEventListener('pointercancel',()=>{ dragging=false; vowelOff(); });
+
+// voicing toggle
+document.getElementById('voiceSeg').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  voiced = b.dataset.v==='1';
+  [...e.currentTarget.children].forEach(x=>x.classList.toggle('on', x===b));
+});
+// pitch — drives the glottal source directly
+const pitch=document.getElementById('pitch'), pitchVal=document.getElementById('pitchVal');
+pitch.addEventListener('input', ()=>{
+  f0=+pitch.value; pitchVal.textContent=f0+' Hz';
+  if(started && srcOsc) srcOsc.frequency.setTargetAtTime(f0, ac.currentTime, 0.02);
+});
+// FEEL toggle — buzz the sound's voicing on the phone as you hear it
+const feelSeg=document.getElementById('feelSeg');
+if(feelSeg){
+  if(!canVibrate){ feelSeg.querySelector('[data-f="1"]').disabled=true;
+    feelSeg.insertAdjacentHTML('afterend','<span class="hint" style="margin-left:6px">(this device has no vibration motor)</span>'); }
+  feelSeg.addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b||b.disabled) return;
+    feelOn = b.dataset.f==='1';
+    [...e.currentTarget.children].forEach(x=>x.classList.toggle('on', x===b));
+    if(feelOn && canVibrate) navigator.vibrate(60);   // confirm the motor works
+  });
+}
+
+// consonants
+document.getElementById('consRow').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  playFric(+b.dataset.hz, document.getElementById('consVoiced').checked);
+});
+
+// initial readout
+updateReadout(500,1500);
+
+// Deep-link from the IPA chart or Chat: /sound-lab?s=<phoneme> lands on that
+// sound so the child can experiment with it. (Audio unlocks on first tap —
+// browsers block autoplay — so we position + highlight, ready to sound.)
+(function(){
+  const q=new URLSearchParams(location.search);
+  const want=q.get('s')||q.get('vowel');
+  if(!want) return;
+  const v=VOWELS.find(x=>x.s===want);
+  if(v){
+    const p=posOf(v.f1,v.f2); handle.style.left=p.x+'%'; handle.style.top=p.y+'%';
+    setFormants(v.f1,v.f2); updateReadout(v.f1,v.f2);
+    document.querySelector('.hint').textContent='You arrived on /'+v.s+'/ — press inside the box to hear it, then drag to morph.';
+    jumpTo(v);   // attempts to sound immediately if audio is already unlocked
+  }
+})();
+</script>
+</body>
+</html>

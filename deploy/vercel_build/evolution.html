@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Vaaani Sound Lab — a grade-gated discovery journey through speech sounds. Explore, mutate, and master the articulatory system. Linked to the IPA chart." />
+<meta name="theme-color" content="#2563eb" />
+<title>Sound Lab — Vaaani</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+
+<style>
+  :root{
+    --g-bg:#0e1020; --g-bg2:#161936; --g-card:rgba(255,255,255,0.04); --g-line:rgba(255,255,255,0.12);
+    --g-ink:#f2f3ff; --g-muted:#9aa0c4; --g-accent:#7c9bff; --g-accent2:#b98bff; --g-good:#5fd0a6; --g-warn:#ffcf6b;
+    --rt-accent:#7c9bff; --rt-root:#d4761e; --rt-suffix:#5fd0a6; --rt-ink:#f2f3ff; --rt-muted:#9aa0c4; --rt-line:rgba(255,255,255,.12); --rt-card:rgba(255,255,255,.04);
+  }
+  body.game-body{ background:radial-gradient(1200px 700px at 70% -10%, #23264e 0%, var(--g-bg) 55%); color:var(--g-ink); }
+.game-shell{ max-width:1160px; margin:0 auto; padding:88px 22px 80px; }
+
+.g-hero{ text-align:center; margin-bottom:14px; }
+.g-hero .eyebrow{ color:var(--g-accent); letter-spacing:.16em; }
+.g-hero h1{ font-size:clamp(30px,5.4vw,54px); line-height:1.03; margin:8px 0 10px; letter-spacing:-.02em; }
+.g-hero h1 .serif{ font-family:"Instrument Serif",Georgia,serif; font-style:italic; font-weight:400; color:var(--g-accent2); }
+.g-hero p{ color:var(--g-muted); max-width:600px; margin:0 auto; font-size:16.5px; line-height:1.6; }
+.g-hero p a{ color:var(--g-accent); }
+
+/* grade bar — mirrors roots / ipa pattern */
+.g-gradebar{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:6px 0 8px}
+.g-gbtn{display:flex;flex-direction:column;align-items:center;gap:2px;border:1.5px solid var(--rt-line);background:rgba(255,255,255,.03);border-radius:14px;padding:9px 13px;cursor:pointer;min-width:115px;transition:.15s;font:inherit;color:var(--rt-muted)}
+.g-gbtn:hover{border-color:var(--g-accent)}
+.g-gbtn.active{border-color:var(--g-accent);background:rgba(124,155,255,.12);box-shadow:0 2px 12px rgba(124,155,255,.15)}
+.g-gbtn .gn{font-weight:700;font-size:12px;color:var(--g-accent)}
+.g-gbtn .gt{font-weight:600;font-size:12.5px;color:var(--rt-ink)}
+.g-gbtn .gs{font-size:10.5px;color:var(--rt-muted)}
+.g-mission{text-align:center;font-size:13.5px;color:#ffcf6b;background:rgba(255,207,107,.08);border:1px solid rgba(255,207,107,.25);border-radius:10px;padding:8px 12px;margin:10px auto 6px;max-width:680px}
+
+/* mode toggles */
+.g-modes{display:flex;gap:8px;justify-content:center;margin:20px 0 4px;flex-wrap:wrap}
+.g-modes button{background:var(--g-card);border:1px solid var(--g-line);color:var(--g-muted);border-radius:999px;padding:9px 18px;font:inherit;font-weight:600;font-size:14px;cursor:pointer;transition:.15s;}
+.g-modes button.active{background:var(--g-accent);border-color:var(--g-accent);color:#0b0d1c;}
+.g-modes button:disabled{opacity:.3;cursor:not-allowed}
+
+.g-daily-bar{display:none;max-width:620px;margin:10px auto 0;background:var(--g-card);border:1px solid var(--g-line);border-radius:14px;padding:12px 16px;text-align:center;font-size:14px;color:var(--g-muted);}
+.g-daily-bar.show{display:block;}
+.g-daily-bar b{color:var(--g-ink);}
+.g-daily-bar .target{color:var(--g-accent2);font-weight:700;font-size:18px;}
+
+/* layout */
+.g-layout{display:grid;grid-template-columns: 1fr 360px; gap:24px; margin-top:24px; align-items:start;}
+@media(max-width:940px){.g-layout{grid-template-columns:1fr;}}
+
+/* LAB BENCH */
+.g-lab{background:var(--g-card);border:1px solid var(--g-line);border-radius:22px;padding:26px;backdrop-filter:blur(6px);}
+.g-stage{display:flex;flex-direction:column;align-items:center;}
+.g-creature{width:230px;height:230px;filter:drop-shadow(0 14px 30px rgba(124,155,255,.25));transition:transform.25s;}
+.g-creature.pop{transform:scale(1.07);}
+.g-sym{font-size:46px;font-weight:600;margin-top:6px;}
+.g-name{color:var(--g-muted);font-size:14px;margin-top:2px;text-align:center;}
+.g-newbadge{display:inline-block;margin-top:8px;background:var(--g-good);color:#06281c;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:4px 10px;opacity:0;transition:.2s;}
+.g-newbadge.show{opacity:1;}
+
+.g-dna{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:16px 0 6px;}
+.g-gene{background:rgba(124,155,255,.12);border:1px solid var(--g-line);border-radius:8px;padding:5px 10px;font-size:12px;color:var(--g-ink);}
+.g-gene .k{color:var(--g-muted);}
+
+.g-artic{width:100%;margin-top:16px;background:rgba(255,255,255,.03);border:1px solid var(--g-line);border-radius:14px;padding:12px 14px 14px;}
+.g-artic .cap{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g-muted);margin-bottom:6px;text-align:center;}
+.g-artic svg{display:block;margin:0 auto;width:100%;max-width:260px;height:auto;}
+.g-artic .axl{fill:var(--g-muted);font-size:9px;font-family:Inter,sans-serif;}
+.g-artic .ptlabel{fill:var(--g-ink);font-size:10px;font-weight:600;font-family:Inter,sans-serif;text-anchor:middle;}
+
+.g-hear{margin:10px auto 2px;display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--g-line);color:var(--g-ink);border-radius:10px;padding:8px 14px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;}
+.g-hear:hover{border-color:var(--g-accent);}
+.g-hear svg{width:16px;height:16px;}
+
+.g-mut-title{text-align:center;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g-muted);margin:22px 0 12px;}
+.g-muts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+.g-mut{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.03);border:1px solid var(--g-line);border-radius:12px;padding:11px 13px;cursor:pointer;transition:.14s;text-align:left;font:inherit;color:var(--g-ink);}
+.g-mut:hover{border-color:var(--g-accent);background:rgba(124,155,255,.10);transform:translateY(-2px);}
+.g-mut .lab{font-size:12.5px;}
+.g-mut .lab .sub{display:block;color:var(--g-muted);font-size:11px;margin-top:2px;}
+.g-mut .to{font-size:22px;font-weight:600;color:var(--g-accent);}
+.g-mut.new .to::after{content:"●";color:var(--g-good);font-size:9px;vertical-align:super;margin-left:3px;}
+
+/* SIDE PANEL */
+.g-dex{background:var(--g-card);border:1px solid var(--g-line);border-radius:22px;padding:22px;position:sticky;top:88px;}
+.g-dex h2{font-size:15px;margin:0 0 2px;}
+.g-dex .prog{color:var(--g-muted);font-size:12.5px;margin-bottom:10px;}
+.g-dex .bar{height:7px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:8px 0 14px;}
+.g-dex .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--g-accent),var(--g-accent2));width:0;transition:width.4s;}
+.g-dex-group{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g-muted);margin:14px 0 8px;}
+.g-dex-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.g-dcell{width:38px;height:38px;border-radius:9px;border:1px solid var(--g-line);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:.14s;}
+.g-dcell.locked{color:transparent;background:rgba(255,255,255,.02);}
+.g-dcell.locked::after{content:"?";color:var(--g-muted);opacity:.4;}
+.g-dcell.found{background:rgba(124,155,255,.14);color:var(--g-ink);border-color:rgba(124,155,255,.4);}
+.g-dcell.current{outline:2px solid var(--g-accent);}
+.g-dcell:hover{transform:translateY(-2px);}
+
+/* experiment instructions */
+.g-exp{background:rgba(124,155,255,.07);border:1px solid rgba(124,155,255,.2);border-radius:12px;padding:12px;margin-bottom:12px;font-size:13px;color:var(--g-muted);line-height:1.5;}
+.g-exp b{color:var(--g-ink);}
+.g-exp .exp-title{font-weight:700;color:var(--g-accent);font-size:14px;margin-bottom:4px;}
+
+/* assessment area */
+.g-assess{margin-top:10px;background:rgba(255,207,107,.06);border:1px solid rgba(255,207,107,.18);border-radius:12px;padding:12px;}
+.g-assess .as-q{font-weight:600;font-size:13.5px;color:var(--g-ink);margin-bottom:8px;}
+.g-assess .as-opt{display:block;width:100%;text-align:left;border:1px solid var(--g-line);border-radius:10px;padding:9px 11px;margin:5px 0;background:rgba(255,255,255,.03);cursor:pointer;font:inherit;font-size:13px;color:var(--g-muted);transition:.12s;}
+.g-assess .as-opt:hover{border-color:var(--g-accent);background:rgba(124,155,255,.08);color:var(--g-ink);}
+.g-assess .as-opt.right{border-color:var(--g-good);background:rgba(95,208,166,.12);color:var(--g-good);pointer-events:none;}
+.g-assess .as-opt.wrong{border-color:#dc2626;background:rgba(220,38,38,.1);color:#dc2626;pointer-events:none;}
+.g-assess .as-fb{font-size:13px;font-weight:600;margin-top:6px;min-height:20px;}
+.g-assess .as-fb.ok{color:var(--g-good);}
+.g-assess .as-fb.no{color:#dc2626;}
+.g-assess .as-next{display:none;margin-top:8px;padding:7px 16px;border:none;border-radius:8px;background:var(--g-accent);color:#0b0d1c;font:inherit;font-weight:600;font-size:13px;cursor:pointer;}
+.g-assess .as-next.show{display:inline-block;}
+
+/* evidence panel */
+.g-evidence{background:rgba(255,207,107,.05);border:1px solid rgba(255,207,107,.15);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:12px;color:var(--g-muted);}
+.g-evidence summary{cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--g-muted);user-select:none;}
+.g-evidence summary:hover{color:var(--g-accent);}
+.g-ev-body{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.g-ev-stat{text-align:center;padding:6px;background:rgba(255,255,255,.02);border-radius:8px;}
+.g-ev-stat .n{font-size:20px;font-weight:800;color:var(--g-accent);}
+.g-ev-stat .l{font-size:10px;color:var(--g-muted);}
+
+/* WIN MODAL */
+.g-modal{position:fixed;inset:0;background:rgba(6,7,18,.7);display:none;align-items:center;justify-content:center;z-index:50;backdrop-filter:blur(4px);}
+.g-modal.show{display:flex;}
+.g-modal-card{background:var(--g-bg2);border:1px solid var(--g-line);border-radius:22px;padding:30px;max-width:380px;text-align:center;}
+.g-modal-card h3{font-size:24px;margin:6px 0 4px;}
+.g-modal-card .grid{font-size:26px;letter-spacing:4px;margin:14px 0;}
+.g-modal-card p{color:var(--g-muted);font-size:14px;}
+.g-modal-card .btn-row{display:flex;gap:10px;margin-top:18px;}
+.g-modal-card button{flex:1;border-radius:12px;padding:12px;font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--g-line);}
+.g-share{background:var(--g-good);color:#06281c;border:none!important;}
+.g-close{background:transparent;color:var(--g-ink);}
+
+.g-foot-note{text-align:center;color:var(--g-muted);font-size:12px;margin-top:22px;}
+.g-foot-note a{color:var(--g-accent);}
+</style>
+<script>(function(){var s=document.createElement('style');s.id='__vg';s.textContent='html{visibility:hidden!important}';document.documentElement.appendChild(s);var done=false;function show(){if(done)return;done=true;var e=document.getElementById('__vg');if(e)e.remove();}function go(){if(done)return;done=true;location.replace('/login?next='+encodeURIComponent(location.pathname+location.search));}var t=setTimeout(show,7000);fetch('/auth/me').then(function(r){if(r.ok){return r.json().then(function(d){clearTimeout(t);(d&&d.user)?show():go();});}clearTimeout(t);if(r.status===401||r.status===403){go();}else{show();}}).catch(function(){clearTimeout(t);show();});})();</script></head>
+<body class="game-body">
+
+<nav class="nav scrolled" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+      <path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/ipa">IPA Chart</a>
+    <a href="/evolution" class="active">Sound Lab</a>
+    <a href="/roots">Word Roots</a>
+    <a href="/about">About</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="game-shell">
+  <section class="g-hero">
+    <p class="eyebrow" id="gEyebrow">// Grade 1 · Sound Explorer</p>
+    <h1>Change one thing about your mouth.<br/><span class="serif">Hear a different sound appear.</span></h1>
+    <p id="gHeroDesc">Discover that every speech sound is made by a specific mouth shape. Tap creatures, hear their sounds, and watch where your tongue and lips go. <a href="/ipa">Open the IPA chart</a> anytime.</p>
+  </section>
+
+  <div class="g-gradebar" id="gGradeBar"></div>
+  <div class="g-mission" id="gMission"></div>
+
+  <div class="g-modes">
+    <button id="mLab" class="active" onclick="setMode('lab')">Grade Lab</button>
+    <button id="mFree" onclick="setMode('free')" disabled>Free Explore</button>
+    <button id="mDaily" onclick="setMode('daily')" disabled>Daily Practice</button>
+  </div>
+  <div class="g-daily-bar" id="dailyBar"></div>
+
+  <div class="g-layout">
+    <!-- LAB BENCH -->
+    <div class="g-lab">
+      <div class="g-stage">
+        <svg class="g-creature" id="creature" viewBox="0 0 200 200" aria-hidden="true"></svg>
+        <div class="g-sym" id="sym">—</div>
+        <div class="g-name" id="name">—</div>
+        <div class="g-newbadge" id="newBadge">New sound unlocked</div>
+        <button class="g-hear" id="hearBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14M15.5 8.5a4 4 0 0 1 0 7"/></svg>
+          Hear it
+        </button>
+        <a class="g-hear" id="ipaLink" href="/ipa" style="text-decoration:none;margin-left:8px">
+          See in IPA chart →
+        </a>
+        <div class="g-dna" id="dna"></div>
+        <div class="g-artic" id="artic"></div>
+      </div>
+
+      <div class="g-mut-title" id="mutTitle">Mutate — change one feature</div>
+      <div class="g-muts" id="muts"></div>
+    </div>
+
+    <!-- SIDE PANEL -->
+    <aside class="g-dex">
+      <div class="g-exp" id="gExp">
+        <div class="exp-title" id="expTitle">Mouth-Sound Match</div>
+        <div id="expText">Tap each creature. Hear its sound. Watch where your tongue and lips go on the diagram below.</div>
+      </div>
+
+      <div class="g-assess" id="gAssess">
+        <div class="as-q" id="asQ">Which mouth position makes the /m/ sound?</div>
+        <div id="asOpts"></div>
+        <div class="as-fb" id="asFb"></div>
+        <button class="as-next" id="asNext" onclick="nextAssessment()">Next →</button>
+      </div>
+
+      <h2 style="margin-top:14px">Phonodex</h2>
+      <div class="prog"><span id="dexCount">0</span> of <span id="dexTotal">0</span> sounds discovered</div>
+      <div class="bar"><span id="dexBar"></span></div>
+      <div id="dexBody"></div>
+
+      <details class="g-evidence" id="gEvidence">
+        <summary>Your Progress</summary>
+        <div class="g-ev-body" id="gEvBody"></div>
+      </details>
+    </aside>
+  </div>
+
+  <p class="g-foot-note">Sound plays with your browser's voice. Curious <em>why</em> these sounds pattern? <a href="/ipa">Open the IPA chart</a> or <a href="/tutor">ask the tutor</a>.</p>
+</main>
+
+<div class="g-modal" id="winModal">
+  <div class="g-modal-card">
+    <div style="font-size:40px;"></div>
+    <h3 id="winTitle">Evolved!</h3>
+    <div class="grid" id="winGrid"></div>
+    <p id="winText">You reached the target.</p>
+    <div class="btn-row">
+      <button class="g-share" id="shareBtn">Share result</button>
+      <button class="g-close" onclick="closeModal()">Keep playing</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+/* ============================================================
+   PHONEME DATA — 44 English speech sounds
+   ============================================================ */
+const PLACES = ["bilabial","labiodental","dental","alveolar","postalveolar","palatal","velar","glottal"];
+const MANNERS = ["plosive","affricate","fricative","nasal","approximant"];
+const P = [
+  {s:"p",k:"C",n:"voiceless bilabial plosive",say:"pin",f:{v:0,pl:0,m:0}},
+  {s:"b",k:"C",n:"voiced bilabial plosive",say:"bin",f:{v:1,pl:0,m:0}},
+  {s:"m",k:"C",n:"bilabial nasal",say:"man",f:{v:1,pl:0,m:3}},
+  {s:"f",k:"C",n:"voiceless labiodental fricative",say:"fan",tricky:1,f:{v:0,pl:1,m:2}},
+  {s:"v",k:"C",n:"voiced labiodental fricative",say:"van",tricky:1,f:{v:1,pl:1,m:2}},
+  {s:"θ",k:"C",n:"voiceless dental fricative",say:"think",tricky:1,f:{v:0,pl:2,m:2}},
+  {s:"ð",k:"C",n:"voiced dental fricative",say:"this",tricky:1,f:{v:1,pl:2,m:2}},
+  {s:"t",k:"C",n:"voiceless alveolar plosive",say:"top",tricky:1,f:{v:0,pl:3,m:0}},
+  {s:"d",k:"C",n:"voiced alveolar plosive",say:"dog",tricky:1,f:{v:1,pl:3,m:0}},
+  {s:"n",k:"C",n:"alveolar nasal",say:"net",f:{v:1,pl:3,m:3}},
+  {s:"s",k:"C",n:"voiceless alveolar fricative",say:"sun",f:{v:0,pl:3,m:2}},
+  {s:"z",k:"C",n:"voiced alveolar fricative",say:"zoo",tricky:1,f:{v:1,pl:3,m:2}},
+  {s:"l",k:"C",n:"alveolar lateral approximant",say:"leg",f:{v:1,pl:3,m:4}},
+  {s:"ʃ",k:"C",n:"voiceless postalveolar fricative",say:"ship",f:{v:0,pl:4,m:2}},
+  {s:"ʒ",k:"C",n:"voiced postalveolar fricative",say:"measure",f:{v:1,pl:4,m:2}},
+  {s:"tʃ",k:"C",n:"voiceless postalveolar affricate",say:"chair",f:{v:0,pl:4,m:1}},
+  {s:"dʒ",k:"C",n:"voiced postalveolar affricate",say:"jump",f:{v:1,pl:4,m:1}},
+  {s:"ɹ",k:"C",n:"postalveolar approximant (English r)",say:"red",tricky:1,f:{v:1,pl:4,m:4}},
+  {s:"j",k:"C",n:"palatal approximant",say:"yes",f:{v:1,pl:5,m:4}},
+  {s:"k",k:"C",n:"voiceless velar plosive",say:"cat",f:{v:0,pl:6,m:0}},
+  {s:"g",k:"C",n:"voiced velar plosive",say:"go",f:{v:1,pl:6,m:0}},
+  {s:"ŋ",k:"C",n:"velar nasal",say:"sing",f:{v:1,pl:6,m:3}},
+  {s:"w",k:"C",n:"labial-velar approximant",say:"wet",tricky:1,f:{v:1,pl:6,m:4}},
+  {s:"h",k:"C",n:"voiceless glottal fricative",say:"hat",f:{v:0,pl:7,m:2}},
+  {s:"iː",k:"V",n:"close front, long",say:"see",f:{h:0,b:0,r:0,l:1}},
+  {s:"ɪ",k:"V",n:"near-close front",say:"sit",tricky:1,f:{h:0,b:0,r:0,l:0}},
+  {s:"e",k:"V",n:"mid front",say:"bed",f:{h:1,b:0,r:0,l:0}},
+  {s:"æ",k:"V",n:"near-open front",say:"cat",tricky:1,f:{h:3,b:0,r:0,l:0}},
+  {s:"ə",k:"V",n:"schwa, mid central",say:"about",tricky:1,f:{h:2,b:1,r:0,l:0}},
+  {s:"ɜː",k:"V",n:"open-mid central, long",say:"bird",f:{h:2,b:1,r:0,l:1}},
+  {s:"ʌ",k:"V",n:"open-mid back",say:"cup",f:{h:2,b:2,r:0,l:0}},
+  {s:"ɑː",k:"V",n:"open back, long",say:"car",f:{h:3,b:2,r:0,l:1}},
+  {s:"ɒ",k:"V",n:"open back rounded",say:"hot",f:{h:3,b:2,r:1,l:0}},
+  {s:"ɔː",k:"V",n:"open-mid back rounded, long",say:"thought",f:{h:2,b:2,r:1,l:1}},
+  {s:"ʊ",k:"V",n:"near-close back rounded",say:"put",f:{h:0,b:2,r:1,l:0}},
+  {s:"uː",k:"V",n:"close back rounded, long",say:"blue",f:{h:0,b:2,r:1,l:1}},
+  {s:"eɪ",k:"D",n:"diphthong e→ɪ",say:"day",from:"e"},
+  {s:"aɪ",k:"D",n:"diphthong a→ɪ",say:"my",from:"æ"},
+  {s:"ɔɪ",k:"D",n:"diphthong ɔ→ɪ",say:"boy",from:"ɔː"},
+  {s:"aʊ",k:"D",n:"diphthong a→ʊ",say:"now",from:"ɑː"},
+  {s:"əʊ",k:"D",n:"diphthong ə→ʊ",say:"go",tricky:1,from:"ə"},
+  {s:"ɪə",k:"D",n:"diphthong ɪ→ə",say:"here",from:"ɪ"},
+  {s:"eə",k:"D",n:"diphthong e→ə",say:"hair",from:"e"},
+  {s:"ʊə",k:"D",n:"diphthong ʊ→ə",say:"tour",from:"ʊ"},
+];
+const BY={}; P.forEach(p=>BY[p.s]=p);
+
+// Kid-friendly terminology (G1-G3 use these; G4-G5 use grown-up PLACES/MANNERS)
+const KID_PLACES = ["lips together","lip + teeth","tongue + teeth","behind top teeth","behind the ridge","roof of mouth","back of mouth","throat"];
+const KID_MANNERS = ["pop sound","pop+hiss","hissing sound","nose sound","smooth sound"];
+function kidName(p){
+  if(!p)return'—';
+  if(p.k==='D') return 'gliding vowel';
+  if(p.k==='V'){
+    const hname=['high','mid-high','mid-low','low'][p.f.h];
+    const bname=['front','middle','back'][p.f.b];
+    const round=p.f.r?' rounded':'';
+    return `${hname}${round} ${bname}`;
+  }
+  const voice=p.f.v?'buzzy':'whispery';
+  const place=KID_PLACES[p.f.pl];
+  const manner=KID_MANNERS[p.f.m];
+  return `${voice} ${place} ${manner}`;
+}
+function placeLabel(g,p){ return (g<=3?KID_PLACES:PLACES)[p.f.pl]; }
+function mannerLabel(g,p){ return (g<=3?KID_MANNERS:MANNERS)[p.f.m]; }
+
+// Grade-specific phoneme pools
+const GRADE_POOL={
+  1:new Set(['p','b','m','f','t','d','n','s','k','g','h','iː','ɪ','e','æ','ə','ʌ','ɑː','uː']),
+  2:new Set(['p','b','m','f','v','t','d','n','s','z','k','g','h','iː','ɪ','e','æ','ə','ʌ','ɑː','uː']),
+  3:new Set(['p','b','m','f','v','θ','ð','t','d','n','s','z','l','ʃ','tʃ','dʒ','ɹ','j','k','g','ŋ','w','h','iː','ɪ','e','æ','ə','ɜː','ʌ','ɑː','ɒ','ɔː','ʊ','uː']),
+  4:new Set(P.map(p=>p.s)),
+  5:new Set(P.map(p=>p.s)),
+};
+
+// ---- grade definitions ----
+const GRADES=[
+  {g:1,t:'Sound Explorer',s:'Recognition',hero:'Discover that every speech sound is made by a specific mouth shape. Tap creatures, hear their sounds, and watch where your tongue and lips go.',m:'Mission: match sounds to the mouth shapes that make them.'},
+  {g:2,t:'Sound Detective',s:'Discrimination',hero:'Some sounds are twins — identical mouth shape but one buzzes and the other whispers. Toggle the voice switch and <em>hear</em> the difference between /p/ and /b/, /f/ and /v/.',m:'Mission: sort sounds by voice-on and voice-off using your throat detector.'},
+  {g:3,t:'Sound Builder',s:'Production',hero:'Now you become the builder. Start with one sound, change a single feature of your mouth — turn on your voice, slide your tongue back, loosen the closure — and watch it become a <em>different</em> sound. The IPA symbols unlock here.',m:'Mission: predict what sound you get when you change one articulatory feature.'},
+  {g:4,t:'Pattern Maker',s:'Application',hero:'Sounds don\'t live alone — they pattern together into syllables and clusters. Discover which sounds can combine at the start of a word, how diphthongs glide between vowels, and how spelling maps onto sound.',m:'Mission: apply sound-combination rules to pronounce words you\'ve never seen.'},
+  {g:5,t:'Sound Scientist',s:'Explanation',hero:'The full articulatory system is yours. Every phoneme accessible. Compare English sounds with Hindi sounds. Trace how sounds change over time. Write articulatory descriptions. This is the whole map.',m:'Mission: explain the articulatory system and describe how your mouth makes any sound.'},
+];
+
+// ---- state ----
+let currentGrade=1, mode='lab', current=null;
+let dailyMoves=0, dailyTarget=null, dailyStart=null, dailyPar=0;
+let assessRound=0, assessCorrect=0, assessAnswered=false;
+const found = new Set(JSON.parse(localStorage.getItem("vaaani_phonodex")||"[]"));
+function saveFound(){ localStorage.setItem("vaaani_phonodex", JSON.stringify([...found])); }
+
+// ---- mastery ----
+const MASTERY_KEY = 'vaaani_soundlab_mastery_v1';
+let mastery = loadMastery();
+function loadMastery(){
+  try{ const raw=localStorage.getItem(MASTERY_KEY); if(raw){ const m=JSON.parse(raw); if(m.scores&&m.scores.length===5) return m; }}catch(e){}
+  return {scores:[{correct:0,total:0},{correct:0,total:0},{correct:0,total:0},{correct:0,total:0},{correct:0,total:0}]};
+}
+function saveMastery(){ try{localStorage.setItem(MASTERY_KEY,JSON.stringify(mastery));}catch(e){} }
+function recordAssess(correct){
+  const s=mastery.scores[currentGrade-1]; s.total++; if(correct)s.correct++; saveMastery(); renderEvidence();
+}
+function renderEvidence(){
+  const s=mastery.scores[currentGrade-1]; const pct=s.total>0?Math.round(s.correct/s.total*100):0;
+  const total=mastery.scores.reduce((a,x)=>a+x.total,0);
+  const corr=mastery.scores.reduce((a,x)=>a+x.correct,0);
+  $('gEvBody').innerHTML=`<div class="g-ev-stat"><div class="n">${pct}%</div><div class="l">G${currentGrade} accuracy</div></div>
+    <div class="g-ev-stat"><div class="n">${found.size}</div><div class="l">sounds found</div></div>
+    <div class="g-ev-stat"><div class="n">${corr}/${total}</div><div class="l">total correct</div></div>
+    <div class="g-ev-stat"><div class="n">${getGradePoolSize(currentGrade)}</div><div class="l">G${currentGrade} target</div></div>`;
+}
+
+// ---- TTS ----
+let enVoice=null;
+function pickVoice(){const v=window.speechSynthesis?speechSynthesis.getVoices():[];enVoice=v.find(x=>/en[-_]GB/i.test(x.lang))||v.find(x=>/en[-_]US/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||null;}
+if(window.speechSynthesis){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function speak(word){if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(word);u.lang=enVoice?enVoice.lang:'en-GB';if(enVoice)u.voice=enVoice;u.rate=.85;speechSynthesis.speak(u);}
+
+// ---- grade helpers ----
+function getGradePool(g){ return GRADE_POOL[g]||GRADE_POOL[5]; }
+function getGradePoolSize(g){ return getGradePool(g).size; }
+function isInGradePool(p,g){ return getGradePool(g||currentGrade).has(p.s); }
+
+// ---- grade bar ----
+function renderGradeBar(){
+  const bar=$('gGradeBar');
+  bar.innerHTML=GRADES.map(G=>`<button class="g-gbtn" data-g="${G.g}"><span class="gn">Grade ${G.g}</span><span class="gt">${G.t}</span><span class="gs">${G.s}</span></button>`).join('');
+  bar.querySelectorAll('.g-gbtn').forEach(b=>b.onclick=()=>setGrade(+b.dataset.g));
+}
+function setGrade(g){
+  if(current&&!isInGradePool(current,g)&&mode==='lab'){ current=null; }
+  currentGrade=g;
+  const G=GRADES[g-1];
+  $('gEyebrow').textContent=`// Grade ${g} · ${G.t}`;
+  $('gHeroDesc').innerHTML=G.hero;
+  $('gMission').textContent=G.m;
+  $('gGradeBar').querySelectorAll('.g-gbtn').forEach(b=>b.classList.toggle('active',+b.dataset.g===g));
+  // Mode buttons
+  $('mLab').classList.toggle('active',mode==='lab');
+  $('mFree').disabled=(g<3);
+  $('mFree').classList.toggle('active',mode==='free');
+  $('mDaily').disabled=(g<3);
+  $('mDaily').classList.toggle('active',mode==='daily');
+  if(mode==='free'&&g<3) setMode('lab');
+  renderExpText();
+  resetAssessment();
+  renderEvidence();
+  // Pick a valid starter for this grade
+  if(!current||!isInGradePool(current,g)){
+    const starter=BY['m']||P.find(p=>isInGradePool(p,g));
+    if(starter) setCreature(starter,false);
+  }
+  if(mode==='lab') renderMuts(current); else if(mode==='free') renderMuts(current);
+  renderDex();
+}
+function renderExpText(){
+  const g=currentGrade;
+  if(g===1){ $('expTitle').textContent='Mouth-Sound Match'; $('expText').innerHTML='Tap each <b>creature</b> in the Phonodex or click <b>Hear it</b>. Watch the <b>articulation diagram</b> below the creature — it shows exactly where your tongue and lips go.'; }
+  else if(g===2){ $('expTitle').textContent='Voice Toggle Lab'; $('expText').innerHTML='Some sounds are <b>twins</b> — same mouth shape, but one buzzes (voice ON) and one whispers (voice OFF). Use the mutation buttons to <b>toggle voice</b> and hear the difference.'; }
+  else if(g===3){ $('expTitle').textContent='Feature Mutation Lab'; $('expText').innerHTML='Change one <b>articulatory feature</b> at a time — voice, place, or manner — and watch the sound <b>evolve</b> into a new one. IPA symbols appear here for the first time.'; }
+  else if(g===4){ $('expTitle').textContent='Cluster & Pattern Lab'; $('expText').innerHTML='Sounds pattern together into <b>clusters</b> and <b>diphthongs</b>. Explore which consonants can combine (/s/+/p/=sp), how vowels glide, and how spelling maps to sound.'; }
+  else { $('expTitle').textContent='Full Articulatory System'; $('expText').innerHTML='Every phoneme is accessible. <b>Compare</b> English and Hindi sounds. <b>Trace</b> sound change chains. <b>Write</b> articulatory descriptions. This is the whole map of speech.'; }
+}
+
+// ---- assessment per grade ----
+function buildAssessmentRounds(g){
+  if(g===1) return [
+    {q:'Which mouth shape makes the <b>/m/</b> sound?',opts:['Lips together','Tongue behind top teeth','Back of mouth'],a:0},
+    {q:'Which mouth shape makes the <b>/t/</b> sound?',opts:['Lips together','Tongue tip behind top teeth','Throat'],a:1},
+    {q:'Where is your tongue when you say <b>/k/</b> (cat)?',opts:['Near the teeth (front)','Roof of mouth (middle)','Back of mouth (soft palate)'],a:2},
+  ];
+  if(g===2) return [
+    {q:'Listen: <b>/p/</b> (pin). Is your voice ON or OFF?',type:'listen',opts:['Voice OFF (voiceless)','Voice ON (voiced)'],a:0,say:'pin'},
+    {q:'Listen: <b>/b/</b> (bin). Is your voice ON or OFF?',type:'listen',opts:['Voice OFF','Voice ON (voiced)'],a:1,say:'bin'},
+    {q:'Which pair are voice twins (same mouth, different buzz)?',opts:['/p/ and /b/','/p/ and /t/','/m/ and /n/','/f/ and /s/'],a:0},
+  ];
+  if(g===3) return [
+    {q:'If /t/ → /d/ by <b>turning voice ON</b>, what does /p/ become?',opts:['/b/','/m/','/f/','/k/'],a:0},
+    {q:'If /t/ → /k/ by <b>moving tongue BACK</b>, what does /d/ become?',opts:['/g/','/n/','/z/','/b/'],a:0},
+    {q:'If /s/ → /z/ by adding voice, what does /f/ become?',opts:['/v/','/θ/','/ʃ/','/p/'],a:0},
+  ];
+  if(g===4) return [
+    {q:'Can /s/ and /p/ combine at the <b>start</b> of an English word?',opts:['Yes — spoon, spot, spin','No — they never combine','Only at the end of words','Only in other languages'],a:0},
+    {q:'The diphthong /aɪ/ glides from /æ/ to /ɪ/. Which word contains /aɪ/?',opts:['my','cat','bed','hot'],a:0},
+    {q:'Look at nonsense word: <b>splig</b>. Does it follow English sound-combining rules?',opts:['Yes — /spl/ is a valid cluster (splash)','No — /pl/ can\'t follow /s/','No — /g/ can\'t end a word','Yes — but only in Hindi'],a:0},
+  ];
+  // G5
+  return [
+    {q:'Describe: what does your <b>tongue</b> do to make /ʃ/ (ship)?',opts:['Tongue blade near the roof behind your teeth','Tongue tip between teeth','Tongue at the very back','Lips together, tongue flat'],a:0},
+    {q:'How is English /t/ different from Hindi ट (retroflex t)?',opts:['English /t/ is behind top teeth; Hindi ट curls tongue back','They are identical sounds','Hindi ट uses voice, English /t/ does not','English /t/ is made at the lips'],a:0},
+    {q:'Why can /ŋ/ (sing) end an English word but NOT start one?',opts:['English sound rules: /ŋ/ cannot appear at the start of a word','It can start words — "ngame" is a word','/ŋ/ is only a letter, not a sound','Because no language allows it'],a:0},
+  ];
+}
+function resetAssessment(){ assessRound=0; assessCorrect=0; assessAnswered=false; renderAssessment(); }
+function renderAssessment(){
+  const rounds=buildAssessmentRounds(currentGrade);
+  if(assessRound>=rounds.length){ showAssessComplete(); return; }
+  const rd=rounds[assessRound]; assessAnswered=false;
+  $('asQ').innerHTML=rd.q;
+  if(rd.type==='listen'&&rd.say){
+    $('asQ').innerHTML+=` <button class="g-hear" style="display:inline-flex;margin:0;padding:5px 10px;font-size:11px" onclick="speak('${rd.say}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14"/></svg> Play</button>`;
+  }
+  $('asOpts').innerHTML=rd.opts.map((o,i)=>`<button class="as-opt" data-i="${i}" onclick="checkAssess(${i})">${o}</button>`).join('');
+  $('asFb').textContent=''; $('asFb').className='as-fb';
+  $('asNext').classList.remove('show');
+}
+function checkAssess(ans){
+  if(assessAnswered) return; assessAnswered=true;
+  const rounds=buildAssessmentRounds(currentGrade);
+  const rd=rounds[assessRound];
+  const correct=ans===rd.a;
+  if(correct) assessCorrect++;
+  recordAssess(correct);
+  $('asFb').className='as-fb '+(correct?'ok':'no');
+  $('asFb').textContent=correct?'Correct!':'Not quite. Answer: '+rd.opts[rd.a];
+  $('asOpts').querySelectorAll('.as-opt').forEach((b,i)=>{
+    b.disabled=true; if(i===rd.a) b.classList.add('right'); else if(i===ans&&!correct) b.classList.add('wrong');
+  });
+  $('asNext').classList.add('show');
+}
+function nextAssessment(){ assessRound++; renderAssessment(); }
+function showAssessComplete(){
+  $('asQ').textContent=`Assessment complete: ${assessCorrect}/${buildAssessmentRounds(currentGrade).length} correct`;
+  $('asOpts').innerHTML='<button class="as-opt" onclick="resetAssessment()" style="text-align:center">Try again</button>';
+  $('asFb').textContent=''; $('asNext').classList.remove('show');
+}
+
+// ---- feature-signature lookup ----
+function consKey(v,pl,m){return`C${v}.${pl}.${m}`;}
+function vowKey(h,b,r,l){return`V${h}.${b}.${r}.${l}`;}
+const CIDX={},VIDX={};
+P.forEach(p=>{if(p.k==="C")CIDX[consKey(p.f.v,p.f.pl,p.f.m)]=p;if(p.k==="V")VIDX[vowKey(p.f.h,p.f.b,p.f.r,p.f.l)]=p;});
+
+function mutations(p){
+  const out=[];
+  const useKid=(currentGrade<=3);
+  const add=(label,sub,to)=>{if(to&&to.s!==p.s)out.push({label,sub,to});};
+  if(p.k==="C"){
+    const{v,pl,m}=p.f;
+    add(v?(useKid?"Turn buzz OFF":"Remove your voice"):(useKid?"Turn buzz ON":"Add your voice"),
+      v?(useKid?"buzzy → whispery":"voiced → voiceless"):(useKid?"whispery → buzzy":"voiceless → voiced"),
+      CIDX[consKey(v?0:1,pl,m)]);
+    if(pl>0) add(useKid?"Tongue forward":"Tongue forward",useKid?"tongue slides forward":"place: more front",CIDX[consKey(v,pl-1,m)]);
+    if(pl<7) add(useKid?"Tongue back":"Tongue back",useKid?"tongue slides back":"place: more back",CIDX[consKey(v,pl+1,m)]);
+    if(m>0) add(useKid?"Squeeze the air":"Tighten closure",useKid?"air squeezed tighter":"manner: more closed",CIDX[consKey(v,pl,m-1)]);
+    if(m<4) add(useKid?"Open the air path":"Open the flow",useKid?"air flows freer":"manner: more open",CIDX[consKey(v,pl,m+1)]);
+  } else if(p.k==="V"){
+    const{h,b,r,l}=p.f;
+    if(h>0) add(useKid?"Raise tongue":"Raise the tongue",useKid?"tongue rises":"vowel: higher",VIDX[vowKey(h-1,b,r,l)]);
+    if(h<3) add(useKid?"Drop jaw":"Lower the jaw",useKid?"jaw drops more":"vowel: more open",VIDX[vowKey(h+1,b,r,l)]);
+    if(b>0) add(useKid?"Tongue forward":"Tongue forward",useKid?"tongue slides forward":"vowel: more front",VIDX[vowKey(h,b-1,r,l)]);
+    if(b<2) add(useKid?"Tongue back":"Tongue back",useKid?"tongue slides back":"vowel: more back",VIDX[vowKey(h,b+1,r,l)]);
+    add(r?(useKid?"Unround lips":"Unround the lips"):(useKid?"Round lips":"Round the lips"),
+      r?(useKid?"lips unround":"rounded → spread"):(useKid?"lips round":"spread → rounded"),
+      VIDX[vowKey(h,b,r?0:1,l)]);
+    add(l?(useKid?"Make it short":"Shorten it"):(useKid?"Make it long":"Lengthen it"),
+      l?(useKid?"shorter":"long → short"):(useKid?"longer":"short → long"),
+      VIDX[vowKey(h,b,r,l?0:1)]);
+    P.filter(x=>x.k==="D"&&x.from===p.s).forEach(d=>add(useKid?"Glide into another":"Glide it",useKid?"glides into another vowel":"vowel → diphthong",d));
+  } else {
+    add(useKid?"Back to pure vowel":"Settle the glide",useKid?"back to pure vowel":"diphthong → pure vowel",BY[p.from]);
+  }
+  return out;
+}
+
+// ---- creature art (kept from original) ----
+function hueFor(p){if(p.k==="C")return 210+p.f.pl*16;if(p.k==="V")return 20+p.f.b*40+p.f.h*12;return 280;}
+function creatureSVG(p){
+  const hue=hueFor(p); const voiced=p.k==="C"?p.f.v:1;
+  const sat=voiced?78:34,lig=voiced?60:55;
+  const c1=`hsl(${hue} ${sat}% ${lig}%)`,c2=`hsl(${hue+24} ${sat}% ${lig-16}%)`;
+  const cx=100,cy=104,R=58; let deco="";
+  const manner=p.k==="C"?p.f.m:(p.k==="V"?-1:-2);
+  if(manner===0||manner===1){for(let i=0;i<12;i++){const a=i/12*Math.PI*2,r1=R+2,r2=R+18;const x1=cx+Math.cos(a)*r1,y1=cy+Math.sin(a)*r1,x2=cx+Math.cos(a)*r2,y2=cy+Math.sin(a)*r2;const xa=cx+Math.cos(a+.12)*r1,ya=cy+Math.sin(a+.12)*r1,xb=cx+Math.cos(a-.12)*r1,yb=cy+Math.sin(a-.12)*r1;deco+=`<path d="M${xa} ${ya} L${x2} ${y2} L${xb} ${yb} Z" fill="${c2}"/>`;}}
+  if(manner===2||manner===1){let d=`M ${cx-R} ${cy} `;const N=22;for(let i=0;i<=N;i++){const a=Math.PI-i/N*Math.PI*2,rr=R+(i%2?9:0);d+=`L ${cx+Math.cos(a)*rr} ${cy+Math.sin(a)*rr} `;}deco+=`<path d="${d}Z" fill="none" stroke="${c2}" stroke-width="3" opacity=".7"/>`;}
+  if(manner===3){deco+=`<line x1="${cx-20}" y1="${cy-R+6}" x2="${cx-30}" y2="${cy-R-22}" stroke="${c2}" stroke-width="4" stroke-linecap="round"/><circle cx="${cx-30}" cy="${cy-R-24}" r="6" fill="${c2}"/>`;deco+=`<line x1="${cx+20}" y1="${cy-R+6}" x2="${cx+30}" y2="${cy-R-22}" stroke="${c2}" stroke-width="4" stroke-linecap="round"/><circle cx="${cx+30}" cy="${cy-R-24}" r="6" fill="${c2}"/>`;}
+  if(manner===4){deco+=`<circle cx="${cx}" cy="${cy}" r="${R+12}" fill="none" stroke="${c1}" stroke-width="2" opacity=".4"/>`;}
+  let body;
+  if(p.k==="D"){const h2=hueFor(BY[p.from]);body=`<circle cx="${cx-22}" cy="${cy}" r="${R-6}" fill="hsl(${h2} 70% 60%)"/><circle cx="${cx+22}" cy="${cy}" r="${R-6}" fill="${c1}"/>`;}
+  else{body=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#bg${p.k})"/>`;}
+  const voiceless=(p.k==="C"&&!p.f.v);
+  const outline=voiceless?`<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="5 5"/>`:"";
+  const face=`<g><circle cx="${cx-17}" cy="${cy-6}" r="9" fill="#fff"/><circle cx="${cx-15}" cy="${cy-4}" r="4.5" fill="#11132a"/><circle cx="${cx+17}" cy="${cy-6}" r="9" fill="#fff"/><circle cx="${cx+19}" cy="${cy-4}" r="4.5" fill="#11132a"/><path d="M${cx-13} ${cy+16} Q${cx} ${cy+28} ${cx+13} ${cy+16}" fill="none" stroke="#11132a" stroke-width="3" stroke-linecap="round"/></g>`;
+  return`<defs><radialGradient id="bg${p.k}" cx="40%" cy="35%"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></radialGradient></defs>${deco}${body}${outline}${face}`;
+}
+
+// ---- articulation diagrams (kept from original) ----
+const PLACE_PT={0:[34,58],1:[52,50],2:[66,45],3:[86,43],4:[104,43],5:[128,46],6:[156,51],7:[200,72]};
+function mouthSVG(p){const[px,py]=PLACE_PT[p.f.pl];const voiced=p.f.v;const acc="#7c9bff";const plabel=placeLabel(currentGrade,p);return`<svg viewBox="0 0 240 116" role="img"><path d="M20,58 Q20,30 64,30 L150,33 Q205,40 214,62" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2.5"/><path d="M20,64 Q44,86 96,82 Q156,78 206,68" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2.5"/><path d="M16,52 Q8,61 16,70" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="3" stroke-linecap="round"/><line x1="208" y1="74" x2="208" y2="92" stroke="${voiced?acc:'rgba(255,255,255,.3)'}" stroke-width="3" stroke-linecap="round"/>${voiced?`<path d="M198,79 Q204,83 198,87 M218,79 Q212,83 218,87" fill="none" stroke="${acc}" stroke-width="1.6" opacity=".8"/>`:''}<text class="axl" x="208" y="106" text-anchor="middle">${voiced?(currentGrade<=3?'buzz on':'voice on'):(currentGrade<=3?'buzz off':'voice off')}</text><circle cx="${px}" cy="${py}" r="11" fill="${acc}" opacity=".22"/><circle cx="${px}" cy="${py}" r="5.5" fill="${acc}"/><text class="ptlabel" x="${px}" y="${py-15}">${plabel}</text><text class="axl" x="20" y="14">lips</text><text class="axl" x="214" y="20" text-anchor="end">throat</text></svg>`;}
+function vowelXY(b,h){return[50+(b/2)*112,30+(h/3)*78];}
+function vowelSVG(v,diph){const acc="#b98bff",acc2="#7c9bff";const[vx,vy]=vowelXY(v.f.b,v.f.h);let glide="";if(diph){const last=diph.s.slice(-1);const end=last==="ɪ"?[0,0]:last==="ʊ"?[2,0]:[1,2];const[ex,ey]=vowelXY(end[0],end[1]);glide=`<defs><marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3.2" orient="auto"><path d="M0,0 L6,3.2 L0,6.4 Z" fill="${acc}"/></marker></defs><line x1="${vx}" y1="${vy}" x2="${ex}" y2="${ey}" stroke="${acc}" stroke-width="2.4" marker-end="url(#arr)"/><circle cx="${ex}" cy="${ey}" r="4" fill="none" stroke="${acc}" stroke-width="2"/>`;}return`<svg viewBox="0 0 200 150" role="img"><polygon points="42,30 175,30 158,118 72,118" fill="rgba(124,155,255,.05)" stroke="rgba(255,255,255,.22)" stroke-width="1.5"/><text class="axl" x="40" y="22">front</text><text class="axl" x="176" y="22" text-anchor="end">back</text><text class="axl" x="6" y="34">close</text><text class="axl" x="6" y="120">open</text>${glide}<circle cx="${vx}" cy="${vy}" r="11" fill="${acc2}" opacity=".22"/><circle cx="${vx}" cy="${vy}" r="6" fill="${acc2}"/>${v.f.r?`<circle cx="${vx}" cy="${vy}" r="12" fill="none" stroke="${acc2}" stroke-width="1.6" opacity=".7"/>`:''}<text class="ptlabel" x="${vx}" y="${vy-16}">${diph?'start':v.s}</text></svg>`;}
+function renderArtic(p){const el=$("artic");if(p.k==="C")el.innerHTML=`<div class="cap">Where your mouth makes it</div>`+mouthSVG(p);else if(p.k==="V")el.innerHTML=`<div class="cap">Tongue position</div>`+vowelSVG(p,null);else el.innerHTML=`<div class="cap">A glide between two vowels</div>`+vowelSVG(BY[p.from],p);}
+
+// ---- set creature (core) ----
+function setCreature(p,isMutation){
+  const wasNew=!found.has(p.s);
+  current=p;
+  const el=$("creature");el.innerHTML=creatureSVG(p);el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");
+  $("sym").textContent=p.s;
+  const useKid=(currentGrade<=3);
+  $("name").textContent=useKid?kidName(p):p.n;
+  const il=$("ipaLink"); if(il) il.href="/ipa?s="+encodeURIComponent(p.s);  // seamless → IPA chart at this phoneme
+  const dna=$("dna");dna.innerHTML="";
+  const chips=p.k==="C"
+    ?[[useKid?"buzz":"voice",p.f.v?(useKid?"buzzy":"voiced"):(useKid?"whispery":"voiceless")],[useKid?"where":"place",placeLabel(currentGrade,p)],[useKid?"how":"manner",mannerLabel(currentGrade,p)]]
+    :p.k==="V"
+    ?[["height",["close","close-mid","open-mid","open"][p.f.h]],["tongue",["front","central","back"][p.f.b]],["lips",p.f.r?"rounded":"spread"],["length",p.f.l?"long":"short"]]
+    :[["type","diphthong"],["glide","from /"+p.from+"/"]];
+  chips.forEach(([k,v])=>{const c=document.createElement("span");c.className="g-gene";c.innerHTML=`<span class="k">${k}</span> ${v}`;dna.appendChild(c);});
+  renderArtic(p);
+  found.add(p.s);saveFound();
+  const nb=$("newBadge");nb.classList.toggle("show",wasNew&&isMutation);
+  if(wasNew&&isMutation)setTimeout(()=>nb.classList.remove("show"),1800);
+  renderMuts(p);renderDex();
+  if(isMutation)speak(p.say);
+  if(mode==="daily"&&isMutation){dailyMoves++;updateDailyBar();if(p.s===dailyTarget.s)winDaily();}
+}
+function renderMuts(p){
+  const wrap=$("muts");wrap.innerHTML="";
+  if(!p)return;
+  const muts=mutations(p);
+  const showAll=(mode==='free'||currentGrade>=3);
+  const showVoiceOnly=(mode==='lab'&&currentGrade===2);
+  if(mode==='lab'&&currentGrade===1){$('mutTitle').style.display='none';wrap.style.display='none';return;}
+  $('mutTitle').style.display='';wrap.style.display='';
+  muts.forEach(mut=>{
+    // Grade-gate: G2 lab shows only voice mutations
+    if(showVoiceOnly){
+      const isVoice=mut.label.toLowerCase().includes('voice');
+      if(!isVoice)return;
+    }
+    // Grade-filter: only show mutations to sounds in this grade's pool
+    if(mode==='lab'&&!isInGradePool(mut.to))return;
+    const b=document.createElement("button");
+    b.className="g-mut"+(found.has(mut.to.s)?"":" new");
+    b.innerHTML=`<span class="lab">${mut.label}<span class="sub">${mut.sub}</span></span><span class="to">${mut.to.s}</span>`;
+    b.onclick=()=>setCreature(mut.to,true);
+    wrap.appendChild(b);
+  });
+}
+
+// ---- Phonodex (grade-filtered) ----
+function renderDex(){
+  const pool=getGradePool(currentGrade);
+  const filtered=P.filter(p=>pool.has(p.s));
+  $("dexCount").textContent=[...found].filter(s=>pool.has(s)).length;
+  $("dexTotal").textContent=filtered.length;
+  const fCount=[...found].filter(s=>pool.has(s)).length;
+  $("dexBar").style.width=(fCount/filtered.length*100)+"%";
+  const groups=[["Consonants","C"],["Vowels","V"],["Diphthongs","D"]];
+  const body=$("dexBody");body.innerHTML="";
+  groups.forEach(([title,kind])=>{
+    const grp=filtered.filter(x=>x.k===kind);
+    if(!grp.length)return;
+    const h=document.createElement("div");h.className="g-dex-group";h.textContent=title;body.appendChild(h);
+    const g=document.createElement("div");g.className="g-dex-grid";
+    grp.forEach(p=>{
+      const c=document.createElement("div");
+      const f=found.has(p.s);
+      c.className="g-dcell "+(f?"found":"locked")+(current&&current.s===p.s?" current":"");
+      c.textContent=f?p.s:"";c.title=f?`${p.s} — ${currentGrade<=3?kidName(p):p.n}`:(currentGrade<=3?`Tap to discover this sound`:`Tap to reveal`);
+      // every tile is tappable: setCreature reveals it (adds to found), plays it, and re-renders.
+      c.onclick=()=>{setCreature(p,false);speak(p.say);};
+      g.appendChild(c);
+    });
+    body.appendChild(g);
+  });
+}
+
+// ---- Modes ----
+function setMode(m){
+  if(m==='free'&&currentGrade<3)return;
+  if(m==='daily'&&currentGrade<3)return;
+  mode=m;
+  $('mLab').classList.toggle('active',m==='lab');
+  $('mFree').classList.toggle('active',m==='free');
+  $('mDaily').classList.toggle('active',m==='daily');
+  $('dailyBar').classList.toggle('show',m==='daily');
+  if(m==='free'){
+    // Jump to a starter if current not set
+    if(!current)setCreature(BY['m']||P[0],false);
+    else setCreature(current,false);
+  }else if(m==='daily'){
+    startDaily();
+  }else{
+    const starter=BY['m']&&isInGradePool(BY['m'])?BY['m']:P.find(p=>isInGradePool(p));
+    if(starter&&(!current||!isInGradePool(current)))setCreature(starter,false);
+    else if(current)setCreature(current,false);
+    renderExpText();resetAssessment();renderEvidence();
+  }
+}
+
+// ---- Daily mode (kept from original) ----
+function seededPick(seed,arr){let x=Math.sin(seed)*10000;x=x-Math.floor(x);return arr[Math.floor(x*arr.length)];}
+function bfsDist(a,b){const q=[[a,0]],seen=new Set([a.s]);while(q.length){const[cur,d]=q.shift();if(cur.s===b.s)return d;mutations(cur).forEach(mu=>{if(!seen.has(mu.to.s)){seen.add(mu.to.s);q.push([mu.to,d+1]);}});}return-1;}
+function todaySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
+function startDaily(){
+  const seed=todaySeed();dailyStart=BY["m"];let cand=null;
+  for(let i=0;i<60;i++){const c=seededPick(seed+i,P);if(c.s!==dailyStart.s){const dist=bfsDist(dailyStart,c);if(dist>=3){cand=c;dailyPar=dist;break;}}}
+  dailyTarget=cand||seededPick(seed,P.filter(x=>x.k==="C"));dailyMoves=0;
+  const done=JSON.parse(localStorage.getItem("vaaani_daily")||"{}");
+  if(done.date===seed&&done.solved){setCreature(dailyTarget,false);updateDailyBar(true,done.moves);return;}
+  setCreature(dailyStart,false);updateDailyBar();
+}
+function updateDailyBar(solved,movesOverride){
+  const m=movesOverride!=null?movesOverride:dailyMoves;
+  $("dailyBar").innerHTML=solved?`Today's target <span class="target">/${dailyTarget.s}/</span> — solved in <b>${m}</b> mutations (par ${dailyPar}). Come back tomorrow!`:`Evolve from <b>/${dailyStart.s}/</b> to <span class="target">/${dailyTarget.s}/</span> &nbsp;·&nbsp; mutations: <b>${dailyMoves}</b> &nbsp;·&nbsp; par ${dailyPar}`;
+}
+function winDaily(){
+  const seed=todaySeed();let streak=1;const prev=JSON.parse(localStorage.getItem("vaaani_daily")||"{}");
+  if(prev.lastSolvedSeed&&seed-prev.lastSolvedSeed<=1&&prev.streak)streak=prev.streak+(seed!==prev.lastSolvedSeed?1:0);
+  localStorage.setItem("vaaani_daily",JSON.stringify({date:seed,solved:true,moves:dailyMoves,streak,lastSolvedSeed:seed}));
+  const score=dailyMoves<=dailyPar?"Perfect!":(dailyMoves<=dailyPar+2?"Great!":"Solved!");
+  $("winTitle").textContent=`${score} /${dailyTarget.s}/ reached`;
+  const eff=Math.max(1,Math.round(dailyPar/dailyMoves*5));
+  $("winGrid").textContent="".repeat(eff)+"".repeat(5-eff);
+  $("winText").textContent=`${dailyMoves} mutations (par ${dailyPar}). Streak: ${streak}`;
+  $("winModal").classList.add("show");
+  $("shareBtn").onclick=()=>{const txt=`Vaaani Sound Lab\n/${dailyStart.s}/ → /${dailyTarget.s}/ in ${dailyMoves} (par ${dailyPar})\n${$("winGrid").textContent}\nStreak ${streak} brain.vaaani.in/evolution`;navigator.clipboard?.writeText(txt).then(()=>{$("shareBtn").textContent="Copied!";setTimeout(()=>$("shareBtn").textContent="Share result",1500);});};
+}
+function closeModal(){$("winModal").classList.remove("show");}
+
+// ---- BOOT ----
+renderGradeBar();setGrade(1);
+$("hearBtn").onclick=()=>current&&speak(current.say);
+if(window.speechSynthesis){speechSynthesis.onvoiceschanged=()=>{};speechSynthesis.getVoices();}
+const starter=BY['m']; if(starter)setCreature(starter,false); else setCreature(P[0],false);
+renderDex();renderExpText();resetAssessment();renderEvidence();
+</script>
+</body>
+</html>

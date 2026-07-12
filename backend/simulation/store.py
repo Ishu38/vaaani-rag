@@ -54,6 +54,7 @@ def init_db() -> None:
         was_correct INTEGER NOT NULL DEFAULT 0,
         response_ms REAL NOT NULL DEFAULT 0,
         confidence_1to5 INTEGER NOT NULL DEFAULT 0,
+        confidence_0to100 INTEGER NOT NULL DEFAULT -1,
         coaching_interjection TEXT NOT NULL DEFAULT '',
         pressure_state_json TEXT NOT NULL DEFAULT '{}',
         is_flagged INTEGER NOT NULL DEFAULT 0,
@@ -139,19 +140,19 @@ class SimulationStore:
                    correct_answer: str, student_answer: str,
                    was_correct: int, response_ms: float, confidence_1to5: int,
                    coaching_interjection: str, pressure_state: dict,
-                   is_flagged: int) -> None:
+                   is_flagged: int, confidence_0to100: int = -1) -> None:
         db = _conn()
         db.execute(
             """INSERT INTO simulation_answers
                (session_id, user_id, question_index, topic, difficulty,
                 query, correct_answer, student_answer, was_correct,
-                response_ms, confidence_1to5, coaching_interjection,
-                pressure_state_json, is_flagged)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                response_ms, confidence_1to5, confidence_0to100,
+                coaching_interjection, pressure_state_json, is_flagged)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (session_id, user_id, question_index, topic, difficulty,
              query, correct_answer, student_answer, was_correct,
-             response_ms, confidence_1to5, coaching_interjection,
-             json.dumps(pressure_state), is_flagged),
+             response_ms, confidence_1to5, confidence_0to100,
+             coaching_interjection, json.dumps(pressure_state), is_flagged),
         )
         db.commit()
         db.close()

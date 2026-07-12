@@ -185,12 +185,12 @@ def _handle_chat_turn(msg: IncomingMessage, user_id: int, text: str) -> list[Out
         return _reply(msg, f"Socratic mode is currently *{current}*. Use `/socratic on` or `/socratic off`.")
 
     if low.startswith("/docs"):
-        return _list_docs(msg)
+        return _list_docs(msg, user_id)
 
     if low.startswith("/listen"):
-        return _make_audio(msg, text[len("/listen"):].strip(), mode="narration")
+        return _make_audio(msg, text[len("/listen"):].strip(), mode="narration", user_id=user_id)
     if low.startswith("/podcast"):
-        return _make_audio(msg, text[len("/podcast"):].strip(), mode="podcast")
+        return _make_audio(msg, text[len("/podcast"):].strip(), mode="podcast", user_id=user_id)
 
     if low.startswith("/review"):
         return _start_review(msg, user_id)
@@ -225,44 +225,39 @@ def _rag_answer(msg: IncomingMessage, user_id: int, query: str) -> list[Outgoing
 
 
 def _run_chat_for_messenger(query: str, *, socratic: bool, user_id: int) -> str:
-    """Minimal chat pipeline for the bot: retrieval + DeepSeek, returning
-    a single string. We deliberately skip the streaming + structured
-    output path the web UI uses; messengers don't render tables nicely
-    and don't need progressive updates."""
-    from main import retriever  # local import to avoid cycle at module load
-    from intent import classify, graph_mode
-    from llm import build_graph_block, build_prompt, call_deepseek
-    from memory import format_memory_block, load_memory, record_query
+    """One chat turn for the bot, via the SAME pipeline the web uses
+    (_run_intent): intent routing, graph-RAG, Hermes, the relevance gate,
+    and per-user privacy scoping all apply. Messengers just get the final
+    string — no streaming, no structured output.
 
-    hits = retriever.search(query, top_k=5)
-    intent = classify(query)
-    g_mode = graph_mode(query, intent)
-    mem = load_memory()
-    mem_block = format_memory_block(mem)
+    (This used to hand-roll retrieval with signatures that had drifted —
+    every call in it crashed on any bot question. Delegating keeps it from
+    rotting again.)
+    """
+    from main import _allowed_paths, _run_intent  # lazy: avoid cycle at module load
+    from auth import service as auth_service
+    from memory import record_query
 
-    graph_block = build_graph_block(hits, mode=g_mode)
-    prompt = build_prompt(
-        query=query,
-        hits=hits,
-        intent=intent,
-        memory_block=mem_block,
+    user = None
+    try:
+        user = auth_service.get_user_by_id(user_id) if user_id else None
+    except Exception:
+        user = None
+
+    result, _retrieval = _run_intent(
+        query, False,
         socratic=socratic,
-        graph_block=graph_block,
+        user=user,
+        allowed_paths=_allowed_paths(user),
     )
-    resp = call_deepseek(prompt, stream=False, json_mode=False)
-    answer = ""
-    if isinstance(resp, dict):
-        try:
-            answer = resp["choices"][0]["message"]["content"].strip()
-        except (KeyError, IndexError):
-            answer = ""
+    answer = (result.answer or "").strip()
 
     if not answer:
         answer = "I couldn't draw a clear answer from your material this turn. Try rephrasing or /docs to see what's loaded."
 
     # Persist a query trace so memory + dashboards still work for bot turns.
     try:
-        record_query(query, intent=intent)
+        record_query(query, user_id=user_id)
     except Exception:
         pass
 
@@ -273,10 +268,24 @@ def _run_chat_for_messenger(query: str, *, socratic: bool, user_id: int) -> str:
 #  /docs
 # =========================================================================
 
-def _list_docs(msg: IncomingMessage) -> list[OutgoingReply]:
+def _allowed_names_for(user_id: int | None) -> set[str] | None:
+    """Doc display-names the linked account may read (privacy scope)."""
+    try:
+        from main import _allowed_doc_names
+        from auth import service as auth_service
+        user = auth_service.get_user_by_id(user_id) if user_id else None
+        return _allowed_doc_names(user)
+    except Exception:
+        return set()  # fail closed
+
+
+def _list_docs(msg: IncomingMessage, user_id: int | None = None) -> list[OutgoingReply]:
     try:
         from audio import list_narratable_docs
         docs = list_narratable_docs()
+        names = _allowed_names_for(user_id)
+        if names is not None:
+            docs = [d for d in docs if d.get("doc_name") in names]
     except Exception:
         docs = []
     if not docs:
@@ -293,10 +302,13 @@ def _list_docs(msg: IncomingMessage) -> list[OutgoingReply]:
 #  /listen + /podcast
 # =========================================================================
 
-def _make_audio(msg: IncomingMessage, name: str, *, mode: str) -> list[OutgoingReply]:
+def _make_audio(msg: IncomingMessage, name: str, *, mode: str, user_id: int | None = None) -> list[OutgoingReply]:
     name = name.strip()
     if not name:
         return _reply(msg, f"Usage: `/{mode if mode == 'podcast' else 'listen'} <doc name>`. Use /docs to see options.")
+    allowed = _allowed_names_for(user_id)
+    if allowed is not None and name not in allowed:
+        return _reply(msg, f"I don't have a document called *{name}*. Use /docs to see what's ingested.")
     try:
         from audio import narrate_doc, podcast_doc
         result = podcast_doc(name) if mode == "podcast" else narrate_doc(name)
@@ -473,7 +485,7 @@ def _handle_attachment(msg: IncomingMessage, user_id: int) -> list[OutgoingReply
 
     try:
         if kind == "pdf" or attachments.is_pdf(msg.attachment_mime, msg.attachment_name):
-            result = attachments.ingest_pdf(path, source_label=label)
+            result = attachments.ingest_pdf(path, source_label=label, owner_user_id=user_id)
             return _reply(
                 msg,
                 f"Got the PDF *{msg.attachment_name or result['doc_filename']}*. "
@@ -482,7 +494,9 @@ def _handle_attachment(msg: IncomingMessage, user_id: int) -> list[OutgoingReply
                 f"Ask me anything about it.",
             )
         if kind == "photo":
-            result = attachments.ingest_photo(path, source_label=label, caption=msg.text or "")
+            result = attachments.ingest_photo(
+                path, source_label=label, caption=msg.text or "", owner_user_id=user_id
+            )
             if not result.get("ok"):
                 if result.get("reason") == "too_little_text":
                     return _reply(

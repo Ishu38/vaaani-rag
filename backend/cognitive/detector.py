@@ -21,6 +21,7 @@ def analyze_turn(
     correct_answer: str,
     topic: str = "",
     confidence_1to5: int = 0,
+    confidence_0to100: int | None = None,
     response_ms: float = 0,
     is_correct: bool = False,
     session_id: str = "",

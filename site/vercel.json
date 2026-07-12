@@ -1,3 +1,38 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/app", "destination": "/tutor", "permanent": false }
+  ],
+  "rewrites": [
+    { "source": "/auth", "destination": "https://api.vaaani.in/auth" },
+    { "source": "/auth/(.*)", "destination": "https://api.vaaani.in/auth/$1" },
+    { "source": "/audio", "destination": "https://api.vaaani.in/audio" },
+    { "source": "/audio/(.*)", "destination": "https://api.vaaani.in/audio/$1" },
+    { "source": "/chat", "destination": "https://api.vaaani.in/chat" },
+    { "source": "/chat/(.*)", "destination": "https://api.vaaani.in/chat/$1" },
+    { "source": "/cognitive/(.*)", "destination": "https://api.vaaani.in/cognitive/$1" },
+    { "source": "/explore/(.*)", "destination": "https://api.vaaani.in/explore/$1" },
+    { "source": "/feynman", "destination": "https://api.vaaani.in/feynman" },
+    { "source": "/feynman/(.*)", "destination": "https://api.vaaani.in/feynman/$1" },
+    { "source": "/figures", "destination": "https://api.vaaani.in/figures" },
+    { "source": "/figures/(.*)", "destination": "https://api.vaaani.in/figures/$1" },
+    { "source": "/graph", "destination": "https://api.vaaani.in/graph" },
+    { "source": "/graph/(.*)", "destination": "https://api.vaaani.in/graph/$1" },
+    { "source": "/hermes", "destination": "https://api.vaaani.in/hermes" },
+    { "source": "/hermes/(.*)", "destination": "https://api.vaaani.in/hermes/$1" },
+    { "source": "/ingest", "destination": "https://api.vaaani.in/ingest" },
+    { "source": "/ingest/(.*)", "destination": "https://api.vaaani.in/ingest/$1" },
+    { "source": "/learning", "destination": "https://api.vaaani.in/learning" },
+    { "source": "/learning/(.*)", "destination": "https://api.vaaani.in/learning/$1" },
+    { "source": "/loop", "destination": "https://api.vaaani.in/loop" },
+    { "source": "/loop/(.*)", "destination": "https://api.vaaani.in/loop/$1" },
+    { "source": "/messenger", "destination": "https://api.vaaani.in/messenger" },
+    { "source": "/messenger/(.*)", "destination": "https://api.vaaani.in/messenger/$1" },
+    { "source": "/simulation/(.*)", "destination": "https://api.vaaani.in/simulation/$1" },
+    { "source": "/status", "destination": "https://api.vaaani.in/status" },
+    { "source": "/status/(.*)", "destination": "https://api.vaaani.in/status/$1" },
+    { "source": "/youtube", "destination": "https://api.vaaani.in/youtube" },
+    { "source": "/youtube/(.*)", "destination": "https://api.vaaani.in/youtube/$1" }
+  ]
 }

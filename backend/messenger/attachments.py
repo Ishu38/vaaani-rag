@@ -146,25 +146,55 @@ def _safe_label(label: str) -> str:
     return _SAFE_NAME_RE.sub("-", (label or "").strip())[:40].strip("-") or "doc"
 
 
-def save_text_as_doc(text: str, *, source_label: str, prefix: str = "telegram-photo") -> Path:
+def _dest_dir(owner_user_id: int | None) -> Path:
+    """Per-user subdir keeps file keys unique and ownership unambiguous."""
+    d = RAW_DIR / f"u{owner_user_id}" if owner_user_id else RAW_DIR
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def _record_owner(path: Path, owner_user_id: int | None) -> None:
+    """Stamp privacy-scope ownership (see scope.py) for an ingested file."""
+    if not owner_user_id:
+        return
+    try:
+        import scope
+        from auth import service as auth_service
+        user = auth_service.get_user_by_id(owner_user_id)
+        scope.record_ownership(
+            str(path.resolve()), owner_user_id, scope.sharing_school_ids(user)
+        )
+    except Exception:
+        pass
+
+
+def save_text_as_doc(
+    text: str, *, source_label: str, prefix: str = "telegram-photo",
+    owner_user_id: int | None = None,
+) -> Path:
     """Write OCRed (or otherwise text-extracted) content into data/raw/
     so the existing ingest pipeline picks it up. Returns the path."""
     ts = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
     label = _safe_label(source_label)
     fname = f"{prefix}-{label}-{ts}.md"
-    path = RAW_DIR / fname
+    path = _dest_dir(owner_user_id) / fname
     front = f"# Photo from {source_label} · {ts}\n\n" if "photo" in prefix else f"# {source_label}\n\n"
     path.write_text(front + text, encoding="utf-8")
+    _record_owner(path, owner_user_id)
     return path
 
 
-def save_pdf(source_path: Path, *, source_label: str, prefix: str = "telegram-doc") -> Path:
+def save_pdf(
+    source_path: Path, *, source_label: str, prefix: str = "telegram-doc",
+    owner_user_id: int | None = None,
+) -> Path:
     """Copy an inbound PDF into data/raw/ with a stable, sanitised name."""
     ts = datetime.utcnow().strftime("%Y%m%d-%H%M%S")
     label = _safe_label(source_label)
     fname = f"{prefix}-{label}-{ts}.pdf"
-    dest = RAW_DIR / fname
+    dest = _dest_dir(owner_user_id) / fname
     shutil.copy2(source_path, dest)
+    _record_owner(dest, owner_user_id)
     return dest
 
 
@@ -190,7 +220,10 @@ def run_ingest_and_refresh() -> dict:
 #  Top-level entry points used by the dispatcher
 # =========================================================================
 
-def ingest_photo(image_path: Path, *, source_label: str, caption: str = "") -> dict:
+def ingest_photo(
+    image_path: Path, *, source_label: str, caption: str = "",
+    owner_user_id: int | None = None,
+) -> dict:
     """OCR + persist + ingest. Returns a dict the dispatcher can format
     into a reply: {chars, words, chunks_added, total_chunks, doc_filename}."""
     text = ocr_image(image_path)
@@ -201,7 +234,7 @@ def ingest_photo(image_path: Path, *, source_label: str, caption: str = "") -> d
             "chars": len(text),
         }
     full = text if not caption else f"{caption.strip()}\n\n{text}"
-    doc_path = save_text_as_doc(full, source_label=source_label)
+    doc_path = save_text_as_doc(full, source_label=source_label, owner_user_id=owner_user_id)
     summary = run_ingest_and_refresh()
     return {
         "ok": True,
@@ -213,10 +246,10 @@ def ingest_photo(image_path: Path, *, source_label: str, caption: str = "") -> d
     }
 
 
-def ingest_pdf(pdf_path: Path, *, source_label: str) -> dict:
+def ingest_pdf(pdf_path: Path, *, source_label: str, owner_user_id: int | None = None) -> dict:
     """Drop an inbound PDF into data/raw/ + ingest. PyPDF (already a
     dep of the existing ingest pipeline) handles the text extraction."""
-    saved = save_pdf(pdf_path, source_label=source_label)
+    saved = save_pdf(pdf_path, source_label=source_label, owner_user_id=owner_user_id)
     summary = run_ingest_and_refresh()
     return {
         "ok": True,

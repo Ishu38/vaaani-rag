@@ -107,7 +107,11 @@ class Retriever:
         vecs = self.model.encode(list(texts), show_progress_bar=False, convert_to_numpy=True)
         return np.asarray(vecs, dtype=np.float32)
 
-    def search(self, query: str, k: int = TOP_K, *, source_filter: set[str] | None = None) -> list[dict]:
+    def search(
+        self, query: str, k: int = TOP_K, *,
+        source_filter: set[str] | None = None,
+        allowed_paths: set[str] | None = None,
+    ) -> list[dict]:
         """Return up to `k` chunks as [{text, source, score}] for `query`.
 
         Source-filename overlap boost: when the query contains tokens that
@@ -117,6 +121,11 @@ class Retriever:
         Hard source filter: if ``source_filter`` is a non-empty set, only
         chunks whose ``source`` field is in that set are returned. This
         backs the per-document "scope chip" in the UI.
+
+        ``allowed_paths`` (privacy scope, see scope.py): if a non-empty set,
+        only chunks whose ``path`` (owning file key) is in the set are
+        returned — this is the per-user/per-school visibility boundary and
+        is enforced independently of the cosmetic source_filter.
         """
         if not query.strip() or self.index is None:
             return []
@@ -148,6 +157,9 @@ class Retriever:
             # Hard scope filter — drop chunks not in the allowed source set.
             if source_filter and ch["source"] not in source_filter:
                 continue
+            # Privacy scope — drop chunks the caller's user may not see.
+            if allowed_paths is not None and ch.get("path", "") not in allowed_paths:
+                continue
             adj = float(score)
             if query_tokens:
                 src_tokens = {
@@ -173,7 +185,29 @@ class Retriever:
             return {"text": ch["text"], "source": ch["source"], "chunk_id": chunk_id}
         return None
 
-    def local_graph_search(self, query: str, k: int = TOP_K, *, source_filter: set[str] | None = None) -> dict:
+    def node_paths(self, node_key: str) -> set[str]:
+        """Owning file keys of every chunk a graph node was extracted from."""
+        if not self.kg.g.has_node(node_key):
+            return set()
+        chunks_meta = self.metadata.get("chunks", [])
+        cids = self.kg.g.nodes[node_key].get("chunk_ids", []) or []
+        return {
+            chunks_meta[c].get("path", "")
+            for c in cids
+            if 0 <= c < len(chunks_meta)
+        }
+
+    def node_visible(self, node_key: str, allowed_paths: set[str] | None) -> bool:
+        """True if the node derives from at least one file the caller may see."""
+        if allowed_paths is None:
+            return True
+        return bool(self.node_paths(node_key) & allowed_paths)
+
+    def local_graph_search(
+        self, query: str, k: int = TOP_K, *,
+        source_filter: set[str] | None = None,
+        allowed_paths: set[str] | None = None,
+    ) -> dict:
         """Local Graph-RAG: vector hits + 1-hop entity neighbourhood + community context.
 
         Returns a dict with:
@@ -186,7 +220,7 @@ class Retriever:
         retrieval to. Passes through to ``search()`` and additionally
         drops graph-expanded chunks whose source isn't in the set.
         """
-        vector_hits = self.search(query, k=k, source_filter=source_filter)
+        vector_hits = self.search(query, k=k, source_filter=source_filter, allowed_paths=allowed_paths)
         chunks_by_id: dict[int, dict] = {}
         # seed with vector hits (assign synthetic ids from metadata position)
         kg = self.kg
@@ -200,10 +234,18 @@ class Retriever:
                     break
 
         # Find entities mentioned in the query, expand neighborhood, gather their chunks.
-        matched = kg.find_entities(query)
+        # Privacy scope: entities/edges from files the caller can't see must not
+        # surface even as names — filter node keys, not just their chunks.
+        matched = [
+            m for m in kg.find_entities(query)
+            if self.node_visible(m, allowed_paths)
+        ]
         neighbour_keys: set[str] = set(matched)
         for k_ in matched:
-            neighbour_keys |= kg.neighbors(k_, hops=LOCAL_HOPS)
+            neighbour_keys |= {
+                n for n in kg.neighbors(k_, hops=LOCAL_HOPS)
+                if self.node_visible(n, allowed_paths)
+            }
         for cid in kg.chunks_for_nodes(neighbour_keys):
             ch = self.chunk_by_id(cid)
             if ch is None or cid in chunks_by_id:
@@ -211,6 +253,11 @@ class Retriever:
             # Scope-chip respected on graph-expansion too — otherwise the
             # filter leaks via the entity neighborhood.
             if source_filter and ch["source"] not in source_filter:
+                continue
+            if allowed_paths is not None and (
+                (chunks_meta[cid].get("path", "") if 0 <= cid < len(chunks_meta) else "")
+                not in allowed_paths
+            ):
                 continue
             chunks_by_id[cid] = {**ch, "score": 0.0}
 
@@ -268,9 +315,19 @@ class Retriever:
             "edges": edges[:8],
         }
 
-    def global_graph_search(self, query: str) -> dict:
-        """Global Graph-RAG: rank community summaries by semantic relevance to the query."""
-        comms = self.communities
+    def community_visible(self, c: Community, allowed_paths: set[str] | None) -> bool:
+        """A community is visible if at least one of its nodes is."""
+        if allowed_paths is None:
+            return True
+        return any(self.node_visible(nk, allowed_paths) for nk in c.nodes)
+
+    def global_graph_search(self, query: str, *, allowed_paths: set[str] | None = None) -> dict:
+        """Global Graph-RAG: rank community summaries by semantic relevance to the query.
+
+        Privacy scope: communities summarise chunk content, so only those with
+        at least one node from the caller's allowed files may participate.
+        """
+        comms = [c for c in self.communities if self.community_visible(c, allowed_paths)]
         if not comms:
             return {"chunks": [], "entities": [], "communities": [], "edges": []}
         # Embed query + community summaries; pick top-k communities by cosine.
@@ -292,32 +349,65 @@ class Retriever:
         picked = [valid[i] for i in order]
         # Pull a few representative chunks from the top community for grounding.
         chunks: list[dict] = []
+        chunks_meta = self.metadata.get("chunks", [])
         if picked:
             top_nodes = picked[0].nodes[:10]
             for cid in self.kg.chunks_for_nodes(top_nodes):
                 ch = self.chunk_by_id(cid)
-                if ch is not None:
-                    chunks.append({**ch, "score": float(scores[order[0]])})
+                if ch is None:
+                    continue
+                if allowed_paths is not None and (
+                    (chunks_meta[cid].get("path", "") if 0 <= cid < len(chunks_meta) else "")
+                    not in allowed_paths
+                ):
+                    continue
+                chunks.append({**ch, "score": float(scores[order[0]])})
                 if len(chunks) >= TOP_K:
                     break
         return {"chunks": chunks, "entities": [], "communities": picked, "edges": []}
 
-    def status(self) -> dict:
-        """Return a status summary for the /status endpoint."""
-        total_chunks = len(self.metadata.get("chunks", []))
+    def status(self, *, allowed_paths: set[str] | None = None) -> dict:
+        """Return a status summary for the /status endpoint.
+
+        With ``allowed_paths`` set, every figure is scoped to the caller's
+        visible documents (privacy boundary — see scope.py).
+        """
+        files = self.metadata.get("files", {})
+        all_chunks = self.metadata.get("chunks", [])
+        if allowed_paths is None:
+            total_chunks = len(all_chunks)
+            docs = [v["name"] for v in files.values()]
+            graph_nodes = self.kg.g.number_of_nodes()
+            graph_edges = self.kg.g.number_of_edges()
+            communities_count = len(self.communities)
+        else:
+            total_chunks = sum(
+                1 for ch in all_chunks if ch.get("path", "") in allowed_paths
+            )
+            docs = [v["name"] for k, v in files.items() if k in allowed_paths]
+            visible_nodes = {
+                nk for nk in self.kg.g.nodes if self.node_visible(nk, allowed_paths)
+            }
+            graph_nodes = len(visible_nodes)
+            # e is (u, v) or (u, v, key) depending on graph type — index, don't unpack.
+            graph_edges = sum(
+                1 for e in self.kg.g.edges if e[0] in visible_nodes and e[1] in visible_nodes
+            )
+            communities_count = sum(
+                1 for c in self.communities if self.community_visible(c, allowed_paths)
+            )
         index_size_mb = (
             round(self.index_path.stat().st_size / (1024 * 1024), 3)
             if self.index_path.exists()
             else 0.0
         )
-        docs = [v["name"] for v in self.metadata.get("files", {}).values()]
         return {
             "total_chunks": total_chunks,
             "index_size_mb": index_size_mb,
             "documents_indexed": docs,
             "embedding_dim": EMBED_DIM,
             "bit_width": BIT_WIDTH,
-            "graph_nodes": self.kg.g.number_of_nodes(),
-            "graph_edges": self.kg.g.number_of_edges(),
-            "communities_count": len(self.communities),
+            "graph_nodes": graph_nodes,
+            "graph_edges": graph_edges,
+            "communities_count": communities_count,
         }
