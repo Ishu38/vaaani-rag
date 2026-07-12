@@ -13,16 +13,16 @@ DB_PATH = DATA_DIR / "cognitive.db"
 ERROR_TYPES = [
     "memorization_override",
     "conceptual_gap",
-    "algebraic_slip",
-    "dimensional_error",
+    "terminology_confusion",
+    "spelling_sound_conflation",
+    "l1_transfer",
+    "overgeneralisation",
     "overconfidence",
     "underconfidence",
     "impulsive",
     "shortcut_dependency",
     "fragile_understanding",
     "visualization_weakness",
-    "unit_confusion",
-    "sign_error",
 ]
 
 
@@ -153,7 +153,10 @@ class CognitiveStore:
     def get_recent_events(self, user_id: int, limit: int = 50) -> list[dict]:
         db = _conn()
         rows = db.execute(
-            "SELECT * FROM cognitive_events WHERE user_id=? ORDER BY created_at DESC LIMIT ?",
+            # id DESC tiebreak: created_at has second resolution, and rapid-fire
+            # answers (game taps) can share a timestamp — insertion order must
+            # survive so bounce-back sequences reconstruct correctly.
+            "SELECT * FROM cognitive_events WHERE user_id=? ORDER BY created_at DESC, id DESC LIMIT ?",
             (user_id, limit),
         ).fetchall()
         db.close()
@@ -165,6 +168,21 @@ class CognitiveStore:
             "SELECT error_type, COUNT(*) as cnt FROM cognitive_events "
             "WHERE user_id=? GROUP BY error_type ORDER BY cnt DESC",
             (user_id,),
+        ).fetchall()
+        db.close()
+        return {r["error_type"]: r["cnt"] for r in rows}
+
+    def aggregate_error_breakdown(self, user_ids: list[int]) -> dict:
+        """School-wide misconception tally across many students (real errors only)."""
+        if not user_ids:
+            return {}
+        ph = ",".join("?" for _ in user_ids)
+        db = _conn()
+        rows = db.execute(
+            f"SELECT error_type, COUNT(*) as cnt FROM cognitive_events "
+            f"WHERE user_id IN ({ph}) AND error_type NOT IN ('', 'no_error') "
+            f"GROUP BY error_type ORDER BY cnt DESC",
+            tuple(user_ids),
         ).fetchall()
         db.close()
         return {r["error_type"]: r["cnt"] for r in rows}

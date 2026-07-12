@@ -9,16 +9,16 @@ from .classifier import ERROR_TYPES
 ERROR_LABELS = {
     "memorization_override": "Rote Memorization",
     "conceptual_gap": "Conceptual Gap",
-    "algebraic_slip": "Algebraic Slips",
-    "dimensional_error": "Dimensional Errors",
+    "terminology_confusion": "Term Mix-ups",
+    "spelling_sound_conflation": "Letters vs Sounds",
+    "l1_transfer": "Mother-Tongue Transfer",
+    "overgeneralisation": "Rule Overgeneralisation",
     "overconfidence": "Overconfidence",
     "underconfidence": "Underconfidence",
     "impulsive": "Impulsive Solving",
     "shortcut_dependency": "Shortcut Dependency",
     "fragile_understanding": "Fragile Understanding",
     "visualization_weakness": "Visualization Gap",
-    "unit_confusion": "Unit Confusion",
-    "sign_error": "Sign Errors",
     "no_error": "Correct",
 }
 
@@ -94,10 +94,18 @@ def build_fingerprint(user_id: int) -> dict:
     if error_counts.get("shortcut_dependency", 0) > max(1, total_count) * 0.2:
         biases["shortcut_issue"] = "Relies on pattern matching over understanding"
 
-    # Resilience score
-    resilience = min(1.0, max(0.0, accuracy / 100))
-    if biases.get("tendency", ""):
-        resilience -= 0.1
+    # Resilience score — the metric the UI promises: of the answers given
+    # immediately after a miss, what fraction were correct? (Bounce-back
+    # rate, not accuracy.) Events arrive newest-first; walk them oldest-first.
+    def _ok(e: dict) -> bool:
+        return e.get("error_type", "") == "no_error" or bool(e.get("actual_correct"))
+
+    chrono = list(reversed(events))
+    followups = [
+        _ok(nxt) for prev, nxt in zip(chrono, chrono[1:]) if not _ok(prev)
+    ]
+    # No miss yet (or nothing after the only miss): resilience is untested.
+    resilience = (sum(followups) / len(followups)) if followups else None
 
     return {
         "user_id": user_id,
@@ -122,7 +130,8 @@ def build_fingerprint(user_id: int) -> dict:
         "weaknesses": weaknesses,
         "biases": biases,
         "topics": topic_acc,
-        "resilience_score": round(resilience, 2),
+        "resilience_score": round(resilience, 2) if resilience is not None else None,
+        "resilience_n": len(followups),
         "confidence_calibration": calib,
     }
 
@@ -138,6 +147,7 @@ def _empty_fingerprint(user_id: int) -> dict:
         "weaknesses": [],
         "biases": {},
         "topics": {},
-        "resilience_score": 0.5,
+        "resilience_score": None,
+        "resilience_n": 0,
         "confidence_calibration": {},
     }

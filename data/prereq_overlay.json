@@ -1,0 +1,534 @@
+{
+ "generated": "scripts/enrich_prereqs.py",
+ "rules": {
+  "root_of": "root before derived word",
+  "is_a": "category before member"
+ },
+ "edges": [
+  {
+   "prerequisite": "tri",
+   "for": "triangle",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "tri",
+   "for": "tricycle",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "tri",
+   "for": "trio",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "tri",
+   "for": "triplets",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "tri",
+   "for": "tripod",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "uni",
+   "for": "unicorn",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "uni",
+   "for": "unicycle",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "uni",
+   "for": "uniform",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "uni",
+   "for": "unite",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "uni",
+   "for": "unique",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "bi",
+   "for": "bicycle",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "bi",
+   "for": "binoculars",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "bi",
+   "for": "biped",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "bi",
+   "for": "bilingual",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "bi",
+   "for": "biweekly",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "vehicle",
+   "for": "bicycle",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "octo",
+   "for": "octopus",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "octo",
+   "for": "octagon",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "octo",
+   "for": "october",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "octo",
+   "for": "octave",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "octo",
+   "for": "octet",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "cent",
+   "for": "century",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "cent",
+   "for": "centipede",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "cent",
+   "for": "percent",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "cent",
+   "for": "centenary",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "cent",
+   "for": "centimetre",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "dent",
+   "for": "dentist",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "dent",
+   "for": "dental",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "dent",
+   "for": "trident",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "dent",
+   "for": "denture",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "dent",
+   "for": "indent",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "ped",
+   "for": "pedal",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "ped",
+   "for": "pedestrian",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "ped",
+   "for": "tripod",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "ped",
+   "for": "pedicure",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "ped",
+   "for": "centipede",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "manu",
+   "for": "manual",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "manu",
+   "for": "manicure",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "manu",
+   "for": "manufacture",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "manu",
+   "for": "manuscript",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "manu",
+   "for": "manage",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "aqua",
+   "for": "aquarium",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "aqua",
+   "for": "aquatic",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "aqua",
+   "for": "aqueduct",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "aqua",
+   "for": "aquanaut",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "aqua",
+   "for": "aquaplane",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "sol",
+   "for": "solar",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "sol",
+   "for": "solarium",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "sol",
+   "for": "parasol",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "sol",
+   "for": "solstice",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "sol",
+   "for": "solar panel",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "luna",
+   "for": "lunar",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "luna",
+   "for": "lunatic",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "luna",
+   "for": "lunamoth",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "luna",
+   "for": "lunar eclipse",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "luna",
+   "for": "interlunar",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "terr",
+   "for": "terrain",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "terr",
+   "for": "territory",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "terr",
+   "for": "terrarium",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "terr",
+   "for": "terrace",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "terr",
+   "for": "subterranean",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "flor",
+   "for": "floral",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "flor",
+   "for": "florist",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "flor",
+   "for": "flora",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "flor",
+   "for": "flourish",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "flor",
+   "for": "floral crown",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "zoo",
+   "for": "zoology",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "zoo",
+   "for": "zookeeper",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "nov",
+   "for": "novel",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "nov",
+   "for": "novice",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "nov",
+   "for": "renovate",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "nov",
+   "for": "innovate",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "nov",
+   "for": "novelty",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "parent",
+   "for": "father",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "parent",
+   "for": "mother",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "person",
+   "for": "man",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "person",
+   "for": "woman",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "child",
+   "for": "boy",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "child",
+   "for": "girl",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "food",
+   "for": "apple",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "food",
+   "for": "banana",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "food",
+   "for": "pizza",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "food",
+   "for": "carrot",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "vehicle",
+   "for": "car",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "vehicle",
+   "for": "bus",
+   "rule": "is_a"
+  },
+  {
+   "prerequisite": "bio",
+   "for": "biography",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "geo",
+   "for": "geography",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "micro",
+   "for": "microscope",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "micro",
+   "for": "microphone",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "mega",
+   "for": "megaphone",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "scope",
+   "for": "telescope",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "scope",
+   "for": "microscope",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "port",
+   "for": "transport",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "scrib",
+   "for": "manuscript",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "graph",
+   "for": "photograph",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "graph",
+   "for": "telegraph",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "graph",
+   "for": "geography",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "tele",
+   "for": "telescope",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "tele",
+   "for": "telephone",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "tele",
+   "for": "telegraph",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "photo",
+   "for": "photograph",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "phon",
+   "for": "telephone",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "phon",
+   "for": "microphone",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "phon",
+   "for": "megaphone",
+   "rule": "root_of"
+  },
+  {
+   "prerequisite": "tract",
+   "for": "transport",
+   "rule": "root_of"
+  }
+ ]
+}

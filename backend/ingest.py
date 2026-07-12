@@ -341,8 +341,13 @@ def _extract_chunks_parallel(
     *,
     concurrency: int = EXTRACT_CONCURRENCY,
     progress_cb=None,
-) -> dict[int, object]:
+) -> tuple[dict[int, object], int]:
     """Run entity extraction over `chunks` in parallel batches.
+
+    Returns ``(results, failed)`` where `failed` counts chunks whose batch
+    errored (timeout, engine down, bad JSON). Callers must NOT mark a file
+    graph-extracted when `failed > 0`, otherwise the failure is silent and
+    the file never gets a retry — the "zero-node library" bug.
 
     `progress_cb`, if provided, is called as ``progress_cb(done, total)``
     each time a batch completes — used by main.py to push live progress
@@ -350,6 +355,7 @@ def _extract_chunks_parallel(
     instead of just a phase name.
     """
     results: dict[int, object] = {}
+    failed = 0
     jobs: list[tuple[int, str]] = []
     skipped = 0
     for i, ch in enumerate(chunks):
@@ -363,7 +369,7 @@ def _extract_chunks_parallel(
         print(f"  [extract] skipping {skipped}/{len(chunks)} chunks (< {MIN_EXTRACT_WORDS} words)")
 
     if not jobs:
-        return results
+        return results, failed
 
     timeout_val = DEEPSEEK_TIMEOUT
 
@@ -386,6 +392,7 @@ def _extract_chunks_parallel(
             idx_list, _ = futures[future]
             done += len(idx_list)
             if err:
+                failed += len(idx_list)
                 print(f"  [extract:warn] batch of {len(idx_list)} failed: {err}")
             else:
                 for k, v in batch_result.items():
@@ -398,7 +405,7 @@ def _extract_chunks_parallel(
                     pass
             print(f"  [extract] {done}/{total} done ({len(results)} with entities)")
 
-    return results
+    return results, failed
 
 
 def ingest_graph_deferred(progress_cb=None) -> dict:
@@ -440,36 +447,47 @@ def ingest_graph_deferred(progress_cb=None) -> dict:
             continue
         filenames_seen.add(fname)
 
-        # Gather all chunks for this file
+        # Gather all chunks for this file WITH their GLOBAL index into
+        # meta["chunks"]. That global index IS the chunk_id the knowledge graph
+        # records as provenance and that per-user visibility scoping resolves
+        # back to a source file. Using a file-local index here (the old bug)
+        # mis-attributed every node after the first file to whatever document
+        # occupies that global slot — a cross-document / cross-tenant leak.
         file_chunks: list[tuple[int, str]] = []
-        for i, c in enumerate(meta["chunks"]):
+        for gi, c in enumerate(meta["chunks"]):
             if c.get("source") == fname:
-                file_chunks.append((file_info.get("chunks", 0) - len(file_chunks) - 1, c["text"]))
+                file_chunks.append((gi, c["text"]))
 
         if not file_chunks:
             continue
 
         n = len(file_chunks)
+        local_to_global = [gi for gi, _ in file_chunks]
         print(f"Graph extraction: {fname} ({n} chunks)...")
         t0 = time.time()
 
+        # Normalise every extraction path to key by GLOBAL chunk_id.
+        results: dict = {}
+        failed_chunks = 0
         if n >= 8:
-            results = _extract_chunks_parallel(
+            # parallel extractor keys by local position (0..n-1); remap to global
+            par_results, failed_chunks = _extract_chunks_parallel(
                 [t for _, t in file_chunks], 0, progress_cb=progress_cb
             )
+            for local_id, ex in par_results.items():
+                results[local_to_global[local_id]] = ex
         else:
-            results = {}
             # Sequential for small files
             with httpx.Client(timeout=DEEPSEEK_TIMEOUT) as cl:
-                for i, (_, text) in enumerate(file_chunks):
+                for gi, text in file_chunks:
                     wc = len(text.split())
                     if wc < MIN_EXTRACT_WORDS:
                         continue
                     try:
-                        ex = extract_chunk(text, client=cl)
-                        results[i] = ex
+                        results[gi] = extract_chunk(text, client=cl)
                     except Exception as e:
-                        print(f"  [extract:warn] {fname} chunk {i}: {e}")
+                        failed_chunks += 1
+                        print(f"  [extract:warn] {fname} chunk {gi}: {e}")
 
         ent_count = 0
         rel_count = 0
@@ -479,12 +497,21 @@ def ingest_graph_deferred(progress_cb=None) -> dict:
             rel_count += len(ex.relations)
         triples_added += ent_count + rel_count
 
-        # Mark as graph-extracted
-        meta["files"][file_key]["_graph_extracted"] = True
-        save_metadata(meta, METADATA_PATH)
-
-        print(f"  {fname} graph done in {time.time() - t0:.1f}s "
-              f"(+{ent_count} entities, +{rel_count} relations)")
+        # Only mark the file graph-extracted when every extractable chunk
+        # succeeded. Marking on failure made extraction errors silent and
+        # permanent (a dead engine produced a zero-node graph that never
+        # got retried). Leaving the flag unset means the next /ingest run
+        # retries just the failed file; already-ingested extractions are
+        # deduped by kg.ingest_extraction upserts.
+        if failed_chunks == 0:
+            meta["files"][file_key]["_graph_extracted"] = True
+            save_metadata(meta, METADATA_PATH)
+            print(f"  {fname} graph done in {time.time() - t0:.1f}s "
+                  f"(+{ent_count} entities, +{rel_count} relations)")
+        else:
+            print(f"  [extract:warn] {fname}: {failed_chunks}/{n} chunks failed — "
+                  f"file left unmarked, will retry on next ingest "
+                  f"(+{ent_count} entities, +{rel_count} relations kept)")
 
     kg.save(GRAPH_PATH)
 

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vaaani — Efficacy &amp; Design Rationale</title>
+<style>
+  :root{--ink:#1a1f2b;--acc:#2b5cd6;--acc2:#6ea8fe;--mute:#5b6372;--green:#2a9d5c;--paper:#f7f8fb}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#e9edf3;color:var(--ink);font-family:Calibri,Segoe UI,system-ui,sans-serif}
+  .deck{max-width:1120px;margin:0 auto;padding:24px 16px}
+  .slide{background:#fff;border-radius:14px;box-shadow:0 6px 24px rgba(20,25,40,.10);
+    margin:0 0 22px;padding:44px 52px;min-height:560px;position:relative;overflow:hidden}
+  .slide.dark{background:var(--ink);color:#fff}
+  .bar{position:absolute;left:0;top:0;height:7px;width:100%;background:var(--acc)}
+  .kick{color:var(--acc);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:6px 0 6px}
+  h1{font-size:44px;margin:0 0 6px;line-height:1.08}
+  h2{font-size:30px;margin:0 0 18px;line-height:1.15}
+  .dark h1{font-size:56px}
+  .sub{font-size:22px;color:var(--acc2);font-weight:700;margin:2px 0 14px}
+  .lead{font-size:18px;color:#c9d2e3;max-width:900px}
+  ul{font-size:17px;line-height:1.5;padding-left:22px;max-width:980px}
+  li{margin:0 0 10px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+  .card{background:var(--paper);border-radius:12px;padding:20px 22px;border-left:6px solid var(--acc2)}
+  .card.g{border-left-color:var(--green)}
+  .card h3{margin:0 0 10px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
+  .card.g h3{color:var(--green)}
+  .card ul{font-size:15px;margin:0}
+  .quote{background:var(--paper);border-radius:12px;padding:26px;font-size:23px;font-weight:700;margin:8px 0 18px}
+  .grid4{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+  .tile{background:var(--paper);border-left:6px solid var(--acc);border-radius:10px;padding:16px 18px;font-size:18px;font-weight:700}
+  .foot{position:absolute;bottom:16px;left:52px;right:52px;display:flex;justify-content:space-between;color:var(--mute);font-size:12px}
+  .cred{color:#fff;font-size:14px;margin-top:26px}
+  .band{position:absolute;left:0;bottom:0;height:14px;width:100%;background:var(--acc)}
+  .note{background:var(--paper);border-radius:12px;padding:16px 20px;font-size:16px;margin-top:18px}
+  @media print{body{background:#fff}.slide{box-shadow:none;page-break-after:always;margin:0;border-radius:0}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 -->
+  <section class="slide dark">
+    <h1>Vaaani</h1>
+    <div class="sub">The Linguistics Tutor for Grades 1–8</div>
+    <p class="lead">Efficacy &amp; Design Rationale — how it is built to work, what it measures, and how we will prove it.</p>
+    <div class="cred">Neil Shankar Ray · MA Applied Linguistics (14 yrs) · AI/ML, IIT Patna</div>
+    <div class="band"></div>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">The Problem</div>
+    <h2>Every school teaches English. None teach how language works.</h2>
+    <ul>
+      <li>India's children arrive multilingual — a cognitive asset classrooms treat as interference to be corrected.</li>
+      <li>English is taught as rules to memorise, decoupled from the sounds, words and meaning a child actually acquires.</li>
+      <li>Assessment reports marks, not the thinking behind an error — so teaching can't target the real gap.</li>
+      <li>Screens make children passive consumers (reels, games) at the exact age language is built through active use.</li>
+      <li>Result: fluent-on-paper, fragile-in-use English, and a mother tongue left on the shelf.</li>
+    </ul>
+    <div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>2</span></div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">What Vaaani Is</div>
+    <h2>How language works — using the language a child already speaks.</h2>
+    <div class="quote">"Vaaani teaches children how language works — using the language they already speak at home as the bridge."</div>
+    <ul>
+      <li>A linguistics tutor (sounds, words, sentences, meaning, word-histories) for Grades 1–8, built for multilingual India.</li>
+      <li>Not exam prep, not a spoken-English app — a genuinely empty category with a clear school buyer.</li>
+      <li>The pedagogy is enforced in the engine's code, not promised in a brochure — which is the whole efficacy argument.</li>
+    </ul>
+    <div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>3</span></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">The Efficacy Thesis</div>
+    <h2>Pedagogy in code, not pedagogy in slideware.</h2>
+    <ul><li>Most edtech claims a pedagogy. Vaaani compiles it in — four principles, each backed by established learning science and each enforced by a mechanism a competitor cannot talk the model out of.</li></ul>
+    <div class="grid4">
+      <div class="tile">1 — Sound before Symbol</div>
+      <div class="tile">2 — Discovery before Definition</div>
+      <div class="tile">3 — Mother Tongue as a Bridge</div>
+      <div class="tile">4 — Evidence before Advancement</div>
+    </div>
+    <div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>4</span></div>
+  </section>
+
+  <!-- 5-8 principles -->
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">The Root Bridge Method · Principle 1</div><h2>Sound before Symbol</h2>
+    <div class="cols">
+      <div class="card"><h3>The Evidence</h3><ul>
+        <li>Phonemic awareness — hearing that 'thick' has 3 sounds but 5 letters — is among the strongest predictors of reading success.</li>
+        <li>Formal notation (IPA) before ~age 10 turns sound-play into decoding and slows acquisition.</li>
+        <li>Foundational-stage learning is oral first (NCF-SE 2023; NEP FLN mission).</li></ul></div>
+      <div class="card g"><h3>How Vaaani Enforces It</h3><ul>
+        <li>A serving-layer firewall physically rewrites phonetic notation into plain sound-talk below the notation grade — even mid-stream.</li>
+        <li>Not a prompt the model can forget — deterministic code.</li>
+        <li>Grade gate default 5, school-configurable 4–6, hard floor at 4.</li></ul></div>
+    </div><div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>5</span></div>
+  </section>
+
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">The Root Bridge Method · Principle 2</div><h2>Discovery before Definition</h2>
+    <div class="cols">
+      <div class="card"><h3>The Evidence</h3><ul>
+        <li>The generation effect: learners retain what they discover far better than what they are told.</li>
+        <li>Guided discovery and Bruner's spiral: give the data, ask the question, let the child name the pattern.</li>
+        <li>NEP 4.6 calls for experiential, story-based pedagogy.</li></ul></div>
+      <div class="card g"><h3>How Vaaani Enforces It</h3><ul>
+        <li>Socratic mode is a first-class engine mode schools can enforce; answers auto-checked against a no-direct-answer policy.</li>
+        <li>In the Word-Roots units, jargon (root, Latin, etymology) is forbidden through Grade 4 — the child catches the pattern first.</li>
+        <li>The tutor asks; it does not tell.</li></ul></div>
+    </div><div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>6</span></div>
+  </section>
+
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">The Root Bridge Method · Principle 3</div><h2>Mother Tongue as a Bridge</h2>
+    <div class="cols">
+      <div class="card"><h3>The Evidence</h3><ul>
+        <li>Additive multilingualism has well-evidenced cognitive benefits; suppressing L1 harms L2 learning.</li>
+        <li>NEP 4.11: home language as medium to at least Grade 5; 4.12: multilingual advantage.</li>
+        <li>L1→L2 transfer ('iskool', 'van/wan') is a normal developmental stage, not a defect.</li></ul></div>
+      <div class="card g"><h3>How Vaaani Enforces It</h3><ul>
+        <li>Every word unit carries a Hindi/Bengali connection, with honest cognate-vs-translation distinction encoded in the data.</li>
+        <li>The Cognitive X-Ray names mother-tongue transfer as a first-class diagnosis and teaches it contrastively.</li>
+        <li>Answers are written so a non-English-fluent parent can follow.</li></ul></div>
+    </div><div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>7</span></div>
+  </section>
+
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">The Root Bridge Method · Principle 4</div><h2>Evidence before Advancement</h2>
+    <div class="cols">
+      <div class="card"><h3>The Evidence</h3><ul>
+        <li>Retrieval practice and spaced repetition are among the most robust findings in learning science.</li>
+        <li>Two children who miss the same item can need opposite help — diagnosis must target the thinking, not the mark.</li>
+        <li>NEP 4.34+ / PARAKH: assessment FOR learning, competency-based.</li></ul></div>
+      <div class="card g"><h3>How Vaaani Enforces It</h3><ul>
+        <li>The Cognitive X-Ray classifies which of a linguistics-specific error taxonomy an answer was (transfer, letter-sound conflation, overgeneralisation…).</li>
+        <li>A graph-aware spaced-review engine resurfaces each concept exactly as it fades.</li>
+        <li>Weak spots steer the tutor's next questions; mastery is tracked per concept, per child.</li></ul></div>
+    </div><div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>8</span></div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">The Measurement Instrument</div>
+    <h2>Efficacy you can see — the child's language brain, made visible.</h2>
+    <ul>
+      <li>Every concept is a star: bright = mastered and well-remembered, dim = not yet discovered, amber = a memory fading toward review.</li>
+      <li>Per-child, live metrics: concepts, discovery %, connections, and Memory Health (average mastery).</li>
+      <li>A parent who can't read a mastery table can read a dim star — assessment-for-learning made legible.</li>
+    </ul>
+    <div class="note">This is also the efficacy data engine: the graph is the longitudinal record a school and parent watch grow across a term — and the substrate for outcome studies.</div>
+    <div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>9</span></div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">The Multimodal Breakthrough</div>
+    <h2>Point-See-Say, and Feel-Say-Measure — on nothing but a phone.</h2>
+    <ul>
+      <li><b>Explore My World:</b> the child points a camera at a real object; on-device recognition (frames never leave the phone) seeds a staged Language Journey ending in the child recording its story — production, not consumption. The anti-reel.</li>
+      <li><b>Feel the Sound:</b> the phone's vibration motor renders voicing as a buzz (voiced = your voice-box vibrating); the mic then measures whether the child voiced it — a closed perception-production loop, all on-device.</li>
+      <li>Grounded, embodied language learning — how children actually acquire language — using hardware every family already owns.</li>
+    </ul>
+    <div class="note">These loops fuse Vaaani's tutor with contrastive acoustics — a defensible, uniquely-integrated pipeline.</div>
+    <div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>10</span></div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">Policy Alignment</div>
+    <h2>Designed in alignment with NEP 2020 &amp; NCF-SE 2023.</h2>
+    <ul>
+      <li>NEP §2 / NIPUN Bharat (FLN): Band 1–2 is foundational literacy — oral, sound-first, no premature abstraction.</li>
+      <li>NEP 4.11 / NCF R1→R2: the home language is the bridge into English — Vaaani's core principle.</li>
+      <li>NEP 4.16: the Grades 6–8 'Languages of India' project — Vaaani's Band 4, systematised and individualised.</li>
+      <li>NEP 4.34+ / PARAKH: assessment for learning — the Cognitive X-Ray and living-brain graph.</li>
+      <li><i>Say "designed in alignment with" — never "certified" or "endorsed". Verify clause numbers against the official PDFs before presenting.</i></li>
+    </ul>
+    <div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>11</span></div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide"><div class="bar"></div>
+    <div class="kick">Honest Status &amp; Validation Roadmap</div>
+    <h2>Built on proven methods. Our own proof is the next step.</h2>
+    <div class="cols">
+      <div class="card"><h3>What Is Established</h3><ul>
+        <li>The methods — phonemic awareness, retrieval practice, guided discovery, additive multilingualism — are settled learning science.</li>
+        <li>The product works end-to-end: tutor, Explore, Feel-Say-Measure, living-brain graph, per-child diagnosis.</li>
+        <li>Own Apache-licensed model, on-device, privacy-scoped per child and school.</li></ul></div>
+      <div class="card g"><h3>How We Prove Vaaani</h3><ul>
+        <li>Design-partner pilot: one school, real Grades 1–5, one term.</li>
+        <li>Pre/post measures: phonemic awareness, target-vocabulary retention, L1→L2 transfer errors, engagement time.</li>
+        <li>The living-brain graph is the built-in instrument — mastery growth is the primary outcome.</li>
+        <li>Honest framing: 'built on', never 'proven to' — until the pilot reports.</li></ul></div>
+    </div><div class="foot"><span>Vaaani — Efficacy &amp; Design Rationale</span><span>12</span></div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide dark"><div class="bar"></div>
+    <h1 style="font-size:40px">Watch your child's language brain grow.</h1>
+    <p class="lead" style="margin-top:18px">A linguistics tutor that turns a child's multilingual world — and their own camera and voice — into a growing, measurable language universe.</p>
+    <p class="sub" style="margin-top:26px">The ask: one design-partner school, one term, to turn established method into measured outcome.</p>
+  </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Vaaani · Library Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  :root {
+    /* Adobe Spectrum-inspired professional palette (2026-05-28).
+       Same tokens as frontend//app so the two views feel like one app. */
+    --bg: #fafafa;
+    --panel: #ffffff;
+    --panel-2: #f4f4f5;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --text: #18181b;
+    --muted: #71717a;
+    --muted-strong: #3f3f46;
+    --accent: #2563eb;
+    --accent-glow: rgba(37, 99, 235, 0.15);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+    font-family: 'Inter', -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  body {
+    background:
+      radial-gradient(ellipse 1100px 500px at 50% -15%, rgba(37,99,235,0.04), transparent 65%),
+      var(--bg);
+    display: flex; flex-direction: column; min-height: 100vh;
+    letter-spacing: -0.005em;
+  }
+  nav.top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px; gap: 24px;
+    backdrop-filter: blur(14px);
+    background: rgba(250,250,250,0.85);
+    border-bottom: 1px solid var(--border);
+  }
+.brand { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+.brand.a { color: var(--accent); }
+.brand.badge {
+    margin-left: 8px; padding: 3px 8px; border-radius: 4px;
+    background: transparent; color: var(--muted-strong);
+    font-size: 10px; letter-spacing: 0.14em; font-weight: 600; text-transform: uppercase;
+    border: 1px solid var(--border-strong);
+  }
+.nav-links { display: flex; gap: 28px; font-size: 13.5px; color: var(--muted); }
+.nav-links a { color: var(--muted); text-decoration: none; padding: 4px 0; position: relative; transition: color.15s; }
+.nav-links a.active { color: var(--text); }
+.nav-links a.active::after { content: ''; position: absolute; bottom: -18px; left: 0; right: 0; height: 2px; background: var(--accent); }
+.nav-links a:hover { color: var(--text); }
+.pill { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
+    background: var(--panel); border: 1px solid var(--border); color: var(--muted-strong);
+    font-variant-numeric: tabular-nums; }
+  main { flex: 1; display: grid; grid-template-columns: 280px 1fr; gap: 0; min-height: 0; }
+  aside {
+    border-right: 1px solid var(--border); padding: 20px 18px; overflow-y: auto;
+    background: rgba(244,244,245,0.6);
+  }
+  aside.intro {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; font-size: 12.5px; color: var(--muted-strong);
+    line-height: 1.6; margin-bottom: 24px;
+  }
+  aside.intro strong { color: var(--text); font-weight: 600; }
+  aside.help { font-size: 11.5px; color: var(--muted); margin: -4px 0 10px; }
+  aside h2 { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 14px; font-weight: 600; }
+  aside.stat { display: flex; justify-content: space-between; padding: 10px 0;
+    border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted-strong);
+    font-variant-numeric: tabular-nums; }
+  aside.stat b { color: var(--text); font-weight: 600; }
+  aside.community { margin: 8px 0; padding: 12px 14px; border-radius: 6px;
+    background: var(--panel); border: 1px solid var(--border); cursor: pointer;
+    transition: border-color.15s, background.15s; font-size: 12.5px; }
+  aside.community:hover { border-color: var(--border-strong); background: var(--panel-2); }
+  aside.community.title { font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  aside.community.size { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  aside.community.swatch { display: inline-block; width: 10px; height: 10px;
+    border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  /* The #graph container MUST be height-constrained or vis-network's canvas
+     grows to fit its scattered nodes — we measured 17455 px in the wild,
+     which puts every node off-screen and the camera at y=-3169 staring at
+     emptiness. Calc against viewport with a nav allowance keeps the canvas
+     bounded to one screenful. The wrapper around #graph also needs the
+     same constraint (otherwise its height: auto wins). */
+  #graphWrap { position: relative; width: 100%; height: calc(100vh - 60px); min-height: 0; overflow: hidden; }
+  #graph { width: 100%; height: 100%; }
+  /* The empty / "pick a theme" placeholder overlays the canvas so both can
+     coexist. Without position:absolute the two block-level 100%-height
+     children stack vertically and push the hint off-screen. pointer-events:
+     none lets clicks fall through to the canvas underneath. */
+.empty {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 15px; text-align: center; padding: 40px;
+    pointer-events: none;
+    z-index: 2;
+  }
+.legend {
+    position: absolute; right: 20px; bottom: 20px;
+    background: rgba(255,255,255,0.95); border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 14px; font-size: 11.5px; max-width: 260px;
+    backdrop-filter: blur(8px); color: var(--muted-strong);
+  }
+.legend.row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+.legend.swatch { width: 8px; height: 8px; border-radius: 50%; }
+.legend.head { font-weight: 600; color: var(--text); margin-bottom: 6px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ===== FEYNMAN OVERLAY BANNER ===== */
+.feynman-banner {
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--bg); border: 1px solid var(--accent);
+    border-radius: 10px; padding: 12px 18px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 12px 32px rgba(37,99,235,0.15);
+    z-index: 5; max-width: 90%;
+  }
+.feynman-banner.head {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent);
+  }
+.feynman-banner.pct {
+    font-size: 22px; font-weight: 700; color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+.feynman-banner.label {
+    font-size: 13px; color: var(--text);
+  }
+.feynman-banner.label b { color: var(--accent); font-weight: 600; }
+.feynman-banner.swatch-row { display: flex; gap: 12px; font-size: 11px; color: var(--muted-strong); }
+.feynman-banner.sw { display: inline-flex; align-items: center; gap: 5px; }
+.feynman-banner.sw.dot {
+    width: 9px; height: 9px; border-radius: 50%; display: inline-block;
+  }
+.feynman-banner.sw.dot.covered { background: var(--accent); border: 2px solid var(--accent); }
+.feynman-banner.sw.dot.missed { background: var(--panel); border: 2px dashed var(--accent); }
+.feynman-banner.sw.dot.dimmed { background: var(--panel-2); border: 1px solid var(--border-strong); opacity: 0.6; }
+.feynman-banner.x {
+    background: transparent; border: 1px solid var(--border); border-radius: 6px;
+    color: var(--muted-strong); font: inherit; font-size: 12px; cursor: pointer;
+    padding: 4px 10px; transition: border-color.15s, color.15s;
+  }
+.feynman-banner.x:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ===== KID MODE (Grades 1–8) — bigger, calmer, fewer things on screen ===== */
+.kidtoggle { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    background: var(--panel); border: 1px solid var(--border-strong); color: var(--muted-strong);
+    cursor: pointer; font-family: inherit; transition: all.15s; }
+.kidtoggle:hover { border-color: var(--accent); color: var(--accent); }
+.kidtoggle.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  body.kid.stat, body.kid #glanceHead { display: none; }
+  body.kid aside.intro { font-size: 14.5px; line-height: 1.65; }
+  body.kid aside h2 { font-size: 13px; }
+  body.kid aside.help { font-size: 13px; }
+  body.kid.community { padding: 15px 16px; border-radius: 16px; display: flex; align-items: center;
+    gap: 13px; margin: 10px 0; box-shadow: 0 2px 8px rgba(20,20,40,.05); }
+  body.kid.community:hover { transform: translateY(-2px); }
+  body.kid.community.kidemoji { font-size: 28px; line-height: 1; }
+  body.kid.community.title { font-weight: 700; font-size: 16px; }
+  body.kid.community.size { font-size: 12.5px; }
+  body.kid.legend { font-size: 13.5px; max-width: 280px; }
+</style>
+</head>
+<body>
+<nav class="top">
+  <div class="brand"><span>Vaa</span><span class="a">ani</span><span class="badge">Library Map</span></div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/tutor">Chat</a>
+    <a href="/explore">Explore 📷</a>
+    <a href="/graph-view" class="active">Library Map</a>
+    <a href="/ipa">IPA Chart</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div style="display:flex; align-items:center; gap:14px;">
+    <button class="kidtoggle" id="kidToggle" title="Simpler view for younger students (Grades 1–8)"> Kid mode</button>
+    <span class="pill" id="statusPill">—</span>
+  </div>
+</nav>
+
+<main>
+  <aside>
+    <div class="intro">
+      This is the map of the Vaaani Library — every idea in your documents, laid out as stars. A bright one is something you've already practised and remember well; a dim one is waiting to be explored; an amber ring means a memory is fading and it's time to revisit. Each <strong>line</strong> is a connection, and each <strong>constellation</strong> is a word family or theme. Your own growing universe lives on the <a href="/learn">missions page</a> — this map shows everything there is to discover.
+    </div>
+
+    <style>
+      .prog-rail{margin:6px 0 22px;display:flex;flex-direction:column;gap:0}
+      .prog-step{display:flex;gap:11px;padding:11px 0;border-left:2px solid var(--accent,#6ea8fe);padding-left:14px;position:relative}
+      .prog-step + .prog-step{border-top:1px dashed rgba(255,255,255,.08)}
+      .prog-step .pn{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted,#8b93a7)}
+      .prog-step h4{margin:2px 0 3px;font-size:14px;color:var(--ink,#e8ecf4)}
+      .prog-step p{margin:0;font-size:12.5px;line-height:1.5;color:var(--muted,#8b93a7)}
+    </style>
+    <h2 style="margin-top:4px;">Three stages, one map</h2>
+    <div class="prog-rail">
+      <div class="prog-step"><div><div class="pn">Grades 1–3</div><h4>Sound-to-Spelling</h4><p>Sounds link to the letters that spell them — what you hear joins what you see.</p></div></div>
+      <div class="prog-step"><div><div class="pn">Grades 2–5</div><h4>Word Family</h4><p>Words that share a hidden piece pull together into families.</p></div></div>
+      <div class="prog-step"><div><div class="pn">Grades 4+</div><h4>Meaning Network</h4><p>Families connect to families — the whole web of meaning.</p></div></div>
+    </div>
+
+    <style>
+      .journey{margin:2px 0 20px;display:flex;flex-direction:column}
+      .jstep{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted,#8b93a7);padding:2.5px 0}
+      .jstep .jdot{width:8px;height:8px;border-radius:50%;background:var(--accent,#6ea8fe);opacity:.9;flex:none}
+      .jstep b{color:var(--text);font-weight:600}
+      .jarrow{color:var(--muted);opacity:.4;font-size:11px;margin-left:3px}
+      .mh-wrap{height:8px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden;margin:5px 0 2px}
+      .mh-bar{height:100%;background:linear-gradient(90deg,#6ea8fe,#7ee787);width:0%;transition:width .6s}
+      .recent-item{display:flex;justify-content:space-between;font-size:12px;color:var(--muted-strong);padding:3px 0;border-bottom:1px solid var(--border)}
+      .recent-item .rm{color:var(--accent);font-variant-numeric:tabular-nums}
+    </style>
+    <h2 style="margin-top:4px;">The Vaaani Language Journey</h2>
+    <div class="journey">
+      <div class="jstep"><span class="jdot"></span><b>Hear</b><span class="jarrow">→ sounds</span></div>
+      <div class="jstep"><span class="jdot"></span><b>Feel</b><span class="jarrow">→ rhythm &amp; stress</span></div>
+      <div class="jstep"><span class="jdot"></span><b>Recognize</b><span class="jarrow">→ words &amp; families</span></div>
+      <div class="jstep"><span class="jdot"></span><b>Construct</b><span class="jarrow">→ sentences</span></div>
+      <div class="jstep"><span class="jdot"></span><b>Reason</b><span class="jarrow">→ meaning</span></div>
+      <div class="jstep"><span class="jdot"></span><b>Communicate</b></div>
+    </div>
+
+    <h2 id="glanceHead">The library at a glance</h2>
+    <div class="stat"><span>Concepts (stars)</span><b id="sNodes">—</b></div>
+    <div class="stat"><span>Discovered</span><b id="sDiscovered">—</b></div>
+    <div class="stat"><span>Connections</span><b id="sEdges">—</b></div>
+    <div class="stat"><span>Constellations</span><b id="sComms">—</b></div>
+    <div class="stat"><span>Due to revisit</span><b id="sDue">—</b></div>
+    <div style="margin-top:12px;font-size:12px;color:var(--muted);">Memory health <b id="mhPct" style="color:var(--text);float:right">—</b></div>
+    <div class="mh-wrap"><div class="mh-bar" id="mhBar"></div></div>
+
+    <h2 style="margin-top:24px;display:none;" id="recentHead">Recently discovered</h2>
+    <div id="recentList"></div>
+
+    <h2 style="margin-top:28px;">Themes in your library</h2>
+    <div class="help">Click any theme to fly to it on the map.</div>
+    <div id="commList"></div>
+  </aside>
+
+  <div id="graphWrap">
+    <div id="graph"></div>
+
+    <!-- ACTIVE LEARNING: the child constructs (Build) and self-corrects (Fix),
+         with immediate feedback — not passive viewing. -->
+    <style>
+      .al-panel{position:absolute;top:14px;left:14px;z-index:40;width:340px;max-width:calc(100% - 28px);
+        background:var(--panel,#fff);border:1px solid var(--border,#e6e8ee);border-radius:14px;
+        box-shadow:0 8px 30px rgba(10,15,30,.16);padding:12px 14px;font-size:13.5px}
+      .al-tabs{display:flex;gap:6px;margin-bottom:10px}
+      .al-tab{flex:1;border:1px solid var(--border,#e6e8ee);background:transparent;border-radius:9px;padding:7px;
+        cursor:pointer;font:inherit;font-size:12.5px;color:var(--muted,#8b93a7);font-weight:600}
+      .al-tab.active{background:var(--accent,#6ea8fe);color:#fff;border-color:var(--accent,#6ea8fe)}
+      .al-hint{color:var(--muted,#8b93a7);margin-bottom:8px}
+      .al-chip,.al-word{border:1px solid var(--border,#e6e8ee);background:var(--panel-2,#f4f6fb);border-radius:8px;
+        padding:6px 10px;margin:0 6px 6px 0;cursor:pointer;font:inherit;font-size:13px;color:var(--text,#1a1f2b)}
+      .al-chip:hover,.al-word:hover{border-color:var(--accent,#6ea8fe)}
+      .al-bank{max-height:96px;overflow:auto;margin-bottom:8px}
+      .al-tray{min-height:30px;margin-bottom:8px}
+      .al-tchip{display:inline-flex;gap:6px;background:var(--accent,#6ea8fe);color:#fff;border-radius:8px;padding:5px 9px;margin:0 6px 6px 0;font-size:13px}
+      .al-tchip b{cursor:pointer}
+      .al-muted{color:var(--muted,#8b93a7)}
+      .al-input{width:100%;border:2px solid var(--border,#e6e8ee);border-radius:9px;padding:9px 11px;font:inherit;font-size:14px;margin-bottom:8px;background:var(--bg,#fff);color:var(--text,#1a1f2b)}
+      .al-btn{background:var(--accent,#6ea8fe);color:#fff;border:none;border-radius:9px;padding:9px 14px;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+      .al-words{margin:6px 0 8px;line-height:2.2}
+      .al-word.al-right{background:#2a9d5c;color:#fff;border-color:#2a9d5c}
+      .al-word.al-wrong{background:#f3d2cb;border-color:#e8503a}
+      .al-fb{font-size:13px;margin-top:8px;min-height:18px;color:var(--text,#1a1f2b)}
+      .al-fix{color:#2a9d5c;font-weight:700}
+      body.kid .al-panel{font-size:15px;width:360px}
+    </style>
+    <div class="al-panel" id="alPanel">
+      <div class="al-tabs">
+        <button class="al-tab active" data-mode="build" id="alTabBuild">🔨 Build a sentence</button>
+        <button class="al-tab" data-mode="fix" id="alTabFix">🔍 Fix the slip</button>
+      </div>
+      <div class="al-body" id="alBuild">
+        <div class="al-hint">Tap 2 words from your universe, then write a sentence using them.</div>
+        <div class="al-bank" id="alBank"></div>
+        <div class="al-tray" id="alTray"></div>
+        <input class="al-input" id="alSentence" placeholder="Write your sentence…" />
+        <button class="al-btn" id="alBuildCheck">Check it</button>
+        <div class="al-fb" id="alBuildFb"></div>
+      </div>
+      <div class="al-body" id="alFix" style="display:none">
+        <div class="al-hint" id="alFixPrompt">Find the word that isn’t right.</div>
+        <div class="al-words" id="alFixWords"></div>
+        <div class="al-fb" id="alFixFb"></div>
+        <button class="al-btn" id="alFixNext" style="display:none;margin-top:8px">Next →</button>
+      </div>
+    </div>
+    <div id="empty" class="empty" style="display:none;">
+      No map yet. Upload your linguistics notes or a textbook from the Chat page, and Vaaani will draw your concept map here automatically.
+    </div>
+    <div class="legend">
+      <div class="head">How to read this</div>
+      <div class="row"><span class="swatch" style="background:var(--accent)"></span>Each coloured star is one concept — a sound, a word-part, a rule</div>
+      <div class="row"><span class="swatch" style="background:#888"></span>A line means two concepts appeared together</div>
+      <div class="row" style="margin-top:8px; color: var(--muted); display: block;">Same colour = same theme. Click a star to see only what it connects to. Scroll to zoom, drag to pan.</div>
+    </div>
+  </div>
+</main>
+
+<script>
+const COMMUNITY_COLOURS = [
+  '#4d694e', '#7c6a2f', '#a06a1e', '#3c5340', '#6a8a6b', '#8a6f3c',
+  '#5d7459', '#b08a4a', '#6e5a8a', '#4a7c6b', '#a05a5a', '#5e8a3a'
+];
+
+function colourFor(cid) {
+  if (cid == null) return '#444';
+  return COMMUNITY_COLOURS[cid % COMMUNITY_COLOURS.length];
+}
+
+async function load() {
+  const [graphRes, statusRes] = await Promise.all([
+    fetch('/graph').then(r => r.json()),
+    fetch('/status').then(r => r.json()),
+  ]);
+  // Expose for focusCommunity() / renderCommunityPanel() — they need to
+  // look up community summaries + node display names by id.
+  window.graphRes = graphRes;
+  const J = graphRes.journey || {};
+  document.getElementById('sNodes').textContent = J.concepts ?? graphRes.nodes.length;
+  document.getElementById('sDiscovered').textContent =
+    (J.discovered ?? 0) + (J.discovery_pct ? ` · ${J.discovery_pct}%` : '');
+  document.getElementById('sEdges').textContent = J.connections ?? graphRes.edges.length;
+  document.getElementById('sComms').textContent = J.constellations ?? graphRes.communities.length;
+  document.getElementById('sDue').textContent = J.due_count ?? 0;
+  const mh = Math.round((J.memory_health ?? 0) * 100);
+  document.getElementById('mhPct').textContent = mh + '%';
+  document.getElementById('mhBar').style.width = mh + '%';
+  // Recently discovered concepts (only shows once the learner has practised any).
+  const recent = J.recently_discovered || [];
+  const recHead = document.getElementById('recentHead');
+  const recList = document.getElementById('recentList');
+  if (recent.length) {
+    recHead.style.display = '';
+    recList.innerHTML = recent.map(r =>
+      `<div class="recent-item"><span>${r.display}</span><span class="rm">${
+        r.mastery != null ? r.mastery.toFixed(1) + '/5' : ''}</span></div>`).join('');
+  } else {
+    recHead.style.display = 'none';
+    recList.innerHTML = '';
+  }
+  document.getElementById('statusPill').textContent =
+    `${statusRes.documents_indexed.length} docs · ${statusRes.total_chunks} chunks`;
+
+  // Build a node-id → display map so single-node themes can be named after their idea.
+  const displayByNodeId = new Map(graphRes.nodes.map(n => [n.id, n.display]));
+  // Single-node "themes" have no DeepSeek-generated title — surface the lone idea name instead.
+  function themeName(c) {
+    if (c.title && c.title.trim()) return c.title;
+    if (c.size === 1) {
+      // The /graph endpoint doesn't return community→node mapping, so derive from nodes.
+      const node = graphRes.nodes.find(n => n.community === c.id);
+      if (node) return `Just one idea: ${node.display}`;
+    }
+    return 'Unnamed theme';
+  }
+
+  // Community list in sidebar — sort by size desc, show meaningful ones first.
+  const cl = document.getElementById('commList');
+  cl.innerHTML = '';
+  const sorted = [...graphRes.communities].sort((a, b) => b.size - a.size);
+  for (const c of sorted) {
+    const div = document.createElement('div');
+    div.className = 'community';
+    const label = c.size === 1? '1 idea' : `${c.size} ideas`;
+    div.innerHTML = `
+      <div class="title"><span class="swatch" style="background:${colourFor(c.id)}"></span>${themeName(c)}</div>
+      <div class="size">${label}</div>
+    `;
+    div.onclick = () => network && focusCommunity(c.id);
+    cl.appendChild(div);
+  }
+
+  if (!graphRes.nodes.length) {
+    document.getElementById('empty').style.display = 'flex';
+    document.getElementById('empty').textContent = 'Your universe is still loading. Explore a Vaaani Library world or ask a question on the Chat page, and new stars will appear here.';
+    return;
+  }
+
+  // 2026-05-28: with corpora producing thousands of nodes / hundreds of
+  // communities, rendering the entire constellation upfront is both
+  // unreadable AND slow (improvedLayout gives up; forceAtlas2 churns).
+  // New model: start the canvas EMPTY. The sidebar IS the index. Clicking
+  // a community renders just that community's nodes + their 1-hop graph
+  // neighbours as the full canvas. Tiny "Show all" button is available
+  // for users who want the messy overview.
+  // Pre-index neighbours per node for O(1) 1-hop expansion later.
+  window._neighbours = new Map();
+  for (const e of graphRes.edges) {
+    if (!window._neighbours.has(e.source)) window._neighbours.set(e.source, new Set());
+    if (!window._neighbours.has(e.target)) window._neighbours.set(e.target, new Set());
+    window._neighbours.get(e.source).add(e.target);
+    window._neighbours.get(e.target).add(e.source);
+  }
+  window._nodeById = new Map(graphRes.nodes.map(n => [n.id, n]));
+
+  const nodes = new vis.DataSet([]); // start empty
+  const edges = new vis.DataSet([]); // start empty
+  window._nodesDS = nodes;
+  window._edgesDS = edges;
+
+  const container = document.getElementById('graph');
+  const data = { nodes, edges };
+  const options = {
+    nodes: { shape: 'dot', size: 16, borderWidth: 2 },
+    edges: { width: 1, smooth: { type: 'continuous' } },
+    interaction: { hover: true, dragNodes: true, zoomView: true },
+    physics: {
+      solver: 'forceAtlas2Based',
+      forceAtlas2Based: { gravitationalConstant: -80, springLength: 120, avoidOverlap: 0.3 },
+      stabilization: { iterations: 150 },
+    },
+    layout: { improvedLayout: true },
+  };
+  window.network = new vis.Network(container, data, options);
+
+  // Show the "pick a theme" hint until the user clicks a community.
+  const emptyEl = document.getElementById('empty');
+  emptyEl.style.display = 'flex';
+  emptyEl.textContent = `${graphRes.nodes.length.toLocaleString()} ideas across ${graphRes.communities.length.toLocaleString()} themes. Pick one on the left to see its constellation.`;
+
+  network.on('click', (params) => {
+    // Active-learning "Build" mode: tapping a star adds its word to the tray.
+    if (window._alMode === 'build' && params.nodes.length && window._nodeById) {
+      const n = window._nodeById.get(params.nodes[0]);
+      if (n && window.alAddWord) window.alAddWord(n.display);
+    }
+    if (params.nodes.length === 0) {
+      nodes.update(graphRes.nodes.map(n => ({ id: n.id, color: { background: colourFor(n.community), border: '#fff' } })));
+      return;
+    }
+    const id = params.nodes[0];
+    const connected = new Set(network.getConnectedNodes(id));
+    connected.add(id);
+    nodes.update(graphRes.nodes.map(n => ({
+      id: n.id,
+      color: connected.has(n.id)
+? { background: colourFor(n.community), border: '#fff' }
+        : { background: '#e0cc93', border: '#bfa86f' },
+    })));
+  });
+}
+
+// LIVING-BRAIN node visuals: a star's look encodes the learner's memory of the
+// concept, not just its theme colour.
+//  - undiscovered (no skill yet) → small, dim, hollow: a star waiting to be lit
+//  - discovered → sized + brightened by mastery (0–5)
+//  - due to revisit (memory fading) → warm amber ring, the "revive me" cue
+function nodeVisual(n) {
+  const theme = colourFor(n.community);
+  if (!n.discovered) {
+    return { size: 7, color: { background: '#3a3f4b', border: '#4b515f' }, borderWidth: 1 };
+  }
+  const m = (n.mastery ?? 0) / 5;                 // 0..1
+  const size = 10 + Math.round(m * 16);            // 10..26 px by mastery
+  const border = n.due ? '#e8a13a' : '#ffffff';    // amber = fading, white = fresh
+  const borderWidth = n.due ? 3 : 2;
+  return { size, color: { background: theme, border }, borderWidth };
+}
+
+function focusCommunity(cid) {
+  if (!window.graphRes) return;
+
+  // 1. Find every node whose community === cid.
+  const coreIds = new Set();
+  for (const n of window.graphRes.nodes) {
+    if (n.community === cid) coreIds.add(n.id);
+  }
+
+  // 2. Expand by 1 hop so the user sees how this community connects to the
+  // rest of the corpus (and so an isolated singleton has at least its
+  // immediate context visible).
+  const expanded = new Set(coreIds);
+  for (const id of coreIds) {
+    const nbrs = window._neighbours.get(id);
+    if (nbrs) for (const n of nbrs) expanded.add(n);
+  }
+
+  // 3. Build the subgraph datasets from scratch.
+  const nodePayload = [];
+  for (const id of expanded) {
+    const n = window._nodeById.get(id);
+    if (!n) continue;
+    const isCore = coreIds.has(id);
+    const vis_ = nodeVisual(n);
+    const masteryLine = n.discovered
+      ? `\nMastery: ${(n.mastery ?? 0).toFixed(1)}/5${n.due ? ' · due to revisit' : ''}`
+      : '\nNot yet discovered';
+    nodePayload.push({
+      id: n.id,
+      label: n.display,
+      title: `${n.display}\nKind: ${n.type}\nTheme: ${n.community?? '—'}${masteryLine}`,
+      // 1-hop neighbours (non-core) stay muted so the focused family reads clearly,
+      // but a discovered/fading neighbour still shows its memory state.
+      color: isCore || n.discovered
+        ? vis_.color
+        : { background: '#2f333d', border: '#3a3f4b' },
+      size: vis_.size,
+      borderWidth: vis_.borderWidth,
+      font: { color: '#c9d2e3', size: 13, face: 'Inter', strokeWidth: 3, strokeColor: '#12151c' },
+      community: n.community,
+    });
+  }
+  const edgePayload = [];
+  let edgeId = 0;
+  for (const e of window.graphRes.edges) {
+    if (expanded.has(e.source) && expanded.has(e.target)) {
+      edgePayload.push({
+        id: edgeId++,
+        from: e.source, to: e.target, label: e.type,
+        color: { color: '#d4d4d8', highlight: '#2563eb' },
+        font: { color: '#71717a', size: 10, strokeWidth: 3, strokeColor: '#ffffff', align: 'middle' },
+        arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+        smooth: { type: 'continuous' },
+      });
+    }
+  }
+  console.log('[focusCommunity]', cid, 'core:', coreIds.size, 'expanded:', expanded.size, 'edges:', edgePayload.length);
+
+  // 4. Hide placeholder.
+  const emptyEl = document.getElementById('empty');
+  if (emptyEl) emptyEl.style.display = 'none';
+
+  // 5. Destroy any existing network and create a fresh one with the
+  // subgraph as initial data. This bypasses ALL the "did the empty
+  // network auto-restart physics after a DataSet add" gotchas. It does
+  // cost a small flicker between selections but that's an acceptable
+  // trade for guaranteed-paint behaviour across vis-network versions.
+  if (window.network) {
+    try { window.network.destroy(); } catch (_) { /* noop */ }
+  }
+  const container = document.getElementById('graph');
+  const nodes = new vis.DataSet(nodePayload);
+  const edges = new vis.DataSet(edgePayload);
+  window._nodesDS = nodes;
+  window._edgesDS = edges;
+  const subOptions = {
+    nodes: { shape: 'dot', size: nodePayload.length > 200? 10 : 16, borderWidth: 2 },
+    edges: { width: nodePayload.length > 200? 0.6 : 1, smooth: { type: 'continuous' } },
+    interaction: { hover: true, dragNodes: true, zoomView: true },
+    physics: {
+      solver: 'forceAtlas2Based',
+      forceAtlas2Based: { gravitationalConstant: -60, springLength: 110, avoidOverlap: 0.3 },
+      stabilization: { iterations: nodePayload.length > 200? 100 : 200 },
+    },
+    layout: { improvedLayout: nodePayload.length < 500 },
+  };
+  window.network = new vis.Network(container, { nodes, edges }, subOptions);
+
+  // 6. Fit on stabilization, plus fallback after 3 s for tiny subgraphs
+  // where stabilization may complete before the listener attaches.
+  let fitDone = false;
+  const finish = () => {
+    if (fitDone) return;
+    fitDone = true;
+    try { window.network.fit({ animation: { duration: 600 } }); } catch (_) {}
+    try { window.network.setOptions({ physics: { enabled: false } }); } catch (_) {}
+  };
+  window.network.once('stabilizationIterationsDone', finish);
+  setTimeout(finish, 3000);
+
+  // 7. Side panel with summary + entity chips.
+  renderCommunityPanel(cid, [...coreIds]);
+}
+
+function renderCommunityPanel(cid, ids) {
+  // graphRes is captured in load(); pull the matching community + names.
+  if (!window.graphRes) return;
+  const community = (graphRes.communities || []).find(c => c.id === cid);
+  if (!community) return;
+  const displayById = new Map((graphRes.nodes || []).map(n => [n.id, n.display]));
+  const memberNames = ids.map(id => displayById.get(id) || id).slice(0, 30);
+
+  console.log('[community-panel] render', cid, 'members:', ids.length);
+  const PANEL_W = 340;
+  const PANEL_GAP = 24;
+  let panel = document.getElementById('communityPanel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'communityPanel';
+    // We attach to documentElement (html) and explicitly compute `left` in
+    // JS because vis-network applies a transform to its canvas wrapper —
+    // any `position: fixed; right: …` ends up anchored to that wrapper,
+    // not the viewport, and the panel lands at x ≈ -229. Computing left
+    // from window.innerWidth bypasses the containing-block issue entirely.
+    panel.style.cssText = [
+      'position:fixed', 'top:80px', `width:${PANEL_W}px`, 'max-height:75vh',
+      'overflow-y:auto', 'padding:14px 16px', 'background:#ffffff',
+      'border:1px solid #d4d4d8', 'border-radius:10px',
+      'box-shadow:0 6px 24px rgba(37, 99, 235,0.25)', 'z-index:9999',
+      'font-size:13px', 'color:#18181b', 'font-family:Inter,system-ui,sans-serif',
+    ].join(';');
+    document.documentElement.appendChild(panel);
+    // Re-anchor on viewport resize so it follows the right edge.
+    const reposition = () => {
+      panel.style.left = (window.innerWidth - PANEL_W - PANEL_GAP) + 'px';
+    };
+    reposition();
+    window.addEventListener('resize', reposition);
+    panel._reposition = reposition;
+  } else {
+    panel.style.left = (window.innerWidth - PANEL_W - PANEL_GAP) + 'px';
+  }
+  const swatch = `<span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${colourFor(cid)};vertical-align:middle;margin-right:6px;"></span>`;
+  const closeBtn = `<button id="closeCommPanel" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;">×</button>`;
+  const findingsHtml = (community.findings || []).length
+? `<div style="margin-top:10px;font-weight:600;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;">Key findings</div>
+       <ul style="margin:6px 0 0;padding-left:18px;line-height:1.5;">${(community.findings || []).map(f => `<li>${_esc(f)}</li>`).join('')}</ul>`
+    : '';
+  const memberHtml = memberNames.length
+? `<div style="margin-top:10px;font-weight:600;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;">Entities (${ids.length})</div>
+       <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;">${memberNames.map(n => `<span style="padding:2px 8px;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;font-size:11px;">${_esc(n)}</span>`).join('')}${ids.length > 30? ` <span style="color:var(--muted);font-size:11px;">+${ids.length - 30} more</span>` : ''}</div>`
+    : '<div style="margin-top:10px;color:var(--muted);font-style:italic;">No member entities in graph (stale community).</div>';
+  panel.innerHTML = `
+    ${closeBtn}
+    <div style="font-weight:700;font-size:14px;margin-bottom:4px;">${swatch}${_esc(community.title || 'Unnamed theme')}</div>
+    <div style="color:var(--muted);font-size:11px;margin-bottom:8px;">${community.size} ${community.size === 1? 'idea' : 'ideas'}</div>
+    ${community.summary? `<div style="line-height:1.5;color:var(--muted-strong);">${_esc(community.summary)}</div>` : ''}
+    ${findingsHtml}
+    ${memberHtml}
+  `;
+  document.getElementById('closeCommPanel').onclick = () => {
+    panel.remove();
+    // Restore full-colour view.
+    const ds = network.body.data.nodes;
+    const restored = [];
+    ds.forEach(n => restored.push({ id: n.id, color: { background: colourFor(n.community), border: '#fff' }, opacity: 1 }));
+    ds.update(restored);
+  };
+}
+
+function _esc(s) {
+  return String(s == null? '' : s)
+.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ===== FEYNMAN OVERLAY =====
+// Activated when /graph-view is opened with?topic=...&covered=...&missed=...
+// from the Explain-back modal. Recolours nodes by coverage state, dims the
+// rest of the constellation, and zooms to the subgraph.
+
+function parseFeynmanParams() {
+  const q = new URLSearchParams(window.location.search);
+  const topic = q.get('topic');
+  if (!topic) return null;
+  const split = (s) => (s || '').split(',').map(x => x.trim()).filter(Boolean);
+  return {
+    topic,
+    topicDisplay: q.get('topic_display') || topic,
+    covered: new Set(split(q.get('covered'))),
+    missed: new Set(split(q.get('missed'))),
+    pct: q.get('pct')? parseFloat(q.get('pct')) : null,
+  };
+}
+
+function applyFeynmanOverlay(graphRes, nodes, network, params) {
+  // Compute the highlighted set — anything mentioned in either bucket.
+  const highlighted = new Set([...params.covered,...params.missed, params.topic]);
+
+  // Override colours: covered = solid olive, missed = cream + dashed olive
+  // border, everything else dimmed to background panel tone.
+  const updates = graphRes.nodes.map(n => {
+    if (params.covered.has(n.id)) {
+      return {
+        id: n.id,
+        color: {
+          background: '#4d694e', border: '#3c5340',
+          highlight: { background: '#3c5340', border: '#4d694e' },
+        },
+        borderWidth: 3,
+        font: { color: '#fff3d5', size: 14, face: 'Inter', strokeWidth: 0 },
+        shapeProperties: { borderDashes: false },
+      };
+    }
+    if (params.missed.has(n.id)) {
+      return {
+        id: n.id,
+        color: {
+          background: '#f7e9c2', border: '#4d694e',
+          highlight: { background: '#fbedc6', border: '#3c5340' },
+        },
+        borderWidth: 2,
+        font: { color: '#3c5340', size: 13, face: 'Inter', strokeWidth: 3, strokeColor: '#ffffff' },
+        shapeProperties: { borderDashes: [4, 3] },
+      };
+    }
+    // Out-of-subgraph: dim heavily so the focus stays on the topic neighbourhood.
+    return {
+      id: n.id,
+      color: { background: '#f0dda8', border: '#bfa86f' },
+      borderWidth: 1,
+      font: { color: '#bfa86f', size: 11, face: 'Inter', strokeWidth: 2, strokeColor: '#ffffff' },
+      opacity: 0.45,
+    };
+  });
+
+  // The topic node itself: ring it so it pops even within the covered/missed mix.
+  updates.push({
+    id: params.topic,
+    color: { background: '#4d694e', border: '#a06a1e' },
+    borderWidth: 5,
+    font: { color: '#fff3d5', size: 16, face: 'Inter', strokeWidth: 0 },
+  });
+  nodes.update(updates);
+
+  // Dim the out-of-subgraph edges; brighten the subgraph edges.
+  const edgeUpdates = graphRes.edges.map((e, i) => {
+    const both = highlighted.has(e.source) && highlighted.has(e.target);
+    return {
+      id: i,
+      color: both? { color: '#4d694e' } : { color: '#e0cc93' },
+      width: both? 2 : 1,
+    };
+  });
+  network.body.data.edges.update(edgeUpdates);
+
+  // Zoom to the subgraph neighbourhood.
+  const focusIds = [...highlighted].filter(id => graphRes.nodes.some(n => n.id === id));
+  if (focusIds.length) {
+    network.once('stabilizationIterationsDone', () => {
+      network.fit({ nodes: focusIds, animation: { duration: 700 } });
+    });
+    // Also try a fit on next tick in case stabilization already finished.
+    setTimeout(() => network.fit({ nodes: focusIds, animation: { duration: 700 } }), 250);
+  }
+
+  renderFeynmanBanner(params);
+}
+
+function renderFeynmanBanner(params) {
+  const existing = document.getElementById('feynmanBanner');
+  if (existing) existing.remove();
+  const banner = document.createElement('div');
+  banner.id = 'feynmanBanner';
+  banner.className = 'feynman-banner';
+  const pctHTML = params.pct!= null
+? `<span class="pct">${params.pct}%</span>`
+    : '';
+  banner.innerHTML = `
+    <div>
+      <div class="head">Explain-back overlay</div>
+      <div class="label"><b>${escapeHtmlGV(params.topicDisplay)}</b> · ${params.covered.size} covered / ${params.covered.size + params.missed.size} in subgraph</div>
+    </div>
+    ${pctHTML}
+    <div class="swatch-row">
+      <span class="sw"><span class="dot covered"></span>covered</span>
+      <span class="sw"><span class="dot missed"></span>missed</span>
+      <span class="sw"><span class="dot dimmed"></span>outside</span>
+    </div>
+    <button class="x" id="feynmanBannerClear">Clear</button>
+  `;
+  document.querySelector('main > div:last-child').appendChild(banner);
+  document.getElementById('feynmanBannerClear').addEventListener('click', () => {
+    const url = new URL(window.location.href);
+    ['topic','topic_display','covered','missed','pct'].forEach(k => url.searchParams.delete(k));
+    window.location.href = url.toString();
+  });
+}
+
+function escapeHtmlGV(s) {
+  return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+// ===== KID MODE (Grades 1–8) =====
+// Auto-on when the page is opened with?grade=N (N<=8) or?kids=1; otherwise
+// remembers the last choice. The teacher/student can flip it any time.
+const KID_EMOJI = ['','','','','','','','','','','',''];
+const KID_MAX_THEMES = 8; // never overwhelm a young reader
+const KID_MAX_NODES = 12; // per-theme bubble cap
+
+function computeKidMode() {
+  const q = new URLSearchParams(location.search);
+  if (q.get('kids') === '0') { localStorage.setItem('vaaani_kid', '0'); return false; }
+  if (q.get('kids') === '1') { localStorage.setItem('vaaani_kid', '1'); return true; }
+  const g = parseInt(q.get('grade'), 10);
+  if (!isNaN(g)) { const on = g <= 8; localStorage.setItem('vaaani_kid', on? '1' : '0'); return on; }
+  return localStorage.getItem('vaaani_kid') === '1';
+}
+
+function applyKidMode() {
+  document.body.classList.add('kid');
+  const t = document.getElementById('kidToggle'); if (t) t.classList.add('on');
+  const gr = window.graphRes;
+  if (!gr) return;
+
+  // Friendlier intro + legend + empty hint.
+  const intro = document.querySelector('aside.intro');
+  if (intro) intro.innerHTML = 'This is a <strong>map of what you are learning</strong>. Each coloured bubble is a group of ideas that go together. Tap one to see what is inside!';
+  const legend = document.querySelector('.legend');
+  if (legend) legend.innerHTML = '<div class="head">How to use this</div><div>Tap a coloured group on the left. Each dot is one idea. Lines join ideas that belong together. Pinch or scroll to zoom.</div>';
+  const help = document.querySelector('aside.help');
+  if (help) help.textContent = 'Tap a group to open it.';
+
+  // Rebuild the theme list: only the biggest few, as big emoji bubbles.
+  const cl = document.getElementById('commList');
+  if (cl) {
+    cl.innerHTML = '';
+    const sorted = [...gr.communities].sort((a, b) => b.size - a.size).slice(0, KID_MAX_THEMES);
+    sorted.forEach((c, i) => {
+      const div = document.createElement('div');
+      div.className = 'community';
+      const title = (c.title && c.title.trim())? c.title : 'A group of ideas';
+      const label = c.size === 1? '1 idea' : `${Math.min(c.size, KID_MAX_NODES)} ideas to explore`;
+      div.innerHTML = `<span class="kidemoji">${KID_EMOJI[i % KID_EMOJI.length]}</span>
+        <span><span class="title"><span class="swatch" style="background:${colourFor(c.id)}"></span>${_esc(title)}</span>
+        <span class="size">${label}</span></span>`;
+      div.onclick = () => focusCommunityKid(c.id);
+      cl.appendChild(div);
+    });
+  }
+
+  const emptyEl = document.getElementById('empty');
+  if (emptyEl) { emptyEl.style.display = 'flex'; emptyEl.textContent = ' Tap a coloured group to see what is inside!'; }
+}
+
+// Kid-friendly focus: core ideas only (no 1-hop sprawl), capped, big bubbles,
+// no edge labels or arrows, gentle physics.
+function focusCommunityKid(cid) {
+  if (!window.graphRes) return;
+  const core = window.graphRes.nodes.filter(n => n.community === cid).slice(0, KID_MAX_NODES);
+  const coreIds = new Set(core.map(n => n.id));
+
+  const nodePayload = core.map(n => ({
+    id: n.id, label: n.display, shape: 'dot', size: 30,
+    color: { background: colourFor(n.community), border: '#ffffff' },
+    font: { color: '#18181b', size: 19, face: 'Inter', strokeWidth: 4, strokeColor: '#ffffff' },
+    community: n.community,
+  }));
+  let eid = 0;
+  const edgePayload = [];
+  for (const e of window.graphRes.edges) {
+    if (coreIds.has(e.source) && coreIds.has(e.target)) {
+      edgePayload.push({ id: eid++, from: e.source, to: e.target,
+        color: { color: '#cfd6e6', highlight: '#2563eb' }, width: 2, smooth: { type: 'continuous' } });
+    }
+  }
+
+  const emptyEl = document.getElementById('empty'); if (emptyEl) emptyEl.style.display = 'none';
+  if (window.network) { try { window.network.destroy(); } catch (_) {} }
+  const nodes = new vis.DataSet(nodePayload);
+  const edges = new vis.DataSet(edgePayload);
+  window._nodesDS = nodes; window._edgesDS = edges;
+  window.network = new vis.Network(document.getElementById('graph'), { nodes, edges }, {
+    nodes: { shape: 'dot', size: 30, borderWidth: 3 },
+    edges: { width: 2, smooth: { type: 'continuous' } },
+    interaction: { hover: true, dragNodes: true, zoomView: true },
+    physics: { solver: 'forceAtlas2Based',
+      forceAtlas2Based: { gravitationalConstant: -45, springLength: 150, avoidOverlap: 0.6 },
+      stabilization: { iterations: 120 } },
+    layout: { improvedLayout: true },
+  });
+  let done = false;
+  const finish = () => { if (done) return; done = true;
+    try { window.network.fit({ animation: { duration: 600 } }); } catch (_) {}
+    try { window.network.setOptions({ physics: { enabled: false } }); } catch (_) {} };
+  window.network.once('stabilizationIterationsDone', finish);
+  setTimeout(finish, 2500);
+
+  renderCommunityPanel(cid, [...coreIds]);
+}
+
+// Toggle button: flip the stored preference and reload for a clean re-render.
+// ===== ACTIVE LEARNING PANEL (Build + Fix) =====
+window._alMode = 'build';
+let _alTargets = [];
+const _$ = id => document.getElementById(id);
+
+window.alAddWord = function(w){
+  w = (w || '').trim();
+  if (!w || _alTargets.includes(w) || _alTargets.length >= 3) return;
+  _alTargets.push(w); alRenderTray();
+};
+function alRenderTray(){
+  const t = _$('alTray');
+  t.innerHTML = _alTargets.length
+    ? _alTargets.map((w,i)=>`<span class="al-tchip">${w} <b data-i="${i}">×</b></span>`).join('')
+    : '<span class="al-muted">Pick 2 words (tap a star, or a word below)…</span>';
+  t.querySelectorAll('b').forEach(x => x.onclick = () => { _alTargets.splice(+x.dataset.i,1); alRenderTray(); });
+}
+function alRenderBank(){
+  const seen = new Set(), words = [];
+  (window.graphRes?.nodes || []).forEach(n => {
+    const d = (n.display || '').trim();
+    if (/^[A-Za-z][A-Za-z\- ]{1,18}$/.test(d) && !seen.has(d.toLowerCase())) { seen.add(d.toLowerCase()); words.push(d); }
+  });
+  const bank = _$('alBank'); bank.innerHTML = '';
+  words.slice(0,40).forEach(w => {
+    const b = document.createElement('button'); b.className='al-chip'; b.textContent=w;
+    b.onclick = () => window.alAddWord(w); bank.appendChild(b);
+  });
+  if (!words.length) bank.innerHTML = '<span class="al-muted">Discover some words first — explore or ask a question.</span>';
+}
+_$('alBuildCheck').onclick = async () => {
+  const r = await fetch('/learning/build/check', {method:'POST',headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({sentence:_$('alSentence').value, targets:_alTargets})}).then(r=>r.json());
+  _$('alBuildFb').textContent = r.feedback || '';
+};
+
+// ---- Fix the slip ----
+let _alFixId = null, _alFixTries = 0;
+async function alFixLoad(){
+  const c = await fetch('/learning/fixit' + (_alFixId?`?exclude=${_alFixId}`:'')).then(r=>r.json());
+  _alFixId = c.id; _alFixTries = 0; _$('alFixPrompt').textContent = c.prompt;
+  const host = _$('alFixWords'); host.innerHTML='';
+  c.words.forEach((w,i) => {
+    const b = document.createElement('button'); b.className='al-word'; b.textContent=w;
+    b.onclick = () => alFixTap(i,b); host.appendChild(b);
+  });
+  _$('alFixFb').textContent=''; _$('alFixNext').style.display='none';
+}
+async function alFixTap(idx, btn){
+  const first = _alFixTries === 0; _alFixTries++;
+  const r = await fetch('/learning/fixit/check',{method:'POST',headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({id:_alFixId, idx, first})}).then(r=>r.json());
+  const fb = _$('alFixFb');
+  if (r.correct){
+    btn.classList.add('al-right');
+    fb.innerHTML = `<b>${r.feedback}</b><br>${r.why}<br><span class="al-fix">✓ ${r.correct_sentence}</span>`;
+    _$('alFixNext').style.display='';
+  } else { btn.classList.add('al-wrong'); fb.textContent = r.feedback; }
+}
+_$('alFixNext').onclick = alFixLoad;
+
+// tabs
+function alSetMode(m){
+  window._alMode = m;
+  _$('alTabBuild').classList.toggle('active', m==='build');
+  _$('alTabFix').classList.toggle('active', m==='fix');
+  _$('alBuild').style.display = m==='build' ? '' : 'none';
+  _$('alFix').style.display = m==='fix' ? '' : 'none';
+  if (m==='fix' && !_alFixId) alFixLoad();
+}
+_$('alTabBuild').onclick = () => alSetMode('build');
+_$('alTabFix').onclick = () => alSetMode('fix');
+alRenderTray();
+// populate the word bank once the graph has loaded
+(function waitGraph(){ if (window.graphRes) alRenderBank(); else setTimeout(waitGraph, 400); })();
+
+document.getElementById('kidToggle').addEventListener('click', () => {
+  const now = localStorage.getItem('vaaani_kid') === '1';
+  localStorage.setItem('vaaani_kid', now? '0' : '1');
+  const url = new URL(location.href);
+  url.searchParams.delete('kids'); url.searchParams.delete('grade');
+  location.href = url.toString();
+});
+
+// Hook overlays into the existing load() flow without forking it.
+const _origLoad = load;
+load = async function patchedLoad() {
+  await _origLoad();
+  if (!window.network) return;
+  const params = parseFeynmanParams();
+  if (params) {
+    // Wait briefly so the DataSets exist; vis-network is async during layout.
+    const graphRes = await fetch('/graph').then(r => r.json());
+    const nodes = window.network.body.data.nodes;
+    applyFeynmanOverlay(graphRes, nodes, window.network, params);
+    return;
+  }
+  if (computeKidMode()) applyKidMode();
+  // Deep-link: ?community=N auto-focuses that community on load.
+  const qs = new URLSearchParams(location.search);
+  const commId = qs.get('community');
+  if (commId != null) {
+    setTimeout(() => {
+      const cid = parseInt(commId, 10);
+      if (!isNaN(cid) && typeof focusCommunity === 'function') focusCommunity(cid);
+    }, 400);
+  }
+};
+
+load();
+</script>
+</body>
+</html>

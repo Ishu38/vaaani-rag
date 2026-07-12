@@ -5,9 +5,9 @@ import shutil
 import sqlite3 as _sqlite3
 from pathlib import Path
 
-from fastapi import Cookie, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import Cookie, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -37,6 +37,8 @@ from auth.security import decode_session
 from hermes import corrector as hermes_corrector, store as hermes_store
 from hermes.routes import router as hermes_router
 from cognitive.routes import router as cognitive_router
+from cognitive.fingerprint import build_fingerprint
+from cognitive_loop_routes import router as cognitive_loop_router
 from simulation.routes import router as simulation_router
 
 from config import (
@@ -48,6 +50,7 @@ from config import (
     ROOT,
     STRUCTURED_TRIGGERS,
     TOP_K,
+    MIN_RELEVANCE,
 )
 from ingest import ingest, ingest_vectors, ingest_graph_deferred, SUPPORTED_EXT
 from diagram import extract_and_render_all as render_diagrams
@@ -59,6 +62,7 @@ from llm import (
     call_deepseek,
     citation_fidelity,
     maybe_parse_structured,
+    scrub_provider_identity,
 )
 from memory import (
     format_memory_block,
@@ -67,11 +71,17 @@ from memory import (
     top_relevant_facts,
 )
 from retriever import Retriever
+import developmental_firewall
 
 app = FastAPI(title="Local RAG Assistant", version="0.1.0")
+# In prod, CORS_ORIGINS names the exact frontend origins (e.g. https://app.vaaani.in)
+# and credentials are allowed so the shared cookie flows. Locally (no CORS_ORIGINS)
+# we stay permissive without credentials — the browser rule forbids "*" + cookies.
+from config import CORS_ORIGINS as _CORS_ORIGINS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_CORS_ORIGINS or ["*"],
+    allow_credentials=bool(_CORS_ORIGINS),
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -81,6 +91,7 @@ app.include_router(hermes_router)
 app.include_router(messenger_router)
 app.include_router(youtube_router)
 app.include_router(cognitive_router)
+app.include_router(cognitive_loop_router)
 app.include_router(simulation_router)
 hermes_store.init_hermes_db()
 
@@ -142,6 +153,18 @@ except Exception:
     pass
 
 retriever = Retriever()
+
+# Phase 3: Preload the graph cache at startup for O(1) deterministic
+# word lookups.  If the cache doesn't exist (first run), rebuild it
+# from the knowledge graph.
+try:
+    import graph_cache
+    cache = graph_cache.load_cache()
+    if not cache:
+        graph_cache.rebuild_and_save()
+except Exception:
+    pass
+
 FRONTEND_INDEX = ROOT / "frontend" / "index.html"
 FRONTEND_GRAPH = ROOT / "frontend" / "graph.html"
 SITE_DIR = ROOT / "site"
@@ -161,7 +184,7 @@ app.mount("/figures", StaticFiles(directory=str(FIGURES_DIR)), name="figures")
 
 class ChatRequest(BaseModel):
     """Body for POST /chat."""
-    query: str = Field(..., min_length=1)
+    query: str = Field(default="", min_length=0)
     conversation_history: list[dict] = Field(default_factory=list)
     remember: str | None = Field(
         default=None,
@@ -171,6 +194,16 @@ class ChatRequest(BaseModel):
         default=False,
         description="When true, assistant teaches by asking leading questions instead of answering directly.",
     )
+    grade: int | None = Field(
+        default=None,
+        ge=1, le=12,
+        description=(
+            "Learner grade (1–12), the developmental-stage signal for the output "
+            "firewall. Below the phonics-gate grade, phonetic notation is stripped "
+            "from generated answers. If omitted, derived from the account's DOB; "
+            "if still unknown, the firewall fails safe to protecting the learner."
+        ),
+    )
     source_filter: list[str] | None = Field(
         default=None,
         description=(
@@ -178,6 +211,16 @@ class ChatRequest(BaseModel):
             "provided, only chunks whose source is in this list are eligible "
             "for vector hits + graph expansion. None or [] = no filter "
             "(search the whole corpus, current behaviour)."
+        ),
+    )
+    discovery_context: dict | None = Field(
+        default=None,
+        description=(
+            "When set, activates the Discovery Orchestrator. The orchestrator "
+            "reads the learner's current state (grade, mastered sounds, L1, "
+            "completed patterns) and generates ONE discovery mission instead "
+            "of answering a question. Used when navigating from IPA Chart, "
+            "Explore camera, or Sound Lab into the chat assistant."
         ),
     )
 
@@ -267,10 +310,330 @@ def integrations_page() -> FileResponse:
     return _serve_site("integrations.html")
 
 
+@app.get("/roots")
+def roots_page() -> FileResponse:
+    """Serve the Word Roots module (morphology-first: roots/affixes before sound)."""
+    return _serve_site("roots.html")
+
+
+# ─────────────────────── Explore My World (camera loop) ──────────────────────
+
+class ExploreDiscoverBody(BaseModel):
+    object: str = Field(..., min_length=1, max_length=60)
+
+
+class ExploreAnswerBody(BaseModel):
+    object: str = Field(..., min_length=1, max_length=60)
+    answer: str = Field(default="", max_length=2000)
+
+
+class ExploreGroundBody(BaseModel):
+    """Point-see-say: the three grounding signals captured at the moment of
+    discovery. Any subset may be present; the fusion decides the object."""
+    vision_label: str = Field(default="", max_length=60)   # what the camera saw
+    spoken_label: str = Field(default="", max_length=60)   # what the child said
+    pointing: bool = Field(default=False)                   # was the child pointing
+
+
+@app.get("/explore")
+def explore_page() -> FileResponse:
+    """Explore My World — point the camera at the real world, walk the Language
+    Journey for what you find, and record its story."""
+    return _serve_site("explore.html")
+
+
+# ─────────────────── Active learning on the graph ───────────────────────────
+
+class FixitCheckBody(BaseModel):
+    id: str = Field(..., min_length=1, max_length=40)
+    idx: int = Field(..., ge=0, le=40)
+    # True only on the learner's first tap for a challenge — retries after
+    # feedback are self-correction, not fresh diagnostic evidence.
+    first: bool = True
+
+
+class BuildCheckBody(BaseModel):
+    sentence: str = Field(default="", max_length=400)
+    targets: list[str] = Field(default_factory=list)
+
+
+def _twin_evidence(user: dict, node_id: str, source: str, outcome: str,
+                   confidence: float, meta: dict) -> dict | None:
+    """Post one evidence object into the Cognitive Twin (BKT + credal).
+
+    Same ingress as /loop/evidence; student id matches the 'u_<id>' convention
+    the SPA uses, so stars lit here appear in the learner's universe.
+    """
+    try:
+        from cognitive_loop_routes import _get_world
+        import cognitive_twin as _twin
+        from evidence_graph import EvidenceObject
+        world = _get_world()
+        if node_id not in world.nodes:
+            return None
+        belief = _twin.update(EvidenceObject(
+            f"u_{user['id']}", node_id, source, outcome, confidence, meta=meta))
+        return {"node_id": belief.node_id, "mastery": round(belief.mastery, 4),
+                "mastered": belief.mastered}
+    except Exception:
+        return None
+
+
+@app.get("/learning/fixit")
+def learning_fixit(
+    exclude: str | None = None,
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    """A 'spot the slip' challenge — error hidden; the child detects it."""
+    _resolve_processing_user(vaaani_session)  # sign-in required
+    import active_learning
+    return active_learning.fixit_next(exclude)
+
+
+@app.post("/learning/fixit/check")
+def learning_fixit_check(
+    body: FixitCheckBody,
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    user = _resolve_processing_user(vaaani_session)  # sign-in required
+    import active_learning
+    result = active_learning.fixit_check(body.id, body.idx)
+
+    # Cognitive X-Ray feed: the bank is authored, so the error taxonomy is
+    # known deterministically — no LLM in the child's tap loop. Only the
+    # first tap counts; a miss means this transfer pattern is invisible to
+    # the learner (a detection failure), which is exactly what the X-Ray maps.
+    if body.first and "error" not in result:
+        try:
+            from cognitive.store import store as _cog_store, CognitiveEvent
+            _cog_store.log_event(CognitiveEvent(
+                user_id=user["id"],
+                topic=result["topic"],
+                query="Fix the slip: tap the word that isn't right.",
+                student_answer=result["error_word"] if result["correct"] else f"word #{body.idx}",
+                correct_answer=result["correct_sentence"],
+                error_type="no_error" if result["correct"] else result["error_type"],
+                error_signature=f"fixit:{body.id}",
+                explanation=result["why"],
+                root_cause_topic=result["topic"],
+                remediation=result["why"],
+                actual_correct=1 if result["correct"] else 0,
+                session_id="active_learning",
+            ))
+        except Exception:
+            pass
+    return result
+
+
+@app.post("/learning/build/check")
+def learning_build_check(
+    body: BuildCheckBody,
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    """The child built a sentence from their own graph words — reward it."""
+    user = _resolve_processing_user(vaaani_session)  # sign-in required
+    import active_learning
+    result = active_learning.build_check(body.sentence, body.targets)
+
+    # Production is the strongest evidence a learner owns a word. On success,
+    # credit each target's node in the Cognitive Twin so the star genuinely
+    # grows (the feedback already promised it). A failed build is an
+    # incomplete task, not evidence of inability — no negative update.
+    if result.get("ok"):
+        from cognitive_loop_routes import _get_world
+        updates = []
+        try:
+            world = _get_world()
+            by_display = {n.get("display", "").strip().lower(): nid
+                          for nid, n in world.nodes.items()}
+            for t in result.get("used", []):
+                nid = by_display.get(t.strip().lower())
+                if nid:
+                    up = _twin_evidence(user, nid, "quiz", "correct", 0.7,
+                                        {"task": "build_sentence"})
+                    if up:
+                        updates.append(up)
+        except Exception:
+            pass
+        if updates:
+            result["twin_updates"] = updates
+    return result
+
+
+@app.get("/feel")
+def feel_page() -> FileResponse:
+    """Feel the Sound — render a phonological feature (voicing) as a haptic
+    buzz on the device's vibration actuator: the 'Feel' stage of the Language
+    Journey, made physical on existing mobile hardware."""
+    return _serve_site("feel.html")
+
+
+@app.post("/explore/discover")
+def explore_discover(
+    body: ExploreDiscoverBody,
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    """A recognised object begins its Journey. Returns the opening question."""
+    user = _resolve_processing_user(vaaani_session)
+    import explore as _explore
+    try:
+        return _explore.start_discovery(user["id"], body.object)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.post("/explore/ground")
+def explore_ground(
+    body: ExploreGroundBody,
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    """Point-see-say: fuse camera + speech + gesture into a grounded discovery
+    and begin its Journey. This multimodal grounding is the defensible core —
+    it needs the vision and gesture engines together."""
+    user = _resolve_processing_user(vaaani_session)
+    import explore as _explore
+    try:
+        return _explore.ground(
+            user["id"], body.vision_label, body.spoken_label, body.pointing
+        )
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.post("/explore/answer")
+def explore_answer(
+    body: ExploreAnswerBody,
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    """Record the child's answer to the current Journey step and advance."""
+    user = _resolve_processing_user(vaaani_session)
+    import explore as _explore
+    try:
+        return _explore.answer_step(user["id"], body.object, body.answer)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.get("/explore/discoveries")
+def explore_discoveries(
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    user = _resolve_user(vaaani_session)
+    if not user:
+        return {"discoveries": []}
+    import explore as _explore
+    return {"discoveries": _explore.list_discoveries(user["id"])}
+
+
+@app.post("/explore/narrate")
+def explore_narrate(
+    object: str = Form(...),
+    video: UploadFile = File(...),
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    """The Communicate capstone: save the child's short story video, privately
+    scoped to them, and complete the Journey for that object."""
+    user = _resolve_processing_user(vaaani_session)
+    import explore as _explore
+    ext = Path(video.filename or "clip.webm").suffix.lower() or ".webm"
+    if ext not in (".webm", ".mp4", ".mov", ".ogg"):
+        raise HTTPException(400, f"unsupported video type: {ext}")
+    obj_slug = "".join(ch for ch in body_object_slug(object))
+    user_dir = _explore.EXPLORE_MEDIA / f"u{user['id']}"
+    user_dir.mkdir(parents=True, exist_ok=True)
+    dest = user_dir / f"{obj_slug}{ext}"
+    size = 0
+    with dest.open("wb") as out:
+        while chunk := video.file.read(1 << 20):
+            size += len(chunk)
+            if size > 40 * 1024 * 1024:                # 40 MB cap on a child's clip
+                out.close(); dest.unlink(missing_ok=True)
+                raise HTTPException(413, "video too long — keep the story short!")
+            out.write(chunk)
+    try:
+        return _explore.attach_video(user["id"], object, dest.name)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.post("/explore/themes")
+def explore_themes(body: dict, vaaani_session: str | None = Cookie(default=None, alias="vaaani_session")) -> dict:
+    """Given a camera-detected object label, return matching knowledge-graph
+    themes and word-family communities so the Explore page can connect the
+    physical world to the language universe.
+
+    No auth required — the knowledge graph is shared public data."""
+    import explore as _explore
+    obj = (body.get("object") or "").strip()
+    if not obj:
+        raise HTTPException(400, "No object provided")
+    return _explore.match_themes(obj)
+
+
+def body_object_slug(name: str) -> str:
+    return "".join(c if c.isalnum() else "-" for c in (name or "obj").lower()).strip("-") or "obj"
+
+
+@app.get("/ipa")
+def ipa_page() -> FileResponse:
+    """Serve the interactive IPA chart (phonetics learning tool)."""
+    return _serve_site("ipa.html")
+
+
+@app.get("/learn")
+def learn_page() -> FileResponse:
+    """Serve the daily-mission page (the cognitive loop's front door).
+
+    Works for guests too — the page mints a local guest student id, so the
+    backend deployment matches the Vercel static routing where /learn already
+    resolved. Without this route the homepage's mission links 404 here.
+    """
+    return _serve_site("learn.html")
+
+
+@app.get("/language-map")
+def language_map_page() -> FileResponse:
+    """Serve the grade-gated Language Map (question-first developmental graph + assessment pyramid)."""
+    return _serve_site("language-map.html")
+
+
+@app.get("/evolution")
+def evolution_page() -> FileResponse:
+    """Serve the Phoneme Evolution game (mutate sound-creatures, fill in the IPA)."""
+    return _serve_site("evolution.html")
+
+
+@app.get("/sound-lab")
+def sound_lab_page() -> FileResponse:
+    """Sound Lab — live Web Audio formant synthesis: drag the vowel space to hear
+    a vowel morph, toggle voicing, and hear+feel real speech sounds on-device."""
+    return _serve_site("sound-lab.html")
+
+
+@app.get("/game")
+def game_alias() -> RedirectResponse:
+    """Friendly alias → the phoneme game."""
+    return RedirectResponse(url="/evolution", status_code=302)
+
+
+@app.get("/sw.js")
+def service_worker() -> FileResponse:
+    """Serve the service worker with no-cache so SW updates reach clients
+    immediately — never let the edge or browser pin an old shell/cache."""
+    p = SITE_DIR / "sw.js"
+    if not p.exists():
+        raise HTTPException(404, "sw.js not found")
+    return FileResponse(
+        p,
+        media_type="text/javascript",
+        headers={"Cache-Control": "no-cache, max-age=0, must-revalidate"},
+    )
+
+
 @app.get("/pricing")
-def pricing_page() -> FileResponse:
-    """Serve the Pricing page with three tiers."""
-    return _serve_site("pricing.html")
+def pricing_page() -> RedirectResponse:
+    """Pricing has been removed from the product surface — send visitors home."""
+    return RedirectResponse(url="/", status_code=302)
 
 
 @app.get("/signup")
@@ -310,24 +673,6 @@ def privacy_page() -> FileResponse:
     """Serve the privacy notice (template — lawyer must review before
     relying on it for DPDP §5 compliance)."""
     return _serve_site("privacy.html")
-
-
-@app.get("/cognitive")
-def cognitive_page() -> FileResponse:
-    """Cognitive X-Ray — detect thinking flaws in a learner's reasoning.
-    Pairs with the cognitive_router (/cognitive/analyze, /fingerprint, etc.)
-    for the API surface. Page-route added 2026-05-28 so the chat nav can
-    link to it directly with /cognitive."""
-    return _serve_site("cognitive.html")
-
-
-@app.get("/simulation")
-def simulation_page() -> FileResponse:
-    """Pressure Simulation — exam-style time-boxed practice. Pairs with
-    the simulation_router (/simulation/start, /answer, /report, etc.)
-    for the API surface. Page-route added 2026-05-28 so the chat nav
-    can link to it directly with /simulation."""
-    return _serve_site("simulation.html")
 
 
 @app.get("/dashboard")
@@ -376,7 +721,8 @@ def status(vaaani_session: str | None = Cookie(default=None, alias="vaaani_sessi
     Anonymous callers get zeros — the corpus counts (docs/chunks/entities)
     are private to signed-in users and must not leak via the public pill.
     """
-    if not _resolve_user(vaaani_session):
+    status_user = _resolve_user(vaaani_session)
+    if not status_user:
         # Same schema as retriever.status() but zeroed — keeps the SPA's
         # refreshStatus() happy without exposing corpus counts to anon callers.
         return {
@@ -391,10 +737,13 @@ def status(vaaani_session: str | None = Cookie(default=None, alias="vaaani_sessi
             "memory_facts": 0,
             "recent_queries": [],
         }
-    s = retriever.status()
+    # Privacy scope: counts, document list, graph figures, memory and recent
+    # queries are all restricted to what THIS user may see.
+    s = retriever.status(allowed_paths=_allowed_paths(status_user))
+    from memory import _facts_for, recent_queries_for
     mem = load_memory()
-    s["memory_facts"] = len(mem.get("facts", []))
-    s["recent_queries"] = mem.get("recent_queries", [])[-5:]
+    s["memory_facts"] = len(_facts_for(mem, status_user["id"]))
+    s["recent_queries"] = recent_queries_for(mem, status_user["id"], n=5)
     return s
 
 
@@ -405,18 +754,47 @@ class NarrateRequest(BaseModel):
     mode: str = "narration"
 
 
+def _allowed_doc_names(user: dict | None) -> set[str] | None:
+    """Display names of the documents `user` may read (None = unrestricted)."""
+    allowed = _allowed_paths(user)
+    if allowed is None:
+        return None
+    files = retriever.metadata.get("files", {})
+    return {v.get("name", "") for k, v in files.items() if k in allowed}
+
+
 @app.get("/audio/library")
-def audio_library() -> dict:
-    """Ingested docs eligible for narration plus the voice list."""
+def audio_library(vaaani_session: str | None = Cookie(default=None, alias="vaaani_session")) -> dict:
+    """Ingested docs eligible for narration plus the voice list.
+
+    Auth-gated + privacy-scoped: only the caller's visible documents appear.
+    """
+    lib_user = _resolve_user(vaaani_session)
+    if not lib_user:
+        return {"docs": [], "voices": available_voices()}
+    names = _allowed_doc_names(lib_user)
+    docs = list_narratable_docs()
+    if names is not None:
+        docs = [d for d in docs if d.get("doc_name") in names]
     return {
-        "docs": list_narratable_docs(),
+        "docs": docs,
         "voices": available_voices(),
     }
 
 
 @app.post("/audio/narrate")
-def audio_narrate(req: NarrateRequest) -> dict:
+def audio_narrate(
+    req: NarrateRequest,
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
     """Synthesize an MP3 for an ingested document. Idempotent via SHA1 cache."""
+    narrate_user = _resolve_user(vaaani_session)
+    if not narrate_user:
+        raise HTTPException(401, "Sign in to use Vaaani.")
+    names = _allowed_doc_names(narrate_user)
+    if names is not None and req.doc_name not in names:
+        # 404, not 403 — don't confirm the document exists for other users.
+        raise HTTPException(404, f"no ingested document named '{req.doc_name}'")
     mode = (req.mode or "narration").lower()
     try:
         if mode == "podcast":
@@ -449,16 +827,30 @@ class FeynmanRequest(BaseModel):
 
 
 @app.get("/feynman/topics")
-def feynman_topics() -> dict:
+def feynman_topics(vaaani_session: str | None = Cookie(default=None, alias="vaaani_session")) -> dict:
     """Topics worth explaining back: well-connected graph nodes, ranked
-    by degree desc."""
-    return {"topics": list_topics()}
+    by degree desc. Auth-gated + scoped to the caller's visible documents."""
+    fey_user = _resolve_user(vaaani_session)
+    if not fey_user:
+        return {"topics": []}
+    allowed = _allowed_paths(fey_user)
+    topics = [t for t in list_topics() if retriever.node_visible(t.get("id", ""), allowed)]
+    return {"topics": topics}
 
 
 @app.post("/feynman/diff")
-def feynman_diff(req: FeynmanRequest) -> dict:
+def feynman_diff(
+    req: FeynmanRequest,
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
     """Run the explain-it-back diff against the corpus subgraph for the
     chosen topic. Returns structured node/edge coverage."""
+    fey_user = _resolve_user(vaaani_session)
+    if not fey_user:
+        raise HTTPException(401, "Sign in to use Vaaani.")
+    if not retriever.node_visible(req.topic_id, _allowed_paths(fey_user)):
+        # 404, not 403 — don't confirm the topic exists for other users.
+        raise HTTPException(404, f"unknown topic '{req.topic_id}'")
     if len(req.explanation.strip()) < 20:
         raise HTTPException(400, "explanation is too short — write at least a few sentences")
     if not (1 <= req.k <= 3):
@@ -499,12 +891,16 @@ def ingest_endpoint(
     Synchronous — runs to completion in-request. Best for small files (<5 MB).
     For larger uploads use /ingest/async + /ingest/status/{job_id} to avoid
     Cloudflare's 100s edge timeout. Frontend uses /ingest/async by default."""
-    _resolve_processing_user(vaaani_session)
+    ingest_user = _resolve_processing_user(vaaani_session)
     name = Path(file.filename or "upload.bin").name
     ext = Path(name).suffix.lower()
     if ext not in SUPPORTED_EXT:
         raise HTTPException(400, f"Unsupported file type: {ext}. Allowed: {sorted(SUPPORTED_EXT)}")
-    dest = RAW_DIR / name
+    # Per-user subdirectory: same-named files from different users get
+    # distinct file keys, and ownership is unambiguous.
+    user_dir = RAW_DIR / f"u{ingest_user['id']}"
+    user_dir.mkdir(parents=True, exist_ok=True)
+    dest = user_dir / name
     with dest.open("wb") as out:
         shutil.copyfileobj(file.file, out)
     size_bytes = dest.stat().st_size
@@ -512,6 +908,10 @@ def ingest_endpoint(
         dest.unlink(missing_ok=True)
         raise HTTPException(413, f"File too large: {size_bytes/1e6:.1f} MB. Max: {MAX_UPLOAD_BYTES/1e6:.0f} MB")
     summary = ingest(RAW_DIR, INDEX_PATH, METADATA_PATH)
+    import scope
+    scope.record_ownership(
+        str(dest.resolve()), ingest_user["id"], scope.sharing_school_ids(ingest_user)
+    )
     retriever.reload()
     return {
         "status": "ok",
@@ -659,18 +1059,26 @@ def ingest_async(
     """Queue a document ingest job. Returns 202 + job_id immediately; client
     polls /ingest/status/{job_id} for progress. Avoids Cloudflare's 100s
     edge-timeout that kills sync ingest of larger PDFs."""
-    _resolve_processing_user(vaaani_session)
+    async_user = _resolve_processing_user(vaaani_session)
     name = Path(file.filename or "upload.bin").name
     ext = Path(name).suffix.lower()
     if ext not in SUPPORTED_EXT:
         raise HTTPException(400, f"Unsupported file type: {ext}. Allowed: {sorted(SUPPORTED_EXT)}")
-    dest = RAW_DIR / name
+    user_dir = RAW_DIR / f"u{async_user['id']}"
+    user_dir.mkdir(parents=True, exist_ok=True)
+    dest = user_dir / name
     with dest.open("wb") as out:
         shutil.copyfileobj(file.file, out)
     size_bytes = dest.stat().st_size
     if size_bytes > MAX_UPLOAD_BYTES:
         dest.unlink(missing_ok=True)
         raise HTTPException(413, f"File too large: {size_bytes/1e6:.1f} MB. Max: {MAX_UPLOAD_BYTES/1e6:.0f} MB")
+    # Ownership is recorded up-front (idempotent) so the file is scoped even
+    # if the worker crashes mid-ingest and retries later.
+    import scope
+    scope.record_ownership(
+        str(dest.resolve()), async_user["id"], scope.sharing_school_ids(async_user)
+    )
 
     job_id = _uuid.uuid4().hex[:16]
     with _INGEST_LOCK:
@@ -707,6 +1115,74 @@ def ingest_status(job_id: str) -> dict:
     return dict(job)
 
 
+def _discovery_retrieval_query(ctx: dict) -> str:
+    """Synthesize a KB retrieval query from the learner's discovery state.
+
+    The orchestrator fast-path doesn't have a user query — the learner just
+    arrived. But the KB must still reason about what the learner should
+    discover next. This function turns the discovery_context (mastered sounds,
+    weak patterns, word families, current unit) into a query string that
+    local_graph_search can use to retrieve relevant chunks, entities, and
+    communities from the knowledge graph.
+
+    Priority: weak_patterns (highest leverage) → mastered sounds + families
+    → current unit. Keeps the query short (Graph-RAG works best with focused
+    queries, not kitchen-sink ones).
+    """
+    parts: list[str] = []
+
+    # Weak patterns are the ZPD frontier — highest retrieval priority
+    for w in (ctx.get("weak_patterns") or ctx.get("current_weak_areas") or [])[:2]:
+        # "ph -> /f/" becomes "ph f" — search for both the grapheme and phoneme
+        cleaned = w.replace("→", " ").replace("->", " ").replace("/", " ")
+        cleaned = " ".join(cleaned.split())  # collapse whitespace
+        if cleaned:
+            parts.append(cleaned)
+
+    # Recent errors give more signal about what to retrieve
+    for e in (ctx.get("recent_errors") or ctx.get("recently_confused_concepts") or [])[:2]:
+        cleaned = e.replace("/", " ").replace("→", " ")
+        cleaned = " ".join(cleaned.split())
+        if cleaned:
+            parts.append(cleaned)
+
+    # Mastered sounds + their word families anchor the familiar 80%
+    mastered = ctx.get("mastered_sounds") or []
+    families = ctx.get("unlocked_word_families") or []
+    if families:
+        parts.append(f"word family {' '.join(families[:4])}")
+    elif mastered:
+        parts.append(f"words with {' '.join(mastered[:4])} sounds")
+
+    # Current unit / stage
+    unit = ctx.get("current_unit") or ctx.get("current_stage") or ""
+    if unit:
+        parts.append(unit)
+
+    return " ".join(parts) if parts else "English sounds spelling patterns phonics"
+
+
+def _try_graph_route(query: str, *, grade: int | None = None,
+                    user: dict | None = None):
+    """Try to answer a query from the structural linguistics graph.
+
+    Returns a graph_router.GraphResult (confidence 0–5), or None if routing
+    errors.  Caller should only use answers with confidence >= 4 for a
+    deterministic response; confidence 2-3 can be appended as context to the
+    LLM prompt; confidence 0-1 falls through to normal retrieval.
+    """
+    from graph_router import route_query
+    g = grade or (int(user.get("grade", 2)) if user else 2)
+    return route_query(query, g)
+
+
+def _allowed_paths(user: dict | None) -> set[str] | None:
+    """The set of document file-keys `user` may read (None = unrestricted,
+    only when scoping is disabled). See scope.py for the sharing rules."""
+    import scope
+    return scope.allowed_paths_for(user, retriever.metadata.get("files", {}))
+
+
 def _resolve_user(cookie: str | None) -> dict | None:
     """Look up the current user from the session cookie, or None if unauth."""
     payload = decode_session(cookie or "")
@@ -739,6 +1215,54 @@ def _resolve_processing_user(cookie: str | None) -> dict:
     return user
 
 
+def build_learner_profile_block(user: dict | None) -> str:
+    """Compact 'what Vaaani already knows about this student' block, injected
+    into every answer so the tutor adapts without the learner re-explaining
+    themselves each session (Uday/SWI: 'pre-trained, knows the student').
+
+    Built from the persistent cognitive fingerprint. Returns '' for guests and
+    for brand-new students with no history yet, so the tutor stays neutral until
+    there is something real to adapt to.
+    """
+    if not user:
+        return ""
+    try:
+        fp = build_fingerprint(user["id"])
+    except Exception:
+        return ""
+    s = fp.get("summary", {}) or {}
+    if not s.get("total_analyzed"):
+        return ""
+    lines = [
+        "STUDENT PROFILE — you already know this learner from past sessions. "
+        "Adapt difficulty, examples and tone to them; do NOT make them re-explain "
+        "what they know:",
+    ]
+    name = user.get("name") or user.get("display_name")
+    if name:
+        lines.append(f"- Name: {name}.")
+    lines.append(f"- Has answered {s['total_analyzed']} questions, ~{s.get('accuracy', 0)}% correct.")
+    if fp.get("strengths"):
+        lines.append(f"- Already strong in: {', '.join(fp['strengths'][:4])} (acknowledge, don't over-drill).")
+    if fp.get("weaknesses"):
+        lines.append(f"- Needs practice in: {', '.join(fp['weaknesses'][:4])} (gently steer practice here).")
+    pw = s.get("primary_weakness_label")
+    if pw and pw not in ("None", "No data yet", "Unknown"):
+        lines.append(f"- Most common mistake type: {pw} — address the root cause, not just the symptom.")
+    biases = fp.get("biases", {}) or {}
+    if biases.get("description"):
+        lines.append(f"- Tendency: {biases['description']}.")
+    if biases.get("speed_issue"):
+        lines.append(f"- {biases['speed_issue']} — nudge them to check their work before answering.")
+    res = fp.get("resilience_score")
+    if isinstance(res, (int, float)) and res < 0.4:
+        lines.append("- Confidence is fragile right now — be encouraging and scaffold in small steps.")
+    lines.append(
+        "Use this only to calibrate how you teach. Never read this profile back to the student."
+    )
+    return "\n".join(lines)
+
+
 def _run_intent(
     query: str,
     structured: bool,
@@ -747,6 +1271,7 @@ def _run_intent(
     user: dict | None = None,
     guardrail_prompt: str = "",
     source_filter: list[str] | None = None,
+    allowed_paths: set[str] | None = None,
 ) -> tuple[LLMResponse, dict]:
     """Route a query through intent → graph-aware retrieval → LLM.
 
@@ -785,15 +1310,30 @@ def _run_intent(
 
     if intent == "knowledge":
         retrieval = (
-            retriever.global_graph_search(query)
+            retriever.global_graph_search(query, allowed_paths=allowed_paths)
             if g_mode == "global"
-            else retriever.local_graph_search(query, k=effective_top_k, source_filter=sf_set)
+            else retriever.local_graph_search(
+                query, k=effective_top_k, source_filter=sf_set, allowed_paths=allowed_paths
+            )
         )
     elif intent == "task":
-        retrieval["chunks"] = retriever.search(query, k=effective_top_k, source_filter=sf_set)
+        retrieval["chunks"] = retriever.search(
+            query, k=effective_top_k, source_filter=sf_set, allowed_paths=allowed_paths
+        )
+
+    # Relevance floor (local mode): nearest-neighbour search returns chunks
+    # for ANY query; below MIN_RELEVANCE they are noise, and graph context
+    # extracted from noise chunks is noise too — clear it so the no-context
+    # gate below can fire instead of the model improvising.
+    if intent == "knowledge" and g_mode != "global":
+        kept = [c for c in retrieval["chunks"] if float(c.get("score", 0.0)) >= MIN_RELEVANCE]
+        if kept:
+            retrieval = {**retrieval, "chunks": kept}
+        else:
+            retrieval = {**retrieval, "chunks": [], "entities": [], "edges": [], "communities": []}
 
     chunks = retrieval["chunks"]
-    facts = top_relevant_facts(query, retriever.embed)
+    facts = top_relevant_facts(query, retriever.embed, user_id=user["id"] if user else None)
     memory_block = format_memory_block(facts)
 
     # Build canonical topic refs (key + display) and look up weak-spots for the user.
@@ -810,6 +1350,46 @@ def _run_intent(
                 weak = learn_service.weak_spots(user["id"], [t["topic"] for t in topic_refs])
             except Exception:
                 weak = []
+
+    # Hard gate: a knowledge question with NOTHING retrieved (no chunks, no
+    # graph context) is the worst hallucination case for the small model —
+    # don't generate at all, answer honestly and deterministically. The trace
+    # is still logged so Hermes learns these queries are chunk-starved.
+    if intent == "knowledge" and not chunks and not (
+        retrieval.get("entities") or retrieval.get("edges") or retrieval.get("communities")
+    ):
+        try:
+            hermes_store.log_trace(
+                user_id=user_id,
+                query=query,
+                embedding=query_vec,
+                intent=intent,
+                graph_mode=g_mode,
+                num_chunks=0,
+                fidelity_warnings=0,
+                tokens=0,
+                corrections_applied=hermes_plan.names,
+            )
+        except Exception:
+            pass
+        return LLMResponse(
+            answer=(
+                "I don't have anything about that in my knowledge base yet. "
+                "Try uploading the relevant notes or textbook chapter, or ask me "
+                "about something from the material that's already been added."
+            ),
+            sources_used=[],
+            tokens_used=0,
+            intent=intent,
+        ), {
+            **retrieval,
+            "graph_mode": g_mode,
+            "topic_refs": topic_refs,
+            "weak_spots": weak,
+            "hermes_corrections": [
+                {"name": c.name, "reason": c.reason} for c in hermes_plan.corrections
+            ],
+        }
 
     graph_block = (
         build_graph_block(retrieval["entities"], retrieval["edges"], retrieval["communities"])
@@ -828,16 +1408,23 @@ def _run_intent(
         if "strict_grounding" in correction_names
         else ""
     )
+    # Persistent learner memory: the tutor already knows this student.
+    profile_block = build_learner_profile_block(user)
+    if profile_block:
+        extra_system = (extra_system + "\n\n" + profile_block) if extra_system else profile_block
     messages = build_prompt(
         query, chunks, memory_block, intent, structured,
         graph_mode=g_mode, graph_block=graph_block, socratic=socratic,
         extra_system=extra_system,
         guardrail_prompt=guardrail_prompt,
     )
-    resp = call_deepseek(messages, stream=False, json_mode=structured)
+    # Greedy decoding for factual answers; keep light sampling for Socratic
+    # questioning and creative/task intents.
+    temperature = 0.0 if intent == "knowledge" and not socratic else 0.2
+    resp = call_deepseek(messages, stream=False, json_mode=structured, temperature=temperature)
 
     choice = resp.get("choices", [{}])[0]
-    answer = choice.get("message", {}).get("content", "")
+    answer = scrub_provider_identity(choice.get("message", {}).get("content", ""))
     tokens = resp.get("usage", {}).get("total_tokens", 0)
 
     structured_payload = maybe_parse_structured(answer) if structured else None
@@ -899,13 +1486,13 @@ def chat(
     vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
 ) -> ChatResponse:
     """Main chat endpoint with intent routing, Graph-RAG, memory, and citation check."""
+    user = _resolve_processing_user(vaaani_session)
     if req.remember:
         from memory import add_fact
-        add_fact(req.remember)
+        add_fact(req.remember, user_id=user["id"])
 
-    user = _resolve_processing_user(vaaani_session)
     structured = wants_structured_output(req.query, STRUCTURED_TRIGGERS)
-    facts_used = top_relevant_facts(req.query, retriever.embed)
+    facts_used = top_relevant_facts(req.query, retriever.embed, user_id=user["id"])
 
     guardrail_prompt = build_universal_guardrail_prompt()
     student_guardrails: dict | None = None
@@ -918,14 +1505,46 @@ def chat(
         except Exception:
             pass
 
+    # ── Graph-First Router (Phase 2) ──────────────────────────────────
+    # Before any vector search or LLM call, try the deterministic graph
+    # router. If the graph has a high-confidence answer, return it
+    # immediately — zero LLM tokens, zero hallucination risk, sub-50ms.
+    gr_result = None
+    if (not structured and not req.discovery_context and req.query.strip()):
+        try:
+            gr_result = _try_graph_route(req.query, grade=req.grade, user=user)
+        except Exception:
+            pass
+    if gr_result and gr_result.confidence >= 4:
+        # High confidence — return graph answer directly, no LLM needed
+        return ChatResponse(
+            answer=gr_result.answer, sources=[], tokens=0,
+            intent=gr_result.intent, entities=gr_result.entities,
+        )
+    if gr_result and gr_result.confidence >= 2:
+        # Medium confidence — inject graph context into the LLM prompt
+        req.query = (
+            f"{req.query}\n\n[KNOWLEDGE GRAPH CONTEXT (use this as a fact-source; "
+            f"do not invent information beyond it): {gr_result.answer}]"
+        )
+
     result, retrieval = _run_intent(
         req.query, structured,
         socratic=req.socratic,
         user=user,
         guardrail_prompt=guardrail_prompt,
         source_filter=req.source_filter,
+        allowed_paths=_allowed_paths(user),
     )
-    record_query(req.query)
+    record_query(req.query, user_id=user["id"])
+
+    # Developmental output firewall: strip phonetic notation for young learners
+    # (grade-gated). Structured/JSON answers are exempt — they carry table data,
+    # not prose, and '[' would collide with array syntax.
+    if not structured and result.answer:
+        result.answer = developmental_firewall.scrub_text(
+            result.answer, explicit_grade=req.grade, user=user
+        )
 
     guardrail_violations: list[dict] = []
     guardrail_active = bool(student_guardrails and not student_guardrails.get("allow_direct_answers", False))
@@ -1024,10 +1643,291 @@ def _chat_stream_generator(req: "ChatRequest", user: dict):
 
         if req.remember:
             from memory import add_fact as _add_fact
-            _add_fact(req.remember)
+            _add_fact(req.remember, user_id=user["id"])
+
+        # ── Discovery Orchestrator fast-path ──────────────────────────
+        # When the learner arrives from IPA/Explore/Sound Lab, the first
+        # message has an empty query + discovery_context. Skip retrieval
+        # entirely and let the orchestrator generate a mission.
+        discovery_ctx = req.discovery_context
+        if discovery_ctx:
+            from orchestrator import (
+                DISCOVERY_ORCHESTRATOR,
+                build_discovery_state,
+            )
+            orchestrator_system = (
+                DISCOVERY_ORCHESTRATOR + "\n\n" +
+                build_discovery_state(user, discovery_ctx)
+            )
+            # Empty query + discovery context = first message: no retrieval
+            is_first_discovery = not (req.query or "").strip()
+        else:
+            orchestrator_system = ""
+            is_first_discovery = False
+
+        if is_first_discovery:
+            # ── Phase 4: Deterministic Discovery Engine ──────────────────
+            # The graph's prerequisite_for edges encode what the learner
+            # should learn next. Try graph traversal before any LLM call.
+            # If confidence >= 3, stream the deterministic mission.
+            # Otherwise fall through to Graph-RAG + LLM.
+            disco_mission = None
+            try:
+                from graph_discovery import discover as graph_discover
+                disco_result = graph_discover(discovery_ctx)
+                if disco_result.confidence >= 3:
+                    disco_mission = disco_result
+            except Exception:
+                pass
+
+            if disco_mission:
+                mission_text = disco_mission.mission_text
+                # Apply the developmental firewall
+                fw = developmental_firewall.Firewall(
+                    active=developmental_firewall.is_active(
+                        developmental_firewall.resolve_grade(req.grade, user)
+                    )
+                )
+                safe = fw.feed(mission_text) + fw.flush()
+                if safe:
+                    mission_text = safe
+                mission_text = developmental_firewall.scrub_text(
+                    mission_text, explicit_grade=req.grade, user=user
+                )
+
+                yield _sse("retrieval", {
+                    "intent": "knowledge",
+                    "graph_mode": "local",
+                    "entities": [disco_mission.target_word] + disco_mission.mastered_anchors,
+                    "sources": [{"source": "Vaaani Discovery Graph", "score": 1.0,
+                                "snippet": f"Phase 4: deterministic discovery — {disco_mission.target_word}"}],
+                    "discovery_mode": True,
+                })
+                yield _sse("token", {"delta": mission_text})
+                yield _sse("done", {
+                    "answer": mission_text,
+                    "sources": [{"source": "Vaaani Discovery Graph", "score": 1.0,
+                                "snippet": mission_text[:240]}],
+                    "tokens": len(mission_text.split()),
+                    "intent": "knowledge",
+                    "graph_mode": "local",
+                    "entities": [disco_mission.target_word] + disco_mission.mastered_anchors,
+                    "topic_refs": [],
+                    "communities": [],
+                    "structured": None,
+                    "fidelity_warnings": [],
+                    "memory_used": [],
+                    "weak_spots": [],
+                    "user_signed_in": True,
+                    "hermes_corrections": [],
+                    "figures": [],
+                    "guardrail_active": False,
+                    "guardrail_violations": [],
+                    "discovery_mode": True,
+                })
+                return
+
+            # ── Graph-RAG retrieval for discovery mode ────────────────
+            # The orchestrator generates a mission from the learner state,
+            # but the KB must still reason about what content to ground it
+            # in. Synthesize a retrieval query from the discovery context
+            # and run local_graph_search so the orchestrator sees relevant
+            # chunks, entities, edges, and community context — the same KB
+            # context the normal chat path gets. This restores the
+            # neuro-symbolic principle ("KB reasons; LLM only expresses")
+            # for discovery mode.
+            disco_query = _discovery_retrieval_query(discovery_ctx)
+            allowed_paths = _allowed_paths(user)
+
+            discovery_chunks: list[dict] = []
+            discovery_entities: list[str] = []
+            discovery_communities: list = []
+            discovery_edges: list[str] = []
+            g_mode_disco = None
+
+            try:
+                disco_retrieval = retriever.local_graph_search(
+                    disco_query,
+                    k=config.TOP_K_CHUNKS,
+                    allowed_paths=allowed_paths,
+                )
+                discovery_chunks = disco_retrieval.get("chunks", [])
+                discovery_entities = disco_retrieval.get("entities", [])
+                discovery_communities = disco_retrieval.get("communities", [])
+                discovery_edges = disco_retrieval.get("edges", [])
+                if discovery_chunks or discovery_entities:
+                    g_mode_disco = "local"
+            except Exception:
+                # Fail safe: if retrieval errors, proceed with empty context
+                # (the orchestrator can still generate from learner state)
+                pass
+
+            disco_graph_block = build_graph_block(
+                discovery_entities, discovery_edges, discovery_communities,
+            )
+
+            messages = build_prompt(
+                disco_query, discovery_chunks, "", "knowledge", False,
+                graph_mode=g_mode_disco,
+                graph_block=disco_graph_block,
+                orchestrator_system=orchestrator_system,
+            )
+            # Override the user message to be an explicit orchestrator trigger
+            messages[-1]["content"] = (
+                "BEGIN DISCOVERY SESSION. The learner has just arrived. "
+                "Read the LEARNER STATE above and generate ONE discovery "
+                "mission. Follow your core rules: build on mastered "
+                "knowledge, introduce ONE new idea, make it feel like a "
+                "mystery. Short response — 2 to 4 sentences. "
+                "If the mission asks the learner to use a tool, include a "
+                "[[LINK:/path|Label]] sentinel so the learner can open it."
+            )
+
+            disco_sources = [
+                {
+                    "source": c.get("source", ""),
+                    "score": float(c.get("score", 0.0)),
+                    "snippet": (c.get("text", "") or "")[:240],
+                }
+                for c in discovery_chunks
+            ]
+            disco_communities_payload = [
+                {
+                    "id": getattr(c, "id", None),
+                    "title": getattr(c, "title", "") or f"community-{getattr(c, 'id', '?')}",
+                    "summary": getattr(c, "summary", ""),
+                    "findings": list(getattr(c, "findings", []) or []),
+                    "size": getattr(c, "size", len(getattr(c, "nodes", []) or [])),
+                }
+                for c in discovery_communities
+            ]
+
+            yield _sse("retrieval", {
+                "intent": "knowledge",
+                "graph_mode": g_mode_disco,
+                "entities": discovery_entities,
+                "sources": disco_sources,
+                "discovery_mode": True,
+            })
+
+            accumulator: list[str] = []
+            tokens_used = 0
+            # Developmental output firewall — same as the normal streaming
+            # path. Sub-G5 learners must never see phoneme notation (/f/,
+            # /m/, IPA glyphs) even in discovery mode. The orchestrator
+            # prompt asks the LLM to avoid notation, but the LLM can still
+            # emit it; this is the deterministic backstop.
+            fw = developmental_firewall.Firewall(
+                active=developmental_firewall.is_active(
+                    developmental_firewall.resolve_grade(req.grade, user)
+                )
+            )
+            try:
+                stream_gen = call_deepseek(messages, stream=True, json_mode=False, temperature=0.3)
+                while True:
+                    try:
+                        delta = next(stream_gen)
+                    except StopIteration as stop:
+                        final = stop.value or {}
+                        tokens_used = final.get("tokens", 0) if isinstance(final, dict) else 0
+                        break
+                    if delta:
+                        safe = fw.feed(delta)
+                        if safe:
+                            accumulator.append(safe)
+                            yield _sse("token", {"delta": safe, "tokens": tokens_used})
+                # Flush any held tail (an unclosed /span at end of stream).
+                tail = fw.flush()
+                if tail:
+                    accumulator.append(tail)
+                    yield _sse("token", {"delta": tail, "tokens": tokens_used})
+            except Exception as exc:
+                yield _sse("error", {"detail": str(exc)[:500]})
+                return
+
+            answer = "".join(accumulator)
+            # Final one-shot scrub as belt-and-suspenders (catches anything
+            # the streaming firewall missed at chunk boundaries). Preserve
+            # [[LINK:...]] sentinels — they use only ASCII and no notation.
+            if answer:
+                answer = developmental_firewall.scrub_text(
+                    answer, explicit_grade=req.grade, user=user
+                )
+            yield _sse("done", {
+                "answer": answer,
+                "sources": disco_sources,
+                "tokens": tokens_used,
+                "intent": "knowledge",
+                "graph_mode": g_mode_disco,
+                "entities": discovery_entities,
+                "topic_refs": [],
+                "communities": disco_communities_payload,
+                "structured": None,
+                "fidelity_warnings": [],
+                "memory_used": [],
+                "weak_spots": [],
+                "user_signed_in": True,
+                "hermes_corrections": [],
+                "figures": [],
+                "guardrail_active": False,
+                "guardrail_violations": [],
+                "discovery_mode": True,
+            })
+            return
+
+        # ── Normal retrieval path ─────────────────────────────────────
+
+        # ── Graph-First Router (Phase 2) ──────────────────────────────
+        # Try deterministic graph answer before retrieval. If confidence
+        # is high, stream it as an SSE token → done sequence.
+        gr_result = None
+        if req.query.strip() and not req.discovery_context:
+            try:
+                gr_result = _try_graph_route(req.query, grade=req.grade, user=user)
+            except Exception:
+                pass
+        if gr_result and gr_result.confidence >= 4:
+            safe = developmental_firewall.scrub_text(
+                gr_result.answer, explicit_grade=req.grade, user=user
+            )
+            yield _sse("retrieval", {
+                "intent": gr_result.intent,
+                "graph_mode": "local",
+                "entities": gr_result.entities,
+                "sources": [{"source": "Vaaani Language Graph", "score": 1.0,
+                            "snippet": gr_result.answer[:240]}],
+            })
+            yield _sse("token", {"delta": safe})
+            yield _sse("done", {
+                "answer": safe,
+                "sources": [{"source": "Vaaani Language Graph", "score": 1.0,
+                            "snippet": gr_result.answer[:240]}],
+                "tokens": len(safe.split()),
+                "intent": gr_result.intent,
+                "graph_mode": "local",
+                "entities": gr_result.entities,
+                "topic_refs": [],
+                "communities": [],
+                "structured": None,
+                "fidelity_warnings": [],
+                "memory_used": [],
+                "weak_spots": [],
+                "user_signed_in": True,
+                "hermes_corrections": [],
+                "figures": [],
+                "guardrail_active": False,
+                "guardrail_violations": [],
+            })
+            return
+        if gr_result and gr_result.confidence >= 2:
+            # Medium confidence — inject graph context into the LLM prompt
+            req.query = (
+                f"{req.query}\n\n[KNOWLEDGE GRAPH CONTEXT: {gr_result.answer}]"
+            )
 
         structured = wants_structured_output(req.query, STRUCTURED_TRIGGERS)
-        facts_used = top_relevant_facts(req.query, retriever.embed)
+        facts_used = top_relevant_facts(req.query, retriever.embed, user_id=user["id"])
+        allowed_paths = _allowed_paths(user)
 
         guardrail_prompt = build_universal_guardrail_prompt()
         student_guardrails: dict | None = None
@@ -1066,12 +1966,24 @@ def _chat_stream_generator(req: "ChatRequest", user: dict):
         sf_set: set[str] | None = set(req.source_filter) if req.source_filter else None
         if intent == "knowledge":
             retrieval = (
-                retriever.global_graph_search(req.query)
+                retriever.global_graph_search(req.query, allowed_paths=allowed_paths)
                 if g_mode == "global"
-                else retriever.local_graph_search(req.query, k=effective_top_k, source_filter=sf_set)
+                else retriever.local_graph_search(
+                    req.query, k=effective_top_k, source_filter=sf_set, allowed_paths=allowed_paths
+                )
             )
         elif intent == "task":
-            retrieval["chunks"] = retriever.search(req.query, k=effective_top_k, source_filter=sf_set)
+            retrieval["chunks"] = retriever.search(
+                req.query, k=effective_top_k, source_filter=sf_set, allowed_paths=allowed_paths
+            )
+
+        # Relevance floor — mirrors _run_intent (see comment there).
+        if intent == "knowledge" and g_mode != "global":
+            kept = [c for c in retrieval["chunks"] if float(c.get("score", 0.0)) >= MIN_RELEVANCE]
+            if kept:
+                retrieval = {**retrieval, "chunks": kept}
+            else:
+                retrieval = {**retrieval, "chunks": [], "entities": [], "edges": [], "communities": []}
 
         chunks = retrieval["chunks"]
         memory_block = format_memory_block(facts_used)
@@ -1108,6 +2020,10 @@ def _chat_stream_generator(req: "ChatRequest", user: dict):
             if "strict_grounding" in correction_names
             else ""
         )
+        # Persistent learner memory: the tutor already knows this student.
+        profile_block = build_learner_profile_block(user)
+        if profile_block:
+            extra_system = (extra_system + "\n\n" + profile_block) if extra_system else profile_block
 
         # Emit early metadata so the UI can paint intent + entity chips
         # while DeepSeek warms up.
@@ -1127,11 +2043,61 @@ def _chat_stream_generator(req: "ChatRequest", user: dict):
             "sources": sources_payload,
         })
 
+        # Hard gate (mirrors _run_intent): nothing retrieved for a knowledge
+        # question → answer honestly without generating. Trace logged so
+        # Hermes learns the query is chunk-starved.
+        if intent == "knowledge" and not chunks and not (
+            retrieval.get("entities") or retrieval.get("edges") or retrieval.get("communities")
+        ):
+            no_kb_answer = (
+                "I don't have anything about that in my knowledge base yet. "
+                "Try uploading the relevant notes or textbook chapter, or ask me "
+                "about something from the material that's already been added."
+            )
+            yield _sse("token", {"delta": no_kb_answer})
+            try:
+                hermes_store.log_trace(
+                    user_id=user["id"],
+                    query=req.query,
+                    embedding=query_vec,
+                    intent=intent,
+                    graph_mode=g_mode,
+                    num_chunks=0,
+                    fidelity_warnings=0,
+                    tokens=0,
+                    corrections_applied=hermes_plan.names,
+                )
+            except Exception:
+                pass
+            yield _sse("done", {
+                "answer": no_kb_answer,
+                "sources": [],
+                "tokens": 0,
+                "intent": intent,
+                "graph_mode": g_mode,
+                "entities": [],
+                "topic_refs": topic_refs,
+                "communities": [],
+                "structured": None,
+                "fidelity_warnings": [],
+                "memory_used": facts_used,
+                "weak_spots": weak,
+                "user_signed_in": True,
+                "hermes_corrections": [
+                    {"name": c.name, "reason": c.reason} for c in hermes_plan.corrections
+                ],
+                "figures": [],
+                "guardrail_active": False,
+                "guardrail_violations": [],
+            })
+            return
+
         messages = build_prompt(
             req.query, chunks, memory_block, intent, structured,
             graph_mode=g_mode, graph_block=graph_block, socratic=req.socratic,
             extra_system=extra_system,
             guardrail_prompt=guardrail_prompt,
+            orchestrator_system=orchestrator_system,
         )
 
         # ---- LLM streaming ----
@@ -1140,7 +2106,16 @@ def _chat_stream_generator(req: "ChatRequest", user: dict):
         # every few milliseconds so the 100 s edge timeout never trips.
         accumulator: list[str] = []
         tokens_used = 0
-        stream_gen = call_deepseek(messages, stream=True, json_mode=structured)
+        temperature = 0.0 if intent == "knowledge" and not req.socratic else 0.2
+        # Developmental output firewall over the token stream (grade-gated). It
+        # holds a buffer across delta boundaries so a transcription split between
+        # two chunks is still caught. Structured/JSON answers pass through.
+        fw = developmental_firewall.Firewall(
+            active=(not structured) and developmental_firewall.is_active(
+                developmental_firewall.resolve_grade(req.grade, user)
+            )
+        )
+        stream_gen = call_deepseek(messages, stream=True, json_mode=structured, temperature=temperature)
         try:
             while True:
                 try:
@@ -1150,14 +2125,22 @@ def _chat_stream_generator(req: "ChatRequest", user: dict):
                     tokens_used = final.get("tokens", 0) or 0
                     break
                 if delta:
-                    accumulator.append(delta)
-                    yield _sse("token", {"delta": delta})
+                    safe = fw.feed(delta)
+                    if safe:
+                        accumulator.append(safe)
+                        yield _sse("token", {"delta": safe})
         except Exception as e:
             yield _sse("error", {"detail": f"LLM stream failed: {e}"})
             return
 
+        # Flush any held tail (an unclosed span at end of stream).
+        tail = fw.flush()
+        if tail:
+            accumulator.append(tail)
+            yield _sse("token", {"delta": tail})
+
         answer = "".join(accumulator)
-        record_query(req.query)
+        record_query(req.query, user_id=user["id"])
 
         # ---- Post-processing (same as /chat): structured parse, guardrail
         #       check, plot rewrite, citation fidelity, skill touches, Hermes
@@ -1295,32 +2278,148 @@ def graph_endpoint(vaaani_session: str | None = Cookie(default=None, alias="vaaa
     anonymous callers get an empty graph rather than leaking another user's
     constellation.
     """
-    if not _resolve_user(vaaani_session):
-        return {"nodes": [], "edges": [], "communities": []}
+    graph_user = _resolve_user(vaaani_session)
+    if not graph_user:
+        return {"nodes": [], "edges": [], "communities": [], "journey": {}}
     kg = retriever.kg
+    # Privacy scope: only nodes extracted from files this user may read, edges
+    # between two visible nodes, and communities with at least one visible node.
+    allowed = _allowed_paths(graph_user)
+    visible = {
+        k for k in kg.g.nodes if retriever.node_visible(k, allowed)
+    }
+
+    # LIVING-BRAIN OVERLAY: a star is not just an entity from a document — it is
+    # a concept THIS learner has acquired. Join each node to the learner's
+    # skill row (student_skills.topic == the normalized graph-node id) so the
+    # node carries mastery (brightness), whether it's fading (due for review),
+    # and when it was discovered. Data already computed by the practice/review
+    # engine; this is the wiring that makes the graph a cognitive map.
+    skills_by_topic: dict[str, dict] = {}
+    due_topics: set[str] = set()
+    try:
+        for s in learn_service.list_skills(graph_user["id"], limit=1000):
+            skills_by_topic[s["topic"]] = s
+        for d in learn_service.due_for_review(graph_user["id"], limit=1000):
+            due_topics.add(d["topic"])
+    except Exception:
+        pass
+
+    nodes = []
+    for k, d in kg.g.nodes(data=True):
+        if k not in visible:
+            continue
+        skill = skills_by_topic.get(k)
+        nodes.append({
+            "id": k,
+            "display": d.get("display", k),
+            "type": d.get("type", "unknown"),
+            "community": retriever.community_idx.get(k),
+            # None when the concept is in the corpus but not yet practised by
+            # this learner (an unlit star — there to be discovered).
+            "discovered": skill is not None,
+            "mastery": round(skill["mastery"], 2) if skill else None,
+            "interval_days": skill.get("interval_days") if skill else None,
+            "due": k in due_topics,
+            "last_seen": skill.get("last_seen_at") if skill else None,
+        })
+
+    # EXPLORE MY WORLD: the child's own camera discoveries are stars too —
+    # their personal "My World" constellation, each brightening as they walk
+    # the Language Journey for that object. Kept separate from the curriculum
+    # graph (namespaced ids) and always private to this learner.
+    try:
+        import explore as _explore
+        MY_WORLD_CID = -1
+        for disc in _explore.list_discoveries(graph_user["id"]):
+            nodes.append({
+                "id": f"explore:{disc['object']}",
+                "display": disc["object"].title(),
+                "type": "explore",
+                "community": MY_WORLD_CID,
+                "discovered": True,
+                "mastery": disc["mastery"],
+                "interval_days": None,
+                "due": False,
+                "last_seen": None,
+                "journey_step": disc["step"],
+                "journey_total": disc["total_steps"],
+                "has_video": disc["has_video"],
+            })
+    except Exception:
+        pass
+
+    discovered = [n for n in nodes if n["discovered"]]
+    avg_mastery = (sum(n["mastery"] for n in discovered) / len(discovered)) if discovered else 0.0
+    recent = sorted(discovered, key=lambda n: n["last_seen"] or "", reverse=True)[:8]
+    journey = {
+        "concepts": len(nodes),
+        "discovered": len(discovered),
+        "connections": sum(1 for u, v in ((e[0], e[1]) for e in kg.g.edges) if u in visible and v in visible),
+        "constellations": sum(1 for c in retriever.communities if retriever.community_visible(c, allowed)),
+        "discovery_pct": round(100 * len(discovered) / len(nodes), 1) if nodes else 0.0,
+        "memory_health": round(avg_mastery / 5.0, 3),   # 0..1
+        "due_count": sum(1 for n in discovered if n["due"]),
+        "recently_discovered": [{"display": n["display"], "mastery": n["mastery"]} for n in recent],
+    }
+
+    communities_out = [
+        # 2026-05-28: summary + findings added so /graph-view can show
+        # a meaningful side panel when the user clicks a community
+        # tile, instead of a silent camera-fit zoom that looks broken.
+        {
+            "id": c.id,
+            "title": c.title,
+            "size": c.size,
+            "summary": c.summary,
+            "findings": c.findings,
+        }
+        for c in retriever.communities
+        if retriever.community_visible(c, allowed)
+    ]
+    explore_stars = [n for n in nodes if n["type"] == "explore"]
+    if explore_stars:
+        communities_out.insert(0, {
+            "id": -1,
+            "title": "My World — things you discovered",
+            "size": len(explore_stars),
+            "summary": "The real things you explored with your camera and told stories about.",
+            "findings": [n["display"] for n in explore_stars[:8]],
+        })
+
     return {
-        "nodes": [
-            {"id": k, "display": d.get("display", k), "type": d.get("type", "unknown"),
-             "community": retriever.community_idx.get(k)}
-            for k, d in kg.g.nodes(data=True)
-        ],
+        "nodes": nodes,
         "edges": [
             {"source": u, "target": v, "type": data.get("type", "related_to")}
             for u, v, data in kg.g.edges(data=True)
+            if u in visible and v in visible
         ],
-        "communities": [
-            # 2026-05-28: summary + findings added so /graph-view can show
-            # a meaningful side panel when the user clicks a community
-            # tile, instead of a silent camera-fit zoom that looks broken.
-            {
-                "id": c.id,
-                "title": c.title,
-                "size": c.size,
-                "summary": c.summary,
-                "findings": c.findings,
-            }
-            for c in retriever.communities
-        ],
+        "communities": communities_out,
+        "journey": journey,
+    }
+
+
+@app.get("/graph/cache")
+def graph_cache_endpoint(
+    vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
+) -> dict:
+    """Return the precomputed graph cache — O(1) word breakdowns for every
+    word and root in the knowledge graph. Loaded at startup; rebuilt when
+    graph_seeder.py runs. Does NOT require auth (the cache is curriculum
+    data, not user data).
+    """
+    from graph_cache import load_cache
+    cache = load_cache()
+    return {
+        "stats": cache.get("stats", {}),
+        "roots": cache.get("roots", {}),
+        "phonemes": cache.get("phonemes", {}),
+        "graphemes": cache.get("graphemes", {}),
+        "indexes": cache.get("indexes", {}),
+        # Don't expose full word cache via API — it's large and used
+        # internally by the graph router. But expose a summary.
+        "word_count": len(cache.get("words", {})),
+        "word_list": sorted(cache.get("words", {}).keys()),
     }
 
 

@@ -1,5 +1,6 @@
 """Simulation engine — state machine that drives exam pressure simulation."""
 
+import re
 import uuid
 import time
 from dataclasses import dataclass, field
@@ -9,6 +10,49 @@ from .pressure import PressureController, PressureConfig, PressureState, Phase
 from .coach import CoachInterjector
 from .question_bank import QuestionBank
 from .store import sim_store
+
+
+_NUMBER_WORDS = {
+    "one": "1", "two": "2", "three": "3", "four": "4", "five": "5",
+    "six": "6", "seven": "7", "eight": "8", "nine": "9", "ten": "10",
+}
+
+
+def _normalize(text: str) -> str:
+    """Lowercase, drop punctuation/quotes/hyphens, map number words, strip articles."""
+    t = (text or "").lower()
+    t = re.sub(r"[^\w\s]", " ", t)
+    words = [w for w in t.split() if w not in ("a", "an", "the")]
+    words = [_NUMBER_WORDS.get(w, w) for w in words]
+    return " ".join(words)
+
+
+def _grade(student_answer: str, q: dict) -> bool:
+    """Lenient free-text grading for linguistics answers.
+
+    Correct when the normalized student answer equals the key (with any
+    parenthetical elaboration stripped), or contains it, or contains any of
+    the question's curated `accept` phrases. Exact string equality alone
+    marks almost every honest free-text answer wrong.
+    """
+    student = _normalize(student_answer)
+    if not student:
+        return False
+    key = q.get("answer", "")
+    key_short = re.sub(r"\([^)]*\)", " ", key)  # drop parenthetical elaboration
+    candidates = [key, key_short] + list(q.get("accept", []) or [])
+    for cand in candidates:
+        c = _normalize(cand)
+        if not c or (len(c) < 2 and not c.isdigit()):
+            continue
+        if student == c:
+            return True
+        # Containment with word boundaries: the key phrase appears inside a
+        # longer honest answer ("it is a nasal sound" matches key "nasal"),
+        # but "ong" cannot match inside "strong".
+        if re.search(rf"(?<!\w){re.escape(c)}(?!\w)", student):
+            return True
+    return False
 
 
 class SessionState(Enum):
@@ -48,12 +92,12 @@ class SimulationEngine:
             fatigue_simulation=config.get("fatigue_simulation", True),
             total_questions=config.get("total_questions", 30),
             time_limit_seconds=config.get("time_limit_seconds", 3600),
-            subject=config.get("subject", "Physics"),
+            subject=config.get("subject", "Phonetics"),
         )
         session_id = uuid.uuid4().hex[:16]
         controller = PressureController(pc)
         controller.start()
-        qb = QuestionBank()
+        qb = QuestionBank(pc.subject)
 
         session = SimulationSession(
             session_id=session_id,
@@ -77,10 +121,12 @@ class SimulationEngine:
         q = qb.get_question(controller.state, question_index=0)
         session.current_question = q
         session.question_index = 0
+        controller.question_start_time = time.time()
 
         return self._session_response(session, q)
 
-    def answer(self, session_id: str, answer: str, confidence_1to5: int = 0) -> dict:
+    def answer(self, session_id: str, answer: str, confidence_1to5: int = 0,
+               confidence_0to100: int = -1) -> dict:
         session = self._sessions.get(session_id)
         if not session:
             return {"error": "session not found", "state": "unknown"}
@@ -92,10 +138,12 @@ class SimulationEngine:
             return {"error": "no active question"}
 
         response_ms = (time.time() - session.controller.question_start_time) * 1000
-        correct = answer.strip().lower() == q.get("answer", "").strip().lower()
+        correct = _grade(answer, q)
 
         session.controller.on_answer(correct, response_ms < 15000, response_ms)
-        session.controller.tick(time.time() - session.started_at - session.controller.state.time_remaining_seconds * 0)
+        # Tick down by the time spent on THIS question only — passing total
+        # session elapsed here double-counts and ends sessions early.
+        session.controller.tick(response_ms / 1000.0)
 
         # Log
         try:
@@ -119,6 +167,7 @@ class SimulationEngine:
                     "momentum": session.controller.state.momentum,
                 },
                 is_flagged=0,
+                confidence_0to100=confidence_0to100 if confidence_0to100 >= 0 else confidence_1to5 * 20,
             )
         except Exception:
             pass
@@ -134,25 +183,54 @@ class SimulationEngine:
             session.controller.coach_triggered()
             session.controller.recover_from_wrong_streak()
 
+        # ── Confidence-driven adaptive difficulty + metacognitive feedback ──
+        # The learner's pre-submission confidence (0–100%) adjusts how the
+        # pressure controller responds to the answer and generates
+        # metacognitive feedback the frontend displays after each answer.
+        conf_feedback = _confidence_feedback(
+            confidence_0to100, correct, q.get("topic", ""),
+        )
+        _apply_confidence_to_difficulty(
+            session.controller, correct, confidence_0to100,
+        )
+
         # Next question
         session.question_index += 1
         if session.question_index >= session.config.total_questions or (
             session.controller.state.time_remaining_seconds <= 0
         ):
-            return self._complete(session, coaching, correct, response_ms)
+            result = self._complete(session, coaching, correct, response_ms)
+            result["answered_question"] = {
+                "query": q.get("query", ""),
+                "answer": q.get("answer", ""),
+                "topic": q.get("topic", ""),
+            }
+            return result
 
         next_q = session.question_bank.get_question(
             session.controller.state,
             question_index=session.question_index,
         )
         session.current_question = next_q
+        session.controller.question_start_time = time.time()
 
-        return self._session_response(session, next_q, coaching, correct, response_ms)
+        result = self._session_response(session, next_q, coaching, correct, response_ms)
+        # The question the student just answered (with its correct answer) —
+        # for post-answer feedback and the cognitive X-Ray feed. current_question
+        # is already the NEXT question here, so consumers must not use it for that.
+        result["answered_question"] = {
+            "query": q.get("query", ""),
+            "answer": q.get("answer", ""),
+            "topic": q.get("topic", ""),
+        }
+        result["confidence_feedback"] = conf_feedback
+        return result
 
     def skip(self, session_id: str) -> dict:
         session = self._sessions.get(session_id)
         if not session:
             return {"error": "session not found"}
+        session.controller.tick(time.time() - session.controller.question_start_time)
         session.controller.on_skip()
         session.question_index += 1
         if session.question_index >= session.config.total_questions:
@@ -161,6 +239,7 @@ class SimulationEngine:
             session.controller.state, question_index=session.question_index
         )
         session.current_question = next_q
+        session.controller.question_start_time = time.time()
         return self._session_response(session, next_q)
 
     def _session_response(
@@ -168,12 +247,17 @@ class SimulationEngine:
         coaching: str = "", correct: bool | None = None, response_ms: float = 0
     ) -> dict:
         ps = session.controller.state
+        # Never ship the correct answer (or accepted variants) with a live
+        # question — grading is server-side and students can read this
+        # payload in devtools.
+        question_public = {k: v for k, v in (question or {}).items()
+                           if k not in ("answer", "accept")}
         return {
             "session_id": session.session_id,
             "state": ps.phase,
             "question_index": session.question_index,
             "total_questions": session.total_questions,
-            "current_question": question,
+            "current_question": question_public,
             "time_remaining": ps.time_remaining_seconds,
             "score": round(ps.current_score, 1),
             "max_score": round(ps.max_score, 1),
@@ -242,3 +326,51 @@ class SimulationEngine:
 
 
 engine = SimulationEngine()
+
+
+# ── Confidence-driven helpers ───────────────────────────────────────────────
+
+
+def _confidence_feedback(conf: int, correct: bool, topic: str) -> dict:
+    """Generate metacognitive feedback based on confidence vs. correctness.
+
+    Returns a dict with 'type' (overconfident|underconfident|well_calibrated)
+    and 'text' for the frontend to display.
+    """
+    if conf < 0:
+        return {}
+    if correct and conf >= 80:
+        return {"type": "well_calibrated", "text": f"Confident and correct on {topic}. You know this well."}
+    if correct and conf < 40:
+        return {"type": "underconfident", "text": f"You got {topic} right but weren't sure — trust your knowledge more here!"}
+    if not correct and conf >= 70:
+        return {"type": "overconfident", "text": f"Overconfidence on {topic} — you felt sure but missed. Let's review this together."}
+    if not correct and conf < 30:
+        return {"type": "well_calibrated", "text": f"Honest gap on {topic} — you knew you didn't know. That's the first step to learning."}
+    return {"type": "well_calibrated", "text": ""}
+
+
+def _apply_confidence_to_difficulty(controller, correct: bool, conf: int) -> None:
+    """Adjust difficulty based on confidence × correctness interaction.
+
+    - Correct + high confidence → push difficulty up (the learner has mastered this)
+    - Correct + low confidence → hold difficulty (lucky guess, don't accelerate)
+    - Wrong + high confidence → don't drop as hard (overconfidence needs re-exposure)
+    - Wrong + low confidence → normal drop (honest gap, ease back in)
+    """
+    if conf < 0:
+        return
+    state = controller.state
+    if correct and conf >= 80:
+        # Accelerate: the learner knows this well
+        state.current_difficulty = min(5.0, state.current_difficulty + 0.3)
+    elif correct and conf < 40:
+        # Hold: lucky guess, don't accelerate
+        pass
+    elif not correct and conf >= 70:
+        # Overconfidence: don't bail them out — keep difficulty high so they
+        # encounter the concept again at the same level
+        state.current_difficulty = max(1.0, state.current_difficulty - 0.1)
+    elif not correct and conf < 30:
+        # Honest gap: normal difficulty drop
+        state.current_difficulty = max(1.0, state.current_difficulty - 0.3)

@@ -85,6 +85,26 @@ def _parse_source_filter(source: str | None) -> set[str] | None:
     return set(parts) if parts else None
 
 
+def _scoped_source_filter(user: dict, source: str | None) -> set[str] | None:
+    """Requested scope chip ∩ the user's visible documents (privacy scope).
+
+    Cloze passages are cut from raw chunk text, so review cards must never
+    be backed by another user's documents. Returns a sentinel-bearing set
+    (never empty) when the user can see nothing, so it still filters.
+    """
+    sf = _parse_source_filter(source)
+    try:
+        from main import _allowed_doc_names
+        allowed = _allowed_doc_names(user)
+    except Exception:
+        allowed = set()  # fail closed
+    if allowed is None:
+        return sf
+    if sf is not None:
+        allowed = allowed & sf
+    return allowed | {"__no_documents__"}
+
+
 @router.get("/review/next")
 def review_next(
     source: str | None = None,
@@ -98,7 +118,7 @@ def review_next(
     queue to one book at a time.
     """
     user = _require_user(vaaani_session)
-    sf = _parse_source_filter(source)
+    sf = _scoped_source_filter(user, source)
     item = spaced.next_review(user["id"], source_filter=sf)
     return {
         "stats": spaced.session_stats(user["id"]),
@@ -115,17 +135,44 @@ def review_grade(
 ):
     """Apply a grade to the current card and return the next one in a single round-trip."""
     user = _require_user(vaaani_session)
-    sf = _parse_source_filter(source)
+    sf = _scoped_source_filter(user, source)
     try:
         updated = spaced.grade_node(user["id"], body.node_id, body.display, body.grade)
     except ValueError as e:
         raise HTTPException(400, str(e))
+
+    # Bridge to the Cognitive Twin: a graded recall is evidence. Self-report
+    # channel, so confidence < 1 (Jeffrey weight); grade maps to outcome
+    # (again→incorrect, hard→partial, good/easy→correct). Only emits when the
+    # card's node exists in the loop's world graph — review cards are built
+    # from graph nodes, so this normally always resolves.
+    twin_update = None
+    try:
+        import cognitive_twin as twin
+        from cognitive_loop_routes import _get_world
+        from evidence_graph import EvidenceObject
+        if body.node_id in _get_world().nodes:
+            outcome = {"again": "incorrect", "hard": "partial",
+                       "good": "correct", "easy": "correct"}[body.grade]
+            b = twin.update(EvidenceObject(
+                student_id=f"u_{user['id']}", node_id=body.node_id,
+                source="review", outcome=outcome, confidence=0.8,
+                meta={"grade": body.grade, "level": "recall"}))
+            twin_update = {"node_id": b.node_id,
+                           "mastery": round(b.mastery, 4),
+                           "exposures": b.exposures}
+    except Exception:
+        pass
+
     nxt = spaced.next_review(user["id"], source_filter=sf)
-    return {
+    resp = {
         "graded": updated,
         "stats": spaced.session_stats(user["id"]),
         "item": nxt,
     }
+    if twin_update:
+        resp["twin_update"] = twin_update
+    return resp
 
 
 # ---------------- Anki .apkg export ----------------
@@ -155,7 +202,7 @@ def anki_export_apkg(
     mega-mix of everything in their library.
     """
     user = _require_user(vaaani_session)
-    sf = _parse_source_filter(source)
+    sf = _scoped_source_filter(user, source)
     try:
         data, filename, stats = anki_export.build_apkg_for_user(user["id"], source_filter=sf)
     except ValueError as e:

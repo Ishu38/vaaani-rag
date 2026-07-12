@@ -47,3 +47,10 @@ build/
 # Playwright
 test-results/
 playwright-report/
+
+# Learner data (never commit — DPDP)
+data/cognitive_twin.db
+data/cognitive_twin.db-*
+data/explore.db
+data/explore.db-*
+data/explore_media/

@@ -469,6 +469,95 @@ def log_guardrail_event(
 
 # ---------------- dashboard queries ----------------
 
+def _build_leader_insights(
+    school_id: int, students: list[dict], student_ids: list[int], recent_queries: list[dict],
+) -> dict:
+    """Turn raw activity into a few things a school leader can actually act on:
+    the weakest topics across the cohort, the most common misconception type,
+    engagement, and a short prioritised 'act on this' list.
+    """
+    grade = ""
+    try:
+        grade = (get_guardrails(school_id) or {}).get("grade_level", "") or ""
+    except Exception:
+        grade = ""
+
+    weak_topics: list[dict] = []
+    if student_ids:
+        ph = ",".join("?" for _ in student_ids)
+        try:
+            with connect() as c:
+                rows = c.execute(
+                    f"SELECT topic, MAX(display) AS display, ROUND(AVG(mastery),1) AS avg_m, "
+                    f"COUNT(DISTINCT user_id) AS n_students "
+                    f"FROM student_skills WHERE user_id IN ({ph}) "
+                    f"GROUP BY topic HAVING AVG(mastery) < 3 "
+                    f"ORDER BY avg_m ASC LIMIT 5",
+                    tuple(student_ids),
+                ).fetchall()
+            weak_topics = [
+                {"topic": r["topic"], "display": r["display"],
+                 "avg_mastery": r["avg_m"], "students": r["n_students"]}
+                for r in rows
+            ]
+        except Exception:
+            weak_topics = []
+
+    # School-wide misconceptions from the cognitive engine (separate DB).
+    misconceptions: list[dict] = []
+    try:
+        from cognitive.store import store as _cog_store
+        from cognitive.fingerprint import ERROR_LABELS as _LABELS
+        agg = _cog_store.aggregate_error_breakdown(student_ids)
+        misconceptions = [
+            {"type": k, "label": _LABELS.get(k, k.replace("_", " ").title()), "count": v}
+            for k, v in list(agg.items())[:5]
+        ]
+    except Exception:
+        misconceptions = []
+
+    # Engagement: who has shown up recently vs not.
+    active_ids = {q["student_id"] for q in recent_queries}
+    n_total = len(students)
+    n_active = len([s for s in students if s["id"] in active_ids])
+    n_inactive = n_total - n_active
+
+    # Prioritised, plain-language actions for the leader.
+    actions: list[str] = []
+    if weak_topics:
+        w = weak_topics[0]
+        actions.append(
+            f"Run a focused review on “{w['display']}” — {w['students']} "
+            f"student(s) are averaging {w['avg_mastery']}/5 there."
+        )
+    if misconceptions:
+        m = misconceptions[0]
+        actions.append(
+            f"The most common mistake across the cohort is “{m['label']}” "
+            f"({m['count']} times) — one short class on this could lift many students at once."
+        )
+    if n_total and n_inactive:
+        actions.append(
+            f"{n_inactive} of {n_total} students haven’t used Vaaani recently — "
+            f"a quick nudge could re-engage them."
+        )
+    elif n_total and not n_inactive:
+        actions.append("Engagement is strong — most students are active. Keep the momentum.")
+    if not actions:
+        actions.append(
+            "Not enough activity yet to surface insights. Once students start asking "
+            "questions, this panel fills with concrete next steps."
+        )
+
+    return {
+        "grade_level": grade,
+        "weak_topics": weak_topics,
+        "misconceptions": misconceptions,
+        "engagement": {"total": n_total, "active": n_active, "inactive": n_inactive},
+        "actions": actions[:3],
+    }
+
+
 def school_dashboard(school_id: int) -> dict:
     """Aggregated stats for the school admin dashboard."""
     members = list_members(school_id)
@@ -530,8 +619,11 @@ def school_dashboard(school_id: int) -> dict:
             "strong_count": r["strong"] or 0,
         }
 
+    leader_insights = _build_leader_insights(school_id, students, student_ids, recent_queries)
+
     return {
         "school_id": school_id,
+        "leader_insights": leader_insights,
         "member_counts": counts,
         "total_queries": total_queries,
         "total_tokens": total_tokens,

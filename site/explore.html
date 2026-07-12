@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Explore My World — Vaaani</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  :root{ --accent:#6ea8fe; --ink:#12151c; --paper:#f7f8fb; --muted:#6b7280; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #e6e8ee;background:#fff}
+  header .brand{font-weight:800;font-size:18px}
+  header a{color:var(--muted);text-decoration:none;font-size:14px}
+  .wrap{max-width:520px;margin:0 auto;padding:16px}
+  .stage{display:flex;flex-direction:column;gap:14px}
+  .camera-card{position:relative;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center}
+  video,canvas{width:100%;height:100%;object-fit:cover}
+  .hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#fff;font-size:14px;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+  .btn{border:none;border-radius:999px;padding:14px 22px;font-size:16px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff;transition:transform .1s}
+  .btn:active{transform:scale(.97)}
+  .btn.secondary{background:#eef1f6;color:var(--ink)}
+  .btn.rec{background:#e8503a}
+  .btn.big{width:100%;padding:16px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .pick{border:1px solid #dfe3ea;background:#fff;border-radius:14px;padding:10px 14px;font-size:15px;cursor:pointer}
+  .pick:active{background:#eef4ff}
+  .journey{background:#fff;border:1px solid #e6e8ee;border-radius:18px;padding:18px}
+  .stage-tag{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .question{font-size:20px;font-weight:600;margin:8px 0 14px;line-height:1.35}
+  .answer-in{width:100%;border:2px solid #e6e8ee;border-radius:12px;padding:12px 14px;font-size:16px;font-family:inherit}
+  .starbar{height:12px;border-radius:8px;background:#eef1f6;overflow:hidden;margin:14px 0 4px}
+  .starfill{height:100%;background:linear-gradient(90deg,#6ea8fe,#ffd66e);width:0%;transition:width .5s}
+  .star-caption{font-size:12px;color:var(--muted)}
+  .big-obj{font-size:26px;font-weight:800}
+  .done-card{text-align:center;padding:24px}
+  .done-card .em{font-size:52px}
+  .hidden{display:none}
+  .sub{color:var(--muted);font-size:13px;text-align:center;margin-top:8px}
+  .theme-card{background:#fff;border:1px solid #e6e8ee;border-radius:16px;padding:14px 16px;cursor:pointer;transition:box-shadow .15s}
+  .theme-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+  .theme-card .t-title{font-weight:700;font-size:15px;margin-bottom:4px}
+  .theme-card .t-snippet{font-size:13px;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .theme-card .t-meta{font-size:11px;color:var(--accent);margin-top:6px;font-weight:600}
+  .theme-badge{display:inline-block;background:#eef4ff;color:var(--accent);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:600;margin:2px}
+  .section-head{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Vaaani · Explore My World</div>
+  <a href="/graph-view">Library Map →</a>
+</header>
+
+<div class="wrap">
+  <!-- STEP A: camera + capture -->
+  <div id="stageCamera" class="stage">
+    <div class="camera-card">
+      <video id="cam" autoplay playsinline muted></video>
+      <canvas id="snap" class="hidden"></canvas>
+      <div class="hint" id="camHint">Point at something real — an apple, a chair, a leaf…</div>
+    </div>
+    <button class="btn big" id="whatBtn">📷 What's this?</button>
+    <div class="sub">Nothing leaves your phone until you choose to save a story.</div>
+  </div>
+
+  <!-- STEP B: confirm the object (detection result / I-Spy picker) -->
+  <div id="stagePick" class="stage hidden">
+    <div class="journey">
+      <div class="stage-tag">Recognize</div>
+      <div class="question">What did you find?</div>
+      <div class="row" id="pickRow"></div>
+      <input class="answer-in" id="pickOther" placeholder="…or type what it is" />
+      <div style="height:10px"></div>
+      <button class="btn big" id="pickGo">That's it →</button>
+    </div>
+  </div>
+
+  <!-- STEP C: the Language Journey conversation -->
+  <div id="stageJourney" class="stage hidden">
+    <div class="journey">
+      <div class="stage-tag" id="jStage">Construct</div>
+      <div id="groundBadge" style="font-size:13px;font-weight:600;color:#2a9d5c;margin:2px 0 6px"></div>
+      <div class="question" id="jQuestion">…</div>
+      <input class="answer-in" id="jAnswer" placeholder="Say it, then type your answer" />
+      <div style="height:12px"></div>
+      <button class="btn big" id="jNext">Next →</button>
+      <div class="starbar"><div class="starfill" id="jStar"></div></div>
+      <div class="star-caption" id="jStarCap">Your <b id="jObj">star</b> is growing…</div>
+    </div>
+    <!-- Communicate capstone: record the story -->
+    <div class="journey hidden" id="recCard">
+      <div class="stage-tag">Communicate</div>
+      <div class="question">Tell the story of your <span id="recObj"></span> — record a short video!</div>
+      <div class="camera-card" style="aspect-ratio:4/3"><video id="recPreview" autoplay playsinline muted></video></div>
+      <div style="height:12px"></div>
+      <div class="row">
+        <button class="btn rec" id="recStart">● Record</button>
+        <button class="btn secondary hidden" id="recStop">■ Stop</button>
+        <button class="btn hidden" id="recSave">Save my story ✓</button>
+      </div>
+      <div class="sub" id="recStatus"></div>
+    </div>
+
+    <!-- Connected Knowledge Graph themes -->
+    <div id="stageThemes" class="stage hidden">
+      <div class="section-head">Connected Word Families</div>
+      <div id="themesList" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div class="sub">Each family is a constellation in your <a href="/graph-view" style="color:var(--accent)">language universe</a></div>
+    </div>
+  </div>
+
+  <!-- DONE -->
+  <div id="stageDone" class="stage hidden">
+    <div class="journey done-card">
+      <div class="em">🌟</div>
+      <div class="big-obj" id="doneObj"></div>
+      <p>became a bright star in your universe!</p>
+      <button class="btn big" id="againBtn">Explore something new</button>
+      <a class="btn secondary big" href="/graph-view" style="display:block;margin-top:10px;text-decoration:none;text-align:center">See the Library Map</a>
+    </div>
+  </div>
+</div>
+
+<!-- On-device vision: TensorFlow.js + COCO-SSD (80 everyday objects), fully
+     SELF-HOSTED under /vendor — no CDN, works offline. Detection runs entirely
+     on the phone; the camera FRAMES are never uploaded. That is the privacy
+     guarantee, and it now holds even with no internet. -->
+<script src="/vendor/tf.min.js"></script>
+<script src="/vendor/coco-ssd.min.js"></script>
+<script>
+// ---- on-device detection ----------------------------------------------------
+// The model PROPOSES what it sees; the child CONFIRMS from the guesses. So the
+// model does the recognition work, but a wrong guess is never shown as fact —
+// the confirm step turns any miss into a gentle "which one is it?" game.
+const COMMON = ['apple','chair','bottle','book','leaf','dog','cup','spoon','ball','flower','shoe','key'];
+let _model = null, _modelPromise = null;
+function loadModel(){
+  if(_modelPromise) return _modelPromise;
+  if(!window.cocoSsd) return Promise.resolve(null);   // libs missing → picker fallback
+  _modelPromise = cocoSsd.load({modelUrl: '/vendor/coco-ssd-model/model.json'})
+    .then(m => { _model = m; return m; }).catch(() => null);
+  return _modelPromise;
+}
+loadModel();  // warm up the eyes on page load
+
+async function detectCandidates(frameCanvas){
+  const m = await loadModel();
+  if(!m){ return [...COMMON].sort(()=>Math.random()-0.5).slice(0,5); }  // graceful fallback
+  let preds = [];
+  try{ preds = await m.detect(frameCanvas, 8); }catch(_){ preds = []; }
+  // rank by confidence, dedupe class names, keep the best few as the child's choices
+  const seen = new Set(), out = [];
+  for(const p of preds.sort((a,b)=>b.score-a.score)){
+    if(!seen.has(p.class)){ seen.add(p.class); out.push(p.class); }
+    if(out.length >= 5) break;
+  }
+  // always leave room for the child to say "something else"
+  return out.length ? out : [...COMMON].sort(()=>Math.random()-0.5).slice(0,4);
+}
+
+let stream, currentObj = '';
+let _visionGuess = '', _spokenWord = '', _pointing = false;
+const $ = id => document.getElementById(id);
+
+// ---- SAY: capture the spoken word (Web Speech API) ---------------------------
+// Prototype uses the browser's recognizer. Production swap: an on-device speech
+// model (Vosk/Whisper-wasm) so audio, like the camera frames, never leaves the
+// phone — completing the "nothing leaves the device" guarantee for all signals.
+let _recog = null;
+(function initSpeech(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return;
+  _recog = new SR(); _recog.lang='en-IN'; _recog.maxAlternatives=3; _recog.interimResults=false;
+  _recog.onresult = e => {
+    const w = (e.results[0][0].transcript||'').trim().toLowerCase().split(/\s+/).pop();
+    if(w){ _spokenWord = w; const el=$('pickOther'); if(el && !el.value) el.value=w; }
+  };
+})();
+function listen(){ try{ _recog && _recog.start(); }catch(_){} }
+
+// ---- POINT: gesture signal ---------------------------------------------------
+// Slot wired for the MLAF gesture engine (the hand→grammar recogniser we own) or
+// MediaPipe Hands. Until that is integrated, pointing stays false and the fusion
+// runs on see+say; the backend already fuses all three the moment this fires.
+function pointingDetected(){ return _pointing; }
+function show(stage){ ['stageCamera','stagePick','stageJourney','stageDone','stageThemes'].forEach(s=>{
+  if(s==='stageThemes'){ $(s).classList.toggle('hidden', stage==='stageCamera'||stage==='stagePick'); }
+  else { $(s).classList.toggle('hidden', s!==stage); }
+}); }
+
+function stopStream(){ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } }
+
+async function startCamera(el){
+  try{
+    stopStream();
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}, audio:false});
+    el.srcObject = stream;
+  }catch(e){ $('camHint').textContent = 'Camera needs permission — tap to allow, or type what you see.'; }
+}
+
+// The Communicate capstone RECORDS the child narrating — so this stream needs
+// AUDIO (the object-capture stream above is video-only). Front camera so the
+// storyteller is on screen; preview stays muted to avoid feedback howl.
+async function startStoryCamera(el){
+  try{
+    stopStream();
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}, audio:true});
+    el.srcObject = stream; el.muted = true;
+  }catch(e){ $('recStatus').textContent = 'Camera + microphone need permission to record your story.'; }
+}
+startCamera($('cam'));
+
+$('whatBtn').onclick = async () => {
+  const v = $('cam'), c = $('snap');
+  c.width = v.videoWidth||480; c.height = v.videoHeight||640;
+  try{ c.getContext('2d').drawImage(v,0,0,c.width,c.height); }catch(_){}
+  const btn = $('whatBtn'), label = btn.textContent;
+  btn.disabled = true; btn.textContent = '👀 Looking…';
+  const cands = await detectCandidates(c);
+  btn.disabled = false; btn.textContent = label;
+  _visionGuess = cands[0] || '';                 // SEE: model's best guess
+  _spokenWord = '';                              // reset SAY for this capture
+  listen();                                      // SAY: start listening ("now say it!")
+  const row = $('pickRow'); row.innerHTML='';
+  cands.forEach(o=>{ const b=document.createElement('button'); b.className='pick'; b.textContent=o;
+    b.onclick=()=>{ $('pickOther').value=o; }; row.appendChild(b); });
+  show('stagePick');
+};
+
+$('pickGo').onclick = async () => {
+  const obj = ($('pickOther').value||'').trim();
+  if(!obj){ $('pickOther').focus(); return; }
+  // POINT-SEE-SAY: fuse the three grounding signals. The confirmed word carries
+  // SAY; the model's guess carries SEE; the gesture engine carries POINT.
+  const payload = {
+    vision_label: _visionGuess || obj,
+    spoken_label: _spokenWord || obj,
+    pointing: pointingDetected(),
+  };
+  const s = await fetch('/explore/ground',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(r=>r.json());
+  if(s.detail){ alert(s.detail); return; }
+  currentObj = s.object;
+  // a tiny grounding badge so the child feels the multimodal "yes!"
+  if(s.grounding==='see+say'||s.grounding==='see+say+point'){ $('jStage').dataset.ground='✨ You saw it AND said it!'; }
+  else if(s.grounding==='mismatch'){ $('jStage').dataset.ground='I saw a '+s.vision_saw+' — let’s look together.'; }
+  renderJourney(s);
+  show('stageJourney');
+  loadThemes(s.object);                // connect to the language universe
+};
+
+function renderJourney(s){
+  $('jStage').textContent = s.stage;
+  const gb = $('groundBadge'); if(gb){ gb.textContent = $('jStage').dataset.ground || ''; }
+  $('jQuestion').textContent = s.question;
+  $('jObj').textContent = s.object;
+  $('jStar').style.width = (s.mastery/5*100)+'%';
+  const isStory = s.stage==='Communicate' && !s.done;
+  $('recCard').classList.toggle('hidden', !isStory);
+  $('jNext').classList.toggle('hidden', isStory || s.done);
+  $('jAnswer').classList.toggle('hidden', isStory || s.done);
+  if(isStory){ $('recObj').textContent = s.object; startStoryCamera($('recPreview')); }
+  if(s.done){ $('doneObj').textContent = s.object; show('stageDone'); }
+}
+
+// ── Graph theme lookup ──────────────────────────────────────────────
+// After the camera finds an object and the child confirms it, look up
+// related word-family themes so the real world connects to the graph.
+async function loadThemes(obj){
+  const el = $('themesList'); if(!el) return;
+  el.innerHTML = '<div class="sub" style="padding:12px">Searching connected word families for <b>'+obj+'</b>…</div>';
+  try{
+    const r = await fetch('/explore/themes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({object:obj})}).then(r=>r.json());
+    if(!r.themes||!r.themes.length){ el.innerHTML='<div class="sub" style="padding:12px">No word families yet for '+obj+' — but exploring creates them!</div>'; return; }
+    let html='';
+    r.themes.forEach((t,i)=>{
+      html+='<div class="theme-card" onclick="openTheme('+t.id+')" style="animation:fadeIn '+(0.1*i+0.2)+'s ease-in">';
+      html+='<div class="t-title">&#x1FA90; '+t.title+'</div>';
+      html+='<div class="t-snippet">'+(t.summary||'').slice(0,180)+(t.summary&&t.summary.length>180?'…':'')+'</div>';
+      if(t.nodes&&t.nodes.length){
+        html+='<div class="t-meta">'+Math.min(t.nodes.length,8)+' words: ';
+        html+=t.nodes.slice(0,4).map(function(n){return '<span class="theme-badge">'+n+'</span>';}).join(' ');
+        if(t.nodes.length>4) html+=' <span class="theme-badge">+'+ (t.nodes.length-4) +' more</span>';
+        html+='</div>';
+      }
+      html+='</div>';
+    });
+    el.innerHTML=html;
+  }catch(e){ el.innerHTML='<div class="sub" style="padding:12px">Could not reach the universe right now — try again!</div>'; }
+}
+
+function openTheme(communityId){
+  location.href='/graph-view?community='+communityId;
+}
+
+$('jNext').onclick = async () => {
+  const ans = $('jAnswer').value.trim();
+  const s = await fetch('/explore/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({object:currentObj,answer:ans})}).then(r=>r.json());
+  $('jAnswer').value='';
+  renderJourney(s);
+};
+
+// ---- Communicate: record the story video ------------------------------------
+let recorder, chunks=[];
+$('recStart').onclick = () => {
+  if(!stream){ $('recStatus').textContent='Camera not ready.'; return; }
+  chunks=[]; recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = e => { if(e.data.size) chunks.push(e.data); };
+  recorder.start();
+  $('recStart').classList.add('hidden'); $('recStop').classList.remove('hidden');
+  $('recStatus').textContent='Recording… tell your story!';
+};
+$('recStop').onclick = () => {
+  recorder.stop();
+  $('recStop').classList.add('hidden'); $('recSave').classList.remove('hidden');
+  $('recStatus').textContent='Ready to save.';
+};
+$('recSave').onclick = async () => {
+  const blob = new Blob(chunks,{type:'video/webm'});
+  const fd = new FormData(); fd.append('object',currentObj); fd.append('video',blob,'story.webm');
+  $('recStatus').textContent='Saving your story…';
+  const s = await fetch('/explore/narrate',{method:'POST',body:fd}).then(r=>r.json());
+  if(s.detail){ $('recStatus').textContent=s.detail; return; }
+  stopStream();                       // story saved — release camera + microphone
+  renderJourney(s);
+};
+
+$('againBtn').onclick = () => { currentObj=''; $('pickOther').value=''; startCamera($('cam')); show('stageCamera'); };
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Feel the Sound — Vaaani</title>
+<style>
+  :root{ --accent:#6ea8fe; --buzz:#e8503a; --ink:#12151c; --paper:#f7f8fb; --muted:#6b7280; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #e6e8ee;background:#fff}
+  .brand{font-weight:800}
+  a{color:var(--muted);text-decoration:none;font-size:14px}
+  .wrap{max-width:520px;margin:0 auto;padding:18px}
+  h1{font-size:24px;margin:8px 0 4px}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:18px}
+  .pair{background:#fff;border:1px solid #e6e8ee;border-radius:18px;padding:16px;margin-bottom:14px}
+  .pair h3{margin:0 0 4px;font-size:15px;color:var(--muted);font-weight:600}
+  .row{display:flex;gap:10px}
+  .sbtn{flex:1;border:2px solid #e6e8ee;border-radius:14px;padding:16px 8px;text-align:center;cursor:pointer;background:#fff;transition:transform .08s,border-color .15s}
+  .sbtn:active{transform:scale(.96)}
+  .sbtn .word{font-size:22px;font-weight:800}
+  .sbtn .tag{font-size:12px;margin-top:4px}
+  .sbtn.voiced{border-color:var(--buzz)}
+  .sbtn.voiced .tag{color:var(--buzz)}
+  .sbtn.voiceless .tag{color:var(--muted)}
+  .buzzing{animation:shake .18s linear infinite}
+  @keyframes shake{0%{transform:translateX(-1px)}50%{transform:translateX(1px)}100%{transform:translateX(-1px)}}
+  .note{font-size:13px;color:var(--muted);background:#eef4ff;border-radius:12px;padding:12px 14px;margin-top:6px}
+  .warn{background:#fff4e5;color:#8a5a00}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Vaaani · Feel the Sound</div>
+  <a href="/explore">← Explore</a>
+</header>
+<div class="wrap">
+  <h1>Feel it, then say it 🤚📳🎤</h1>
+  <div class="sub">Hold your phone and tap each word. Voiced sounds <b>buzz</b> — that is your voice-box vibrating; voiceless sounds stay still. Then take <b>your</b> turn: say the buzzing word, and the phone listens to check you voiced it. Feel → say → the phone measures. All on your phone; nothing leaves it.</div>
+
+  <div id="pairs"></div>
+
+  <div class="note" id="hwnote">Tip: put your fingers on your throat and say “zzz” then “sss” — you feel the buzz start and stop. Your phone does the same.</div>
+</div>
+
+<script>
+// Minimal pairs contrasting ONLY voicing — the one feature that is literally a
+// vibration, so the phone's motor renders the true physical difference.
+const PAIRS = [
+  { title:'/s/ vs /z/', voiceless:{word:'sip', sound:'s'}, voiced:{word:'zip', sound:'z'} },
+  { title:'/f/ vs /v/', voiceless:{word:'fan', sound:'f'}, voiced:{word:'van', sound:'v'} },
+  { title:'/p/ vs /b/', voiceless:{word:'pat', sound:'p'}, voiced:{word:'bat', sound:'b'} },
+  { title:'/t/ vs /d/', voiceless:{word:'to',  sound:'t'}, voiced:{word:'do',  sound:'d'} },
+];
+
+// ---- the haptic mapping (the invention, in one function) --------------------
+// A phonological feature -> an actuator pattern. Voiced = sustained buzz (the
+// vocal folds vibrating); voiceless = a single faint tick (air, no voice).
+// navigator.vibrate on Android; degrades silently where unsupported.
+const canVibrate = 'vibrate' in navigator;
+function renderFeature(voiced){
+  if(!canVibrate) return false;
+  navigator.vibrate(voiced ? 500 : 12);   // 500ms buzz vs a 12ms tick
+  return true;
+}
+
+function makeBtn(item, voiced){
+  const b = document.createElement('button');
+  b.className = 'sbtn ' + (voiced ? 'voiced' : 'voiceless');
+  b.innerHTML = `<div class="word">${item.word}</div><div class="tag">${voiced?'voiced — buzzes':'voiceless — quiet'}</div>`;
+  b.onclick = () => {
+    renderFeature(voiced);
+    if(voiced){ b.classList.add('buzzing'); setTimeout(()=>b.classList.remove('buzzing'), 500); }
+  };
+  return b;
+}
+
+// ---- ACOUSTIC: the mic measures whether the CHILD voiced (on-device DSP) -----
+// Voiced sounds are periodic (the vocal folds vibrate) -> strong autocorrelation
+// in the F0 range and low zero-crossing rate. Voiceless sounds are aperiodic
+// noise -> weak autocorrelation, high ZCR. Classic signal processing; no model,
+// no network — the audio never leaves the phone. Mirrors the Python-validated
+// detector (voiced periodicity ~0.97, voiceless ~0.05).
+function detectVoicing(x, sr){
+  let mean=0; for(const v of x) mean+=v; mean/=x.length;
+  let rms=0; for(const v of x) rms+=(v-mean)*(v-mean); rms=Math.sqrt(rms/x.length);
+  if(rms < 0.008) return {decision:'silence', periodicity:0, zcr:0};
+  const lo=Math.max(1,(sr/500)|0), hi=Math.min(x.length-1,(sr/150)|0);
+  let ac0=0; for(const v of x) ac0+=(v-mean)*(v-mean); if(ac0===0) ac0=1;
+  let peak=0;
+  for(let lag=lo; lag<hi; lag++){
+    let s=0; for(let i=0;i<x.length-lag;i++) s+=(x[i]-mean)*(x[i+lag]-mean);
+    if(s>peak) peak=s;
+  }
+  const periodicity=peak/ac0;
+  let zc=0; for(let i=1;i<x.length;i++) if(Math.sign(x[i]-mean)!==Math.sign(x[i-1]-mean)) zc++;
+  const zcr=zc/x.length;
+  return {decision:(periodicity>0.35 && zcr<0.25)?'voiced':'voiceless',
+          periodicity:+periodicity.toFixed(3), zcr:+zcr.toFixed(3)};
+}
+
+async function micCheck(){
+  const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+  const ac = new (window.AudioContext||window.webkitAudioContext)();
+  const an = ac.createAnalyser(); an.fftSize = 2048;
+  ac.createMediaStreamSource(stream).connect(an);
+  const sr = ac.sampleRate, buf = new Float32Array(an.fftSize);
+  let best=null, bestRms=0, t0=performance.now();
+  await new Promise(res=>{
+    const tick=()=>{
+      an.getFloatTimeDomainData(buf);
+      let r=0; for(const v of buf) r+=v*v; r=Math.sqrt(r/buf.length);
+      if(r>bestRms){ bestRms=r; best=buf.slice(); }
+      if(performance.now()-t0 < 700) requestAnimationFrame(tick); else res();
+    }; tick();
+  });
+  stream.getTracks().forEach(t=>t.stop()); ac.close();
+  return best ? detectVoicing(best, sr) : {decision:'silence'};
+}
+
+const host = document.getElementById('pairs');
+PAIRS.forEach(p => {
+  const card = document.createElement('div'); card.className='pair';
+  card.innerHTML = `<h3>${p.title}</h3>`;
+  const row = document.createElement('div'); row.className='row';
+  row.appendChild(makeBtn(p.voiceless, false));
+  row.appendChild(makeBtn(p.voiced, true));
+  card.appendChild(row);
+
+  // closed loop: feel it, then YOU say the voiced one and the mic checks
+  const turn = document.createElement('div'); turn.style.marginTop='10px';
+  const say = document.createElement('button'); say.className='sbtn';
+  say.style.cssText='width:100%;border-color:var(--accent)';
+  say.innerHTML = `🎤 Your turn — say “${p.voiced.word}” and make it buzz`;
+  const fb = document.createElement('div'); fb.style.cssText='font-size:14px;font-weight:600;margin-top:8px;min-height:20px';
+  say.onclick = async () => {
+    fb.style.color='#6b7280'; fb.textContent='Listening… say it now!';
+    try{
+      const r = await micCheck();
+      if(r.decision==='voiced'){ fb.style.color='#2a9d5c'; fb.textContent=`✓ Yes! You voiced it — you felt the buzz and you made it. (${r.periodicity})`; }
+      else if(r.decision==='silence'){ fb.style.color='#8a5a00'; fb.textContent='I didn’t hear you — hold the phone close and try again.'; }
+      else { fb.style.color='#e8503a'; fb.textContent='Almost — that was voiceless. Add your voice so it buzzes like the phone did.'; }
+    }catch(e){ fb.style.color='#8a5a00'; fb.textContent='Microphone needs permission — tap allow and try again.'; }
+  };
+  turn.appendChild(say); turn.appendChild(fb); card.appendChild(turn);
+  host.appendChild(card);
+});
+
+if(!canVibrate){
+  const n = document.getElementById('hwnote');
+  n.className = 'note warn';
+  n.textContent = 'This browser blocks vibration (iPhone Safari does — the buzz needs the Android app or an iOS build). You will still see the word shake; on an Android phone you will feel it.';
+}
+</script>
+</body>
+</html>

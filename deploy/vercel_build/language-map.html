@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Vaaani's Language Map — a discovery-based journey through the assessment pyramid. Unlock each rung by passing its challenge, then see your evidence of learning." />
+<meta name="theme-color" content="#2563eb" />
+<title>Language Map — Vaaani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+<style>
+.lm-wrap{max-width:1060px;margin:0 auto;padding:calc(var(--nav-h) + 24px) 20px 80px}
+.lm-hero{text-align:center;padding:14px 0 6px}
+.lm-hero .eyebrow{color:#2563eb;font-weight:700;letter-spacing:.08em;font-size:13px;text-transform:uppercase}
+.lm-hero h1{font-size:clamp(28px,5vw,44px);line-height:1.06;margin:8px 0}
+.lm-hero h1 .serif{font-family:'Instrument Serif',serif;font-style:italic;color:#2563eb}
+.lm-hero p{color:#555;max-width:640px;margin:6px auto;font-size:15px;line-height:1.55}
+
+/* journey rail */
+.rail{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:22px 0 8px}
+.stop{flex:1 1 155px;max-width:185px;border:1.5px solid #e3e3ee;border-radius:14px;padding:10px 12px;cursor:pointer;background:#fff;transition:.15s;position:relative;text-align:center;font:inherit}
+.stop:hover{border-color:#9aa3ff}
+.stop.active{border-color:#2563eb;background:#eef2ff;box-shadow:0 4px 14px rgba(37,99,235,.13)}
+.stop.locked{opacity:.45;cursor:not-allowed;background:#fafafa}
+.stop.locked:hover{border-color:#e3e3ee}
+.stop.passed{border-color:#16a34a;background:#f0fdf4}
+.stop .gtag{font-size:10px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:.06em}
+.stop.locked .gtag{color:#999}
+.stop.passed .gtag{color:#16a34a}
+.stop .layer{font-weight:800;font-size:16px;margin:1px 0}
+.stop .q{font-size:12px;color:#666;line-height:1.3;margin-top:2px}
+.stop .check{position:absolute;top:6px;right:8px;font-size:13px;color:#16a34a;display:none}
+.stop.passed .check{display:block}
+.rail-line{height:3px;background:linear-gradient(90deg,#dbe4ff,#2563eb,#16a34a);border-radius:3px;max-width:760px;margin:0 auto 18px}
+
+/* tooltip */
+.tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1c1c28;color:#fff;font-size:11px;padding:5px 10px;border-radius:6px;white-space:nowrap;z-index:10;pointer-events:none}
+.stop.locked:hover .tooltip{display:block}
+
+/* panels */
+.panels{display:grid;grid-template-columns:1.2fr .9fr;gap:20px;align-items:start;margin-top:10px}
+@media(max-width:820px){.panels{grid-template-columns:1fr}}
+.card{border:1.5px solid #e7e7f0;border-radius:18px;padding:20px;background:#fff}
+.card h3{margin:0 0 2px;font-size:18px}
+.card .sub{color:#777;font-size:13px;margin-bottom:12px}
+.card .disc-hint{font-size:12.5px;color:#2563eb;margin-bottom:10px;font-weight:600}
+.graphbox{width:100%;height:300px;border:1px dashed #e3e3ee;border-radius:12px;background:#fcfcff}
+.legend{font-size:12px;color:#888;margin-top:8px;text-align:center}
+
+/* pyramid */
+.pyr{display:flex;flex-direction:column-reverse;gap:5px;margin:6px 0 14px}
+.tier{margin:0 auto;border-radius:8px;padding:8px 12px;font-size:12.5px;font-weight:600;text-align:center;color:#888;background:#f8f8fc;border:1.5px solid #e7e7f0;transition:.2s;position:relative;overflow:hidden}
+.tier.current{color:#2563eb;background:#eef2ff;border-color:#2563eb}
+.tier.passed{color:#16a34a;background:#f0fdf4;border-color:#16a34a}
+.tier .tfill{position:absolute;left:0;top:0;height:100%;background:#16a34a;opacity:.12;transition:width.4s;border-radius:7px 0 0 7px}
+.tier:nth-child(1){width:96%}.tier:nth-child(2){width:84%}.tier:nth-child(3){width:70%}.tier:nth-child(4){width:56%}.tier:nth-child(5){width:42%}
+
+/* challenge area */
+.challenge{margin-top:10px}
+.challenge .round-badge{display:inline-block;background:#eef2ff;color:#2563eb;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;margin-bottom:8px}
+.challenge .q{font-weight:600;margin-bottom:10px;font-size:14px;line-height:1.45}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid #e3e3ee;border-radius:11px;padding:11px 13px;margin:7px 0;background:#fff;cursor:pointer;font:inherit;font-size:14px;transition:.12s}
+.opt:hover{border-color:#9aa3ff;background:#f6f8ff}
+.opt.right{border-color:#16a34a;background:#f0fdf4;pointer-events:none}
+.opt.wrong{border-color:#dc2626;background:#fef2f2;pointer-events:none}
+.opt:disabled{pointer-events:none;opacity:.7}
+.qfb{min-height:22px;font-weight:600;font-size:13.5px;margin-top:8px}.qfb.ok{color:#16a34a}.qfb.no{color:#dc2626}
+.cta-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn-mini{border:none;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;background:#2563eb;color:#fff;font:inherit;font-size:13px;transition:.12s}
+.btn-mini:hover{filter:brightness(1.08)}
+.btn-mini.ghost{background:#fff;color:#2563eb;border:1.5px solid #2563eb}
+.btn-mini.green{background:#16a34a}
+.btn-mini:disabled{opacity:.4;cursor:not-allowed}
+
+/* score bar */
+.scorebar{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#555;margin-top:14px;flex-wrap:wrap;gap:8px}
+.scorebar b{color:#2563eb}
+.scorebar .spass{color:#16a34a;font-weight:700}
+
+/* evidence */
+.evidence{background:#fff7ed;border:1px solid #fed7aa;color:#7c4a12;border-radius:12px;padding:12px 14px;font-size:13px;margin-top:14px;line-height:1.5}
+.evidence b{color:#b45309}
+
+/* pre/post delta */
+.delta{display:flex;gap:14px;margin-top:8px;font-size:12px}
+.delta .dcol{flex:1;text-align:center;padding:8px;border-radius:8px}
+.delta .dcol.pre{background:#fef2f2;border:1px solid #fecaca}
+.delta .dcol.post{background:#f0fdf4;border:1px solid #bbf7d0}
+.delta .dlbl{font-weight:700;margin-bottom:2px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.delta .dval{font-size:18px;font-weight:800}
+
+/* pass celebration */
+@keyframes passPulse{0%,100%{box-shadow:0 0 0 0 rgba(22,163,74,.4)}50%{box-shadow:0 0 0 12px rgba(22,163,74,0)}}
+.pass-celebrate{animation:passPulse 1s ease-out}
+
+/* listen speaker button */
+.speak-btn{display:inline-flex;align-items:center;gap:5px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;font-weight:600;color:#2563eb;cursor:pointer;margin:4px 0}
+.speak-btn:hover{background:#dbe4ff}
+.speak-btn svg{width:14px;height:14px}
+</style>
+<script>(function(){var s=document.createElement('style');s.id='__vg';s.textContent='html{visibility:hidden!important}';document.documentElement.appendChild(s);var done=false;function show(){if(done)return;done=true;var e=document.getElementById('__vg');if(e)e.remove();}function go(){if(done)return;done=true;location.replace('/login?next='+encodeURIComponent(location.pathname+location.search));}var t=setTimeout(show,7000);fetch('/auth/me').then(function(r){if(r.ok){return r.json().then(function(d){clearTimeout(t);(d&&d.user)?show():go();});}clearTimeout(t);if(r.status===401||r.status===403){go();}else{show();}}).catch(function(){clearTimeout(t);show();});})();</script></head>
+<body>
+<nav class="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/roots">Word Roots</a>
+    <a href="/ipa">IPA Chart</a>
+    <a href="/language-map" class="active">Language Map</a>
+    <a href="/sound-lab">Sound Lab</a>
+    <a href="/about">About</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="page" style="padding-top:92px;">
+  <div class="lm-wrap">
+    <a class="back-link" href="/">← Back</a>
+    <section class="lm-hero">
+      <p class="eyebrow" id="lmEyebrow">// The discovery journey</p>
+      <h1>How does one sound connect to <span class="serif">everything</span> I know?</h1>
+      <p>Each rung of the pyramid is a door. <b>Explore the discovery map</b> on the left — click, listen, notice the pattern. Then <b>pass the challenge</b> on the right to unlock the next rung. By the end, you'll see the whole language system — and have the evidence to prove it.</p>
+    </section>
+
+    <div class="rail" id="rail"></div>
+    <div class="rail-line"></div>
+
+    <div class="panels">
+      <!-- Discovery Graph -->
+      <div class="card" id="discoveryCard">
+        <h3 id="gTitle">Sound Family</h3>
+        <div class="sub" id="gQ">Which sounds are siblings?</div>
+        <div class="disc-hint" id="gHint">Click every word to hear it. What do you notice?</div>
+        <div class="graphbox" id="graphBox"></div>
+        <div class="legend" id="gLegend"></div>
+      </div>
+
+      <!-- Challenge + Pyramid -->
+      <div class="card" id="challengeCard">
+        <h3>Rung <span id="rungNum">1</span> of 5 — <span id="rungName">Recall</span></h3>
+        <div class="sub" id="rungDesc">Pass the challenge below to unlock the next rung.</div>
+
+        <!-- Pretest (hidden until needed) -->
+        <div id="pretestArea" style="display:none"></div>
+
+        <!-- Challenge -->
+        <div class="challenge" id="challengeArea">
+          <div class="round-badge" id="roundBadge">Quick check</div>
+          <div class="q" id="cq">What changes when 'cat' becomes 'bat'?</div>
+          <div id="cOpts"></div>
+          <div class="qfb" id="qfb"></div>
+          <div class="cta-row">
+            <button class="btn-mini" id="cNext" style="display:none" onclick="advanceChallenge()">Next →</button>
+            <button class="btn-mini ghost" id="cRetry" style="display:none" onclick="retryRung()">Try this rung again</button>
+            <button class="btn-mini ghost" id="cReset" onclick="resetJourney()">Restart journey</button>
+          </div>
+        </div>
+
+        <!-- Posttest (hidden until rung passed) -->
+        <div id="posttestArea" style="display:none"></div>
+
+        <!-- Pyramid -->
+        <div style="margin-top:16px">
+          <h3 style="font-size:15px;margin-bottom:4px">Assessment Pyramid</h3>
+          <div class="sub" style="margin-bottom:10px">Recall → Recognition → Application → Transfer → Explanation</div>
+          <div class="pyr" id="pyr"></div>
+        </div>
+
+        <!-- Score bar -->
+        <div class="scorebar">
+          <span>Rungs passed: <b class="spass" id="sPassed">0</b> / 5</span>
+          <span>Total correct: <b id="sCorrect">0</b> / <span id="sTotal">0</span></span>
+        </div>
+
+        <!-- Evidence + Delta -->
+        <div class="evidence" id="evBox" style="display:none">
+          <b>Evidence instrument:</b> Below is your pre/post delta for the current rung. A rising score is measurable proof this approach works — not a claim.
+          <div class="delta" id="deltaArea"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/></svg>
+        <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+      </div>
+      <p>A discovery-based linguistics tutor for school children.</p>
+    </div>
+    <div class="footer-col"><h5>Product</h5><a href="/ipa">IPA Chart</a><a href="/language-map">Language Map</a></div>
+    <div class="footer-col"><h5>Company</h5><a href="/about">About</a><a href="/contact">Contact</a></div>
+  </div>
+  <div class="container footer-line">
+    <span>Designed and Developed by <strong>Neil Shankar Ray</strong>, IIT Patna</span>
+    <span>&copy; 2026 – 2028 &middot; All rights reserved</span>
+  </div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// ---- TTS ----
+let enVoice = null;
+function pickVoice(){ const v = window.speechSynthesis?speechSynthesis.getVoices():[]; enVoice = v.find(x=>/en[-_]GB/i.test(x.lang))||v.find(x=>/en[-_]US/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||null; }
+if(window.speechSynthesis){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(w){ if(!window.speechSynthesis||!w)return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(w); u.lang=enVoice?enVoice.lang:'en-GB'; if(enVoice)u.voice=enVoice; u.rate=.85; speechSynthesis.speak(u); }
+
+// ---- The 5-rung journey ----
+const JOURNEY = [
+  { rung:'Recall', title:'Sound Family', icon:'👂',
+    question:'Which sounds are siblings?',
+    hint:'Click each word to hear it. What changes between them?',
+    graphType:'sound-siblings',
+    graphData:{hub:'cat',sibs:[['bat','/k/→/b/'],['mat','/k/→/m/'],['hat','/k/→/h/'],['rat','/k/→/r/'],['sat','/k/→/s/']]},
+    legend:'Same family — only one sound apart. Click any node to hear it.',
+    pretest:{q:'If "cat" changes to "bat", which sound changed?',opts:['The first sound','The middle sound','The last sound','No sound changed'],a:0},
+    desc:'Can you remember what you discovered?',
+    buildRounds(rung){ return [
+      {type:'recall', q:'Which word was <b>not</b> in the sound family you explored?', opts:['bat','dog','mat','hat'], a:1, speak:'dog'},
+      {type:'recall', q:'What sound changes "cat" to "rat"?', opts:['/k/ → /r/','/k/ → /m/','/k/ → /s/','/k/ → /h/'], a:0},
+      {type:'recall', q:'If "cat" → "bat" changes /k/ to /b/, what sound must change to get "fat"?', opts:['/k/ → /f/','/k/ → /p/','/k/ → /t/','/b/ → /f/'], a:0, speak:'fat'},
+    ];},
+  },
+  { rung:'Recognition', title:'Contrast Detective', icon:'🔍',
+    question:'How is this sound different from that one?',
+    hint:'Click each twin pair. Can you hear the tiny difference?',
+    graphType:'contrast-pairs',
+    graphData:[['pin','bin'],['fan','van'],['sip','zip'],['wet','vet'],['coat','goat']],
+    legend:'One tiny change of voice or buzz → completely different word. Click to hear each twin.',
+    pretest:{q:'Which pair has different <b>first</b> sounds?',opts:['pin — bin','cat — hat','run — fun','sun — son'],a:0},
+    desc:'Can you hear what changed?',
+    buildRounds(rung){
+      const pairs = [['pin','bin'],['fan','van'],['sip','zip']];
+      return pairs.map(p => ({type:'listen', q:'Tap <b>Play</b> then select the word you heard.', opts:[p[0],p[1]], pair:p, rounds:1}));
+    },
+  },
+  { rung:'Application', title:'Spelling Pattern', icon:'🔤',
+    question:'How many ways is the /f/ sound spelled?',
+    hint:'One /f/ sound at the top — four spellings below. Click each branch.',
+    graphType:'', // handled in drawGraph special case
+    graphData:{lbl:'/f/',ways:[['f','fan'],['ph','phone'],['gh','laugh'],['ff','off']]},
+    legend:'Same /f/ sound, four different spellings. English is full of patterns like this.',
+    pretest:{q:'Which of these spells the /f/ sound?',opts:['ph in phone','sh in ship','ch in chip','th in thin'],a:0},
+    desc:'Apply the pattern to new words.',
+    buildRounds(rung){ return [
+      {type:'apply', q:'The /f/ sound can be spelled "ph". Which word uses "ph" for /f/?', opts:['phone','fan','off','fine'], a:0, speak:'phone'},
+      {type:'apply', q:'Which letters make the /f/ sound in "enough"?', opts:['gh','f','ph','ff'], a:0, note:'enough uses "gh" for /f/'},
+      {type:'apply', q:'A new word: <b>graph</b>. Which spelling family does its /f/ belong to?', opts:['ph (like phone)','f (like fan)','gh (like laugh)','ff (like off)'], a:0, speak:'graph', note:'graph → "ph" spells /f/'},
+    ];},
+  },
+  { rung:'Transfer', title:'Word Builder', icon:'🧱',
+    question:'What do these word-pieces mean together?',
+    hint:'Every branch grows from the root "tele" = far. Click each to hear.',
+    graphType:'', // handled in drawGraph
+    graphData:{root:'tele',mean:'far',kids:['telephone','television','telescope','telegram']},
+    legend:'Every branch carries "tele" = far. The meaning travels into every word.',
+    pretest:{q:'If "tele" means "far," what does "telescope" let you do?',opts:['See things far away','Hear sounds from far away','Write letters from far away','Carry things far away'],a:0},
+    desc:'Use what you know with new material.',
+    buildRounds(rung){ return [
+      {type:'transfer', q:'New root: <b>micro</b> = small. What does <b>microscope</b> mean?', opts:['A tool for seeing small things','A tool for seeing far things','A tool for writing small things','A tool for hearing small sounds'], a:0},
+      {type:'transfer', q:'Root <b>photo</b> = light, root <b>graph</b> = write. What is a <b>photograph</b>?', opts:['A picture drawn by light','A letter written by hand','A machine that speaks','A tool for measuring heat'], a:0},
+      {type:'transfer', q:'Root <b>aqua</b> = water. What does <b>aquarium</b> mean?', opts:['A water container for fish','A flying machine','A writing desk','A type of plant'], a:0},
+    ];},
+  },
+  { rung:'Explanation', title:'System Thinker', icon:'🧠',
+    question:'What rules connect every word?',
+    hint:'All these roots circle the same idea: seeing. Click to explore the web.',
+    graphType:'',
+    graphData:{center:'see / look',nodes:[['vid','to see'],['spect','to look'],['scope','to watch'],['photo','light to see by']]},
+    legend:'Roots that share meaning link into a web — the language system.',
+    pretest:{q:'Why does "spectator" mean "one who watches"?',opts:['spect = look + ator = one who does','Because it rhymes with alligator','Because it is a long word','Because it has three parts'],a:0},
+    desc:'Explain the rule in your own words.',
+    buildRounds(rung){ return [
+      {type:'explain', q:'Why does <b>telephone</b> mean "far sound"? Pick the best explanation.', opts:['tele = far + phone = sound → sound from far away','Because it was invented long ago','Because it sounds loud','Because "tele" is a brand name'], a:0},
+      {type:'explain', q:'Look at <b>biography</b>: bio = life, graph = write, -y = noun. What does it mean and <b>why</b>?', opts:['Writing about a life — because "bio" means life and "graph" means write','A picture of a life','A musical instrument','A type of geography'], a:0},
+      {type:'explain', q:'A student says: "All words with \'port\' mean carrying things." Is this always true?', opts:['No — "portal" has "port" but means gate, not carry','Yes — every word with "port" means carry','Yes — English rules never break','No — but I cannot explain why'], a:0, note:'portal comes from Latin "porta" = gate, not "portare" = carry'},
+    ];},
+  },
+];
+
+// ---- journey state ----
+const STATE_KEY = 'vaaani_lm_v2';
+let state = loadState();
+let currentRung = 0;
+let currentRound = 0;
+let rounds = [];
+let roundAnswered = false;
+let heardWord = '';
+let pretestDone = false;
+let posttestDone = false;
+
+function defaultState(){
+  return {rungs:JOURNEY.map(()=>({passed:false,pretest:null,posttest:null,score:0,total:0})),totalCorrect:0,totalAttempts:0,currentRung:0};
+}
+function loadState(){
+  try{ const raw=localStorage.getItem(STATE_KEY); if(raw){ const s=JSON.parse(raw); if(s.rungs&&s.rungs.length===5) return s; }}catch(e){}
+  return defaultState();
+}
+function saveState(){ try{localStorage.setItem(STATE_KEY,JSON.stringify(state));}catch(e){} }
+function rungPassed(idx){ return state.rungs[idx]&&state.rungs[idx].passed; }
+function firstUnpassed(){ for(let i=0;i<5;i++) if(!rungPassed(i)) return i; return 4; }
+
+// ---- render rail ----
+function renderRail(){
+  const rail = $('rail');
+  rail.innerHTML = JOURNEY.map((j,i)=>{
+    const passed = rungPassed(i);
+    const isCurrent = (i === currentRung && !passed);
+    const locked = (!passed && i > firstUnpassed());
+    let cls = 'stop';
+    if(isCurrent) cls+=' active';
+    if(passed) cls+=' passed';
+    if(locked) cls+=' locked';
+    const hint = locked ? `<div class="tooltip">Pass "${JOURNEY[firstUnpassed()].rung}" first</div>` : '';
+    const check = passed ? `<span class="check">✓</span>` : '';
+    const icon = passed ? '✓' : isCurrent ? j.icon : locked ? '🔒' : j.icon;
+    return `<div class="${cls}" data-i="${i}" onclick="${locked?'':'setRung('+i+')'}">
+      ${check}${hint}
+      <div class="gtag">${icon} Rung ${i+1}</div>
+      <div class="layer">${j.rung}</div>
+      <div class="q">${j.question}</div>
+    </div>`;
+  }).join('');
+}
+
+// ---- render pyramid ----
+function renderPyramid(){
+  const pyr = $('pyr');
+  const idx = firstUnpassed();
+  pyr.innerHTML = JOURNEY.map((j,i)=>{
+    let cls = 'tier';
+    if(i === idx) cls += ' current';
+    if(rungPassed(i)) cls += ' passed';
+    const fillPct = rungPassed(i) ? 100 : (i === idx && state.rungs[i] ? Math.round((state.rungs[i].score/Math.max(1,state.rungs[i].total))*100) : 0);
+    return `<div class="${cls}"><div class="tfill" style="width:${fillPct}%"></div>${j.rung}${rungPassed(i)?' ✓':''}${!rungPassed(i)&&i>idx?' 🔒':''}</div>`;
+  }).join('');
+}
+
+// ---- draw discovery graph ----
+function drawGraph(rungIdx){
+  const j = JOURNEY[rungIdx];
+  const container = document.getElementById('graphBox');
+  if(!container) return;
+  const cx = 260, cy = 150;
+  let s = '';
+
+  try {
+  if(rungIdx === 0){
+    const d = j.graphData;
+    s += `<text x="260" y="24" text-anchor="middle" font-size="11" fill="#888">one sound changes → a new word</text>`;
+    d.sibs.forEach((sib,i)=>{
+      const ang = (i/d.sibs.length)*2*Math.PI - Math.PI/2;
+      const x = cx + 110*Math.cos(ang), y = cy + 100*Math.sin(ang);
+      s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#c7d2fe" stroke-width="2"/>`;
+      s += `<text x="${(cx+x)/2}" y="${(cy+y)/2-5}" text-anchor="middle" font-size="9" fill="#9aa3ff">${sib[1]}</text>`;
+      s += mkNode(x,y,sib[0],'#eef2ff');
+    });
+    s += mkNode(cx,cy,d.hub,'#dbe4ff');
+    $('gLegend').textContent = j.legend;
+  } else if(rungIdx === 1){
+    s += `<text x="260" y="24" text-anchor="middle" font-size="11" fill="#888">one tiny change of voice/buzz → new meaning</text>`;
+    j.graphData.forEach((p,i)=>{ const y=55+i*54;
+      s += `<line x1="180" y1="${y}" x2="340" y2="${y}" stroke="#c7d2fe" stroke-width="2"/>`;
+      s += `<text x="260" y="${y-6}" text-anchor="middle" font-size="10" fill="#9aa3ff">↔</text>`;
+      s += mkNode(180,y,p[0],'#eef2ff');
+      s += mkNode(340,y,p[1],'#ffe9d6');
+    });
+    $('gLegend').textContent = j.legend;
+  } else if(rungIdx === 2){
+    const d = j.graphData;
+    s += `<text x="260" y="24" text-anchor="middle" font-size="11" fill="#888">one sound, many spellings</text>`;
+    s += mkNode(cx,75,d.lbl,'#dbe4ff');
+    d.ways.forEach((w,i)=>{ const x = 70+i*((460)/(d.ways.length-1)), y=240;
+      s += `<line x1="${cx}" y1="${101}" x2="${x}" y2="${y-26}" stroke="#c7d2fe" stroke-width="2"/>`;
+      s += mkNode(x,y,w[0],'#eef2ff',w[1]);
+    });
+    $('gLegend').textContent = j.legend;
+  } else if(rungIdx === 3){
+    const d = j.graphData;
+    s += `<text x="260" y="24" text-anchor="middle" font-size="11" fill="#888">a root grows a family of meanings</text>`;
+    s += mkNode(cx,75,d.root,'#ffe9d6',d.mean);
+    d.kids.forEach((k,i)=>{ const x = 70+i*((460)/(d.kids.length-1)), y=240;
+      s += `<line x1="${cx}" y1="${105}" x2="${x}" y2="${y-26}" stroke="#c7d2fe" stroke-width="2"/>`;
+      s += mkNode(x,y,k.length>9?k.slice(0,8)+'…':k,'#eef2ff');
+    });
+    $('gLegend').textContent = j.legend;
+  } else {
+    const d = j.graphData;
+    s += `<text x="260" y="24" text-anchor="middle" font-size="11" fill="#888">roots that share meaning connect</text>`;
+    s += mkNode(cx,cy,d.center,'#dbe4ff');
+    d.nodes.forEach((n,i)=>{ const ang=(i/d.nodes.length)*2*Math.PI - Math.PI/2; const x=cx+115*Math.cos(ang), y=cy+100*Math.sin(ang);
+      s += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#c7d2fe" stroke-width="2"/>`;
+      s += mkNode(x,y,n[0],'#eef2ff',n[1]);
+    });
+    $('gLegend').textContent = j.legend;
+  }
+  } catch(e) {
+    s += `<text x="260" y="150" text-anchor="middle" font-size="14" fill="#dc2626">Graph error — try refreshing</text>`;
+  }
+
+  container.innerHTML = `<svg viewBox="0 0 520 300" preserveAspectRatio="xMidYMid meet" style="width:100%;height:300px;display:block" xmlns="http://www.w3.org/2000/svg"><rect width="520" height="300" fill="#fcfcff"/>${s}</svg>`;
+  container.querySelectorAll('[data-say]').forEach(el=>{ el.style.cursor='pointer'; el.onclick=()=>speak(el.getAttribute('data-say')); });
+}
+
+function mkNode(x,y,label,fill,sub){
+  let s = `<g data-say="${label}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="24" fill="${fill}" stroke="#fff" stroke-width="2"/>`;
+  s += `<text x="${x}" y="${y+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#1c1c28">${label}</text></g>`;
+  if(sub) s += `<text x="${x}" y="${y+42}" text-anchor="middle" font-size="10" fill="#777">${sub}</text>`;
+  return s;
+}
+
+// ---- set rung ----
+function setRung(idx){
+  if(idx > firstUnpassed()) return; // locked
+  currentRung = idx;
+  currentRound = 0;
+  roundAnswered = false;
+  pretestDone = false;
+  posttestDone = false;
+  heardWord = '';
+
+  const j = JOURNEY[idx];
+  $('rungNum').textContent = idx+1;
+  $('rungName').textContent = j.rung;
+  $('rungDesc').textContent = j.desc;
+  $('gTitle').textContent = j.title;
+  $('gQ').textContent = j.question;
+  $('gHint').textContent = j.hint;
+  // two-way link → Word Roots: if this rung centres on a root with a full family page, link to it
+  const _ROOTS_PAGE = new Set(['port','dict','spect','struct','aud','tele','graph','therm']);
+  const _fr = j.graphData && j.graphData.root;
+  if (_fr && _ROOTS_PAGE.has(_fr))
+    $('gHint').innerHTML += ` <a href="/roots?root=${_fr}" style="color:#2563eb;font-weight:700;text-decoration:none">— open the full <b>${_fr}</b> family in Word Roots →</a>`;
+  $('evBox').style.display = 'none';
+  $('pretestArea').style.display = 'none';
+  $('posttestArea').style.display = 'none';
+  $('challengeArea').style.display = '';
+  $('qfb').textContent = '';
+  $('qfb').className = 'qfb';
+
+  rounds = j.buildRounds(idx);
+  drawGraph(idx);
+  renderRail();
+  renderPyramid();
+  renderScoreBar();
+
+  // If rung not yet passed, show pretest first
+  if(!rungPassed(idx) && !pretestDone){
+    showPretest(idx);
+  } else {
+    renderChallenge();
+  }
+}
+
+// ---- pretest / posttest ----
+function showPretest(idx){
+  const j = JOURNEY[idx];
+  $('challengeArea').style.display = 'none';
+  const pa = $('pretestArea');
+  pa.style.display = '';
+  pa.innerHTML = `<div style="background:#fefce8;border:1px solid #fde68a;border-radius:10px;padding:12px;margin-bottom:10px">
+    <div style="font-weight:700;font-size:13px;margin-bottom:4px">Quick check — what do you already know?</div>
+    <div style="font-size:13px;color:#555;margin-bottom:8px">${j.pretest.q}</div>
+    <div>${j.pretest.opts.map((o,i)=>`<button class="opt" onclick="checkPretest(${idx},${i})">${o}</button>`).join('')}</div>
+    <div class="qfb" id="ptfb"></div>
+  </div>`;
+}
+
+function checkPretest(idx, ans){
+  const j = JOURNEY[idx];
+  const correct = ans === j.pretest.a;
+  const ptfb = document.getElementById('ptfb');
+  ptfb.className = 'qfb '+(correct?'ok':'no');
+  ptfb.textContent = correct ? 'Good start! Now explore the discovery map →' : 'No worries — explore the map and try again later.';
+  state.rungs[idx].pretest = correct ? 1 : 0;
+  saveState();
+  pretestDone = true;
+
+  // After brief delay, show challenge
+  setTimeout(()=>{
+    $('pretestArea').style.display = 'none';
+    $('challengeArea').style.display = '';
+    renderChallenge();
+  }, correct ? 1200 : 800);
+}
+
+function showPosttest(idx){
+  const j = JOURNEY[idx];
+  $('challengeArea').style.display = 'none';
+  const pa = $('posttestArea');
+  pa.style.display = '';
+  pa.innerHTML = `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px;margin-bottom:10px">
+    <div style="font-weight:700;font-size:13px;margin-bottom:4px;color:#166534">Now — what do you know?</div>
+    <div style="font-size:13px;color:#555;margin-bottom:8px">${j.pretest.q}</div>
+    <div>${j.pretest.opts.map((o,i)=>`<button class="opt" onclick="checkPosttest(${idx},${i})">${o}</button>`).join('')}</div>
+    <div class="qfb" id="potfb"></div>
+  </div>`;
+}
+
+function checkPosttest(idx, ans){
+  const j = JOURNEY[idx];
+  const correct = ans === j.pretest.a;
+  const potfb = document.getElementById('potfb');
+  potfb.className = 'qfb '+(correct?'ok':'no');
+  potfb.textContent = correct ? 'Now you really know it!' : 'Keep practising!';
+  state.rungs[idx].posttest = correct ? 1 : 0;
+  saveState();
+  posttestDone = true;
+
+  // Show evidence delta
+  const pre = state.rungs[idx].pretest||0;
+  const post = state.rungs[idx].posttest||0;
+  $('deltaArea').innerHTML = `<div class="dcol pre"><div class="dlbl">Before</div><div class="dval">${pre?'✓':'✗'}</div></div>
+    <div class="dcol post"><div class="dlbl">After</div><div class="dval">${post?'✓':'✗'}</div></div>`;
+  $('evBox').style.display = '';
+  renderScoreBar();
+  renderPyramid();
+}
+
+// ---- challenge rendering ----
+function renderChallenge(){
+  if(currentRound >= rounds.length){
+    passRung();
+    return;
+  }
+  const rd = rounds[currentRound];
+  roundAnswered = false;
+  heardWord = '';
+
+  $('roundBadge').textContent = `Round ${currentRound+1} of ${rounds.length}`;
+  $('cq').innerHTML = rd.q;
+  let optsHTML = '';
+
+  if(rd.type === 'listen'){
+    optsHTML = `<button class="speak-btn" id="lplay" onclick="playListenWord(${currentRound})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14"/></svg>
+      Play a word
+    </button><div style="margin-top:8px">`;
+    optsHTML += rd.opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');
+    optsHTML += `</div>`;
+  } else {
+    optsHTML = rd.opts.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');
+  }
+
+  $('cOpts').innerHTML = optsHTML;
+  $('qfb').textContent = '';
+  $('qfb').className = 'qfb';
+  $('cNext').style.display = 'none';
+  $('cRetry').style.display = 'none';
+
+  // Wire option clicks
+  $('cOpts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>checkAnswer(+b.dataset.i));
+
+  // Wire play button for listen rounds
+  if(rd.type === 'listen'){
+    const lplay = document.getElementById('lplay');
+    if(lplay) lplay.onclick = ()=>{ playListenWord(currentRound); };
+  }
+}
+
+function playListenWord(roundIdx){
+  const rd = rounds[roundIdx];
+  heardWord = rd.pair[Math.random()<.5?0:1];
+  speak(heardWord);
+  $('qfb').textContent = 'Which did you hear?';
+  $('qfb').className = 'qfb';
+}
+
+function checkAnswer(ans){
+  if(roundAnswered) return;
+  roundAnswered = true;
+  const rd = rounds[currentRound];
+
+  let isCorrect = false;
+  if(rd.type === 'listen'){
+    isCorrect = (rd.opts[ans] === heardWord);
+  } else {
+    isCorrect = (ans === rd.a);
+  }
+
+  const fb = $('qfb');
+  if(isCorrect){
+    fb.className = 'qfb ok';
+    fb.textContent = 'Correct! ' + (rd.note||'');
+    state.rungs[currentRung].score++;
+  } else {
+    fb.className = 'qfb no';
+    const correctAns = rd.type==='listen' ? heardWord : rd.opts[rd.a];
+    fb.textContent = 'Not quite. The answer is: ' + correctAns + (rd.note?'. '+rd.note:'');
+  }
+  state.rungs[currentRung].total++;
+  state.totalAttempts++;
+  if(isCorrect) state.totalCorrect++;
+  saveState();
+
+  // Highlight buttons
+  $('cOpts').querySelectorAll('.opt').forEach(b=>{
+    b.disabled = true;
+    if(rd.type === 'listen'){
+      if(b.textContent === heardWord) b.classList.add('right');
+      if(b.textContent !== heardWord && b.dataset.i == ans) b.classList.add('wrong');
+    } else {
+      if(+b.dataset.i === rd.a) b.classList.add('right');
+      else if(+b.dataset.i === ans && !isCorrect) b.classList.add('wrong');
+    }
+  });
+
+  $('cNext').style.display = '';
+  renderScoreBar();
+  renderPyramid();
+}
+
+function advanceChallenge(){
+  currentRound++;
+  renderChallenge();
+}
+
+function passRung(){
+  const idx = currentRung;
+  const rs = state.rungs[idx];
+  const needed = JOURNEY[idx].buildRounds(idx).length;
+  const passed = rs.score >= Math.ceil(needed*2/3);
+
+  if(passed && !rungPassed(idx)){
+    state.rungs[idx].passed = true;
+    saveState();
+    // Celebration
+    $('discoveryCard').classList.add('pass-celebrate');
+    setTimeout(()=>$('discoveryCard').classList.remove('pass-celebrate'), 1000);
+    $('challengeArea').style.display = 'none';
+    // Show posttest
+    showPosttest(idx);
+    renderRail();
+    renderPyramid();
+    // Advance to next unlocked rung
+    const next = firstUnpassed();
+    if(next > idx && next < 5){
+      setTimeout(()=>setRung(next), 2500);
+    }
+  } else if(!passed && !rungPassed(idx)){
+    $('cq').textContent = `You got ${rs.score}/${needed} correct. Need ${Math.ceil(needed*2/3)}/${needed} to pass.`;
+    $('cOpts').innerHTML = '';
+    $('qfb').className = 'qfb no';
+    $('qfb').textContent = 'Try this rung again to unlock the next one.';
+    $('cNext').style.display = 'none';
+    $('cRetry').style.display = '';
+  }
+}
+
+function retryRung(){
+  currentRound = 0;
+  roundAnswered = false;
+  heardWord = '';
+  state.rungs[currentRung].score = 0;
+  state.rungs[currentRung].total = 0;
+  saveState();
+  $('cNext').style.display = 'none';
+  $('cRetry').style.display = 'none';
+  renderChallenge();
+  renderPyramid();
+  renderScoreBar();
+}
+
+function resetJourney(){
+  if(!confirm('Reset the entire journey? All progress will be lost.')) return;
+  state = defaultState();
+  saveState();
+  currentRung = 0;
+  currentRound = 0;
+  roundAnswered = false;
+  pretestDone = false;
+  posttestDone = false;
+  heardWord = '';
+  rounds = JOURNEY[0].buildRounds(0);
+  $('evBox').style.display = 'none';
+  $('pretestArea').style.display = 'none';
+  $('posttestArea').style.display = 'none';
+  $('challengeArea').style.display = '';
+  setRung(0);
+}
+
+function renderScoreBar(){
+  const passed = state.rungs.filter(r=>r.passed).length;
+  $('sPassed').textContent = passed;
+  $('sCorrect').textContent = state.totalCorrect;
+  $('sTotal').textContent = state.totalAttempts;
+}
+
+// ---- boot ----
+renderRail();
+renderPyramid();
+currentRung = firstUnpassed();
+rounds = JOURNEY[currentRung].buildRounds(currentRung);
+setRung(currentRung);
+</script>
+</body>
+</html>

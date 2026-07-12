@@ -1,0 +1,29 @@
+{
+ "/home/ishu/Desktop/rag-assistant/data/raw/u14/etymology_private.txt": {
+  "owners": [
+   14
+  ],
+  "school_ids": []
+ },
+ "/home/ishu/Desktop/rag-assistant/data/raw/morphology_notes.txt": {
+  "owners": [
+   14
+  ],
+  "school_ids": []
+ },
+ "/home/ishu/Desktop/rag-assistant/data/raw/library/library-numbers-world.md": {
+  "owners": [],
+  "school_ids": [],
+  "library": true
+ },
+ "/home/ishu/Desktop/rag-assistant/data/raw/library/library-body-and-people-world.md": {
+  "owners": [],
+  "school_ids": [],
+  "library": true
+ },
+ "/home/ishu/Desktop/rag-assistant/data/raw/library/library-nature-and-sky-world.md": {
+  "owners": [],
+  "school_ids": [],
+  "library": true
+ }
+}

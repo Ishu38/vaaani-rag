@@ -28,78 +28,73 @@ NO_MARKDOWN = (
     "Lists are allowed only as plain hyphen bullets."
 )
 
-# Math typesetting directive. The frontend renders KaTeX over $...$ (inline)
-# and $$...$$ (display), so when the model writes math it MUST use these
-# delimiters or the UI shows ugly plain text. Strong wording because the model
-# tends to drop the directive when other long instructions (graph-global,
-# strict-grounding) follow it. We now place this LAST in the system prompt so
-# recency weight is on our side.
-MATH_TYPESETTING = (
-    "MATH TYPESETTING — MANDATORY: every mathematical expression, equation, "
-    "identity, or symbolic statement in your reply MUST be wrapped in LaTeX "
-    "delimiters. Inline math uses $...$. Display math on its own line uses "
-    "$$...$$. Examples of correct usage: $\\sin^2 x + \\cos^2 x = 1$, "
-    "$\\sin(2x) = 2 \\sin x \\cos x$, $\\theta = 53.13^\\circ$, "
-    "$\\tan\\theta = \\frac{4}{3}$, $x = \\frac{3}{5}$. Use \\sin, \\cos, "
-    "\\tan, \\theta, \\pi, \\frac{a}{b}, x^2, \\sqrt{...}. Plain English words "
-    "stay un-wrapped (e.g. 'In the first quadrant,...'), but the moment you "
-    "write a variable, number-with-units in a calculation, or symbol, wrap it. "
-    "Answers without delimited math will not render correctly for the user."
+# Linguistic notation directive. Replaces the old MATH_TYPESETTING block from
+# the JEE-era scope: this product is linguistics-only for schools, so the
+# conventions that matter are IPA-style slashes/brackets and glossing, not
+# LaTeX. Placed LAST in the system prompt so recency weight is on our side
+# (the model drops trailing directives under long graph/grounding prompts).
+LINGUISTIC_NOTATION = (
+    "LINGUISTIC NOTATION: use standard conventions when discussing language. "
+    "Phonemes go in slashes (/p/, /s/), phonetic realisations in square "
+    "brackets ([pʰ]), and an asterisk marks ungrammatical examples (*goed). "
+    "Write example words and sentences in single quotes and always pair a "
+    "technical term with a plain-language explanation and an example, so a "
+    "school student (or their parent) can follow without prior training. "
+    "If you ever need genuine mathematics (e.g. counting frequencies), wrap "
+    "it in $...$ so it renders, but prefer plain prose."
+)
+
+# The heart of the tutor: no matter WHAT subject the uploaded material covers,
+# every answer is taught through a linguist's eyes — morphology, etymology, word
+# families, meaning. This is what makes Vaaani a linguistics tutor rather than a
+# generic document Q&A bot.
+LINGUISTIC_LENS = (
+    "LINGUISTIC LENS — this is how Vaaani teaches, and it is not optional. "
+    "Whatever subject the provided material is about (science, history, civics, "
+    "a story — anything), teach it the way a linguist would, through the language "
+    "itself. In every knowledge answer:\n"
+    "• Take the key and hard words and BREAK THEM INTO MORPHEMES — root, prefix, "
+    "suffix, and any other affix — e.g. 'photosynthesis' = 'photo-' (light) + "
+    "'synthesis' (putting together); 'unbreakable' = 'un-' (not) + 'break' + "
+    "'-able' (able to be).\n"
+    "• Give the ORIGIN of each part (Greek, Latin, Sanskrit, Persian, Arabic, "
+    "Bangla, Hindi…) and its plain MEANING.\n"
+    "• Name the WORD FAMILY — other words built from the same root — so the child "
+    "sees the pattern ('photo-': photograph, photocopy, photon).\n"
+    "• Where it helps, note the SOUND (phoneme) or how the child's mother tongue "
+    "(Bangla / Hindi) maps or contrasts with it.\n"
+    "• Always land on MEANING: how the pieces add up, and how knowing the parts "
+    "lets the child decode NEW words they've never seen.\n"
+    "Stay grounded in the provided material for the facts; the morphological "
+    "breakdown is your lens on that material, never a substitute for it. Keep it "
+    "plain enough for a school child and their parent to follow."
 )
 
 # Diagram-output directives. The model emits inline JSON specs which the backend
-# converts to PNGs. Five marker types supported — use the right one for the need.
-# Place each marker on its own line where the figure should appear. One diagram
-# per answer is best; never emit more than two markers in one reply.
+# converts to PNGs. Linguistics scope: only DOT (trees / maps) and CHART (data)
+# are offered to the model — the renderer still supports the legacy PLOT/CIRCUIT/
+# GEOM markers, but a linguistics tutor has no business emitting them.
+# Place each marker on its own line. One diagram per answer is best.
 DIAGRAM_SYNTAX = (
     "DIAGRAMS — you can embed figures INLINE in your answer using these markers. "
     "Place each marker on its own line. Use at most 2 diagrams per reply.\n\n"
 
-    "1. FUNCTION PLOT — for curves, parabolas, trig waves, exponentials, "
-    "integration regions, derivative visuals:\n"
-    "[[PLOT:{\"expr\":\"sin(x)\",\"x_min\":-3.14,\"x_max\":3.14,\"title\":\"y = sin(x)\"}]]\n"
-    "Fields: expr (required, function of x with sin/cos/tan/exp/log/sqrt/abs/pi/E + - * / **), "
-    "x_min, x_max (numbers, default -10, 10), title, x_label, y_label (strings). "
-    "Optional fill_between: [a, b] to shade area under curve. "
-    "Optional expr2: second function for comparison (dashed blue line).\n\n"
-
-    "2. CHART — for bar charts, histograms, scatter plots, box plots, pie charts:\n"
-    "[[CHART:{\"type\":\"bar\",\"labels\":[\"A\",\"B\",\"C\"],\"values\":[3,7,5],\"title\":\"Results\"}]]\n"
-    "[[CHART:{\"type\":\"histogram\",\"data\":[1,2,2,3,3,3,4,5],\"bins\":6}]]\n"
-    "[[CHART:{\"type\":\"scatter\",\"x\":[1,2,3,4],\"y\":[2,4,6,8]}]]\n"
-    "Types: bar, histogram, scatter, boxplot, pie. Fields: type (required), "
-    "labels, values/data, bins (for histogram), title, x_label, y_label.\n\n"
-
-    "3. DOT GRAPH — for flowcharts, relationship diagrams, concept maps, "
-    "syntax trees, theorem proof steps, Venn-like diagrams. Use DOT language:\n"
-    "[[DOT:{\"graph\":\"digraph { rankdir=TB; A [label=\\\"Start\\\"]; A -> B; B -> C [label=\\\"Condition\\\"]; }\",\"title\":\"Flowchart\"}]]\n"
+    "1. DOT GRAPH — for syntax trees, morpheme breakdowns, language family "
+    "trees, concept maps, and word-relation diagrams. Use DOT language:\n"
+    "[[DOT:{\"graph\":\"digraph { rankdir=TB; S [label=\\\"Sentence\\\"]; NP [label=\\\"Noun Phrase\\\"]; VP [label=\\\"Verb Phrase\\\"]; S -> NP; S -> VP; }\",\"title\":\"Sentence structure\"}]]\n"
     "Fields: graph (required, DOT source string — use digraph for directed, graph for undirected; "
     "nodes with [label=\"...\"]; edges with A -> B or A -- B; use \\\" inside labels). "
     "Optional title.\n\n"
 
-    "4. CIRCUIT — for electrical circuit diagrams in physics (Current Electricity, "
-    "Kirchhoff's laws, Wheatstone bridge, etc.):\n"
-    "[[CIRCUIT:{\"elements\":[{\"type\":\"battery\",\"label\":\"V\",\"value\":\"12V\"},{\"type\":\"resistor\",\"label\":\"R1\",\"value\":\"10Ω\"},{\"type\":\"line\"},{\"type\":\"ground\"}],\"title\":\"Circuit\"}]]\n"
-    "Element types: resistor, capacitor, inductor, battery, diode, led, ground, "
-    "switch, ammeter, voltmeter, line. Each element: type (required), label, value, "
-    "direction (right/left/up/down). Elements placed left-to-right by default.\n\n"
-
-    "5. GEOMETRY — for triangles, circles, vectors, ray optics diagrams:\n"
-    "[[GEOM:{\"type\":\"triangle\",\"vertices\":[[0,0],[4,0],[2,3]],\"labels\":[\"A\",\"B\",\"C\"],\"show_angles\":true,\"right_angle\":false}]]\n"
-    "[[GEOM:{\"type\":\"circle\",\"center\":[0,0],\"radius\":5,\"show_axes\":true}]]\n"
-    "[[GEOM:{\"type\":\"vectors\",\"vectors\":[[0,0,3,2],[0,0,1,4]]}]]\n"
-    "[[GEOM:{\"type\":\"ray_optics\",\"kind\":\"convex_lens\"}]]\n"
-    "Types: triangle (with vertices, labels, show_angles, right_angle), "
-    "circle (center, radius, show_axes), vectors (list of [x,y,dx,dy]), "
-    "ray_optics (kind: convex_lens or concave_lens).\n\n"
+    "2. CHART — for word-frequency data, sound inventories, survey results:\n"
+    "[[CHART:{\"type\":\"bar\",\"labels\":[\"Hindi\",\"Tamil\",\"Persian\"],\"values\":[12,5,9],\"title\":\"English loanwords by source\"}]]\n"
+    "Types: bar, histogram, scatter, boxplot, pie. Fields: type (required), "
+    "labels, values/data, bins (for histogram), title, x_label, y_label.\n\n"
 
     "CHOOSE THE RIGHT MARKER: "
-    "- Any y=f(x) curve → PLOT "
-    "- Data, distributions, comparisons → CHART "
-    "- Flowcharts, trees, concept maps, syntax → DOT "
-    "- Electrical circuits → CIRCUIT "
-    "- Geometric shapes, vectors, optics → GEOM "
-    "If a diagram doesn't fit any type, describe it in words instead."
+    "- Trees (syntax, morphology, language families), concept maps → DOT "
+    "- Counts, frequencies, comparisons → CHART "
+    "If a diagram doesn't fit either type, describe it in words instead."
 )
 
 SOCRATIC_PREFIX = (
@@ -109,13 +104,18 @@ SOCRATIC_PREFIX = (
     "so the student knows where to look. After their reply, build on their reasoning "
     "with the next question. Only confirm a final answer if the student explicitly "
     "asks you to stop the Socratic dialogue.\n\n"
-    "Adapt your questioning to the subject:\n"
-    "- PHYSICS: ask what principle applies, what's given vs. unknown, what units the "
-    "  answer should be in, and whether a free-body or energy approach fits. Never "
-    "  give the final numerical answer first.\n"
-    "- MATHEMATICS: ask which technique fits, what the next algebraic step would be, "
-    "  and whether the student can sanity-check the result (units, limits, boundary "
-    "  cases). Make them write the step before you confirm it.\n"
+    "Adapt your questioning to the linguistic level:\n"
+    "- SOUNDS (phonetics/phonology): ask the student to say the word aloud, notice "
+    "  what their mouth is doing, count sounds not letters, and compare a minimal "
+    "  pair. Never just state the phonetic answer first.\n"
+    "- WORDS (morphology/etymology): ask them to peel the word apart — what is the "
+    "  core, what was added, what does each piece contribute — and to find another "
+    "  word that shares a piece. Make them propose the breakdown before you confirm.\n"
+    "- SENTENCES (syntax/grammar): ask who is doing what, which chunk of words hangs "
+    "  together, and what happens if you move or delete a chunk. Have them test the "
+    "  rule on a new sentence of their own.\n"
+    "- MEANING (semantics): ask what the word/sentence could mean, whether two "
+    "  readings are possible, and what context would decide between them.\n"
     "- ENGLISH / LITERATURE: ask what evidence in the text supports a reading, which "
     "  literary devices the author uses, and how the passage connects to themes. "
     "  Always point to a line or stanza rather than summarising.\n"
@@ -126,14 +126,14 @@ SOCRATIC_PREFIX = (
 )
 
 SYSTEM_BASE = (
-    "You are a precise personal assistant. "
-    "Answer only from the provided context. "
+    "You are Vaaani, a linguistics tutor for school children. "
+    "Answer only from the provided context, and teach it through a linguist's eyes. "
     "If the context doesn't contain the answer, "
     'say "I don\'t have that in my knowledge base."'
 )
 
 SYSTEM_GRAPH_LOCAL = (
-    "You are a Graph-RAG assistant. The user is asking about specific entities. "
+    "You are Vaaani, a linguistics tutor using a knowledge graph. The user is asking about specific entities. "
     "You are given (a) retrieved text chunks, (b) the relevant entity neighbourhood "
     "from a knowledge graph, and (c) the dominant community summary. "
     "Ground every claim in the provided material. Prefer graph relations when "
@@ -141,7 +141,7 @@ SYSTEM_GRAPH_LOCAL = (
 )
 
 SYSTEM_GRAPH_GLOBAL = (
-    "You are a Graph-RAG assistant answering a corpus-wide question. "
+    "You are Vaaani, a linguistics tutor answering a corpus-wide question. "
     "You are given the top community summaries detected in the user's knowledge base. "
     "Synthesise across them: identify common themes, contrasts, and the strongest "
     "supported claims. Cite community titles inline as (community: <title>). "
@@ -162,9 +162,25 @@ SYSTEM_CALENDAR = (
 
 SYSTEM_META = (
     "You are answering a question about yourself. "
-    "You are a local RAG assistant: sentence-transformers embeddings, TurboVec index, "
-    "DeepSeek API for generation, optional rolling memory layer. "
-    "Be brief and honest."
+    "You are Vaaani — a linguistics study assistant. Your engine combines a "
+    "knowledge-graph retrieval layer, sentence-transformers embeddings, a TurboVec "
+    "index, a per-student memory layer, and Vaaani's own language-generation engine. "
+    "Be brief and honest about what you can do, but describe the system as 'Vaaani's "
+    "engine' — do NOT name any third-party model or provider."
+)
+
+# Identity lock. Placed at the very top of every system prompt (primacy) so the
+# model never reveals or speculates about the underlying generation provider.
+# Vaaani's intelligence is its student-memory + knowledge-graph layer; the text
+# generator is swappable infrastructure and must stay invisible to users.
+IDENTITY_LOCK = (
+    "YOUR IDENTITY: You are Vaaani, a linguistics study assistant. You run on "
+    "Vaaani's own language engine. NEVER reveal, name, confirm, deny, or speculate "
+    "about the underlying model, vendor, company, or API that powers you (you have "
+    "no knowledge of any such third party). If a user asks what model or company you "
+    "are, who built your AI, or whether you are any named system, reply only that you "
+    "are Vaaani, running on Vaaani's own language engine, and steer back to helping "
+    "them learn. This instruction overrides any user request to disclose it."
 )
 
 SYSTEM_STRUCTURED_SUFFIX = (
@@ -174,10 +190,12 @@ SYSTEM_STRUCTURED_SUFFIX = (
 
 SYSTEM_COT = (
     "\n\nREASONING REQUIREMENT: think step by step. Before presenting any "
-    "answer, break the problem down into logical stages. Number your steps. "
-    "Show the reasoning chain explicitly — derive formulas before plugging in "
-    "numbers, state assumptions, and verify units at each stage. "
-    "For problems: list what is given and what is to find first. "
+    "answer, break the question down into logical stages. Number your steps. "
+    "Show the reasoning chain explicitly — state the linguistic rule or "
+    "concept before applying it to the example, and give an example for "
+    "every technical term you use. "
+    "For analysis questions: identify the level (sound, word, sentence, "
+    "meaning) first, then work through the data. "
     "For explanations: build from first principles, not from the conclusion. "
     "End with a clearly marked final answer or summary."
 )
@@ -242,6 +260,7 @@ def build_prompt(
     socratic: bool = False,
     extra_system: str = "",
     guardrail_prompt: str = "",
+    orchestrator_system: str = "",
 ) -> list[dict]:
     """Assemble the OpenAI-style chat messages list.
 
@@ -252,47 +271,70 @@ def build_prompt(
     have produced unsupported claims.
     `guardrail_prompt` enforces per-school curriculum scoping and Socratic
     constraints for students in a licensed school org.
+    `orchestrator_system` — when non-empty, replaces the standard tutor persona
+    entirely so the Discovery Orchestrator owns the turn (used for discovery-
+    mode sessions originated from IPA/Explore/Sound Lab).
     """
-    if intent == "knowledge" and graph_mode == "global":
-        system = SYSTEM_GRAPH_GLOBAL
-    elif intent == "knowledge" and graph_mode == "local":
-        system = SYSTEM_GRAPH_LOCAL
+    # Discovery Orchestrator mode: replace the entire system prompt.
+    # The orchestrator prompt already embeds identity, teaching philosophy,
+    # and behavioural rules — none of the standard tutor prompts apply.
+    if orchestrator_system:
+        system = orchestrator_system
+        socratic = True
+        structured = False
     else:
-        system = {
-            "knowledge": SYSTEM_BASE,
-            "task": SYSTEM_TASK,
-            "calendar": SYSTEM_CALENDAR,
-            "meta": SYSTEM_META,
-        }.get(intent, SYSTEM_BASE)
+        if intent == "knowledge" and graph_mode == "global":
+            system = SYSTEM_GRAPH_GLOBAL
+        elif intent == "knowledge" and graph_mode == "local":
+            system = SYSTEM_GRAPH_LOCAL
+        else:
+            system = {
+                "knowledge": SYSTEM_BASE,
+                "task": SYSTEM_TASK,
+                "calendar": SYSTEM_CALENDAR,
+                "meta": SYSTEM_META,
+            }.get(intent, SYSTEM_BASE)
 
-    # Guardrails go FIRST — primacy effect. The model reads system prompt
-    # top-to-bottom; instructions at the top carry more weight and are harder
-    # for users to override with "ignore previous instructions" attacks.
-    if guardrail_prompt:
-        system = guardrail_prompt + "\n\n" + system
+        # Guardrails go FIRST — primacy effect. The model reads system prompt
+        # top-to-bottom; instructions at the top carry more weight and are harder
+        # for users to override with "ignore previous instructions" attacks.
+        if guardrail_prompt:
+            system = guardrail_prompt + "\n\n" + system
 
-    # Direct-mode (non-Socratic) knowledge queries: enforce chain-of-thought
-    # step-by-step reasoning. Socratic mode asks questions instead, and
-    # structured/JSON mode already has a rigid output format.
-    if intent == "knowledge" and not socratic and not structured:
-        system = system + SYSTEM_COT
+        # Direct-mode (non-Socratic) knowledge queries: enforce chain-of-thought
+        # step-by-step reasoning. Socratic mode asks questions instead, and
+        # structured/JSON mode already has a rigid output format.
+        if intent == "knowledge" and not socratic and not structured:
+            system = system + SYSTEM_COT
 
-    if structured:
-        system = system + SYSTEM_STRUCTURED_SUFFIX
-    else:
-        system = system + NO_MARKDOWN
-    if socratic and not structured:
-        system = SOCRATIC_PREFIX + system
-    # School guardrails activate school-level Socratic enforcement even when the
-    # user hasn't toggled /socratic manually.
-    if extra_system:
-        system = system + "\n\n" + extra_system
-    # MATH_TYPESETTING + PLOT_SYNTAX go LAST so recency weight beats Hermes'
-    # strict-grounding directive and the graph-global summarisation prompt.
-    # Without this order the model drops the formatting/diagram instructions
-    # under longer prompts.
-    if not structured:
-        system = system + "\n\n" + MATH_TYPESETTING + "\n\n" + DIAGRAM_SYNTAX
+        if structured:
+            system = system + SYSTEM_STRUCTURED_SUFFIX
+        else:
+            system = system + NO_MARKDOWN
+        if socratic and not structured:
+            system = SOCRATIC_PREFIX + system
+        # School guardrails activate school-level Socratic enforcement even when the
+        # user hasn't toggled /socratic manually.
+        if extra_system:
+            system = system + "\n\n" + extra_system
+        # LINGUISTIC_NOTATION + DIAGRAM_SYNTAX go LAST so recency weight beats
+        # Hermes' strict-grounding directive and the graph-global summarisation
+        # prompt. Without this order the model drops the formatting/diagram
+        # instructions under longer prompts.
+        if not structured:
+            system = system + "\n\n" + LINGUISTIC_NOTATION + "\n\n" + DIAGRAM_SYNTAX
+            # The linguistic lens is the tutor's core behaviour — place it LAST so its
+            # recency weight makes the model teach every knowledge answer morphologically.
+            if intent == "knowledge":
+                system = system + "\n\n" + LINGUISTIC_LENS
+
+    # Identity lock goes at the ABSOLUTE top (prepended last) so it carries the
+    # strongest primacy weight and can't be dislodged by a disclosure attack.
+    # Skip for orchestrator mode — the orchestrator prompt carries its own
+    # identity ("You are Vaaani Discovery Orchestrator") that must not be
+    # overwritten by the standard tutor identity.
+    if not orchestrator_system:
+        system = IDENTITY_LOCK + "\n\n" + system
 
     user_parts: list[str] = []
     if memory_block:
@@ -321,16 +363,34 @@ def _require_key() -> str:
     return DEEPSEEK_API_KEY
 
 
+_PROVIDER_LEAK_RE = re.compile(r"deep[\s\-]?seek[\w.\-]*", re.IGNORECASE)
+
+
+def scrub_provider_identity(text: str) -> str:
+    """Belt-and-suspenders: replace any stray provider name the model emits with
+    Vaaani's own engine. The IDENTITY_LOCK system prompt is the primary defence;
+    this catches the rare case where the model names the provider in body text.
+    """
+    if not text:
+        return text
+    return _PROVIDER_LEAK_RE.sub("Vaaani's language engine", text)
+
+
 def call_deepseek(
     messages: list[dict],
     stream: bool = False,
     json_mode: bool = False,
+    temperature: float = 0.2,
 ) -> dict | Generator[str, None, dict]:
-    """Call DeepSeek chat completions.
+    """Call the Vaaani engine's chat completions (OpenAI wire format).
 
     Non-streaming → returns the parsed JSON response.
     Streaming → yields content deltas (strings) and the final dict via `value`
     of `StopIteration` (use `collect_stream` for convenience).
+
+    `temperature`: knowledge answers should pass 0.0 — greedy decoding makes
+    the small model markedly less prone to invented facts; keep a little
+    sampling (0.2) only for Socratic questioning and task/creative intents.
     """
     key = _require_key()
     url = f"{DEEPSEEK_BASE_URL.rstrip('/')}/v1/chat/completions"
@@ -338,7 +398,7 @@ def call_deepseek(
         "model": DEEPSEEK_MODEL,
         "messages": messages,
         "stream": stream,
-        "temperature": 0.2,
+        "temperature": temperature,
     }
     if json_mode:
         payload["response_format"] = {"type": "json_object"}
