@@ -347,11 +347,36 @@ def explore_page() -> FileResponse:
 class FixitCheckBody(BaseModel):
     id: str = Field(..., min_length=1, max_length=40)
     idx: int = Field(..., ge=0, le=40)
+    # True only on the learner's first tap for a challenge — retries after
+    # feedback are self-correction, not fresh diagnostic evidence.
+    first: bool = True
 
 
 class BuildCheckBody(BaseModel):
     sentence: str = Field(default="", max_length=400)
     targets: list[str] = Field(default_factory=list)
+
+
+def _twin_evidence(user: dict, node_id: str, source: str, outcome: str,
+                   confidence: float, meta: dict) -> dict | None:
+    """Post one evidence object into the Cognitive Twin (BKT + credal).
+
+    Same ingress as /loop/evidence; student id matches the 'u_<id>' convention
+    the SPA uses, so stars lit here appear in the learner's universe.
+    """
+    try:
+        from cognitive_loop_routes import _get_world
+        import cognitive_twin as _twin
+        from evidence_graph import EvidenceObject
+        world = _get_world()
+        if node_id not in world.nodes:
+            return None
+        belief = _twin.update(EvidenceObject(
+            f"u_{user['id']}", node_id, source, outcome, confidence, meta=meta))
+        return {"node_id": belief.node_id, "mastery": round(belief.mastery, 4),
+                "mastered": belief.mastered}
+    except Exception:
+        return None
 
 
 @app.get("/learning/fixit")
@@ -370,9 +395,34 @@ def learning_fixit_check(
     body: FixitCheckBody,
     vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
 ) -> dict:
-    _resolve_processing_user(vaaani_session)  # sign-in required
+    user = _resolve_processing_user(vaaani_session)  # sign-in required
     import active_learning
-    return active_learning.fixit_check(body.id, body.idx)
+    result = active_learning.fixit_check(body.id, body.idx)
+
+    # Cognitive X-Ray feed: the bank is authored, so the error taxonomy is
+    # known deterministically — no LLM in the child's tap loop. Only the
+    # first tap counts; a miss means this transfer pattern is invisible to
+    # the learner (a detection failure), which is exactly what the X-Ray maps.
+    if body.first and "error" not in result:
+        try:
+            from cognitive.store import store as _cog_store, CognitiveEvent
+            _cog_store.log_event(CognitiveEvent(
+                user_id=user["id"],
+                topic=result["topic"],
+                query="Fix the slip: tap the word that isn't right.",
+                student_answer=result["error_word"] if result["correct"] else f"word #{body.idx}",
+                correct_answer=result["correct_sentence"],
+                error_type="no_error" if result["correct"] else result["error_type"],
+                error_signature=f"fixit:{body.id}",
+                explanation=result["why"],
+                root_cause_topic=result["topic"],
+                remediation=result["why"],
+                actual_correct=1 if result["correct"] else 0,
+                session_id="active_learning",
+            ))
+        except Exception:
+            pass
+    return result
 
 
 @app.post("/learning/build/check")
@@ -381,9 +431,33 @@ def learning_build_check(
     vaaani_session: str | None = Cookie(default=None, alias="vaaani_session"),
 ) -> dict:
     """The child built a sentence from their own graph words — reward it."""
-    _resolve_processing_user(vaaani_session)  # sign-in required
+    user = _resolve_processing_user(vaaani_session)  # sign-in required
     import active_learning
-    return active_learning.build_check(body.sentence, body.targets)
+    result = active_learning.build_check(body.sentence, body.targets)
+
+    # Production is the strongest evidence a learner owns a word. On success,
+    # credit each target's node in the Cognitive Twin so the star genuinely
+    # grows (the feedback already promised it). A failed build is an
+    # incomplete task, not evidence of inability — no negative update.
+    if result.get("ok"):
+        from cognitive_loop_routes import _get_world
+        updates = []
+        try:
+            world = _get_world()
+            by_display = {n.get("display", "").strip().lower(): nid
+                          for nid, n in world.nodes.items()}
+            for t in result.get("used", []):
+                nid = by_display.get(t.strip().lower())
+                if nid:
+                    up = _twin_evidence(user, nid, "quiz", "correct", 0.7,
+                                        {"task": "build_sentence"})
+                    if up:
+                        updates.append(up)
+        except Exception:
+            pass
+        if updates:
+            result["twin_updates"] = updates
+    return result
 
 
 @app.get("/feel")
@@ -504,6 +578,17 @@ def body_object_slug(name: str) -> str:
 def ipa_page() -> FileResponse:
     """Serve the interactive IPA chart (phonetics learning tool)."""
     return _serve_site("ipa.html")
+
+
+@app.get("/learn")
+def learn_page() -> FileResponse:
+    """Serve the daily-mission page (the cognitive loop's front door).
+
+    Works for guests too — the page mints a local guest student id, so the
+    backend deployment matches the Vercel static routing where /learn already
+    resolved. Without this route the homepage's mission links 404 here.
+    """
+    return _serve_site("learn.html")
 
 
 @app.get("/language-map")

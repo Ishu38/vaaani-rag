@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Vaaani · Graph View</title>
+<title>Vaaani · Library Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
@@ -167,12 +167,12 @@
 </head>
 <body>
 <nav class="top">
-  <div class="brand"><span>Vaa</span><span class="a">ani</span><span class="badge">My Universe</span></div>
+  <div class="brand"><span>Vaa</span><span class="a">ani</span><span class="badge">Library Map</span></div>
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/app">Chat</a>
     <a href="/explore">Explore 📷</a>
-    <a href="/graph-view" class="active">My Universe</a>
+    <a href="/graph-view" class="active">Library Map</a>
     <a href="/ipa">IPA Chart</a>
     <a href="/about">About</a>
     <a href="/contact">Contact</a>
@@ -186,7 +186,7 @@
 <main>
   <aside>
     <div class="intro">
-      This is your language brain, and it grows with you. Every <strong>star</strong> is a concept — a bright one is something you've discovered and remember well; a dim one is waiting for you to explore it; an amber ring means a memory is fading and it's time to revisit. Each <strong>line</strong> is a connection, and each <strong>constellation</strong> is a word family or theme from the Vaaani Library and your own discoveries.
+      This is the map of the Vaaani Library — every idea in your documents, laid out as stars. A bright one is something you've already practised and remember well; a dim one is waiting to be explored; an amber ring means a memory is fading and it's time to revisit. Each <strong>line</strong> is a connection, and each <strong>constellation</strong> is a word family or theme. Your own growing universe lives on the <a href="/learn">missions page</a> — this map shows everything there is to discover.
     </div>
 
     <style>
@@ -225,7 +225,7 @@
       <div class="jstep"><span class="jdot"></span><b>Communicate</b></div>
     </div>
 
-    <h2 id="glanceHead">Your language brain</h2>
+    <h2 id="glanceHead">The library at a glance</h2>
     <div class="stat"><span>Concepts (stars)</span><b id="sNodes">—</b></div>
     <div class="stat"><span>Discovered</span><b id="sDiscovered">—</b></div>
     <div class="stat"><span>Connections</span><b id="sEdges">—</b></div>
@@ -905,10 +905,10 @@ _$('alBuildCheck').onclick = async () => {
 };
 
 // ---- Fix the slip ----
-let _alFixId = null;
+let _alFixId = null, _alFixTries = 0;
 async function alFixLoad(){
   const c = await fetch('/learning/fixit' + (_alFixId?`?exclude=${_alFixId}`:'')).then(r=>r.json());
-  _alFixId = c.id; _$('alFixPrompt').textContent = c.prompt;
+  _alFixId = c.id; _alFixTries = 0; _$('alFixPrompt').textContent = c.prompt;
   const host = _$('alFixWords'); host.innerHTML='';
   c.words.forEach((w,i) => {
     const b = document.createElement('button'); b.className='al-word'; b.textContent=w;
@@ -917,8 +917,9 @@ async function alFixLoad(){
   _$('alFixFb').textContent=''; _$('alFixNext').style.display='none';
 }
 async function alFixTap(idx, btn){
+  const first = _alFixTries === 0; _alFixTries++;
   const r = await fetch('/learning/fixit/check',{method:'POST',headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({id:_alFixId, idx})}).then(r=>r.json());
+    body: JSON.stringify({id:_alFixId, idx, first})}).then(r=>r.json());
   const fb = _$('alFixFb');
   if (r.correct){
     btn.classList.add('al-right');

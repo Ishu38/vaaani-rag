@@ -734,20 +734,25 @@ const KID = {
   g:{ico:'',kn:'Back-Click (buzzy)',feel:'back-of-tongue place, voice ON',hear:'a buzzy guh',ex:['go','goat','bag']},
 };
 const KID_ORDER = ['m','p','b','f','v','w','θ','ð','s','z','ʃ','k','g'];
-// G2 minimal pairs
+// G2 minimal pairs — 4th slot: the two phonemes the pair contrasts, so a
+// duel answer becomes discrimination evidence on both members of the contrast.
 const GPAIRS = [
-  ['pin','bin','voice OFF vs ON'],['fan','van','no buzz vs buzz'],['sip','zip','snake vs buzzy snake'],
-  ['wet','vet','round lips vs teeth-on-lip'],['think','sink','tongue out vs tongue in'],
-  ['coat','goat','quiet vs buzzy back'],['thumb','dumb','tongue peeks out vs hides'],
+  ['pin','bin','voice OFF vs ON',['p','b']],['fan','van','no buzz vs buzz',['f','v']],
+  ['sip','zip','snake vs buzzy snake',['s','z']],
+  ['wet','vet','round lips vs teeth-on-lip',['w','v']],
+  ['think','sink','tongue out vs tongue in',['θ','s']],
+  ['coat','goat','quiet vs buzzy back',['k','g']],
+  ['thumb','dumb','tongue peeks out vs hides',['θ','d']],
 ];
-// G3 one-sound-many-spellings (+ rhyming traps)
+// G3 one-sound-many-spellings (+ rhyming traps). `ph` names the phoneme the
+// set trains, when it exists in the world graph (vowels aren't nodes yet).
 const GSPELLS = [
-  {lbl:'fff',ways:[['f','fan'],['ph','phone'],['gh','laugh'],['ff','off']],traps:['man','pan']},
-  {lbl:'k',ways:[['c','cat'],['k','kite'],['ck','duck'],['ch','school']],traps:['city','cent']},
-  {lbl:'shhh',ways:[['sh','ship'],['ti','nation'],['ci','special'],['ss','mission']],traps:['sip','sun']},
-  {lbl:'j',ways:[['j','jam'],['g','giant'],['dge','bridge']],traps:['gate','goat']},
-  {lbl:'long ee',ways:[['ee','see'],['ea','sea'],['y','happy'],['ie','field']],traps:['bread','head']},
-  {lbl:'long oo',ways:[['oo','moon'],['ew','new'],['ue','blue'],['ui','fruit']],traps:['book','good']},
+  {lbl:'fff',ph:'f',ways:[['f','fan'],['ph','phone'],['gh','laugh'],['ff','off']],traps:['man','pan']},
+  {lbl:'k',ph:'k',ways:[['c','cat'],['k','kite'],['ck','duck'],['ch','school']],traps:['city','cent']},
+  {lbl:'shhh',ph:'ʃ',ways:[['sh','ship'],['ti','nation'],['ci','special'],['ss','mission']],traps:['sip','sun']},
+  {lbl:'j',ph:'j',ways:[['j','jam'],['g','giant'],['dge','bridge']],traps:['gate','goat']},
+  {lbl:'long ee',ph:null,ways:[['ee','see'],['ea','sea'],['y','happy'],['ie','field']],traps:['bread','head']},
+  {lbl:'long oo',ph:null,ways:[['oo','moon'],['ew','new'],['ue','blue'],['ui','fruit']],traps:['book','good']},
 ];
 // G4 word families + combine
 const GFAM = [
@@ -767,7 +772,35 @@ const PIECES = {tri:'three',ped:'foot',tele:'far',scope:'look',micro:'small',pho
 let POINTS = 0, GRADE = 1;
 const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 function setProg(t){ $('gprogText').innerHTML = t; }
-function addPoints(n,msg){ POINTS+=n; $('gBadge').textContent=' '+POINTS+' points'; if(msg) setProg(msg); }
+function addPoints(n,msg){ POINTS+=n; $('gBadge').textContent=' '+POINTS+' points'; if(msg) setProg(msg); saveProgress(); }
+
+/* ── Learner-model bridge ──────────────────────────────────────────────────
+   The playground is not a silo: progress persists across visits, and every
+   graded act posts evidence to the Cognitive Twin (/loop/evidence) under the
+   same student id the missions page uses — a sound discovered here is a star
+   lit in the learner's universe on /learn. */
+const PHONEME_NODE = {m:'phoneme-m',p:'phoneme-p',b:'phoneme-b',f:'phoneme-f',v:'phoneme-v',
+  w:'phoneme-w','θ':'phoneme-th','ð':'phoneme-dh',s:'phoneme-s',z:'phoneme-z',
+  'ʃ':'phoneme-sh',k:'phoneme-k',g:'phoneme-g',d:'phoneme-d',t:'phoneme-t',j:'phoneme-j'};
+let _sid = null;
+async function studentId(){
+  if(_sid) return _sid;
+  try{ const r=await fetch('/auth/me',{credentials:'same-origin'}); const j=await r.json();
+    if(j&&j.user&&(j.user.id||j.user.email)){ _sid='u_'+(j.user.id||j.user.email); return _sid; } }catch(e){}
+  const k='vaaani_loop_student'; let v=localStorage.getItem(k);
+  if(!v){ v='guest_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36); localStorage.setItem(k,v); }
+  _sid=v; return _sid;
+}
+async function sendEvidence(nodeId, outcome, confidence, meta){
+  if(!nodeId) return;               // no matching graph node for this act — skip
+  try{ await fetch('/loop/evidence',{method:'POST',credentials:'same-origin',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({student_id:await studentId(),node_id:nodeId,source:'quiz',
+                         outcome:outcome,confidence:confidence,meta:meta||{}})}); }catch(e){}
+}
+const IPA_SAVE_KEY='vaaani_ipa_progress_v1';
+function saveProgress(){ try{ localStorage.setItem(IPA_SAVE_KEY,
+  JSON.stringify({points:POINTS,g1:[...g1found]})); }catch(e){} }
 
 function renderGradeBar(){
   $('gradeBar').innerHTML = GRADES.map(G =>
@@ -806,14 +839,15 @@ function openG1(k){
     <div style="text-align:center"><button class="btn-mini" id="g1made">I made the sound! </button></div>`;
   det.querySelectorAll('.chipword').forEach(c=>c.onclick=()=>speak(c.dataset.w));
   speak(d.ex[0]);
-  $('g1made').onclick=()=>{ if(!g1found.has(k)){ g1found.add(k); addPoints(10); } renderG1();
+  $('g1made').onclick=()=>{ if(!g1found.has(k)){ g1found.add(k); addPoints(10);
+      sendEvidence(PHONEME_NODE[k],'correct',0.35,{task:'sound_discovery',grade:1}); } renderG1();
     setProg(`Nice! Discovered <b>${g1found.size}</b> of ${KID_ORDER.length}. ${g1found.size===KID_ORDER.length?' All sounds found!':''}`); };
 }
 
 /* ---- G2: Sound Builders (minimal-pair listen duel) ---- */
 let g2i=0, g2heard='';
 function renderG2(){
-  const [a,b,diff]=GPAIRS[g2i%GPAIRS.length];
+  const [a,b,diff,ph]=GPAIRS[g2i%GPAIRS.length];
   $('gStage').innerHTML = `<div class="duel">
     <div style="font-size:14px;color:#888">One tiny change: <b>${diff}</b></div>
     <div class="duel-words"><button class="duel-btn" data-w="${a}">${a}</button><button class="duel-btn" data-w="${b}">${b}</button></div>
@@ -828,6 +862,8 @@ function renderG2(){
     btn.classList.add(ok?'right':'wrong');
     const fb=$('g2fb'); fb.className='feedback '+(ok?'ok':'no');
     fb.textContent = ok?` Yes — “${g2heard}”! Your ears caught the tiny change.`:`Not quite — I said “${g2heard}”. Listen again.`;
+    (ph||[]).forEach(p=>sendEvidence(PHONEME_NODE[p], ok?'correct':'incorrect', 0.6,
+      {task:'minimal_pair',pair:[a,b],grade:2}));
     if(ok){ addPoints(10); } g2heard='';
   });
 }
@@ -850,9 +886,11 @@ function renderG3(){
     speak(t.w);
     if(t.hit){ btn.classList.add('hit'); found.add(t.w); addPoints(8);
       $('g3fb').className='feedback ok'; $('g3fb').innerHTML=` <b>${t.w}</b> → the letters “${t.sp}” make the ${set.lbl} sound. (${found.size}/${need})`;
-      if(found.size===need){ $('g3fb').innerHTML=` You caught every spelling of the ${set.lbl} sound!`; drawFan(set); }
+      if(found.size===need){ $('g3fb').innerHTML=` You caught every spelling of the ${set.lbl} sound!`; drawFan(set);
+        sendEvidence(PHONEME_NODE[set.ph],'correct',0.5,{task:'spelling_hunt',sound:set.lbl,grade:3}); }
     } else { btn.classList.add('miss');
-      $('g3fb').className='feedback no'; $('g3fb').innerHTML=` <b>${t.w}</b> only rhymes or looks close — it does NOT make the ${set.lbl} sound. Sound, not rhyme!`; }
+      $('g3fb').className='feedback no'; $('g3fb').innerHTML=` <b>${t.w}</b> only rhymes or looks close — it does NOT make the ${set.lbl} sound. Sound, not rhyme!`;
+      sendEvidence(PHONEME_NODE[set.ph],'incorrect',0.4,{task:'spelling_hunt',sound:set.lbl,trap:t.w,grade:3}); }
   });
 }
 function drawFan(set){ // the per-grade graph: one sound → many spellings
@@ -879,10 +917,22 @@ function renderG4(){
       <div class="feedback" id="bFb" style="margin-top:12px">Join two meaning-pieces and see what you make.</div></div></div>`;
   $('gStage').querySelectorAll('.famkid').forEach(c=>c.onclick=()=>speak(c.dataset.w));
   $('bGo').onclick=()=>{ const key=$('bA').value+'+'+$('bB').value, hit=GCOMBO[key];
-    const fb=$('bFb'); if(hit){ fb.className='feedback ok'; fb.innerHTML=` <b>${hit[0]}</b> — ${hit[1]}! You built it from ${$('bA').value}+${$('bB').value}.`; speak(hit[0]); addPoints(15); }
+    const fb=$('bFb'); if(hit){ fb.className='feedback ok'; fb.innerHTML=` <b>${hit[0]}</b> — ${hit[1]}! You built it from ${$('bA').value}+${$('bB').value}.`; speak(hit[0]); addPoints(15);
+      // Construction evidence on both meaning-pieces (skipped server-side if a
+      // piece has no node in the world graph).
+      [$('bA').value,$('bB').value].forEach(pc=>sendEvidence('prefix-'+pc,'correct',0.7,
+        {task:'morpheme_build',word:hit[0],grade:4})); }
     else { fb.className='feedback no'; fb.textContent=`Hmm, ${$('bA').value}+${$('bB').value} isn't a real word — try another pair.`; } };
 }
 
+// Restore persisted progress before first render, so a returning child sees
+// their points and discovered sounds instead of a wiped slate.
+(function restoreProgress(){ try{
+  const s=JSON.parse(localStorage.getItem(IPA_SAVE_KEY)||'null');
+  if(!s) return;
+  POINTS=s.points||0; (s.g1||[]).forEach(k=>g1found.add(k));
+  $('gBadge').textContent=' '+POINTS+' points';
+}catch(e){} })();
 renderGradeBar();
 setGrade(1);
 

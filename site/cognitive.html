@@ -62,7 +62,7 @@
 </nav>
 <main>
   <h2>Cognitive X-Ray</h2>
-  <p class="lede">An MRI scan of your <b>linguistic thinking</b>. Every answer you give the tutor is classified — not just right or wrong, but <em>why</em>: a voicing slip, the wrong place of articulation, an IPA-symbol confusion, a mis-cut morpheme, or your first language quietly bleeding into English. The X-Ray shows you the <em>shape</em> of your mistakes so you fix the cause, not the symptom.</p>
+  <p class="lede">An MRI scan of your <b>linguistic thinking</b>. Every graded answer — Exam-Pressure Simulator questions and Fix-the-Slip challenges — is classified, not just right or wrong, but <em>why</em>: a voicing slip, the wrong place of articulation, an IPA-symbol confusion, a mis-cut morpheme, or your first language quietly bleeding into English. The X-Ray shows you the <em>shape</em> of your mistakes so you fix the cause, not the symptom.</p>
 
   <div id="sampleBanner" class="sample-banner">
      <b>This is a sample X-Ray</b> — exactly what yours looks like after a handful of quizzes. <span id="bannerMsg">Sign in and answer a few questions and Vaaani builds your own from real data.</span>
@@ -79,7 +79,8 @@
       <h3>Overall Profile</h3>
       <p class="hint">A quick read on how you're doing and how well you recover after a wrong answer.</p>
       <div class="grid" id="stats-grid"></div>
-      <p class="legend"><b>Resilience Score</b> (0–1): how often you get the <em>next</em> question right after a miss. Higher = you don't spiral.</p>
+      <p class="legend"><b>Resilience Score</b> (0–1): how often you get the <em>next</em> question right after a miss. Higher = you don't spiral. Shown as — until the learner has answered a question after a miss.</p>
+      <p class="legend">Every number on this page is computed from this learner's actual graded answers — nothing is estimated. Sample data is always labelled as such.</p>
     </div>
     <div class="card" id="bias-card" style="display:none"></div>
     <div class="card">
@@ -117,7 +118,7 @@
    answered anything (and for anyone viewing without signing in). */
 const SAMPLE = {
   summary: { accuracy: 72, total_analyzed: 38, error_frequency: 14 },
-  resilience_score: 0.68,
+  resilience_score: 0.68, resilience_n: 11,
   biases: { description: "Your misses cluster on sounds your first language doesn't use — classic <b>L1 interference</b>. /v/–/w/ and /θ/ account for most of them. You're accurate on morphology; phonetics is where the marks leak." },
   error_breakdown: {
     "L1 interference": 7,
@@ -159,7 +160,7 @@ const SAMPLE = {
   // If signed in but no data yet, change the banner message + hide Sign in button
   if (isSample && signedIn) {
     document.getElementById('bannerMsg').textContent =
-      'Answer a few questions in the Exam Simulator and Vaaani builds your X-Ray from real data.';
+      'Answer a few Exam Simulator questions or Fix-the-Slip challenges and Vaaani builds your X-Ray from real data.';
     const signInBtn = document.getElementById('bannerSignIn');
     if (signInBtn) signInBtn.style.display = 'none';
   }
@@ -173,7 +174,7 @@ function render(d) {
     <div class="stat"><div class="value">${s.accuracy||0}%</div><div class="label">Accuracy</div></div>
     <div class="stat"><div class="value">${s.total_analyzed||0}</div><div class="label">Questions analysed</div></div>
     <div class="stat"><div class="value">${s.error_frequency||0}</div><div class="label">Errors detected</div></div>
-    <div class="stat"><div class="value">${d.resilience_score||'0.5'}</div><div class="label">Resilience score</div></div>`;
+    <div class="stat"><div class="value">${typeof d.resilience_score === 'number' ? d.resilience_score : '—'}</div><div class="label">Resilience score${typeof d.resilience_score === 'number' && d.resilience_n ? ` (${d.resilience_n} post-miss answer${d.resilience_n===1?'':'s'})` : ''}</div></div>`;
 
   if(d.biases && Object.keys(d.biases).length){
     document.getElementById('bias-card').style.display='block';

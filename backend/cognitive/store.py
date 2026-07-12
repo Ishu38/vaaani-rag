@@ -153,7 +153,10 @@ class CognitiveStore:
     def get_recent_events(self, user_id: int, limit: int = 50) -> list[dict]:
         db = _conn()
         rows = db.execute(
-            "SELECT * FROM cognitive_events WHERE user_id=? ORDER BY created_at DESC LIMIT ?",
+            # id DESC tiebreak: created_at has second resolution, and rapid-fire
+            # answers (game taps) can share a timestamp — insertion order must
+            # survive so bounce-back sequences reconstruct correctly.
+            "SELECT * FROM cognitive_events WHERE user_id=? ORDER BY created_at DESC, id DESC LIMIT ?",
             (user_id, limit),
         ).fetchall()
         db.close()

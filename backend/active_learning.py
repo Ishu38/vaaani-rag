@@ -15,30 +15,40 @@ import random
 
 # Indian-English L1-transfer errors (pan-Hindi/Bengali). Each has ONE clearly
 # tappable culprit word so "spot the slip" has an unambiguous answer.
+# `topic` names the linguistic phenomenon (feeds the Cognitive X-Ray's topic
+# weakness map); `error_type` is the X-Ray taxonomy bucket the miss belongs to.
 FIXIT = [
     {"id": "know",  "words": ["I", "am", "knowing", "the", "answer", "."], "error": 2,
      "correct": "I know the answer.",
+     "topic": "stative verbs", "error_type": "l1_transfer",
      "why": "‘Know’ names a state, not an action — state verbs (know, want, like) don’t take ‘-ing’."},
     {"id": "have",  "words": ["She", "is", "having", "a", "car", "."], "error": 2,
      "correct": "She has a car.",
+     "topic": "stative verbs", "error_type": "l1_transfer",
      "why": "‘Have’ for owning is a state — not ‘is having’. ‘Having’ is only for actions like ‘having lunch’."},
     {"id": "does",  "words": ["He", "do", "his", "homework", "daily", "."], "error": 1,
      "correct": "He does his homework daily.",
+     "topic": "subject–verb agreement", "error_type": "overgeneralisation",
      "why": "With he / she / it, the verb takes an ‘-s’: he does, she goes, it runs."},
     {"id": "work",  "words": ["I", "have", "too", "much", "works", "today", "."], "error": 4,
      "correct": "I have too much work today.",
+     "topic": "countability", "error_type": "overgeneralisation",
      "why": "‘Work’ is uncountable — no ‘-s’ and no ‘a work’. Say ‘much work’, ‘some work’."},
     {"id": "good",  "words": ["What", "is", "your", "good", "name", "?"], "error": 3,
      "correct": "What is your name?",
+     "topic": "L1 calques", "error_type": "l1_transfer",
      "why": "‘Good name’ is a translation of ‘shubh naam’. In English it’s just ‘your name’."},
     {"id": "yest",  "words": ["I", "have", "seen", "him", "yesterday", "."], "error": 1,
      "correct": "I saw him yesterday.",
+     "topic": "tense–aspect", "error_type": "l1_transfer",
      "why": "With a finished time like ‘yesterday’, use the simple past (saw), not ‘have seen’."},
     {"id": "disc",  "words": ["Let", "us", "discuss", "about", "the", "plan", "."], "error": 3,
      "correct": "Let us discuss the plan.",
+     "topic": "verb complementation", "error_type": "l1_transfer",
      "why": "‘Discuss’ already means ‘talk about’ — you don’t add ‘about’ after it."},
     {"id": "myself", "words": ["Myself", "Rahul", "."], "error": 0,
      "correct": "I am Rahul.",
+     "topic": "L1 calques", "error_type": "l1_transfer",
      "why": "To introduce yourself, say ‘I am Rahul’ or ‘My name is Rahul’ — not ‘Myself Rahul’."},
 ]
 _BY_ID = {c["id"]: c for c in FIXIT}
@@ -62,6 +72,8 @@ def fixit_check(cid: str, idx: int) -> dict:
         "error_word": c["words"][c["error"]],
         "correct_sentence": c["correct"],
         "why": c["why"],
+        "topic": c["topic"],
+        "error_type": c["error_type"],
         "feedback": (f"Yes! ‘{c['words'][c['error']]}’ is the slip." if ok
                      else "Not that one — look again. Which word breaks English grammar?"),
     }
