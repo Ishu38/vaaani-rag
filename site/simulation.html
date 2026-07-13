@@ -110,7 +110,7 @@ async function start(){
   const r = await fetch('/simulation/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)});
   if(r.status === 401){
     document.getElementById('config-panel').innerHTML =
-      '<div class="card" style="text-align:center;padding:40px"><h3>Sign in to start a simulation</h3><p class="muted" style="margin:12px 0">The exam-pressure simulator scores against your ingested corpus, so it needs a Vaaani account.</p><a class="btn btn-primary" href="/login">Sign in</a> &nbsp; <a class="btn btn-ghost" href="/signup">Create account</a></div>';
+      '<div class="card" style="text-align:center;padding:40px"><h3>Sign in to start a simulation</h3><p class="muted" style="margin:12px 0">The exam-pressure simulator scores against your ingested corpus, so it needs a Vaaani account.</p> &nbsp;</div>';
     return;
   }
   const data = await r.json();

@@ -4,6 +4,13 @@
   "redirects": [
     { "source": "/graph-view", "destination": "/learn", "permanent": true },
     { "source": "/cognitive", "destination": "/learn", "permanent": true },
+    { "source": "/login", "destination": "/", "permanent": true },
+    { "source": "/signup", "destination": "/", "permanent": true },
+    { "source": "/account", "destination": "/", "permanent": true },
+    { "source": "/verify", "destination": "/", "permanent": true },
+    { "source": "/forgot-password", "destination": "/", "permanent": true },
+    { "source": "/reset-password", "destination": "/", "permanent": true },
+    { "source": "/dashboard", "destination": "/learn", "permanent": true },
     { "source": "/feel", "destination": "/learn", "permanent": true },
     { "source": "/tutor", "destination": "/learn", "permanent": true },
     { "source": "/missions", "destination": "/learn", "permanent": true },

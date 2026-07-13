@@ -55,18 +55,12 @@ const Auth = {
   },
 };
 
-/** Show user name / signed-in state in any nav with #navAuth. Falls back to "Sign in". */
+/** Sign-in / Sign-out stripped completely — no auth UI is rendered anywhere.
+ *  Learner surfaces run anonymously (a device-local id); nothing invites a login. */
 async function paintNavAuth() {
-  const slot = document.getElementById('navAuth');
-  const user = await Auth.me();
-  if (slot) {
-    if (user) {
-      slot.innerHTML = `<a class="btn btn-primary" href="/account">${escapeHtml(user.name || user.email)} <span class="arr">→</span></a>`;
-    } else {
-      slot.innerHTML = `<a class="btn btn-ghost" href="/login">Sign in</a> <a class="btn btn-primary" href="/signup">Get started <span class="arr">→</span></a>`;
-    }
-  }
-  paintAuthGatedSurfaces(!!user);
+  // Inject nothing into #navAuth. Any auth links are removed from the markup
+  // itself; empty slots stay empty. Everyone is treated as anonymous.
+  paintAuthGatedSurfaces(false);
 }
 
 /**
