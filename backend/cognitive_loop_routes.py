@@ -268,6 +268,52 @@ def get_transcribe(word: str = Query(..., min_length=1, max_length=40),
                          for t in toks]}
 
 
+@router.get("/decode")
+def get_decode(word: str = Query(..., min_length=1, max_length=40)) -> dict:
+    """Semantic Sandbox — reason out an English word instead of memorising it:
+    break it into pieces (prefix/root/suffix), bridge the root to the Bengali word
+    the child already owns, and show the family. Rote → active reasoning."""
+    import morphology as mo, root_bridge as rb
+    d = mo.decode(word)
+    parts = []
+    if d["prefix"]:
+        parts.append({"type": "prefix", "piece": d["prefix"],
+                      "gloss": mo.EN_PREFIXES[d["prefix"]]["gloss"]})
+    if d["root"]:
+        parts.append({"type": "root", "piece": d["root"],
+                      "gloss": mo.EN_ROOTS[d["root"]]["gloss"]})
+    if d["suffix"]:
+        parts.append({"type": "suffix", "piece": d["suffix"],
+                      "gloss": mo.EN_SUFFIXES[d["suffix"]]["gloss"]})
+    return {"word": word, "parts": parts,
+            "bridge": rb.bridge_for_word(word),
+            "cognate_prefix": d["cognate_prefix"]}
+
+
+@router.get("/morphology")
+def get_morphology() -> dict:
+    """The full word-building inventories for both languages (Semantic Sandbox reference)."""
+    import morphology as mo, root_bridge as rb
+    return {"cognate_affixes": mo.COGNATE_AFFIXES,
+            "en_prefixes": mo.EN_PREFIXES, "en_suffixes": mo.EN_SUFFIXES,
+            "en_roots": mo.EN_ROOTS, "bn_upasarga": mo.BN_UPASARGA,
+            "bn_pratyaya": mo.BN_PRATYAYA, "cognate_roots": len(rb.ROOTS)}
+
+
+@router.get("/root-bridge")
+def get_root_bridge(word: str = Query(""), theme: str = Query("")) -> dict:
+    """Root Bridge — the curated Bengali↔English cognate table (real IE etymology).
+    ?word= returns the cognate bridge for an English word (decode it from a Bengali
+    root the child already owns); no arg returns all bridges by theme."""
+    import root_bridge as rb
+    if word:
+        return {"word": word, "bridge": rb.bridge_for_word(word)}
+    tb = rb.by_theme()
+    if theme:
+        return {"theme": theme, "bridges": tb.get(theme, [])}
+    return {"count": len(rb.all_bridges()), "themes": list(tb.keys()), "by_theme": tb}
+
+
 @router.get("/word-in-script")
 def get_word_in_script(word: str = Query(..., min_length=1, max_length=40),
                        l1: str = Query(...)) -> dict:

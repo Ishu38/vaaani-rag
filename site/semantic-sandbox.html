@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Semantic Sandbox — reason out any English word instead of memorising it. Break it into pieces, and find the Bengali root you already own. Rote → reasoning." />
+<meta name="theme-color" content="#4f46e5" />
+<title>Semantic Sandbox — Vaaani</title>
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#f7f6f3; --panel:#fff; --ink:#17171f; --ink-2:#4b4b57; --muted:#8a8a97;
+    --line:#e6e4de; --line-2:#efeee9; --accent:#4f46e5; --accent-soft:#eef0ff;
+    --good:#0f9d6b; --good-soft:#e6f6ef; --warn-soft:#fdf3d8;
+    --shadow:0 1px 2px rgba(20,20,40,.04),0 8px 30px rgba(20,20,40,.05); --mono:'JetBrains Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .accent{color:var(--accent)} .mono{font-family:var(--mono)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(247,246,243,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;max-width:900px;margin:0 auto;padding:0 22px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+  .brand svg{width:23px;height:23px;color:var(--accent)}
+  .nav-links a{font-size:14px;color:var(--ink-2);font-weight:500;margin-left:18px}
+  .nav-links a:hover{color:var(--ink)}
+  main{max-width:900px;margin:0 auto;padding:34px 22px 90px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(28px,4.4vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:800;margin:10px 0 8px}
+  h1 .serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400}
+  .sub{font-size:16.5px;color:var(--ink-2);max-width:40em;margin-bottom:24px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);margin-bottom:18px}
+  .card-h{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .lookup{display:flex;gap:10px;flex-wrap:wrap}
+  .lookup input{flex:1;min-width:200px;border:2px solid var(--line);border-radius:11px;padding:13px 15px;font-size:17px;font-family:inherit;background:#fcfcfb;color:var(--ink)}
+  .lookup input:focus{outline:none;border-color:var(--accent)}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;border-radius:11px;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:#4038c9}
+  .banner{display:none;background:var(--warn-soft);border:1px solid #f0e0b8;color:#8a6d12;border-radius:10px;padding:11px 14px;font-size:13.5px;margin-bottom:14px}
+  .out{display:none;margin-top:6px}
+  .the-word{font-size:30px;font-weight:800;letter-spacing:-.01em;margin-bottom:14px}
+  .pieces{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin-bottom:6px}
+  .pc{background:#f4f3ef;border:1px solid var(--line-2);border-radius:12px;padding:10px 15px;box-shadow:0 1px 2px rgba(20,20,40,.05)}
+  .pc .pk{font-family:var(--mono);font-size:18px;font-weight:600}
+  .pc .pg{font-size:12px;color:var(--muted);margin-top:2px}
+  .pc .pt{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);font-weight:700;margin-bottom:3px}
+  .plus{display:flex;align-items:center;color:var(--muted);font-size:20px;font-weight:300}
+  .bridge{margin-top:16px;border:1px solid #cdeede;border-left:3px solid var(--good);background:var(--good-soft);border-radius:14px;padding:18px 20px}
+  .bridge .bh{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--good);margin-bottom:8px}
+  .bridge .big{font-size:24px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+  .bridge .big .bn{color:var(--good)}
+  .bridge p{font-size:14.5px;color:var(--ink-2)}
+  .fam{margin-top:16px}
+  .fam .fh{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .fam-row{display:flex;flex-wrap:wrap;gap:7px}
+  .fw{font-size:14px;background:var(--accent-soft);color:var(--accent);border:1px solid #dcdcfb;border-radius:8px;padding:5px 11px;cursor:pointer}
+  .fw:hover{background:#e2e2fb}
+  .predict{margin-top:16px;font-size:14.5px;color:var(--ink-2);background:#fbf7ee;border:1px solid #efe4cf;border-radius:12px;padding:14px 16px}
+  .predict b{color:var(--ink)}
+  .cog{margin-top:14px;font-size:14px;color:var(--ink-2)}
+  .cog .mono{color:var(--accent);font-weight:600}
+  .try{margin-top:6px;font-size:13px;color:var(--muted)}
+  .try span{color:var(--accent);cursor:pointer;text-decoration:underline;margin-right:10px}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="/">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/></svg>
+      <span>Vaa<span class="accent">ani</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/phonetics-lab">Phonetics Lab</a>
+      <a href="/sound-lab">Sound Lab</a>
+      <a href="/learn">Missions</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <p class="eyebrow">Semantic Sandbox</p>
+  <h1>Reason out any word. <span class="serif accent">Don’t memorise it.</span></h1>
+  <p class="sub">Every big English word is built from small pieces — and the roots are ones you already own in Bengali. Take a word apart, find the root you know, and you can decode words you’ve never seen.</p>
+
+  <div class="banner" id="banner"></div>
+
+  <div class="card">
+    <div class="card-h">Understand a word — from its pieces</div>
+    <div class="lookup">
+      <input id="wordIn" type="text" placeholder="type a word… e.g. telephone, perimeter, dental" autocomplete="off" spellcheck="false" />
+      <button class="btn btn-primary" id="goBtn">Understand it</button>
+    </div>
+    <div class="try">Try: <span data-w="telephone">telephone</span><span data-w="perimeter">perimeter</span><span data-w="dental">dental</span><span data-w="biology">biology</span><span data-w="progress">progress</span></div>
+
+    <div class="out" id="out">
+      <div class="the-word" id="theWord"></div>
+      <div class="pieces" id="pieces"></div>
+      <div class="cog" id="cog" style="display:none"></div>
+      <div class="bridge" id="bridge" style="display:none"></div>
+      <div class="fam" id="fam" style="display:none"></div>
+      <div class="predict" id="predict" style="display:none"></div>
+    </div>
+  </div>
+</main>
+
+<script src="/auth.js"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ var d=document.createElement('div'); d.textContent=s==null?'':String(s); return d.innerHTML; }
+  function banner(m){ var b=$('banner'); b.textContent=m; b.style.display=m?'block':'none'; }
+
+  async function go(word){
+    var w=(word||$('wordIn').value||'').trim();
+    if(!w) return;
+    $('wordIn').value=w; banner(''); $('goBtn').disabled=true;
+    try{
+      var r=await fetch('/loop/decode?word='+encodeURIComponent(w),{credentials:'same-origin'});
+      if(!r.ok) throw new Error('Could not read that word.');
+      var d=await r.json();
+      render(d);
+    }catch(e){ banner(e.message); }
+    finally{ $('goBtn').disabled=false; }
+  }
+
+  function render(d){
+    $('theWord').textContent=d.word;
+    // pieces
+    var pc=$('pieces'); pc.innerHTML='';
+    if((d.parts||[]).length){
+      d.parts.forEach(function(p,i){
+        if(i) pc.insertAdjacentHTML('beforeend','<div class="plus">+</div>');
+        pc.insertAdjacentHTML('beforeend','<div class="pc"><div class="pt">'+esc(p.type)+'</div><div class="pk">'+esc(p.piece)+'</div><div class="pg">'+esc(p.gloss)+'</div></div>');
+      });
+    } else {
+      pc.innerHTML='<div class="pg" style="color:var(--muted)">A single root — see below.</div>';
+    }
+    // cognate prefix
+    var cog=$('cog');
+    if(d.cognate_prefix){ var c=d.cognate_prefix;
+      cog.innerHTML='The prefix <span class="mono">'+esc(c.en)+'-</span> is your <span class="mono">'+esc(c.bn)+'</span> ('+esc(c.gloss)+'). '+esc(c.hook||'');
+      cog.style.display='block';
+    } else cog.style.display='none';
+    // bridge (the root you already own)
+    var br=$('bridge'), fam=$('fam'), pred=$('predict'), b=d.bridge;
+    if(b){
+      br.innerHTML='<div class="bh">You already own this root</div><div class="big"><span class="bn">'+esc(b.bengali)+'</span> = '+esc(b.gloss)+'</div><p>'+esc(b.hook||'')+'</p>';
+      br.style.display='block';
+      // family
+      var others=(b.english||[]).filter(function(x){ return x.indexOf('-')<0; });
+      if(others.length){
+        var h='<div class="fh">The same root builds these — tap to open</div><div class="fam-row">';
+        others.forEach(function(x){ h+='<span class="fw" data-w="'+esc(x)+'">'+esc(x)+'</span>'; });
+        h+='</div>'; fam.innerHTML=h; fam.style.display='block';
+        var last=others[others.length-1];
+        pred.innerHTML='Now you can <b>reason, not recall</b>: you know '+esc(b.bengali.split(' / ')[0])+' means “'+esc(b.gloss)+'”, so you can already guess what <b>'+esc(last)+'</b> is about.';
+        pred.style.display='block';
+      } else { fam.style.display='none'; pred.style.display='none'; }
+    } else { br.style.display='none'; fam.style.display='none'; pred.style.display='none'; }
+    $('out').style.display='block';
+  }
+
+  $('goBtn').addEventListener('click', function(){ go(); });
+  $('wordIn').addEventListener('keydown', function(e){ if(e.key==='Enter') go(); });
+  document.addEventListener('click', function(e){
+    var t=e.target.closest('[data-w]'); if(t){ go(t.getAttribute('data-w')); window.scrollTo({top:0,behavior:'smooth'}); }
+  });
+})();
+</script>
+</body>
+</html>
