@@ -77,6 +77,22 @@
   .why-card .feel a{text-decoration:underline}
   .foot-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
   .banner{display:none;background:var(--warn-soft);border:1px solid #f0e0b8;color:var(--warn);border-radius:10px;padding:11px 14px;font-size:13.5px;margin-bottom:14px}
+  .l1-pick{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .l1-label{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+  .l1-pick button{font-family:inherit;font-size:15px;font-weight:600;padding:7px 14px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);cursor:pointer}
+  .l1-pick button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .script-panel{display:none;margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+  .script-panel .sp-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .script-panel .sp-word{font-size:30px;font-weight:700;margin-bottom:12px;line-height:1.3}
+  .sp-row{display:flex;flex-wrap:wrap;gap:8px}
+  .sp{display:flex;flex-direction:column;align-items:center;min-width:44px;padding:8px 10px;border-radius:10px;background:#f4f3ef;border:1px solid var(--line-2)}
+  .sp .ak{font-size:22px;line-height:1.1}
+  .sp .ip{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px}
+  .sp.newsnd{background:var(--accent-soft);border-color:#dcdcfb;cursor:pointer}
+  .sp.newsnd .ak{color:var(--accent)}
+  .sp.newsnd .tag{font-size:9px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+  .sp-note{margin-top:12px;font-size:13px;color:var(--ink-2);background:var(--accent-soft);border:1px solid #dcdcfb;border-radius:10px;padding:10px 13px}
+  .sp-note a{color:var(--accent);font-weight:600;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -97,7 +113,15 @@
 <main>
   <p class="eyebrow">Phonetics Lab</p>
   <h1>Type any word. <span class="serif accent">Take it apart.</span></h1>
-  <p class="sub">Every word is made of sounds you can hear, feel and write. Look up any word to see how it's written in sound — then try writing it yourself. No test, no score to chase: just experiment.</p>
+  <p class="sub">Every word is made of sounds you can hear, feel and write. Look up any word to see it in sound — and in your own letters. No test, no score to chase: just experiment.</p>
+
+  <div class="l1-pick" id="l1Pick">
+    <span class="l1-label">Your language</span>
+    <button data-l1="en">English</button>
+    <button data-l1="bn">বাংলা</button>
+    <button data-l1="hi">हिन्दी</button>
+    <button data-l1="ta">தமிழ்</button>
+  </div>
 
   <div class="banner" id="banner"></div>
 
@@ -116,6 +140,7 @@
       </div>
       <div class="phon-row" id="phonRow"></div>
       <p class="hint">Tap a highlighted sound to build it yourself in the Sound Lab.</p>
+      <div class="script-panel" id="scriptPanel" style="display:none;"></div>
     </div>
   </div>
 
@@ -174,6 +199,7 @@
         row.appendChild(el);
       });
       $('wordOut').style.display='block';
+      renderScript();
       $('writeWord').textContent = d.word;
       $('writeCard').style.display='block';
       $('ipaIn').value=''; $('feedback').style.display='none';
@@ -186,6 +212,44 @@
     var u = new SpeechSynthesisUtterance(currentWord); u.lang='en-GB'; u.rate=.85;
     speechSynthesis.cancel(); speechSynthesis.speak(u);
   }
+
+  // See the word in the child's OWN letters (Bangla/Hindi/Tamil), new sounds flagged.
+  async function renderScript(){
+    var sp=$('scriptPanel');
+    if(l1==='en' || !currentWord){ sp.style.display='none'; return; }
+    try{
+      var r=await fetch('/loop/word-in-script?word='+encodeURIComponent(currentWord)+'&l1='+encodeURIComponent(l1), {credentials:'same-origin'});
+      if(!r.ok){ sp.style.display='none'; return; }
+      var d=await r.json();
+      var html='<div class="sp-h">“'+esc(currentWord)+'” in your letters</div>';
+      html+='<div class="sp-word">'+esc(d.script||'')+'</div><div class="sp-row">';
+      (d.sounds||[]).forEach(function(s){
+        var isNew=(s.status==='new'||s.status==='voicing-new');
+        var inner='<span class="ak">'+esc(s.akshara||'·')+'</span><span class="ip">'+esc(s.ipa)+'</span>'+(isNew?'<span class="tag">new</span>':'');
+        html+= isNew ? '<a class="sp newsnd" href="/sound-lab">'+inner+'</a>' : '<span class="sp">'+inner+'</span>';
+      });
+      html+='</div>';
+      if((d.new_sounds||[]).length){
+        html+='<div class="sp-note">The highlighted sounds are <b>new</b> — your language doesn’t have them. Tap one to build it in the <a href="/sound-lab">Sound Lab →</a> and feel how to make it.</div>';
+      }
+      sp.innerHTML=html; sp.style.display='block';
+    }catch(e){ sp.style.display='none'; }
+  }
+
+  // Language selector — sets the child's L1; the script panel re-renders in it.
+  (function initL1(){
+    var btns=document.querySelectorAll('#l1Pick button');
+    for(var i=0;i<btns.length;i++){
+      (function(b){
+        if(b.getAttribute('data-l1')===l1) b.classList.add('on');
+        b.addEventListener('click', function(){
+          l1=b.getAttribute('data-l1'); localStorage.setItem('vaaani_l1', l1);
+          for(var j=0;j<btns.length;j++) btns[j].classList.toggle('on', btns[j]===b);
+          renderScript();
+        });
+      })(btns[i]);
+    }
+  })();
 
   async function check(){
     var typed = ($('ipaIn').value||'').trim();
