@@ -63,7 +63,14 @@ EN_PREFIXES: dict[str, dict] = {
     "micro": {"gloss": "small", "ex": "microscope"},
     "mono":  {"gloss": "one", "ex": "monorail"},
     "bi":    {"gloss": "two", "ex": "bicycle"},
+    "tri":   {"gloss": "three", "ex": "triangle"},
+    "penta": {"gloss": "five", "ex": "pentagon"},
+    "hexa":  {"gloss": "six", "ex": "hexagon"},
     "multi": {"gloss": "many", "ex": "multiply"},
+    "poly":  {"gloss": "many", "ex": "polygon"},
+    "semi":  {"gloss": "half", "ex": "semicircle"},
+    "hyper": {"gloss": "over, above", "ex": "hyperactive"},
+    "dia":   {"gloss": "across, through", "ex": "diameter"},
 }
 
 # ── English suffixes / combining forms (many are Greek roots themselves) ──
@@ -72,6 +79,9 @@ EN_SUFFIXES: dict[str, dict] = {
     "phone": {"gloss": "sound, voice", "ex": "telephone", "greek": "phone"},
     "scope": {"gloss": "look, see", "ex": "microscope", "greek": "skopein"},
     "meter": {"gloss": "measure", "ex": "thermometer", "greek": "metron"},
+    "metry": {"gloss": "measurement (science of measuring)", "ex": "geometry", "greek": "metron"},
+    "graphy":{"gloss": "writing, recording", "ex": "geography", "greek": "graphein"},
+    "nomy":  {"gloss": "law, system, ordering", "ex": "astronomy", "greek": "nomos"},
     "ology": {"gloss": "study of", "ex": "biology", "greek": "logos"},
     "tion":  {"gloss": "act / state of", "ex": "action"},
     "ity":   {"gloss": "quality of", "ex": "purity"},
@@ -100,6 +110,9 @@ EN_ROOTS: dict[str, dict] = {
     "man":    {"gloss": "hand", "ex": "manual"},
     "ped/pod":{"gloss": "foot", "ex": "pedal, tripod"},
     "chrono": {"gloss": "time", "ex": "chronology"},
+    "gon":    {"gloss": "angle", "ex": "polygon"},
+    "hydro":  {"gloss": "water", "ex": "hydrogen"},
+    "morph":  {"gloss": "shape, form", "ex": "morphology"},
 }
 
 # ── Bengali উপসর্গ (Sanskrit-derived, standard set) ──
