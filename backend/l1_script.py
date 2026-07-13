@@ -23,11 +23,14 @@ from l1_confusion import attractor_for
 
 # Consonant aksharas for sounds each L1 HAS (phoneme-node → akshara).
 KNOWN: dict[str, dict[str, str]] = {
+    # Bengali — grounded in Vidyasagar's বর্ণপরিচয় (Barnaparichay). ফ is Bengali's
+    # letter for /f/; দন্ত্য ত is the canonical "t"; শ/ষ/স all lean /ʃ/ (স→ʃ tendency
+    # lives in the confusion field, not here).
     "bn": {"phoneme-p": "প", "phoneme-b": "ব", "phoneme-t": "ত", "phoneme-d": "দ",
            "phoneme-k": "ক", "phoneme-g": "গ", "phoneme-m": "ম", "phoneme-n": "ন",
            "phoneme-ng": "ঙ", "phoneme-l": "ল", "phoneme-r": "র", "phoneme-h": "হ",
            "phoneme-s": "স", "phoneme-sh": "শ", "phoneme-ch": "চ", "phoneme-j": "জ",
-           "phoneme-y": "য়"},
+           "phoneme-y": "য়", "phoneme-f": "ফ"},
     "hi": {"phoneme-p": "प", "phoneme-b": "ब", "phoneme-t": "त", "phoneme-d": "द",
            "phoneme-k": "क", "phoneme-g": "ग", "phoneme-m": "म", "phoneme-n": "न",
            "phoneme-ng": "ङ", "phoneme-l": "ल", "phoneme-r": "र", "phoneme-h": "ह",
@@ -42,8 +45,12 @@ KNOWN: dict[str, dict[str, str]] = {
 
 # Nearest independent vowel letter for the common English vowels (espeak IPA).
 VOWELS: dict[str, dict[str, str]] = {
-    "bn": {"i": "ই", "ɪ": "ই", "e": "এ", "ɛ": "এ", "æ": "অ্যা", "a": "আ", "ɑ": "আ",
-           "ʌ": "আ", "ɒ": "অ", "ɔ": "অ", "o": "ও", "ʊ": "উ", "u": "উ", "ə": "অ", "ɜ": "অ",
+    # Bengali (Barnaparichay স্বরবর্ণ): no length distinction in SOUND, so English
+    # length is taught through the long LETTERS — sheep ঈ vs ship ই, pool ঊ vs pull উ.
+    # অ = /ɔ/ (inherent vowel), so ʌ/ɔ/ɒ/ə anchor to অ; আ = /a/.
+    "bn": {"iː": "ঈ", "i": "ই", "ɪ": "ই", "e": "এ", "ɛ": "এ", "æ": "অ্যা",
+           "a": "আ", "ɑ": "আ", "ɑː": "আ", "ʌ": "অ", "ɒ": "অ", "ɔ": "অ", "ɔː": "অ",
+           "o": "ও", "oː": "ও", "uː": "ঊ", "u": "উ", "ʊ": "উ", "ə": "অ", "ɜ": "অ", "ɜː": "অ",
            "əʊ": "ও", "oʊ": "ও", "aɪ": "আই", "aʊ": "আউ", "eɪ": "এই", "ɔɪ": "অই"},
     "hi": {"i": "इ", "ɪ": "इ", "e": "ए", "ɛ": "ऐ", "æ": "ऐ", "a": "अ", "ɑ": "आ",
            "ʌ": "अ", "ɒ": "ऑ", "ɔ": "ओ", "o": "ओ", "ʊ": "उ", "u": "उ", "ə": "अ", "ɜ": "अ",
@@ -104,7 +111,7 @@ def word_in_script(word: str, l1: str, world) -> dict | None:
             aksh, status = akshara_for_consonant(l1, node)
             ipa_disp = world.display(node)
         else:                                           # vowel (or unmapped)
-            aksh = vmap.get(_norm_vowel(tok))
+            aksh = vmap.get(tok) or vmap.get(_norm_vowel(tok))
             status = "vowel" if aksh else "other"
             ipa_disp = tok
         sounds.append({"ipa": ipa_disp, "node": node, "akshara": aksh, "status": status})
