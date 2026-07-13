@@ -48,11 +48,19 @@
   .the-word{font-size:30px;font-weight:800;letter-spacing:-.01em}
   .the-ipa{font-family:var(--mono);font-size:26px;color:var(--accent)}
   .hear{background:var(--accent-soft);color:var(--accent);border:1px solid #dcdcfb;border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
-  .phon-row{display:flex;flex-wrap:wrap;gap:8px}
-  .phon{font-family:var(--mono);font-size:18px;padding:9px 13px;border-radius:10px;background:#f4f3ef;border:1px solid var(--line-2);color:var(--ink)}
+  .phon-row{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+  .phon{font-family:var(--mono);font-size:22px;padding:12px 16px;border-radius:12px;background:#f4f3ef;
+    border:1px solid var(--line-2);color:var(--ink);box-shadow:0 1px 2px rgba(20,20,40,.05);
+    opacity:0;transform:translateY(10px) scale(.86);transition:opacity .38s cubic-bezier(.2,1.3,.4,1),transform .38s cubic-bezier(.2,1.3,.4,1),box-shadow .16s,background .16s}
+  .phon.in{opacity:1;transform:none}
   .phon.mapped{background:var(--accent-soft);border-color:#dcdcfb;color:var(--accent);cursor:pointer}
-  .phon.mapped:hover{background:#e2e2fb}
-  .phon small{display:block;font-family:Inter,sans-serif;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .phon.mapped:hover{background:#e6e6fc;transform:translateY(-4px);box-shadow:0 8px 18px rgba(79,70,229,.18)}
+  .phon small{display:block;font-family:Inter,sans-serif;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:3px;font-weight:700}
+  .phon.mapped small{color:var(--accent)}
+  .apart-cue{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:2px 0 10px;opacity:0;transition:opacity .4s}
+  .apart-cue.in{opacity:1}
+  .the-word.crack{animation:crack .5s cubic-bezier(.3,1.4,.5,1)}
+  @keyframes crack{30%{transform:scale(1.08);letter-spacing:.06em}60%{letter-spacing:.14em;opacity:.85}100%{letter-spacing:0}}
   .hint{font-size:13px;color:var(--muted);margin-top:10px}
   .write-in{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
   .write-in input{flex:1;min-width:200px;border:2px solid var(--line);border-radius:11px;padding:13px 15px;font-size:19px;font-family:var(--mono);background:#fcfcfb;color:var(--ink)}
@@ -150,6 +158,7 @@
         <button class="hear say" id="sayBtn">🎤 Say it</button>
       </div>
       <div class="say-fb" id="sayFb" style="display:none;"></div>
+      <div class="apart-cue" id="apartCue"></div>
       <div class="phon-row" id="phonRow"></div>
       <p class="hint">Tap a highlighted sound to build it yourself in the Sound Lab.</p>
       <div class="script-panel" id="scriptPanel" style="display:none;"></div>
@@ -216,9 +225,14 @@
       if(!r.ok) throw new Error(r.status===503?'The sound engine is waking up — try again in a moment.':'Could not read that word.');
       var d = await r.json();
       currentWord = d.word; currentIpa = d.ipa;
-      $('theWord').textContent = d.word;
+      var tw=$('theWord'); tw.textContent = d.word;
+      tw.classList.remove('crack'); void tw.offsetWidth; tw.classList.add('crack');   // re-trigger
       $('theIpa').textContent = '/'+d.ipa+'/';
+      var n=(d.phonemes||[]).length;
+      var cue=$('apartCue'); cue.textContent='↓ '+d.word+' comes apart into '+n+' sound'+(n===1?'':'s');
+      cue.classList.remove('in'); void cue.offsetWidth; cue.classList.add('in');
       var row = $('phonRow'); row.innerHTML='';
+      var chips=[];
       (d.phonemes||[]).forEach(function(p){
         var vlink = p.node_id ? null : vowelLink(p.ipa);
         var tappable = p.node_id || vlink;
@@ -227,8 +241,9 @@
         if(p.node_id) el.href = gc(p.ipa, null, null);      // consonant → guided contrast
         else if(vlink) el.href = vlink;                     // vowel → build / length contrast
         el.innerHTML = esc(p.ipa)+(tappable?'<small>build</small>':'');
-        row.appendChild(el);
+        row.appendChild(el); chips.push(el);
       });
+      chips.forEach(function(el,i){ setTimeout(function(){ el.classList.add('in'); }, 180 + i*90); });  // stagger — the word cracking open
       $('wordOut').style.display='block';
       renderScript();
       $('writeWord').textContent = d.word;
