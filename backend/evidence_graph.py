@@ -32,7 +32,7 @@ except ImportError:  # standalone use
 
 DB_PATH = Path(DATA_DIR) / "cognitive_twin.db"
 
-SOURCES = ("quiz", "mission", "review", "chat", "ocr", "audio", "seed")
+SOURCES = ("quiz", "mission", "review", "chat", "ocr", "audio", "seed", "transcription")
 OUTCOMES = ("correct", "incorrect", "partial")
 
 

@@ -242,6 +242,42 @@ def get_confusion(student_id: str, l1: str = Query(...)) -> dict:
                 "belief": round(b.belief, 3)} for b in beliefs]}
 
 
+class TranscribeIn(BaseModel):
+    student_id: str
+    word: str
+    student_ipa: str
+    l1: str = "en"
+
+
+@router.get("/transcribe")
+def get_transcribe(word: str = Query(..., min_length=1, max_length=40),
+                   l1: str = Query("en")) -> dict:
+    """Free instrument — look up ANY word's dictionary IPA (read the dictionary).
+    No gate, no student needed: type a word, see how it's written in sound."""
+    import transcribe as tr
+    from ear import phone_node_index, _norm
+    ref = tr.ipa_for(word)
+    if ref is None:
+        raise HTTPException(503, "transcription engine unavailable")
+    world = _get_world()
+    idx = phone_node_index(world)
+    toks = tr.tokenize(ref)
+    return {"word": word, "ipa": ref,
+            "phonemes": [{"ipa": t, "node_id": idx.get(_norm(t.replace("ː", "")))}
+                         for t in toks]}
+
+
+@router.post("/transcribe/check")
+def post_transcribe_check(body: TranscribeIn) -> dict:
+    """Free instrument — the child writes the IPA of a word themselves; we give
+    first-principles feedback (which sounds matched, which drifted) and the twin
+    quietly learns from the experiment. Never blocks or grades away their play."""
+    import transcribe as tr
+    world = _get_world()
+    return tr.ingest_transcription(body.student_id, body.word,
+                                   body.student_ipa, world, l1=body.l1)
+
+
 @router.get("/edge-twin/{student_id}")
 def get_edge_twin(student_id: str) -> dict:
     world = _get_world()
