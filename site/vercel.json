@@ -11,6 +11,8 @@
     { "source": "/forgot-password", "destination": "/", "permanent": true },
     { "source": "/reset-password", "destination": "/", "permanent": true },
     { "source": "/dashboard", "destination": "/learn", "permanent": true },
+    { "source": "/simulation", "destination": "/learn", "permanent": true },
+    { "source": "/integrations", "destination": "/learn", "permanent": true },
     { "source": "/feel", "destination": "/learn", "permanent": true },
     { "source": "/tutor", "destination": "/learn", "permanent": true },
     { "source": "/missions", "destination": "/learn", "permanent": true },
