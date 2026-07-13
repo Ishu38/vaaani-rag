@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Phonetics Lab — type any word, hear it, take its sounds apart, and write its phonetic notation yourself. A free instrument for reading any dictionary and transcribing any word." />
+<meta name="theme-color" content="#4f46e5" />
+<title>Phonetics Lab — Vaaani</title>
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#f7f6f3; --panel:#fff; --ink:#17171f; --ink-2:#4b4b57; --muted:#8a8a97;
+    --line:#e6e4de; --line-2:#efeee9; --accent:#4f46e5; --accent-soft:#eef0ff;
+    --good:#0f9d6b; --good-soft:#e6f6ef; --warn:#c98a12; --warn-soft:#fdf3d8; --bad:#d64545; --bad-soft:#fbe9e9;
+    --shadow:0 1px 2px rgba(20,20,40,.04),0 8px 30px rgba(20,20,40,.05); --mono:'JetBrains Mono',monospace; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:var(--mono)}
+  .accent{color:var(--accent)}
+  nav{position:sticky;top:0;z-index:50;background:rgba(247,246,243,.82);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;max-width:900px;margin:0 auto;padding:0 22px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+  .brand svg{width:23px;height:23px;color:var(--accent)}
+  .nav-links a{font-size:14px;color:var(--ink-2);font-weight:500;margin-left:18px}
+  .nav-links a:hover{color:var(--ink)}
+  main{max-width:900px;margin:0 auto;padding:34px 22px 90px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(28px,4.4vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:800;margin:10px 0 8px}
+  h1 .serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400}
+  .sub{font-size:16.5px;color:var(--ink-2);max-width:38em;margin-bottom:26px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);margin-bottom:18px}
+  .card-h{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .lookup{display:flex;gap:10px;flex-wrap:wrap}
+  .lookup input{flex:1;min-width:200px;border:2px solid var(--line);border-radius:11px;padding:13px 15px;font-size:17px;font-family:inherit;background:#fcfcfb;color:var(--ink)}
+  .lookup input:focus{outline:none;border-color:var(--accent)}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;border-radius:11px;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:#4038c9}
+  .btn-ghost{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+  .btn-ghost:hover{border-color:#c9c7bf}
+  .btn:disabled{opacity:.5;cursor:default}
+  .word-out{display:none;margin-top:20px}
+  .word-line{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+  .the-word{font-size:30px;font-weight:800;letter-spacing:-.01em}
+  .the-ipa{font-family:var(--mono);font-size:26px;color:var(--accent)}
+  .hear{background:var(--accent-soft);color:var(--accent);border:1px solid #dcdcfb;border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+  .phon-row{display:flex;flex-wrap:wrap;gap:8px}
+  .phon{font-family:var(--mono);font-size:18px;padding:9px 13px;border-radius:10px;background:#f4f3ef;border:1px solid var(--line-2);color:var(--ink)}
+  .phon.mapped{background:var(--accent-soft);border-color:#dcdcfb;color:var(--accent);cursor:pointer}
+  .phon.mapped:hover{background:#e2e2fb}
+  .phon small{display:block;font-family:Inter,sans-serif;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+  .hint{font-size:13px;color:var(--muted);margin-top:10px}
+  .write-in{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+  .write-in input{flex:1;min-width:200px;border:2px solid var(--line);border-radius:11px;padding:13px 15px;font-size:19px;font-family:var(--mono);background:#fcfcfb;color:var(--ink)}
+  .write-in input:focus{outline:none;border-color:var(--accent)}
+  .feedback{display:none;margin-top:18px}
+  .fb-line{font-size:14.5px;color:var(--ink-2);margin-bottom:12px}
+  .fb-line b{color:var(--ink)}
+  .fb-row{display:flex;flex-wrap:wrap;gap:7px}
+  .fb{font-family:var(--mono);font-size:16px;padding:8px 11px;border-radius:9px;text-align:center;line-height:1.2}
+  .fb.correct{background:var(--good-soft);color:var(--good);border:1px solid #cdeede}
+  .fb.substituted{background:var(--warn-soft);color:var(--warn);border:1px solid #f0e0b8}
+  .fb.missed{background:var(--bad-soft);color:var(--bad);border:1px solid #f3cccc}
+  .fb.inserted{background:#f4f3ef;color:var(--muted);border:1px dashed var(--line);text-decoration:line-through}
+  .fb small{display:block;font-family:Inter,sans-serif;font-size:9px;opacity:.8;margin-top:2px}
+  .note{margin-top:14px;font-size:13.5px;color:var(--ink-2);background:var(--good-soft);border:1px solid #cdeede;border-radius:10px;padding:11px 13px}
+  .foot-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .banner{display:none;background:var(--warn-soft);border:1px solid #f0e0b8;color:var(--warn);border-radius:10px;padding:11px 14px;font-size:13.5px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="/">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/></svg>
+      <span>Vaa<span class="accent">ani</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="/sound-lab">Sound Lab</a>
+      <a href="/ipa">IPA Chart</a>
+      <a href="/learn">Missions</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <p class="eyebrow">Phonetics Lab</p>
+  <h1>Type any word. <span class="serif accent">Take it apart.</span></h1>
+  <p class="sub">Every word is made of sounds you can hear, feel and write. Look up any word to see how it's written in sound — then try writing it yourself. No test, no score to chase: just experiment.</p>
+
+  <div class="banner" id="banner"></div>
+
+  <div class="card">
+    <div class="card-h">Read the dictionary — see any word in sound</div>
+    <div class="lookup">
+      <input id="wordIn" type="text" placeholder="type a word… e.g. dictionary" autocomplete="off" spellcheck="false" />
+      <button class="btn btn-primary" id="lookBtn">Look it up</button>
+    </div>
+
+    <div class="word-out" id="wordOut">
+      <div class="word-line">
+        <span class="the-word" id="theWord"></span>
+        <span class="the-ipa" id="theIpa"></span>
+        <button class="hear" id="hearBtn">🔊 Hear it</button>
+      </div>
+      <div class="phon-row" id="phonRow"></div>
+      <p class="hint">Tap a highlighted sound to build it yourself in the Sound Lab.</p>
+    </div>
+  </div>
+
+  <div class="card" id="writeCard" style="display:none;">
+    <div class="card-h">Write the notation — your turn</div>
+    <p class="hint" style="margin:0 0 10px">Listen, then write the sounds of “<span id="writeWord"></span>” in IPA. Peek at the chart if you like — this is play, not a test.</p>
+    <div class="write-in">
+      <input id="ipaIn" type="text" placeholder="type the sounds… e.g. dɪkʃənəɹi" autocomplete="off" spellcheck="false" />
+      <button class="btn btn-primary" id="checkBtn">See how I did</button>
+    </div>
+    <div class="foot-links">
+      <a class="btn btn-ghost" href="/ipa">Open the IPA chart ↗</a>
+      <a class="btn btn-ghost" href="/sound-lab">Open the Sound Lab ↗</a>
+    </div>
+
+    <div class="feedback" id="feedback">
+      <div class="fb-line" id="fbLine"></div>
+      <div class="fb-row" id="fbRow"></div>
+      <div class="note" id="fbNote" style="display:none;"></div>
+    </div>
+  </div>
+</main>
+
+<script src="/auth.js"></script>
+<script>
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  // learner id + L1 — shared with the rest of the app; the twin quietly learns, never gates.
+  var sid = localStorage.getItem('vaaani_loop_student');
+  if(!sid){ sid = 'guest_'+Math.random().toString(36).slice(2,9)+Date.now().toString(36); localStorage.setItem('vaaani_loop_student', sid); }
+  var l1 = localStorage.getItem('vaaani_l1') || 'en';
+  var currentWord = '', currentIpa = '';
+
+  function banner(msg){ var b=$('banner'); b.textContent=msg; b.style.display= msg?'block':'none'; }
+  function esc(s){ var d=document.createElement('div'); d.textContent=s==null?'':String(s); return d.innerHTML; }
+
+  async function lookup(){
+    var w = ($('wordIn').value||'').trim();
+    if(!w) return;
+    banner(''); $('lookBtn').disabled=true;
+    try{
+      var r = await fetch('/loop/transcribe?word='+encodeURIComponent(w)+'&l1='+encodeURIComponent(l1), {credentials:'same-origin'});
+      if(!r.ok) throw new Error(r.status===503?'The sound engine is waking up — try again in a moment.':'Could not read that word.');
+      var d = await r.json();
+      currentWord = d.word; currentIpa = d.ipa;
+      $('theWord').textContent = d.word;
+      $('theIpa').textContent = '/'+d.ipa+'/';
+      var row = $('phonRow'); row.innerHTML='';
+      (d.phonemes||[]).forEach(function(p){
+        var el = document.createElement(p.node_id? 'a':'span');
+        el.className = 'phon'+(p.node_id?' mapped':'');
+        if(p.node_id){ el.href='/sound-lab'; }
+        el.innerHTML = esc(p.ipa)+(p.node_id?'<small>build</small>':'');
+        row.appendChild(el);
+      });
+      $('wordOut').style.display='block';
+      $('writeWord').textContent = d.word;
+      $('writeCard').style.display='block';
+      $('ipaIn').value=''; $('feedback').style.display='none';
+    }catch(e){ banner(e.message); }
+    finally{ $('lookBtn').disabled=false; }
+  }
+
+  function hear(){
+    if(!currentWord || !('speechSynthesis' in window)) return;
+    var u = new SpeechSynthesisUtterance(currentWord); u.lang='en-GB'; u.rate=.85;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }
+
+  async function check(){
+    var typed = ($('ipaIn').value||'').trim();
+    if(!typed || !currentWord) return;
+    $('checkBtn').disabled=true;
+    try{
+      var r = await fetch('/loop/transcribe/check', {method:'POST', credentials:'same-origin',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({student_id:sid, word:currentWord, student_ipa:typed, l1:l1})});
+      var d = await r.json();
+      var matched = (d.per_phoneme||[]).filter(function(p){return p.outcome==='correct';}).length;
+      var total = (d.per_phoneme||[]).filter(function(p){return p.ref;}).length;
+      $('fbLine').innerHTML = 'You matched <b>'+matched+' of '+total+'</b> sounds. The dictionary writes it <b class="mono">/'+esc(d.reference)+'/</b>.';
+      var row = $('fbRow'); row.innerHTML='';
+      (d.per_phoneme||[]).forEach(function(p){
+        var el=document.createElement('div'); el.className='fb '+p.outcome;
+        if(p.outcome==='correct') el.innerHTML=esc(p.ref);
+        else if(p.outcome==='substituted') el.innerHTML=esc(p.ref)+'<small>you: '+esc(p.got)+'</small>';
+        else if(p.outcome==='missed') el.innerHTML=esc(p.ref)+'<small>missed</small>';
+        else el.innerHTML=esc(p.got)+'<small>extra</small>';
+        row.appendChild(el);
+      });
+      var note=$('fbNote');
+      if(d.diagnosis && d.diagnosis.top_cause==='l1_interference' && d.diagnosis.explanation){
+        note.textContent = d.diagnosis.explanation; note.style.display='block';
+      } else { note.style.display='none'; }
+      $('feedback').style.display='block';
+    }catch(e){ banner('Could not check that — try again.'); }
+    finally{ $('checkBtn').disabled=false; }
+  }
+
+  $('lookBtn').addEventListener('click', lookup);
+  $('wordIn').addEventListener('keydown', function(e){ if(e.key==='Enter') lookup(); });
+  $('hearBtn').addEventListener('click', hear);
+  $('checkBtn').addEventListener('click', check);
+  $('ipaIn').addEventListener('keydown', function(e){ if(e.key==='Enter') check(); });
+})();
+</script>
+</body>
+</html>
