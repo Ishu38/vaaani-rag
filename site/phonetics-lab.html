@@ -68,6 +68,13 @@
   .fb.inserted{background:#f4f3ef;color:var(--muted);border:1px dashed var(--line);text-decoration:line-through}
   .fb small{display:block;font-family:Inter,sans-serif;font-size:9px;opacity:.8;margin-top:2px}
   .note{margin-top:14px;font-size:13.5px;color:var(--ink-2);background:var(--good-soft);border:1px solid #cdeede;border-radius:10px;padding:11px 13px}
+  .why-card{margin-top:14px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:14px 16px;background:#fcfcfb}
+  .why-card .pair{font-family:var(--mono);font-size:20px;font-weight:600;margin-bottom:6px}
+  .why-card .pair .neq{color:var(--muted);margin:0 8px}
+  .why-card .why-h{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:10px 0 3px}
+  .why-card p{font-size:13.5px;color:var(--ink-2);margin:0}
+  .why-card .feel{margin-top:10px;font-size:13px;color:var(--accent);font-weight:600}
+  .why-card .feel a{text-decoration:underline}
   .foot-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
   .banner{display:none;background:var(--warn-soft);border:1px solid #f0e0b8;color:var(--warn);border-radius:10px;padding:11px 14px;font-size:13.5px;margin-bottom:14px}
 </style>
@@ -127,6 +134,7 @@
     <div class="feedback" id="feedback">
       <div class="fb-line" id="fbLine"></div>
       <div class="fb-row" id="fbRow"></div>
+      <div id="whyBox"></div>
       <div class="note" id="fbNote" style="display:none;"></div>
     </div>
   </div>
@@ -199,6 +207,18 @@
         else if(p.outcome==='missed') el.innerHTML=esc(p.ref)+'<small>missed</small>';
         else el.innerHTML=esc(p.got)+'<small>extra</small>';
         row.appendChild(el);
+      });
+      // WHY each swapped sound is meaningful / wrong — first principles
+      var wb=$('whyBox'); wb.innerHTML='';
+      (d.per_phoneme||[]).forEach(function(p){
+        var c=p.contrast; if(!c) return;
+        var html='<div class="why-card">';
+        if(c.minimal_pair){ var v=Object.keys(c.minimal_pair).map(function(k){return c.minimal_pair[k];});
+          html+='<div class="pair">'+esc(v[0])+'<span class="neq">≠</span>'+esc(v[1])+'</div>'; }
+        if(c.why_meaningful){ html+='<div class="why-h">Why '+esc(c.ref_ipa)+' matters</div><p>'+esc(c.why_meaningful)+'</p>'; }
+        if(c.why_wrong){ html+='<div class="why-h">What you changed</div><p>'+esc(c.why_wrong)+'</p>'; }
+        if(c.feel_it){ html+='<div class="feel">Feel it — '+esc(c.feel_it)+'. <a href="/sound-lab">Build it in the Sound Lab →</a></div>'; }
+        html+='</div>'; wb.insertAdjacentHTML('beforeend', html);
       });
       var note=$('fbNote');
       if(d.diagnosis && d.diagnosis.top_cause==='l1_interference' && d.diagnosis.explanation){

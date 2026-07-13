@@ -120,6 +120,7 @@ def ingest_transcription(student_id: str, word: str, student_ipa: str,
         return {"recorded": False, "reason": "transcription reference unavailable"}
 
     import cognitive_twin as twin
+    import contrast as contrast_mod
     from evidence_graph import EvidenceObject
     from ear import phone_node_index, _norm
 
@@ -135,6 +136,13 @@ def ingest_transcription(student_id: str, word: str, student_ipa: str,
         if pnode is None:
             skipped += 1
             continue
+        # WHY this sound is meaningful / why the swap is wrong (first principles)
+        if item["outcome"] == "substituted" and item.get("got"):
+            gnode = idx.get(_norm(item["got"].replace("ː", "")))
+            if gnode:
+                c = contrast_mod.contrast(world, pnode, gnode)
+                if c:
+                    item["contrast"] = c
         correct = item["outcome"] == "correct"
         b = twin.update(EvidenceObject(
             student_id=student_id, node_id=pnode, source="transcription",

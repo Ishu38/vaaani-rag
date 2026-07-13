@@ -305,10 +305,16 @@ def _find_confusion(student_id: str, l1: str, node_id: str,
     for n in cands:
         cb = lc.get(student_id, l1, n)
         if cb:
-            return {"target": cb.target, "attractor": cb.attractor,
-                    "target_ipa": world.display(cb.target),
-                    "attractor_ipa": world.display(cb.attractor),
-                    "belief": round(cb.belief, 3)}
+            sub = {"target": cb.target, "attractor": cb.attractor,
+                   "target_ipa": world.display(cb.target),
+                   "attractor_ipa": world.display(cb.attractor),
+                   "belief": round(cb.belief, 3)}
+            try:                    # WHY it's meaningful / wrong (first principles)
+                import contrast
+                sub["contrast"] = contrast.contrast(world, cb.target, cb.attractor)
+            except Exception:
+                pass
+            return sub
     return None
 
 
