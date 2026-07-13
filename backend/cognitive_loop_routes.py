@@ -254,7 +254,7 @@ def get_transcribe(word: str = Query(..., min_length=1, max_length=40),
                    l1: str = Query("en")) -> dict:
     """Free instrument — look up ANY word's dictionary IPA (read the dictionary).
     No gate, no student needed: type a word, see how it's written in sound."""
-    import transcribe as tr
+    import transcribe as tr, phonogram
     from ear import phone_node_index, _norm
     ref = tr.ipa_for(word)
     if ref is None:
@@ -263,7 +263,8 @@ def get_transcribe(word: str = Query(..., min_length=1, max_length=40),
     idx = phone_node_index(world)
     toks = tr.tokenize(ref)
     return {"word": word, "ipa": ref,
-            "phonemes": [{"ipa": t, "node_id": idx.get(_norm(t.replace("ː", "")))}
+            "phonemes": [{"ipa": t, "node_id": idx.get(_norm(t.replace("ː", ""))),
+                          "spellings": phonogram.spellings_for(t)}
                          for t in toks]}
 
 

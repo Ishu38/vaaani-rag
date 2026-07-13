@@ -101,6 +101,15 @@
   .sp.newsnd .tag{font-size:9px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
   .sp-note{margin-top:12px;font-size:13px;color:var(--ink-2);background:var(--accent-soft);border:1px solid #dcdcfb;border-radius:10px;padding:10px 13px}
   .sp-note a{color:var(--accent);font-weight:600;text-decoration:underline}
+  .spell-panel{display:none;margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+  .spell-panel .sp-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .spell-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .spell-row .snd{font-family:var(--mono);font-size:18px;color:var(--accent);min-width:44px}
+  .spell-ways{display:flex;flex-wrap:wrap;gap:6px}
+  .way{font-size:13px;background:#f4f3ef;border:1px solid var(--line-2);border-radius:8px;padding:4px 9px}
+  .way b{font-family:var(--mono);color:var(--ink)}
+  .way span{color:var(--muted)}
+  .spell-note{margin-top:6px;font-size:13.5px;color:var(--ink-2);background:#fbf7ee;border:1px solid #efe4cf;border-radius:10px;padding:11px 13px}
   .hear.say{background:var(--good-soft);color:var(--good);border-color:#cdeede}
   .hear.say.rec{background:var(--bad-soft);color:var(--bad);border-color:#f3cccc}
   .say-fb{display:none;margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
@@ -162,6 +171,7 @@
       <div class="phon-row" id="phonRow"></div>
       <p class="hint">Tap a highlighted sound to build it yourself in the Sound Lab.</p>
       <div class="script-panel" id="scriptPanel" style="display:none;"></div>
+      <div class="spell-panel" id="spellPanel" style="display:none;"></div>
     </div>
   </div>
 
@@ -244,6 +254,7 @@
         row.appendChild(el); chips.push(el);
       });
       chips.forEach(function(el,i){ setTimeout(function(){ el.classList.add('in'); }, 180 + i*90); });  // stagger — the word cracking open
+      renderSpellings(d);
       $('wordOut').style.display='block';
       renderScript();
       $('writeWord').textContent = d.word;
@@ -251,6 +262,24 @@
       $('ipaIn').value=''; $('feedback').style.display='none';
     }catch(e){ banner(e.message); }
     finally{ $('lookBtn').disabled=false; }
+  }
+
+  // Logic of English — the same sound is spelled many ways (phonograms).
+  function renderSpellings(d){
+    var sp=$('spellPanel');
+    var multi=(d.phonemes||[]).filter(function(p){ return p.spellings && p.spellings.length>1; });
+    if(!multi.length){ sp.style.display='none'; return; }
+    var html='<div class="sp-h">Same sound, many spellings — the logic of English</div>';
+    var seen={};
+    multi.forEach(function(p){
+      if(seen[p.ipa]) return; seen[p.ipa]=1;
+      html+='<div class="spell-row"><span class="snd">/'+esc(p.ipa)+'/</span><div class="spell-ways">';
+      p.spellings.forEach(function(w){ html+='<span class="way"><b>'+esc(w.spelling)+'</b> <span>'+esc(w.example)+'</span></span>'; });
+      html+='</div></div>';
+    });
+    var langName={bn:'Bangla',hi:'Hindi',ta:'Tamil'}[l1];
+    if(langName){ html+='<div class="spell-note">In '+langName+', one letter is always one sound. English writes one sound many ways — but it’s a <b>system</b>, not chaos: each spelling is a phonogram you can learn.</div>'; }
+    sp.innerHTML=html; sp.style.display='block';
   }
 
   function hear(){
