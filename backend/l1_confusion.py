@@ -38,6 +38,7 @@ CONFUSION: dict[str, dict[str, tuple[str, float]]] = {
         "phoneme-th": ("phoneme-t", 0.65),   # /θ/ → /t̪/
         "phoneme-dh": ("phoneme-d", 0.65),   # /ð/ → /d̪/
         "phoneme-s":  ("phoneme-sh", 0.45),  # /s/ → /ʃ/   (Bengali sibilant bias)
+        "phoneme-f":  ("phoneme-p", 0.45),   # /f/ → /pʰ/  (no native /f/)
     },
     "hi": {   # Hindi
         "phoneme-v":  ("phoneme-w", 0.75),   # /v/ ~ /w/ merger (ʋ)

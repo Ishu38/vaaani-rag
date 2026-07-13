@@ -267,6 +267,21 @@ def get_transcribe(word: str = Query(..., min_length=1, max_length=40),
                          for t in toks]}
 
 
+@router.get("/word-in-script")
+def get_word_in_script(word: str = Query(..., min_length=1, max_length=40),
+                       l1: str = Query(...)) -> dict:
+    """L1-script bridge — see any English word in the child's OWN letters
+    (Bangla/Hindi/Tamil), sound by sound, with the sounds their language lacks
+    flagged. The accessible door for a vernacular-medium learner."""
+    import l1_script
+    if not l1_script.supported(l1):
+        raise HTTPException(422, f"script bridge not available for l1={l1!r}")
+    out = l1_script.word_in_script(word, l1, _get_world())
+    if out is None:
+        raise HTTPException(503, "transcription engine unavailable")
+    return out
+
+
 @router.post("/transcribe/check")
 def post_transcribe_check(body: TranscribeIn) -> dict:
     """Free instrument — the child writes the IPA of a word themselves; we give
