@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="description" content="An interactive IPA chart from Vaaani — click any phonetic symbol to hear it, see how it's articulated, and learn which sounds trip up Hindi, Bangla and other Indian English learners." />
-<meta name="theme-color" content="#2563eb" />
+<meta name="theme-color" content="#4f46e5" />
 <title>Interactive IPA Chart — Vaaani</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +16,7 @@
 
 <style>
   :root {
-    --ipa-accent: #2563eb;
+    --ipa-accent: #4f46e5;
     --ipa-accent-soft: rgba(37, 99, 235, 0.10);
     --ipa-tricky: #d4761e;
     --ipa-tricky-soft: rgba(212, 118, 30, 0.12);
@@ -124,7 +124,7 @@
   </a>
   <div class="nav-links">
     <a href="/">Home</a>
-    <a href="/#how">How it works</a>
+    <a href="/#engine">The engine</a>
     <a href="/cognitive">Diagnostics</a>
     <a href="/roots">Word Roots</a>
     <a href="/ipa" class="active">IPA Chart</a>
@@ -154,12 +154,12 @@
 .grade-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0 6px}
 .grade-btn{display:flex;flex-direction:column;align-items:center;gap:2px;border:1.5px solid #e3e3ee;background:#fff;border-radius:14px;padding:9px 14px;cursor:pointer;min-width:118px;transition:.15s}
 .grade-btn:hover{border-color:#9aa3ff}
-.grade-btn.active{border-color:#2563eb;background:#eef2ff;box-shadow:0 2px 10px rgba(37,99,235,.12)}
-.grade-btn.gnum{font-weight:700;font-size:13px;color:#2563eb}
+.grade-btn.active{border-color:#4f46e5;background:#eef2ff;box-shadow:0 2px 10px rgba(37,99,235,.12)}
+.grade-btn.gnum{font-weight:700;font-size:13px;color:#4f46e5}
 .grade-btn.gname{font-weight:600;font-size:13px;color:#1c1c28}
 .grade-btn.gskill{font-size:11px;color:#8a8a9a}
 .gprogress{display:flex;align-items:center;gap:14px;justify-content:center;margin:2px 0 16px;font-size:13px;color:#555}
-.gprogress b{color:#2563eb}
+.gprogress b{color:#4f46e5}
 .gbadge{background:#fff7ed;border:1px solid #fed7aa;color:#b45309;border-radius:999px;padding:3px 11px;font-weight:600;font-size:12px}
 .gstage{max-width:1000px;margin:0 auto}
 .gmission{text-align:center;font-size:14px;color:#6f3a0e;background:var(--ipa-tricky-soft);border-radius:12px;padding:10px 14px;margin:0 auto 18px;max-width:680px}
@@ -176,19 +176,19 @@
 .snd-row.k{width:78px;color:#888;font-weight:600}
 .chipword{display:inline-block;background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:5px 11px;margin:3px;cursor:pointer;font-weight:600}
 .chipword:hover{background:#dbe4ff}
-.btn-mini{border:none;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;background:#2563eb;color:#fff;margin-top:8px}
-.btn-mini.ghost{background:#fff;color:#2563eb;border:1.5px solid #2563eb}
+.btn-mini{border:none;border-radius:10px;padding:9px 16px;font-weight:600;cursor:pointer;background:#4f46e5;color:#fff;margin-top:8px}
+.btn-mini.ghost{background:#fff;color:#4f46e5;border:1.5px solid #4f46e5}
 .duel{text-align:center;border:1.5px solid #e3e3ee;border-radius:18px;padding:24px;max-width:560px;margin:0 auto}
 .duel-words{display:flex;gap:14px;justify-content:center;margin:16px 0}
 .duel-btn{font-size:24px;font-weight:700;border:2px solid #e3e3ee;border-radius:14px;padding:18px 34px;cursor:pointer;background:#fff;transition:.12s}
-.duel-btn:hover{border-color:#2563eb;background:#eef2ff}
+.duel-btn:hover{border-color:#4f46e5;background:#eef2ff}
 .duel-btn.right{border-color:#16a34a;background:#f0fdf4}
 .duel-btn.wrong{border-color:#dc2626;background:#fef2f2}
 .feedback{min-height:24px;font-weight:600;margin-top:8px}
 .ok{color:#16a34a}.no{color:#dc2626}
 .soundchips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
 .soundchip{border:1.5px solid #e3e3ee;border-radius:999px;padding:7px 15px;cursor:pointer;font-weight:600;background:#fff}
-.soundchip.active{border-color:#2563eb;background:#eef2ff;color:#2563eb}
+.soundchip.active{border-color:#4f46e5;background:#eef2ff;color:#4f46e5}
 .hunt-tiles{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:14px 0}
 .htile{font-size:18px;font-weight:600;border:2px solid #e3e3ee;border-radius:12px;padding:12px 18px;cursor:pointer;background:#fff;transition:.12s}
 .htile.hit{border-color:#16a34a;background:#f0fdf4}
@@ -287,7 +287,7 @@
             </svg>
             <!-- Vowels & diphthongs: the IPA vowel quadrilateral, dot = tongue position -->
             <svg id="articQuad" viewBox="0 0 300 200" style="display:none;" role="img" aria-label="Vowel chart showing tongue height and frontness">
-              <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker></defs>
+              <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4f46e5"/></marker></defs>
               <polygon class="quad" points="40,30 260,30 260,170 110,170"/>
               <text class="qlabel" x="30" y="24" text-anchor="start">front</text>
               <text class="qlabel" x="262" y="24" text-anchor="end">back</text>
@@ -316,7 +316,7 @@
 
     <section class="ipa-cta">
       <h2>This chart connects to <em>what you're learning.</em></h2>
-      <p>Every symbol here is a sound your lessons teach you to feel, hear and say first — the chart simply gives it a name once you've earned it. Pick a sound and learn it with the tutor, or build it yourself in the Sound Lab by changing one feature at a time.</p>
+      <p>Every symbol here is a sound your lessons teach you to feel, hear and say first — the chart simply gives it a name once you've earned it. Pick a sound to hear it and see how the mouth shapes it, or build it yourself in the Sound Lab by changing one feature at a time.</p>
       <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
         <a class="btn btn-ghost lg" href="/sound-lab">Open the Sound Lab</a>
       </div>
@@ -334,11 +334,11 @@
         </svg>
         <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
       </div>
-      <p>A discovery-based linguistics tutor for school children.</p>
+      <p>A diagnostic language engine for schools.</p>
     </div>
     <div class="footer-col">
       <h5>Product</h5>
-      <a href="/graph-view">Knowledge map</a>
+      <a href="/learn">Try a mission</a>
       <a href="/ipa">IPA Chart</a>
     </div>
     <div class="footer-col">
@@ -855,7 +855,7 @@ function renderG3(){
 }
 function drawFan(set){ // the per-grade graph: one sound → many spellings
   const svg=$('g3fan'), n=set.ways.length, W=420, H=150; svg.setAttribute('height',H);
-  let s=`<text x="${W/2}" y="20" text-anchor="middle" font-weight="700" fill="#2563eb">${set.lbl} sound</text>`;
+  let s=`<text x="${W/2}" y="20" text-anchor="middle" font-weight="700" fill="#4f46e5">${set.lbl} sound</text>`;
   set.ways.forEach((w,i)=>{ const x=40+i*(W-80)/(n-1||1), y=120;
     s+=`<line x1="${W/2}" y1="30" x2="${x}" y2="${y-22}" stroke="#c7d2fe" stroke-width="2"/>`;
     s+=`<rect x="${x-26}" y="${y-22}" width="52" height="26" rx="7" fill="#eef2ff" stroke="#c7d2fe"/><text x="${x}" y="${y-4}" text-anchor="middle" font-weight="700" font-size="13">${w[0]}</text>`;

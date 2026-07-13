@@ -63,22 +63,22 @@ body.has-cursor button {
 }
 
 :root {
-  /* Brand */
-  --c-bg:            #fafafa;
-  --c-bg-2:          #f4f4f5;
+  /* Brand — glass-box palette (matches landing) */
+  --c-bg:            #f7f6f3;
+  --c-bg-2:          #efeee9;
   --c-surface:       #ffffff;
-  --c-surface-2:     #f4f4f5;
-  --c-border:        #e4e4e7;
-  --c-border-strong: #d4d4d8;
+  --c-surface-2:     #f4f3ef;
+  --c-border:        #e6e4de;
+  --c-border-strong: #d7d5cd;
 
-  --c-text:          #18181b;
-  --c-muted:         #71717a;
-  --c-muted-strong:  #3f3f46;
+  --c-text:          #17171f;
+  --c-muted:         #7c7c88;
+  --c-muted-strong:  #4b4b57;
 
-  --c-accent:        #2563eb;
-  --c-accent-soft:   #3b82f6;
-  --c-accent-deep:   #1e40af;
-  --c-accent-glow:   rgba(37, 99, 235, 0.15);
+  --c-accent:        #4f46e5;
+  --c-accent-soft:   #6d63f0;
+  --c-accent-deep:   #4038c9;
+  --c-accent-glow:   rgba(79, 70, 229, 0.15);
 
   /* Type */
   --font-display: 'Inter', -apple-system, "Segoe UI", system-ui, sans-serif;
