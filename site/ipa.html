@@ -553,7 +553,7 @@ function select(cell, it, type) {
   if (st.note) html += st.note + '<br>';
   if (it.tip) html += (st.note?'<span style="opacity:.85">':'') + it.tip + (st.note?'</span>':'');
   if (st.state !== 'owned') {
-    html += `<br><a class="feelsay" href="/feel">🎤 Feel &amp; say it — check with the mic</a>`;
+    html += `<br><a class="feelsay" href="/phonetics-lab">🎤 Say it — check with the mic</a>`;
   }
   // Connect to the Sound Lab: synthesise + experiment with THIS sound.
   html += `<br><a class="feelsay" href="/sound-lab?s=${encodeURIComponent(it.s)}">🔬 Experiment with this sound in the Sound Lab →</a>`;
