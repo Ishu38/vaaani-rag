@@ -1,6 +1,13 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/graph-view", "destination": "/learn", "permanent": true },
+    { "source": "/feel", "destination": "/learn", "permanent": true },
+    { "source": "/tutor", "destination": "/learn", "permanent": true },
+    { "source": "/missions", "destination": "/learn", "permanent": true },
+    { "source": "/evolution", "destination": "/sound-lab", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/auth", "destination": "https://api.vaaani.in/auth" },
     { "source": "/auth/(.*)", "destination": "https://api.vaaani.in/auth/$1" },

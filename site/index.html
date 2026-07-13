@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="description" content="Vaaani is a discovery-based language tutor for school children, grade by grade. It leads each student to uncover the sounds, word families and meanings of English — bridged from their home language, grown one student at a time, never handed the answer." />
-<meta name="theme-color" content="#2563eb" />
-<title>Vaaani — Language, Taught by Discovery, Grade by Grade</title>
+<meta name="description" content="Vaaani is a diagnostic language engine for schools. It builds a living, inspectable model of every child — bridged from their home language — and chooses each mission with a reason it can show you. Not a chatbot. A glass box." />
+<meta name="theme-color" content="#4f46e5" />
+<title>Vaaani — The language engine that shows its reasoning</title>
 
 <link rel="manifest" href="/manifest.webmanifest" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -16,580 +16,411 @@
 <meta name="mobile-web-app-capable" content="yes" />
 <script>
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
-    });
+    window.addEventListener('load', () => { navigator.serviceWorker.register('/sw.js').catch(() => {}); });
   }
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/style.css?v=20260528-cursor" />
+<style>
+  :root{
+    --bg:#f7f6f3; --panel:#ffffff; --ink:#17171f; --ink-2:#4b4b57; --muted:#8a8a97;
+    --line:#e6e4de; --line-2:#efeee9; --accent:#4f46e5; --accent-soft:#eef0ff;
+    --good:#0f9d6b; --good-soft:#e6f6ef; --warn:#c98a12; --bad:#d64545;
+    --shadow:0 1px 2px rgba(20,20,40,.04), 0 8px 30px rgba(20,20,40,.05);
+    --r:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+  .serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .accent{color:var(--accent)}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted)}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  /* nav */
+  nav{position:sticky;top:0;z-index:50;background:rgba(247,246,243,.82);
+    backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.01em}
+  .brand svg{width:24px;height:24px;color:var(--accent)}
+  .nav-links{display:flex;gap:28px;font-size:14.5px;color:var(--ink-2);font-weight:500}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{display:flex;align-items:center;gap:14px}
+  .signin{font-size:14.5px;font-weight:600;color:var(--ink-2)}
+  .signin:hover{color:var(--ink)}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px;
+    border-radius:10px;padding:10px 18px;cursor:pointer;transition:.16s;border:1px solid transparent;white-space:nowrap}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:#4038c9;transform:translateY(-1px)}
+  .btn-ghost{background:var(--panel);color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{border-color:#c9c7bf}
+  .btn.lg{padding:13px 24px;font-size:15.5px;border-radius:12px}
+  @media(max-width:820px){.nav-links{display:none}}
+
+  /* hero */
+  .hero{padding:74px 0 40px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  @media(max-width:940px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+  .h1{font-size:clamp(38px,5.4vw,60px);line-height:1.04;letter-spacing:-.025em;font-weight:800;margin:18px 0 22px}
+  .h1 .serif{letter-spacing:0}
+  .lead{font-size:18.5px;color:var(--ink-2);max-width:33em}
+  .hero-cta{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+  .trust{margin-top:26px;display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+  .trust b{color:var(--ink-2);font-weight:600}
+
+  /* instrument panel (the glass box) */
+  .glass{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+    box-shadow:var(--shadow);overflow:hidden}
+  .glass-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line-2);
+    font-size:12px;color:var(--muted)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px var(--good-soft)}
+  .glass-body{padding:18px 18px 20px}
+  .mono-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--muted)}
+  .decision{border:1px solid var(--line);border-radius:12px;padding:14px 15px;background:#fcfcfb}
+  .decision .kind{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;
+    letter-spacing:.05em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);
+    padding:3px 9px;border-radius:6px;font-weight:600}
+  .decision h4{font-size:18px;margin:10px 0 4px;letter-spacing:-.01em}
+  .decision .why{font-size:13.5px;color:var(--ink-2)}
+  .decision .pred{margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted)}
+  .decision .pred b{color:var(--good)}
+  .meters{margin-top:16px;display:grid;gap:9px}
+  .meter{display:grid;grid-template-columns:96px 1fr 40px;align-items:center;gap:10px;font-size:12.5px}
+  .meter .nm{color:var(--ink-2)}
+  .bar{height:7px;border-radius:99px;background:var(--line-2);overflow:hidden}
+  .bar span{display:block;height:100%;border-radius:99px;background:var(--accent)}
+  .meter .v{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);text-align:right}
+  .cause-panel{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+  .cause-row{display:grid;grid-template-columns:150px 1fr 40px;align-items:center;gap:10px;font-size:12.5px;margin-top:7px}
+  .cause-row .nm{color:var(--ink-2)}
+  .cause-row .bar span{background:linear-gradient(90deg,#7c6df2,#4f46e5)}
+  .cause-row.top .nm{color:var(--ink);font-weight:600}
+  .cause-note{margin-top:12px;font-size:12.5px;color:var(--ink-2);background:var(--good-soft);
+    border:1px solid #cdeede;border-radius:10px;padding:10px 12px}
+
+  /* sections */
+  section.band{padding:76px 0}
+  .band-alt{background:linear-gradient(180deg,#fff,#faf9f6)}
+  .kicker{text-align:center;max-width:720px;margin:0 auto 46px}
+  .kicker h2{font-size:clamp(26px,3.6vw,38px);letter-spacing:-.02em;line-height:1.12;margin:12px 0 14px;font-weight:800}
+  .kicker p{font-size:17px;color:var(--ink-2)}
+
+  /* contrast */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:920px;margin:0 auto}
+  @media(max-width:760px){.vs{grid-template-columns:1fr}}
+  .vs .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:var(--shadow)}
+  .vs .card.black{background:#1b1b22;color:#e7e7ea;border-color:#26262e}
+  .vs .tag{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .vs .card.black .tag{color:#8a8a97}
+  .vs h3{font-size:20px;margin:10px 0 12px;letter-spacing:-.01em}
+  .vs ul{list-style:none;display:grid;gap:9px;font-size:14.5px}
+  .vs li{padding-left:24px;position:relative;color:var(--ink-2)}
+  .vs .card.black li{color:#b6b6c0}
+  .vs li::before{content:"";position:absolute;left:0;top:9px;width:12px;height:12px;border-radius:3px}
+  .vs .black li::before{background:#3a3a44}
+  .vs .glassc li::before{background:var(--good)}
+
+  /* instruments grid */
+  .grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  @media(max-width:760px){.grid4{grid-template-columns:1fr}}
+  .inst{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+  .inst .ic{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .inst .ic svg{width:20px;height:20px}
+  .inst h3{font-size:18px;margin-bottom:7px;letter-spacing:-.01em}
+  .inst p{font-size:14.5px;color:var(--ink-2)}
+  .inst .demo{margin-top:15px;padding-top:14px;border-top:1px solid var(--line-2)}
+  .chip-row{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 9px;border-radius:7px;
+    background:#f4f3ef;color:var(--ink-2);border:1px solid var(--line-2)}
+  .chip.lit{background:var(--accent-soft);color:var(--accent);border-color:#dcdcfb}
+  .chip.mastered{background:var(--good-soft);color:var(--good);border-color:#cdeede}
+
+  /* bridge */
+  .bridge{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;max-width:960px;margin:0 auto}
+  @media(max-width:820px){.bridge{grid-template-columns:1fr;gap:28px}}
+  .bridge h2{font-size:clamp(25px,3.4vw,34px);letter-spacing:-.02em;line-height:1.14;margin-bottom:14px;font-weight:800}
+  .bridge p{font-size:16px;color:var(--ink-2);margin-bottom:12px}
+  .bridge .quote{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:12px;padding:18px 20px;box-shadow:var(--shadow)}
+  .bridge .quote .q{font-size:15.5px;color:var(--ink);margin-bottom:8px}
+  .bridge .quote .a{font-size:13.5px;color:var(--ink-2)}
+
+  /* pilot steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto}
+  @media(max-width:760px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+  .step .n{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);font-weight:600}
+  .step h3{font-size:17px;margin:8px 0 6px}
+  .step p{font-size:14px;color:var(--ink-2)}
+
+  /* final cta */
+  .final{text-align:center;max-width:680px;margin:0 auto}
+  .final h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;line-height:1.1;margin-bottom:16px;font-weight:800}
+  .final p{font-size:17px;color:var(--ink-2);margin-bottom:26px}
+  .honest{max-width:760px;margin:40px auto 0;font-size:13px;color:var(--muted);text-align:center;line-height:1.7}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:48px 0 34px;margin-top:20px}
+  .foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:28px}
+  @media(max-width:760px){.foot{grid-template-columns:1fr 1fr}}
+  .foot p{font-size:13.5px;color:var(--muted);margin-top:10px;max-width:26em}
+  .foot h5{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:12px;font-family:'JetBrains Mono',monospace}
+  .foot a{display:block;font-size:14px;color:var(--ink-2);margin-bottom:8px}
+  .foot a:hover{color:var(--ink)}
+  .foot-line{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:34px;
+    padding-top:20px;border-top:1px solid var(--line-2);font-size:12.5px;color:var(--muted)}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
 </head>
 <body>
 
-<!-- ============================================================ INTRO CURTAIN -->
-<div class="intro-curtain" aria-hidden="true">
-  <div class="curtain-content">
-    <svg class="curtain-brand" viewBox="0 0 24 24">
-      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/>
-      <circle cx="20" cy="12" r="2"/><circle cx="12" cy="20" r="2"/>
-      <circle cx="12" cy="12" r="1.5"/>
-      <path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
-      <path d="M4 12 L12 12 M12 4 L12 20 M20 12 L12 12" stroke="currentColor" stroke-width="0.5" opacity="0.4" fill="none"/>
-    </svg>
-    <span class="curtain-word">Vaaani</span>
-  </div>
-</div>
-
-<!-- Custom cursor follower (hidden on touch + reduced-motion via CSS) -->
-<div class="cursor-dot" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"></div>
-
-<nav class="nav" id="nav">
-  <a class="brand" href="/">
-    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
-      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
-      <path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
-      <path d="M4 12 L12 12 M12 4 L12 20 M20 12 L12 12" stroke="currentColor" stroke-width="0.5" opacity="0.4" fill="none"/>
-    </svg>
-    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
-  </a>
-  <div class="nav-links">
-    <a href="/learn">Missions</a>
-    <a href="#features">Features</a>
-    <a href="/integrations">Integrations</a>
-    <a href="/cognitive">Diagnostics</a>
-    <a href="/roots">Word Roots</a>
-    <a href="/ipa">IPA Chart</a>
-    <a href="/sound-lab">Sound Lab</a>
-    <a href="/about">About</a>
-  </div>
-  <div class="nav-cta" id="navAuth">
-    <a class="nav-signin" href="/login">Sign in</a>
-    <a class="btn btn-primary" href="/signup">Get started</a>
+<nav>
+  <div class="wrap nav-in">
+    <a class="brand" href="/">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/><path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.5"/></svg>
+      <span>Vaa<span class="accent">ani</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#engine">The engine</a>
+      <a href="#bridge">Home-language bridge</a>
+      <a href="#pilot">Run a pilot</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/about">About</a>
+    </div>
+    <div class="nav-cta" id="navAuth">
+      <a class="signin" href="/login">Sign in</a>
+      <a class="btn btn-primary" href="/contact" data-auth-label-in="Go to missions" data-auth-href-in="/learn">Book a pilot</a>
+    </div>
   </div>
 </nav>
 
-<!-- progress bar (top edge, scroll-linked) -->
-<div class="scroll-progress" aria-hidden="true"><span></span></div>
-
-<!-- ============================================================ HERO -->
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Diagnostic language engine · grade by grade</p>
+      <h1 class="h1">The language engine that <span class="serif accent">shows its reasoning.</span></h1>
+      <p class="lead">Vaaani builds a living, inspectable model of every child — what they know, what they're ready for, what's fading — and chooses each mission from it, <b>with a reason it can show you</b>. Bridged from the child's home language. Not a chatbot. A glass box.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary lg" href="/contact">Book a pilot <span>→</span></a>
+        <a class="btn btn-ghost lg" href="#engine">See a live diagnosis</a>
+      </div>
+      <div class="trust">
+        <span><b>No black box</b> — decisions are explicit, not an LLM</span>
+        <span><b>L2-English</b>, Indian classrooms</span>
+        <span><b>Runs on CPU</b> — private by design</span>
+      </div>
+    </div>
 
-  <!-- Floating product previews — four tilted UI cards orbiting the headline -->
-  <div class="hero-float-card hf-listen" aria-hidden="true">
-    <div class="hf-row">
-      <div class="hf-icon listen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14M15.5 8.5a4 4 0 0 1 0 7"/></svg>
+    <!-- the glass box: a real decision, shown -->
+    <div class="glass reveal">
+      <div class="glass-head"><span class="dot"></span> vaaani · learner #217 · live decision</div>
+      <div class="glass-body">
+        <div class="decision">
+          <span class="kind">edge · connection</span>
+          <h4>Connect “phone” → the /f/ sound</h4>
+          <p class="why">Two things she already knows, not yet linked. Mending this pulls <span class="mono">photo, graph, laugh</span> along with it.</p>
+          <p class="pred">predicted success <b>68%</b> — the band where learning sticks</p>
+        </div>
+        <div class="meters">
+          <div class="mono-label" style="margin-bottom:2px">belief state · cascade</div>
+          <div class="meter"><span class="nm">/f/ sound</span><span class="bar"><span style="width:81%"></span></span><span class="v">0.81</span></div>
+          <div class="meter"><span class="nm">spelling “ph”</span><span class="bar"><span style="width:34%;background:var(--warn)"></span></span><span class="v">0.34</span></div>
+          <div class="meter"><span class="nm">word “phone”</span><span class="bar"><span style="width:52%"></span></span><span class="v">0.52</span></div>
+        </div>
+        <div class="cause-panel">
+          <div class="mono-label">last miss · why? (causal net)</div>
+          <div class="cause-row top"><span class="nm">phoneme–grapheme gap</span><span class="bar"><span style="width:62%"></span></span><span class="v">.62</span></div>
+          <div class="cause-row"><span class="nm">insufficient exposure</span><span class="bar"><span style="width:23%"></span></span><span class="v">.23</span></div>
+          <div class="cause-row"><span class="nm">home-language transfer</span><span class="bar"><span style="width:11%"></span></span><span class="v">.11</span></div>
+          <div class="cause-note">“The link between the sound and how it’s written isn’t solid yet — we’ll practise that exact pair.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLACK BOX vs GLASS BOX -->
+<section class="band band-alt">
+  <div class="wrap">
+    <div class="kicker reveal">
+      <p class="eyebrow">Why schools choose us</p>
+      <h2>You can defend a decision <span class="serif accent">you can see.</span></h2>
+      <p>Most classroom AI is a large language model in a wrapper — helpful, but you cannot say <em>why</em> it taught what it taught. Vaaani was built the other way round.</p>
+    </div>
+    <div class="vs">
+      <div class="card black reveal">
+        <span class="tag">Typical AI tutor</span>
+        <h3>A black box</h3>
+        <ul>
+          <li>An LLM decides what to show — reasoning hidden</li>
+          <li>“Personalised” with no state you can inspect</li>
+          <li>Same answer handed over; thinking optional</li>
+          <li>Nothing to show a parent, board, or auditor</li>
+          <li>Sends the child’s work to a cloud model</li>
+        </ul>
+      </div>
+      <div class="card glassc reveal">
+        <span class="tag">Vaaani</span>
+        <h3>A glass box</h3>
+        <ul>
+          <li>Every mission chosen by explicit probabilistic reasoning</li>
+          <li>A living per-child belief state you can open and read</li>
+          <li>Each decision states its reason and predicted success</li>
+          <li>Keeps score on its own predictions — calibration you can check</li>
+          <li>Runs on CPU; the child’s data stays put</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE ENGINE / INSTRUMENTS -->
+<section class="band" id="engine">
+  <div class="wrap">
+    <div class="kicker reveal">
+      <p class="eyebrow">Inside the glass box</p>
+      <h2>Four instruments, <span class="serif accent">one growing child.</span></h2>
+      <p>No large language model anywhere in the teaching decision. Just measurable state and explicit reasoning — the kind a linguist, not a chatbot, would use.</p>
+    </div>
+    <div class="grid4">
+      <div class="inst reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>The Cognitive Twin</h3>
+        <p>A probabilistic belief in every skill — updated on each answer, fading realistically with time. Missions are drawn from <em>this child’s</em> twin, so no two students walk the same path.</p>
+        <div class="demo"><div class="meters">
+          <div class="meter"><span class="nm">/tri/ family</span><span class="bar"><span style="width:74%"></span></span><span class="v">0.74</span></div>
+          <div class="meter"><span class="nm">/aqua/ root</span><span class="bar"><span style="width:41%;background:var(--warn)"></span></span><span class="v">0.41</span></div>
+        </div></div>
+      </div>
+      <div class="inst reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="7" r="2"/><circle cx="12" cy="18" r="2"/><path d="M6.7 7.2 10.5 16M17.4 8.5 13.4 16.6M7 6.5h10"/></svg></div>
+        <h3>CASCADE — the web, not the word</h3>
+        <p>Knowledge lives in the <em>links</em> between words, not isolated facts. Master one connection and the belief percolates to its neighbours — the way “photo, graph, laugh” arrive together once /f/ clicks.</p>
+        <div class="demo"><div class="chip-row">
+          <span class="chip mastered">phone</span><span class="chip lit">photo</span><span class="chip lit">graph</span><span class="chip">laugh</span><span class="chip">tough</span>
+        </div></div>
+      </div>
+      <div class="inst reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/></svg></div>
+        <h3>The Cause-net</h3>
+        <p>When a child slips, a small causal network reads the belief state and infers <em>why</em> — home-language transfer, a sound–spelling gap, a shaky prerequisite — as a distribution, then names the exact link to repair.</p>
+        <div class="demo"><div class="cause-row top" style="grid-template-columns:150px 1fr 36px"><span class="nm">l1 transfer</span><span class="bar"><span style="width:58%"></span></span><span class="v">.58</span></div>
+        <div class="cause-row" style="grid-template-columns:150px 1fr 36px"><span class="nm">exposure</span><span class="bar"><span style="width:27%"></span></span><span class="v">.27</span></div></div>
+      </div>
+      <div class="inst reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 4-6"/></svg></div>
+        <h3>Calibration — it keeps score</h3>
+        <p>Before each mission the engine predicts your child’s chance of success, then checks itself against what actually happened. A tutor honest enough to audit its own confidence.</p>
+        <div class="demo mono-label">predicted 0.70 → observed 0.68 · well-calibrated</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOME LANGUAGE BRIDGE -->
+<section class="band band-alt" id="bridge">
+  <div class="wrap bridge">
+    <div class="reveal">
+      <p class="eyebrow">The unfair advantage</p>
+      <h2>Bridged from the <span class="serif accent">mother tongue.</span></h2>
+      <p>An Indian child learning English is not a blank slate — they already own an isomorphic web in Hindi, Bangla, Tamil. Vaaani grafts that head start onto the English graph, and reads L1 into <em>why</em> a sound is hard.</p>
+      <p>A Bengali speaker saying “jero” for “zero” isn’t making a mistake — Bengali has no /z/. The engine knows that, and teaches from it.</p>
+    </div>
+    <div class="quote reveal">
+      <div class="q">“Why do Bengali speakers often say <em>jero</em> instead of <em>zero</em>?”</div>
+      <div class="a">Bengali doesn’t have the /z/ sound, so the brain maps it to the nearest one it owns, /dʒ/. That’s your mother tongue’s phonology at work — not an error. Now: which English sounds does <em>your</em> first language lack? Let’s find them.</div>
+    </div>
+  </div>
+</section>
+
+<!-- RUN A PILOT -->
+<section class="band" id="pilot">
+  <div class="wrap">
+    <div class="kicker reveal">
+      <p class="eyebrow">Run a pilot</p>
+      <h2>See it work on <span class="serif accent">your own students.</span></h2>
+      <p>We start small and honest — a single cohort, real children, measured results you can read line by line.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="n">01</div><h3>Pick a cohort</h3><p>One class or centre. Set the home languages. No installation — it runs in the browser, on a phone or a lab machine.</p></div>
+      <div class="step reveal"><div class="n">02</div><h3>Children do missions</h3><p>Each child works through discovery missions. The twin fills in; every decision logs its reason and prediction.</p></div>
+      <div class="step reveal"><div class="n">03</div><h3>Read the evidence</h3><p>You get each child’s belief map, the causes behind their misses, and the engine’s own calibration — not a black-box score.</p></div>
+    </div>
+    <p class="honest reveal">Where we honestly stand: a first N=7 diagnostic pilot is complete; belief and causal parameters are literature-grounded v0, calibrated as real data accumulates. We show what’s measured — and say so when something is still a prior. Built by Neil Shankar Ray — MA Applied Linguistics, AI/ML (IIT Patna).</p>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="band band-alt">
+  <div class="wrap final reveal">
+    <h2>Bring a tutor that can <span class="serif accent">explain itself</span> to your school.</h2>
+    <p>Give one cohort an engine that knows each child — and can prove it. We’ll set up your pilot personally.</p>
+    <div class="hero-cta" style="justify-content:center">
+      <a class="btn btn-primary lg" href="/contact">Book a pilot <span>→</span></a>
+      <a class="btn btn-ghost lg" href="/learn" data-auth-label-in="Go to missions">Try a mission yourself →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="/">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/></svg>
+          <span>Vaa<span class="accent">ani</span></span>
+        </a>
+        <p>A diagnostic language engine for schools — inspectable, home-language-aware, built for Indian classrooms.</p>
       </div>
       <div>
-        <div class="hf-title">Listening</div>
-        <div class="hf-sub">Linguistics · Complete Introduction</div>
+        <h5>Engine</h5>
+        <a href="#engine">The instruments</a>
+        <a href="#bridge">Home-language bridge</a>
+        <a href="/learn">Try a mission</a>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="/about">About</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/contact">Book a pilot</a>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <a href="/privacy">Privacy notice</a>
+        <a href="mailto:iamanushka32@gmail.com">Grievance officer</a>
       </div>
     </div>
-    <div class="hf-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="hf-time">2:14 / 48:30</div>
-  </div>
-
-  <div class="hero-float-card hf-graph">
-    <div class="hf-pill">Knowledge graph</div>
-    <svg class="hf-mini-graph" viewBox="0 0 160 110" aria-hidden="true">
-      <g stroke="#d4d4d8" stroke-width="0.7" fill="none">
-        <line x1="80" y1="55" x2="35" y2="25"/>
-        <line x1="80" y1="55" x2="130" y2="25"/>
-        <line x1="80" y1="55" x2="40" y2="90"/>
-        <line x1="80" y1="55" x2="125" y2="90"/>
-        <line x1="35" y1="25" x2="40" y2="90"/>
-        <line x1="125" y1="90" x2="130" y2="25"/>
-      </g>
-      <g>
-        <circle cx="80" cy="55" r="6" fill="#2563eb"/>
-        <circle cx="35" cy="25" r="4" fill="#3b82f6"/>
-        <circle cx="130" cy="25" r="4" fill="#3b82f6"/>
-        <circle cx="40" cy="90" r="4" fill="#3b82f6"/>
-        <circle cx="125" cy="90" r="4" fill="#3b82f6"/>
-      </g>
-      <text x="80" y="78" text-anchor="middle" font-size="9" fill="#1e40af" font-weight="600" font-family="Inter">Morphology</text>
-    </svg>
-  </div>
-
-  <div class="hero-float-card hf-explain" aria-hidden="true">
-    <div class="hf-explain-head">
-      <span class="hf-explain-pct">82<small>%</small></span>
-      <span class="hf-explain-label">Coverage</span>
+    <div class="foot-line">
+      <span>Designed &amp; built by <strong>Neil Shankar Ray</strong> · MA Applied Linguistics · AI/ML, IIT Patna</span>
+      <span>© 2026–2028 · All rights reserved</span>
     </div>
-    <div class="hf-explain-row">
-      <span class="hf-chip covered">Phoneme</span>
-      <span class="hf-chip covered">Morpheme</span>
-      <span class="hf-chip covered">Syntax</span>
-      <span class="hf-chip missed">Semantics</span>
-      <span class="hf-chip missed">Pragmatics</span>
-    </div>
-  </div>
-
-  <div class="hero-float-card hf-integrations" aria-hidden="true">
-    <div class="hf-int-head">
-      <span>5 channels</span>
-      <span class="hf-int-status">3 live</span>
-    </div>
-    <div class="hf-int-grid">
-      <span class="hf-int-tile tg" title="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 4.5L18.5 19.2c-.24 1.07-.88 1.34-1.78.83l-4.92-3.63-2.37 2.28c-.26.26-.49.49-1.49l.35-5.04 9.18-8.3c.4-.36-.09-.55-.62-.2L6.99 12.7l-4.9-1.53c-1.07-.33-1.09-1.07.22-1.59L20.4 3.3c.89-.33 1.66.2 1.3 1.2z"/></svg></span>
-      <span class="hf-int-tile wa" title="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.07l-1.4 5.12 5.24-1.38A10 10 0 1 0 12 2zm5.5 12.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.78.97-.95 1.17-.18.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.18-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51-.18-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.18-1.42-.07-.13-.27-.2-.57-.35z"/></svg></span>
-      <span class="hf-int-tile ank" title="Anki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/></svg></span>
-      <span class="hf-int-tile yt" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 7.19a2.51 2.51 0 0 0-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42a2.51 2.51 0 0 0-1.77 1.77A26.5 26.5 0 0 0 2 12a26.5 26.5 0 0 0.42 4.81 2.51 2.51 0 0 0 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42a2.51 2.51 0 0 0 1.77-1.77A26.5 26.5 0 0 0 22 12a26.5 26.5 0 0 0-.42-4.81zM10 15V9l5 3z"/></svg></span>
-      <span class="hf-int-tile gd" title="Google Drive"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.65 14.27L4.41 19.9h11.18l3.24-5.63zM12 4.1L8.41 10.3l4.65 8.07 3.59-6.2zM20.59 16.07L17.41 10.5 14.06 4.1H21l3 5.2z"/></svg></span>
-    </div>
-  </div>
-
-  <div class="hero-content">
-    <p class="eyebrow">Language, taught by discovery — grade by grade</p>
-    <h1 class="hero-title">
-      <span class="line"><span>Learn it deeply.</span></span>
-      <span class="line"><span class="serif tonal">Not just retrieve it.</span></span>
-    </h1>
-    <p class="hero-sub">Vaaani builds a living model of each child — what they know, what they're ready for, what's fading — and chooses every mission from it, with a reason it can show you. An adaptive cognitive architecture, not a chatbot: the teaching decisions are made by explicit, inspectable reasoning, bridged from the child's home language, grown one student at a time.</p>
-    <div class="hero-cta">
-      <a class="btn btn-primary lg" href="/signup">Start free <span class="arr">→</span></a>
-      <a class="btn btn-ghost lg" href="/learn">Try today's mission →</a>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ CHAPTER 1 — THE TRAP (pinned, scrubbed) -->
-<section class="chapter chapter-trap" id="ch-trap" data-chapter="1">
-  <div class="chapter-inner">
-    <span class="chapter-num">Chapter 01</span>
-    <div class="trap-lines">
-      <h2 class="trap-line" data-line="0">Most AI tutors say <span class="accent-text">"here's the answer."</span></h2>
-      <h2 class="trap-line" data-line="1">Your brain says <span class="serif">"good — I don't need to think."</span></h2>
-      <h2 class="trap-line" data-line="2">By tomorrow morning, <span class="accent-text">you've forgotten everything.</span></h2>
-      <h2 class="trap-line" data-line="3">So we had to <span class="serif accent-text">fix this.</span></h2>
-    </div>
-    <div class="trap-progress" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ CHAPTER 2 — THE FLIP (Socratic compare, animated) -->
-<section class="chapter chapter-flip" id="ch-flip" data-chapter="2">
-  <div class="container">
-    <div class="chapter-head">
-      <span class="chapter-num">Chapter 02</span>
-      <h2 class="section-title">Teaching is <span class="serif accent-text">asking the right question.</span></h2>
-      <p class="section-sub">Most AI hands you the answer. Vaaani asks you back — anchored in the very text you're trying to understand.</p>
-    </div>
-    <div class="dialog-compare">
-      <div class="dialog dialog-bad" data-side="left">
-        <div class="dialog-head">
-          <span class="dialog-tag">Most AI tutors</span>
-          <span class="dialog-subtag">Answer first. Thinking optional.</span>
-        </div>
-        <div class="bubble user">What is the difference between phonetics and phonology?</div>
-        <div class="bubble assistant">Phonetics studies physical speech sounds. Phonology studies abstract sound systems. The key difference is that phonetics deals with sounds themselves while phonology deals with how sounds pattern in a language.</div>
-      </div>
-      <div class="dialog dialog-good" data-side="right">
-        <div class="dialog-head">
-          <span class="dialog-tag good">Vaaani · Socratic mode</span>
-          <span class="dialog-subtag">Questions, anchored in the text.</span>
-        </div>
-        <div class="bubble user">What is the difference between phonetics and phonology?</div>
-        <div class="bubble assistant">Look at the word "cat." Phonetically, it is [kʰæt] — three sounds, one aspirated. Phonologically, English treats /k/ as one unit regardless of aspiration.<br/><br/>In Hindi, /pʰal/ (phal, fruit) and /pal/ (moment) are different words. But in English, saying [pʰæt] vs [pæt] for "pat" does not change the meaning. What does this tell you about the difference between phonetics and phonology?</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ CHAPTER 3 — THE CONSTELLATION (pinned, builds on scroll) -->
-<section class="chapter chapter-build" id="ch-build" data-chapter="3">
-  <div class="chapter-inner build-grid">
-    <div class="build-text">
-      <span class="chapter-num">Chapter 03</span>
-      <h2 class="section-title">A web of <span class="serif accent-text">words</span> — drawn from your material.</h2>
-      <p class="build-line" data-step="0">Every word the child meets becomes a <strong>node</strong>.</p>
-      <p class="build-line" data-step="1">Whenever two words share a hidden piece or a meaning, a <strong>link</strong> connects them.</p>
-      <p class="build-line" data-step="2">Families of related words cluster into <strong>worlds</strong> — automatically.</p>
-      <p class="build-line" data-step="3">The child does not just <em>memorise</em> words. They <span class="accent-text">decode</span> them.</p>
-    </div>
-    <div class="build-visual" aria-hidden="true">
-      <svg viewBox="0 0 600 600" class="build-svg">
-        <g class="build-lines" stroke="#2563eb" stroke-opacity="0.35" stroke-width="1.5" fill="none">
-          <line x1="300" y1="300" x2="120" y2="140" data-step="1"/>
-          <line x1="300" y1="300" x2="250" y2="100" data-step="1"/>
-          <line x1="300" y1="300" x2="350" y2="80" data-step="1"/>
-          <line x1="300" y1="300" x2="460" y2="120" data-step="1"/>
-          <line x1="300" y1="300" x2="480" y2="240" data-step="1"/>
-          <line x1="300" y1="300" x2="440" y2="420" data-step="1"/>
-          <line x1="300" y1="300" x2="280" y2="460" data-step="1"/>
-          <line x1="300" y1="300" x2="140" y2="400" data-step="1"/>
-        </g>
-        <g class="build-stars">
-          <circle cx="300" cy="300" r="14" fill="#b45309" data-step="0" opacity="0.9"/>
-          <circle cx="300" cy="300" r="22" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="4 3" data-step="0" opacity="0.4"/>
-          <circle cx="120" cy="140" r="7" fill="#2563eb" data-step="0"/>
-          <circle cx="250" cy="100" r="7" fill="#2563eb" data-step="0"/>
-          <circle cx="350" cy="80" r="6" fill="#7c3aed" data-step="0"/>
-          <circle cx="460" cy="120" r="6" fill="#7c3aed" data-step="0"/>
-          <circle cx="480" cy="240" r="6" fill="#059669" data-step="0"/>
-          <circle cx="440" cy="420" r="6" fill="#059669" data-step="0"/>
-          <circle cx="280" cy="460" r="5" fill="#dc2626" data-step="0"/>
-          <circle cx="140" cy="400" r="5" fill="#dc2626" data-step="0"/>
-        </g>
-        <g class="build-clusters" data-step="2">
-          <ellipse cx="185" cy="120" rx="100" ry="55" fill="rgba(37,99,235,0.06)" stroke="rgba(37,99,235,0.2)" stroke-dasharray="3 4"/>
-          <ellipse cx="405" cy="90" rx="80" ry="55" fill="rgba(124,58,237,0.05)" stroke="rgba(124,58,237,0.18)" stroke-dasharray="3 4"/>
-          <ellipse cx="465" cy="330" rx="85" ry="100" fill="rgba(5,150,105,0.05)" stroke="rgba(5,150,105,0.18)" stroke-dasharray="3 4"/>
-          <ellipse cx="210" cy="435" rx="85" ry="60" fill="rgba(220,38,38,0.04)" stroke="rgba(220,38,38,0.15)" stroke-dasharray="3 4"/>
-        </g>
-        <g class="build-labels" fill="#71717a" font-family="Inter, sans-serif" font-size="11" data-step="3">
-          <text x="285" y="315" text-anchor="middle" fill="#b45309" font-weight="700" font-size="13">phon</text>
-          <text x="285" y="340" text-anchor="middle" fill="#b45309" font-size="9">(the piece that means sound)</text>
-          <text x="100" y="130">phone</text>
-          <text x="230" y="90">telephone</text>
-          <text x="330" y="72">headphone</text>
-          <text x="445" y="110">microphone</text>
-          <text x="470" y="230">saxophone</text>
-          <text x="445" y="412">megaphone</text>
-          <text x="260" y="470">homophone</text>
-          <text x="120" y="410">xylophone</text>
-          <text x="195" y="145" fill="#2563eb" font-size="9" font-weight="600">Talking</text>
-          <text x="405" y="115" fill="#7c3aed" font-size="9" font-weight="600">Gadgets</text>
-          <text x="475" y="355" fill="#059669" font-size="9" font-weight="600">Music</text>
-          <text x="220" y="460" fill="#dc2626" font-size="9" font-weight="600">Sound words</text>
-          <text x="300" y="545" text-anchor="middle" fill="#a1a1aa" font-size="10">1 shared piece → 8 words → 4 worlds</text>
-        </g>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ DEVELOPMENTAL GRAPH PROGRESSION -->
-<section class="progression" id="progression">
-  <style>
-.progression{padding:96px 0;background:linear-gradient(180deg,transparent,rgba(37,99,235,0.03),transparent)}
-.prog-track{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:18px;align-items:stretch;margin-top:48px}
-.prog-stage{position:relative;background:var(--card,#fff);border:1px solid rgba(0,0,0,0.08);border-radius:18px;padding:26px 24px;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
-.prog-stage[data-stage="1"]{border-top:3px solid #2563eb}
-.prog-stage[data-stage="2"]{border-top:3px solid #b45309}
-.prog-stage[data-stage="3"]{border-top:3px solid #059669}
-.prog-grade{display:inline-block;align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted,#71717a);background:rgba(0,0,0,0.04);padding:4px 10px;border-radius:999px;margin-bottom:14px}
-.prog-stage h3{font-size:20px;margin:0 0 6px}
-.prog-lead{font-style:italic;color:var(--muted,#52525b);margin:0 0 10px;font-size:15px}
-.prog-stage p{font-size:14.5px;line-height:1.6;margin:0 0 14px}
-.prog-mini{margin-top:auto;width:100%;height:96px}
-.prog-arrow{display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--muted,#a1a1aa);font-weight:300}
-.prog-foot{max-width:760px;margin:40px auto 0;text-align:center;font-size:15.5px;line-height:1.7;color:var(--muted,#52525b);background:rgba(5,150,105,0.05);border:1px solid rgba(5,150,105,0.15);border-radius:14px;padding:20px 26px}
-    @media(max-width:880px){.prog-track{grid-template-columns:1fr;gap:10px}.prog-arrow{transform:rotate(90deg);padding:4px 0}}
-  </style>
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow reveal">One graph · three stages · every grade</p>
-      <h2 class="section-title reveal">The graph <span class="serif accent-text">grows with the child.</span></h2>
-      <p class="section-sub reveal">Not three separate tools — one living web that unlocks a new layer as the student is ready, and adapts to where each child actually is. The grown-up names (root, phoneme, etymology) stay hidden until the child has discovered the idea for themselves.</p>
-    </div>
-    <div class="prog-track">
-      <article class="prog-stage reveal" data-stage="1">
-        <span class="prog-grade">Grades 1–3 · Sounds</span>
-        <h3>Sound-to-Spelling Graph</h3>
-        <p class="prog-lead">"Which letters make the same sound?"</p>
-        <p>The child links what they <strong>hear</strong> to what they <strong>see</strong>. <em>fan, phone, laugh, off</em> all carry one sound — spelled four ways. Nodes are sounds; links are their spelling disguises.</p>
-        <svg class="prog-mini" viewBox="0 0 220 96" aria-hidden="true">
-          <circle cx="110" cy="48" r="16" fill="#2563eb"/><text x="110" y="52" text-anchor="middle" fill="#fff" font-size="12" font-weight="700" font-family="Inter,sans-serif">f</text>
-          <g stroke="#2563eb" stroke-opacity=".35" stroke-width="1.4">
-            <line x1="110" y1="48" x2="30" y2="22"/><line x1="110" y1="48" x2="40" y2="78"/><line x1="110" y1="48" x2="185" y2="22"/><line x1="110" y1="48" x2="190" y2="76"/></g>
-          <g font-family="Inter,sans-serif" font-size="11" fill="#52525b">
-            <text x="22" y="20">fan</text><text x="20" y="84">phone</text><text x="170" y="20">laugh</text><text x="176" y="86">off</text></g>
-        </svg>
-      </article>
-      <span class="prog-arrow" aria-hidden="true">→</span>
-      <article class="prog-stage reveal" data-stage="2">
-        <span class="prog-grade">Grades 2–5 · Words</span>
-        <h3>Word Family Graph</h3>
-        <p class="prog-lead">"What little piece is hiding inside them all?"</p>
-        <p>The child discovers the shared piece that powers a family. <em>triangle, tricycle, tripod</em> — the piece <strong>tri</strong> means three. Nodes are words; links are the piece they share.</p>
-        <svg class="prog-mini" viewBox="0 0 220 96" aria-hidden="true">
-          <circle cx="110" cy="48" r="16" fill="#b45309"/><text x="110" y="52" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="Inter,sans-serif">tri</text>
-          <g stroke="#b45309" stroke-opacity=".35" stroke-width="1.4">
-            <line x1="110" y1="48" x2="34" y2="26"/><line x1="110" y1="48" x2="36" y2="74"/><line x1="110" y1="48" x2="188" y2="34"/></g>
-          <g font-family="Inter,sans-serif" font-size="11" fill="#52525b">
-            <text x="6" y="24">triangle</text><text x="6" y="80">tricycle</text><text x="166" y="36">tripod</text></g>
-        </svg>
-      </article>
-      <span class="prog-arrow" aria-hidden="true">→</span>
-      <article class="prog-stage reveal" data-stage="3">
-        <span class="prog-grade">Grades 4+ · Meaning</span>
-        <h3>Meaning Network</h3>
-        <p class="prog-lead">"How do the families connect?"</p>
-        <p>Families join families. Pieces combine into new words, and the grown-up names finally appear. The whole web of meaning — and only now, the science behind it.</p>
-        <svg class="prog-mini" viewBox="0 0 220 96" aria-hidden="true">
-          <g stroke="#059669" stroke-opacity=".4" stroke-width="1.4">
-            <line x1="60" y1="34" x2="160" y2="34"/><line x1="60" y1="34" x2="110" y2="78"/><line x1="160" y1="34" x2="110" y2="78"/></g>
-          <circle cx="60" cy="34" r="13" fill="#059669"/><circle cx="160" cy="34" r="13" fill="#2563eb"/><circle cx="110" cy="78" r="13" fill="#b45309"/>
-          <g font-family="Inter,sans-serif" font-size="10" fill="#52525b" text-anchor="middle">
-            <text x="60" y="16">aqua</text><text x="160" y="16">port</text><text x="110" y="96">tele</text></g>
-        </svg>
-      </article>
-    </div>
-    <p class="prog-foot reveal"><strong>Student-specific, not class-average:</strong> Vaaani remembers each child — which pieces they’ve uncovered, where they paused, which home language (Hindi, Bangla…) they bridge from — and grows that child’s graph at their own pace.</p>
-  </div>
-</section>
-
-<!-- ============================================================ CHAPTER 4 — FOUR SUBJECTS (horizontal pinned) -->
-<section class="chapter chapter-subjects" id="ch-subjects" data-chapter="4">
-  <div class="subjects-pin">
-    <div class="subjects-head">
-      <span class="chapter-num">Chapter 04</span>
-      <h2 class="section-title">Four strands. <span class="serif accent-text">One growing child.</span></h2>
-      <p class="section-sub">The same discovery engine, tuned to each grade band — sounds first, then word families, then meaning and sentences. Scroll → to walk through them.</p>
-    </div>
-    <div class="subjects-track">
-      <article class="subject-panel" data-subject="phonetics">
-        <div class="subject-frame">
-          <span class="subject-tag">Sounds · Grades 1–3</span>
-          <h3>Why can your tongue say some sounds and not others?</h3>
-          <div class="mini-dialog">
-            <div class="bubble user">Why do Bengali speakers often say "jero" instead of "zero"?</div>
-            <div class="bubble assistant">Bengali does not have the /z/ phoneme — so the brain maps it to the nearest sound you do have, /dʒ/. This is not a mistake. It is your mother tongue's phonology at work. Now — what English sounds does YOUR first language lack? Let us find them.</div>
-          </div>
-        </div>
-      </article>
-      <article class="subject-panel" data-subject="morphology">
-        <div class="subject-frame">
-          <span class="subject-tag">Word Families · Grades 2–5</span>
-          <h3>What little piece is hiding inside the whole family?</h3>
-          <div class="mini-dialog">
-            <div class="bubble user">triangle, tricycle, tripod… what do they share?</div>
-            <div class="bubble assistant">Be a word detective — say them slowly. What tiny piece do you hear at the start of every one? And once you've found it — what do a three-corner shape, a three-wheel cycle and a three-leg stand all have in common? You're about to unlock its secret.</div>
-          </div>
-        </div>
-      </article>
-      <article class="subject-panel" data-subject="syntax">
-        <div class="subject-frame">
-          <span class="subject-tag">Sentences · Grades 5+</span>
-          <h3>Why does this sentence work and that one does not?</h3>
-          <div class="mini-dialog">
-            <div class="bubble user">Why is "She gave him the book" correct but "She explained him the problem" sounds wrong?</div>
-            <div class="bubble assistant">Both verbs involve transfer of meaning. But they behave differently. What do we call the pattern in the first sentence? Now check — does "explain" allow that same pattern in English? What rule is at work here?</div>
-          </div>
-        </div>
-      </article>
-      <article class="subject-panel" data-subject="etymology">
-        <div class="subject-frame">
-          <span class="subject-tag">Meaning Network · Grades 4+</span>
-          <h3>One piece. A whole web of words.</h3>
-          <div class="mini-dialog">
-            <div class="bubble user">Why do "aquarium" and "aquatic" feel related?</div>
-            <div class="bubble assistant">You've spotted the piece <strong>aqua</strong> — and here's the wonder : your home language has had it all along. In Bangla, water is <em>jol</em>; the idea travels across both. Now that you own <em>aqua</em>, what could <em>aqueduct</em> carry? Decode it — don't memorise it. (And yes — grown-ups call this piece a "root." Now you've earned the word.)</div>
-          </div>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ HOW IT WORKS -->
-<section class="how" id="how">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow reveal">How it works</p>
-      <h2 class="section-title reveal">Three steps. No setup.</h2>
-      <p class="section-sub reveal">Vaaani turns whatever you upload into a navigable map of ideas — then teaches across that map.</p>
-    </div>
-    <ol class="steps">
-      <li class="step reveal">
-        <span class="step-num">01</span>
-        <h3>Upload your material</h3>
-        <p>PDFs, notes, essays, problem sets, DOCX, plain text. Vaaani chunks each document, embeds it, and indexes everything locally.</p>
-      </li>
-      <li class="step reveal">
-        <span class="step-num">02</span>
-        <h3>A word web forms</h3>
-        <p>Every word becomes a node. Every time two words connect through etymology or meaning becomes a link. Roots, derivatives, and linguistic domains cluster automatically.</p>
-      </li>
-      <li class="step reveal">
-        <span class="step-num">03</span>
-        <h3>Ask. Or be asked.</h3>
-        <p>Whatever you upload, Vaaani answers as a linguist — breaking key words into roots, prefixes and suffixes, tracing their families and meaning. Or flip Socratic mode on and it teaches by asking, never spoiling the punchline.</p>
-      </li>
-    </ol>
-  </div>
-</section>
-
-<!-- ============================================================ SUBJECTS -->
-<section class="subjects" id="subjects">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow reveal">Grade-aware pedagogy</p>
-      <h2 class="section-title reveal">A tutor that knows <span class="serif accent-text">where the child is.</span></h2>
-      <p class="section-sub reveal">One discovery engine, four strands — pitched to the grade in front of it. A Grade 2 child meets sounds and word families; the science and the grown-up names wait until they're ready.</p>
-    </div>
-    <div class="subject-grid">
-      <article class="subject-card reveal">
-        <div class="subject-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor"/><ellipse cx="12" cy="12" rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1"/><ellipse cx="12" cy="12" rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="11" ry="4" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(120 12 12)"/></svg>
-        </div>
-        <h3>Phonetics</h3>
-        <p>Asks how sounds are produced, what the place and manner of articulation are, and why a sound behaves differently across languages. Will not tell you the IPA symbol until you describe the articulators involved.</p>
-      </article>
-      <article class="subject-card reveal">
-        <div class="subject-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M3 19 L9 13 L13 17 L21 5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 5 L21 5 L21 12" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
-        </div>
-        <h3>Word Families</h3>
-        <p>Leads the child to spot the little piece hiding inside a family of words, then work out what it means — by discovery, never by being told. The grown-up names (root, prefix, suffix) are revealed only once the child has earned them.</p>
-      </article>
-      <article class="subject-card reveal">
-        <div class="subject-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M4 4 L4 20 L20 20 L20 8 L16 4 Z" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M16 4 L16 8 L20 8" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 12 L16 12 M8 15 L14 15" stroke="currentColor" stroke-width="1"/></svg>
-        </div>
-        <h3>Syntax &amp; Grammar</h3>
-        <p>Points to sentence structure and grammatical rules. Asks why one construction works and another does not. Always anchors explanation in syntactic theory — not just "it sounds wrong."</p>
-      </article>
-      <article class="subject-card reveal">
-        <div class="subject-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="15" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M10.5 11 L13.5 13" stroke="currentColor" stroke-width="1"/></svg>
-        </div>
-        <h3>Meaning Network</h3>
-        <p>Connects word families into a web of meaning and bridges each piece to the child's home language (Hindi, Bangla, and more). Older students unlock the science — how one ancient piece seeded words across languages they already speak.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ FEATURE GRID -->
-<section class="features">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow reveal">What's inside</p>
-      <h2 class="section-title reveal">Engineered, not assembled.</h2>
-    </div>
-    <div class="feature-grid">
-      <div class="feature reveal">
-        <h4><a href="/learn" style="color:inherit;text-decoration:none;">The Cognitive Twin →</a></h4>
-        <p>Vaaani keeps a living probabilistic model of every learner — belief in each skill, updated on every answer, fading realistically with time. Missions are chosen from <em>your</em> twin, so no two students walk the same path. <a href="/learn" style="color:var(--accent);">Get your mission</a></p>
-      </div>
-      <div class="feature reveal">
-        <h4>Every mission has a reason</h4>
-        <p>The engine states, in plain language, why it chose each activity — and the success probability it predicted. Then it checks its own predictions against reality. A tutor that keeps score on itself.</p>
-      </div>
-      <div class="feature reveal">
-        <h4>Decisions without a black box</h4>
-        <p>What to teach next is decided by explicit probabilistic reasoning over the language graph — not by a large language model. Deterministic, auditable, instant, and private by construction.</p>
-      </div>
-      <div class="feature reveal">
-        <h4>Local-first by design</h4>
-        <p>Everything runs on your machine. Embeddings, the vector index, the graph — local. Only the language model call leaves the box.</p>
-      </div>
-      <div class="feature reveal">
-        <h4>TurboVec compression</h4>
-        <p>4-bit quantised vectors. A million-chunk corpus fits in roughly 4 GB of RAM, with faster search than uncompressed indexes.</p>
-      </div>
-      <div class="feature reveal">
-        <h4>Graph reasoning</h4>
-        <p>Every chunk contributes entities and relations. Global queries map-reduce across community summaries — not against a single prompt window.</p>
-      </div>
-      <div class="feature reveal">
-        <h4>Citation discipline</h4>
-        <p>In non-Socratic mode every sentence is checked against retrieved context. Ungrounded claims are detected before they reach you.</p>
-      </div>
-      <div class="feature reveal">
-        <h4>Rolling memory</h4>
-        <p>Persistent facts and recent queries inject themselves into prompts when relevant — without bloating context for unrelated questions.</p>
-      </div>
-      <div class="feature reveal">
-        <h4>Honest by default</h4>
-        <p>If your corpus doesn't contain the answer, Vaaani says so. It will not invent material to look helpful.</p>
-      </div>
-      <div class="feature reveal">
-        <h4><a href="/cognitive" style="color:inherit;text-decoration:none;">Cognitive X-Ray →</a></h4>
-        <p>Every wrong answer is classified — spelling, careless slip, partial-recall, conceptual gap — so the student sees the <em>shape</em> of their mistakes, not just a score. <a href="/cognitive" style="color:var(--accent);">Open the X-Ray</a></p>
-      </div>
-      <div class="feature reveal">
-        <h4><a href="/simulation" style="color:inherit;text-decoration:none;">Exam-Pressure Simulator →</a></h4>
-        <p>Timed mock papers with confidence-rating after every answer. Vaaani grades against your corpus, surfaces where your nerves cost marks. <a href="/simulation" style="color:var(--accent);">Start a session</a></p>
-      </div>
-      <div class="feature reveal">
-        <h4><a href="/roots" style="color:inherit;text-decoration:none;">Word Families →</a></h4>
-        <p>Discover the little <em>piece</em> hiding inside a family of words, work out what it means, then decode words you've never met instead of cramming them. Colour-coded so you see how each word is built. Free for everyone. <a href="/roots" style="color:var(--accent);">Grow a word family</a></p>
-      </div>
-      <div class="feature reveal">
-        <h4><a href="/ipa" style="color:inherit;text-decoration:none;">Interactive IPA Chart →</a></h4>
-        <p>Tap any phonetic symbol to hear it, see how the mouth makes it, and learn which sounds Indian-English speakers most often swap. Free for everyone — no sign-in. <a href="/ipa" style="color:var(--accent);">Explore the sounds</a></p>
-      </div>
-      <div class="feature reveal">
-        <h4><a href="/evolution" style="color:inherit;text-decoration:none;">Sound Lab →</a></h4>
-        <p>Active practice for the sound system: change one feature of a sound — voice, place, manner — and hear it become another, exactly as the Grade-2 lessons teach. Each connection you make fills in the IPA chart you're learning. <a href="/evolution" style="color:var(--accent);">Open the Sound Lab</a></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ CTA -->
-<section class="final-cta">
-  <div class="container center">
-    <h2 class="section-title big reveal">Stop retrieving.<br/><span class="serif accent-text">Start understanding.</span></h2>
-    <p class="section-sub reveal">Start your language discovery journey — pick a mission and begin.</p>
-    <div class="hero-cta reveal" style="justify-content: center;">
-      <a class="btn btn-primary lg" href="/learn" data-auth-label-in="Start a mission ">Explore missions <span class="arr">→</span></a>
-      <a class="btn btn-ghost lg" href="/signup" data-auth="out">Create a free account <span class="arr">→</span></a>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================ FOOTER -->
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div class="footer-brand">
-      <div class="brand">
-        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
-          <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
-          <path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
-        </svg>
-        <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
-      </div>
-      <p>A discovery-based linguistics tutor for school children.</p>
-    </div>
-    <div class="footer-col">
-      <h5>Product</h5>
-      <a href="/graph-view">Knowledge map</a>
-      <a href="/ipa">IPA Chart</a>
-    </div>
-    <div class="footer-col">
-      <h5>Legal</h5>
-      <a href="/privacy">Privacy notice</a>
-      <a href="mailto:iamanushka32@gmail.com">Grievance officer</a>
-    </div>
-    <div class="footer-col">
-      <h5>Learn</h5>
-      <a href="#how">How it works</a>
-      <a href="#subjects">Subjects</a>
-      <a href="#socratic">Socratic mode</a>
-    </div>
-    <div class="footer-col">
-      <h5>Company</h5>
-      <a href="/about">About</a>
-      <a href="/contact">Contact</a>
-      <a href="https://vaaani.in" target="_blank" rel="noopener">vaaani.in</a>
-    </div>
-  </div>
-  <div class="container footer-line">
-    <span>Designed and Developed by <strong>Neil Shankar Ray</strong>, IIT Patna</span>
-    <span>© 2026 – 2028 · All rights reserved</span>
   </div>
 </footer>
 
 <script src="/auth.js?v=20260526a"></script>
-<script src="/main.js?v=20260524b"></script>
+<script>
+  // lightweight scroll reveal (no external libs)
+  (function(){
+    var els=[].slice.call(document.querySelectorAll('.reveal'));
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}})},{rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(e){io.observe(e)});
+  })();
+</script>
 </body>
 </html>
