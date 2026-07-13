@@ -3,6 +3,7 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/graph-view", "destination": "/learn", "permanent": true },
+    { "source": "/cognitive", "destination": "/learn", "permanent": true },
     { "source": "/feel", "destination": "/learn", "permanent": true },
     { "source": "/tutor", "destination": "/learn", "permanent": true },
     { "source": "/missions", "destination": "/learn", "permanent": true },
