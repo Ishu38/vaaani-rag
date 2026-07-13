@@ -359,6 +359,52 @@ updateReadout(500,1500);
     jumpTo(v);   // attempts to sound immediately if audio is already unlocked
   }
 })();
+
+// ── Guided Contrast ── land here from a "new" sound; pre-load the habit,
+// highlight the ONE thing to change, confirm when they land the target.
+// /sound-lab?to=<ipa>&from=<ipa>&ak=<akshara>&l1=<code>. First-principles, no text needed to act.
+(function guidedContrast(){
+  const q=new URLSearchParams(location.search);
+  const toIpa=q.get('to'); if(!toIpa) return;
+  const fromIpa=q.get('from'), ak=q.get('ak');
+  const FRIC={'s':{c:'s',v:false},'z':{c:'s',v:true},'ʃ':{c:'sh',v:false},'ʒ':{c:'sh',v:true},
+              'f':{c:'f',v:false},'v':{c:'f',v:true},'θ':{c:'th',v:false},'ð':{c:'th',v:true}};
+  const to=FRIC[toIpa], from=FRIC[fromIpa];
+  const main=document.querySelector('main');
+  const consRow=document.getElementById('consRow'), consVoiced=document.getElementById('consVoiced');
+  const st=document.createElement('style');
+  st.textContent='.gc-banner{background:linear-gradient(90deg,#20214a,#4f46e5);color:#fff;border-radius:14px;padding:16px 18px;margin-bottom:18px}.gc-banner b{font-size:19px}.gc-banner .step{margin-top:8px;font-size:14.5px;opacity:.96;line-height:1.5}.gc-ok{background:linear-gradient(90deg,#0f7a52,#0f9d6b)!important}.gc-target{outline:3px solid #4f46e5!important;outline-offset:2px;border-radius:8px;animation:gcp 1.1s infinite}@keyframes gcp{50%{outline-color:#a5b4fc}}';
+  document.head.appendChild(st);
+  const banner=document.createElement('div'); banner.className='gc-banner'; main.insertBefore(banner, main.firstChild);
+  const labelFor=c=>({s:'s / z',sh:'ʃ (sh)',f:'f / v',th:'θ (th)'}[c]||c);
+  const btnFor=c=>consRow.querySelector('button[data-c="'+c+'"]');
+  const akTag = ak ? ' <span style="opacity:.8">('+ak+')</span>' : '';
+
+  if(!to){ banner.innerHTML='<b>Make /'+toIpa+'/</b>'+akTag+'<div class="step">This sound is built a special way — press play below and copy what you hear.</div>'; return; }
+
+  let lastC=null;
+  if(from){ consVoiced.checked=from.v; lastC=from.c; }
+  let instr;
+  if(from && from.c===to.c && from.v!==to.v){
+    instr='You say /'+fromIpa+'/. Tap it below, then flip <b>“add voice”</b> — it turns into /'+toIpa+'/. Feel your throat buzz.';
+    consVoiced.closest('label').classList.add('gc-target');
+  } else {
+    instr='Tap <b>'+labelFor(to.c)+'</b>'+(to.v?' and switch on <b>“add voice”</b>':'')+' — that makes /'+toIpa+'/.';
+    const tb=btnFor(to.c); if(tb) tb.classList.add('gc-target');
+    if(to.v) consVoiced.closest('label').classList.add('gc-target');
+  }
+  banner.innerHTML='<b>A new sound: /'+toIpa+'/</b>'+akTag+'<div class="step">'+instr+'</div>';
+
+  function check(){
+    if(lastC===to.c && consVoiced.checked===to.v){
+      banner.classList.add('gc-ok');
+      banner.innerHTML='<b>✓ You made /'+toIpa+'/!</b>'+akTag+'<div class="step">Feel where your mouth is — that is the new sound. Say it out loud a few times so it sticks.</div>';
+      document.querySelectorAll('.gc-target').forEach(x=>x.classList.remove('gc-target'));
+    }
+  }
+  consRow.addEventListener('click', e=>{ const b=e.target.closest('button'); if(b){ lastC=b.dataset.c; check(); } });
+  consVoiced.addEventListener('change', check);
+})();
 </script>
 </body>
 </html>

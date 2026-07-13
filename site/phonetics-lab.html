@@ -190,6 +190,13 @@
 
   function banner(msg){ var b=$('banner'); b.textContent=msg; b.style.display= msg?'block':'none'; }
   function esc(s){ var d=document.createElement('div'); d.textContent=s==null?'':String(s); return d.innerHTML; }
+  // deep-link into Sound Lab Guided Contrast for a target sound (+ optional habit + akshara)
+  function gc(toIpa, fromIpa, ak){
+    var u='/sound-lab?to='+encodeURIComponent(toIpa)+'&l1='+encodeURIComponent(l1);
+    if(fromIpa) u+='&from='+encodeURIComponent(fromIpa);
+    if(ak) u+='&ak='+encodeURIComponent(ak);
+    return u;
+  }
 
   async function lookup(){
     var w = ($('wordIn').value||'').trim();
@@ -238,11 +245,12 @@
       (d.sounds||[]).forEach(function(s){
         var isNew=(s.status==='new'||s.status==='voicing-new');
         var inner='<span class="ak">'+esc(s.akshara||'·')+'</span><span class="ip">'+esc(s.ipa)+'</span>'+(isNew?'<span class="tag">new</span>':'');
-        html+= isNew ? '<a class="sp newsnd" href="/sound-lab">'+inner+'</a>' : '<span class="sp">'+inner+'</span>';
+        html+= isNew ? '<a class="sp newsnd" href="'+gc(s.ipa,null,s.akshara)+'">'+inner+'</a>' : '<span class="sp">'+inner+'</span>';
       });
       html+='</div>';
       if((d.new_sounds||[]).length){
-        html+='<div class="sp-note">The highlighted sounds are <b>new</b> — your language doesn’t have them. Tap one to build it in the <a href="/sound-lab">Sound Lab →</a> and feel how to make it.</div>';
+        var n0=d.new_sounds[0];
+        html+='<div class="sp-note">The highlighted sounds are <b>new</b> — your language doesn’t have them. Tap one to build it in the <a href="'+gc(n0.ipa,null,n0.akshara)+'">Sound Lab →</a> and feel how to make it.</div>';
       }
       sp.innerHTML=html; sp.style.display='block';
     }catch(e){ sp.style.display='none'; }
@@ -296,12 +304,13 @@
         if(!s.node) return;
         var ok=s.outcome==='correct';
         var inner='<span class="ak2">'+esc(s.akshara||s.ipa)+'</span><span class="ip2">'+esc(s.ipa)+(ok?' ✓':'')+'</span>';
-        html+= ok ? '<span class="sf correct">'+inner+'</span>' : '<a class="sf off" href="/sound-lab">'+inner+'</a>';
+        var toH=(s.contrast?gc(s.contrast.ref_ipa,s.contrast.got_ipa,s.akshara):gc(s.ipa,null,s.akshara));
+        html+= ok ? '<span class="sf correct">'+inner+'</span>' : '<a class="sf off" href="'+toH+'">'+inner+'</a>';
       });
       html+='</div>';
       var withC=(d.per_sound||[]).filter(function(s){ return s.contrast; });
       if(withC.length){ var c=withC[0].contrast;
-        html+='<div class="sp-note">'+(c.why_meaningful?esc(c.why_meaningful)+' ':'')+(c.feel_it?'To make it, '+esc(c.feel_it)+'. ':'')+'<a href="/sound-lab">Build it in the Sound Lab →</a></div>';
+        html+='<div class="sp-note">'+(c.why_meaningful?esc(c.why_meaningful)+' ':'')+(c.feel_it?'To make it, '+esc(c.feel_it)+'. ':'')+'<a href="'+gc(c.ref_ipa,c.got_ipa)+'">Build it in the Sound Lab →</a></div>';
       }
       sf.innerHTML=html;
     }catch(e){ sf.innerHTML='<div class="sf-h">Couldn’t check that — try again.</div>'; }
@@ -337,7 +346,7 @@
           html+='<div class="pair">'+esc(v[0])+'<span class="neq">≠</span>'+esc(v[1])+'</div>'; }
         if(c.why_meaningful){ html+='<div class="why-h">Why '+esc(c.ref_ipa)+' matters</div><p>'+esc(c.why_meaningful)+'</p>'; }
         if(c.why_wrong){ html+='<div class="why-h">What you changed</div><p>'+esc(c.why_wrong)+'</p>'; }
-        if(c.feel_it){ html+='<div class="feel">Feel it — '+esc(c.feel_it)+'. <a href="/sound-lab">Build it in the Sound Lab →</a></div>'; }
+        if(c.feel_it){ html+='<div class="feel">Feel it — '+esc(c.feel_it)+'. <a href="'+gc(c.ref_ipa,c.got_ipa)+'">Build it in the Sound Lab →</a></div>'; }
         html+='</div>'; wb.insertAdjacentHTML('beforeend', html);
       });
       var note=$('fbNote');
