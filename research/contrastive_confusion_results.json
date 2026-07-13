@@ -1,0 +1,20 @@
+{
+  "bn": {
+    "l1": "bn",
+    "n_confused_phonemes": 5,
+    "n_shared_phonemes": 9,
+    "mean_l1_posterior_confused": 0.4496,
+    "mean_l1_posterior_shared": 0.0448,
+    "separation": 0.4047,
+    "auc_confused_vs_shared": 1.0
+  },
+  "hi": {
+    "l1": "hi",
+    "n_confused_phonemes": 6,
+    "n_shared_phonemes": 10,
+    "mean_l1_posterior_confused": 0.4496,
+    "mean_l1_posterior_shared": 0.0448,
+    "separation": 0.4047,
+    "auc_confused_vs_shared": 1.0
+  }
+}

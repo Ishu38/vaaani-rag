@@ -113,6 +113,7 @@ class CauseDiagnosis:
     observations: dict[str, bool]
     explanation: str                        # plain language
     l1: str = "en"
+    substitution: dict | None = None        # contrastive L1 confusion, if any
     is_valid: bool = True
     note: str = field(default=(
         "v0 causal net: priors literature-informed, not cohort-fitted; "
@@ -131,6 +132,7 @@ class CauseDiagnosis:
             "explanation": self.explanation,
             "l1": self.l1,
             "l1_name": L1_NAMES.get(self.l1, self.l1),
+            "substitution": self.substitution,
             "note": self.note,
         }
 
@@ -250,11 +252,27 @@ def diagnose(student_id: str, node_id: str, world, outcome: str = "incorrect",
 
     implicated_edge, edge_m = _weakest_incident_edge(student_id, node_id, graph_edges)
     obs = _observe(student_id, node_id, world, l1, implicated_edge, edge_m)
+
+    # Contrastive confusion: a live, quantitative L1 signal. If the node (or the
+    # implicated edge) touches a phoneme this L1 substitutes, read the learner's
+    # substitution belief and let it drive the l1_interference observation.
+    sub = _find_confusion(student_id, l1, node_id, implicated_edge, world)
+    if sub and sub["belief"] >= 0.50:
+        obs["L1"] = True
+
     dist = _posterior(obs, l1)
     top_cause = max(dist, key=dist.get)
 
     # A slip diagnosis shouldn't send them to repair an edge.
     edge_out = "" if top_cause == "careless_slip" else implicated_edge
+
+    explanation = CAUSE_COPY[top_cause]
+    if top_cause == "l1_interference" and sub:
+        explanation = (
+            f"This looks like the {sub['target_ipa']} → {sub['attractor_ipa']} swap "
+            f"that {L1_NAMES.get(l1, l1)} speakers make when English uses a sound your "
+            f"home language doesn't — very common, very fixable. We'll put the two "
+            f"sounds side by side so the difference is easy to hear.")
 
     diag = CauseDiagnosis(
         node_id=node_id,
@@ -265,12 +283,33 @@ def diagnose(student_id: str, node_id: str, world, outcome: str = "incorrect",
         implicated_edge=edge_out,
         implicated_edge_display=_edge_display(edge_out, world),
         observations=obs,
-        explanation=CAUSE_COPY[top_cause],
+        explanation=explanation,
         l1=l1,
+        substitution=sub,
     )
     if persist:
         _persist(student_id, diag)
     return diag
+
+
+def _find_confusion(student_id: str, l1: str, node_id: str,
+                    implicated_edge: str, world) -> dict | None:
+    """The learner's live substitution belief for any confused phoneme touched by
+    this miss (the node itself or an endpoint of the implicated edge)."""
+    if not l1 or l1 == "en":
+        return None
+    import l1_confusion as lc
+    cands = [node_id]
+    if implicated_edge:
+        cands += implicated_edge.split("::")[:2]
+    for n in cands:
+        cb = lc.get(student_id, l1, n)
+        if cb:
+            return {"target": cb.target, "attractor": cb.attractor,
+                    "target_ipa": world.display(cb.target),
+                    "attractor_ipa": world.display(cb.attractor),
+                    "belief": round(cb.belief, 3)}
+    return None
 
 
 def _persist(student_id: str, diag: CauseDiagnosis) -> None:

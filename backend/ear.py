@@ -166,6 +166,16 @@ def ingest_pronunciation(student_id: str, node_id: str, result: dict,
         phone_updates.append({"phone": phone, "node_id": pnode,
                               "outcome": p_outcome,
                               "mastery": round(b.mastery, 4)})
+        # Contrastive L1: a production attempt on a confused phoneme moves the
+        # substitution belief (error raises it; correct/mastery suppresses it).
+        if l1 and l1 != "en":
+            try:
+                import l1_confusion as lc
+                lc.note_production(student_id, l1, pnode,
+                                   correct=(p_outcome == "correct"), confidence=p_conf)
+                lc.suppress_on_mastery(student_id, l1, pnode, b.mastery)
+            except Exception:
+                pass
         # CASCADE: update the word↔phoneme edge beliefs this clip exercised.
         for ek in _word_phone_edges(node_id, pnode, graph_edges):
             eb = twin.update(EvidenceObject(

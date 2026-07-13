@@ -145,8 +145,12 @@ def edge_frontier_candidates(
     if not candidates:
         return []
 
-    # Compute structural importance (betweenness in candidate subgraph)
-    _score_betweenness(candidates, graph_edges)
+    # Structural importance = precomputed GLOBAL edge betweenness (stable bridge
+    # signal; validated by research/curvature_sequencing.py — bridges beat easy
+    # in-cluster edges for reaching percolation). Cheaper than per-call recompute.
+    from betweenness import get_betweenness
+    for c in candidates:
+        c.structural_importance = get_betweenness(c.edge_key)
 
     # Sort: highest structural importance first, then closest to 0.70
     candidates.sort(key=lambda c: (

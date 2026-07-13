@@ -27,9 +27,14 @@ from development_engine import (
 W_GAIN, W_DECAY, W_NOVEL = 1.0, 0.6, 0.2
 REVIEW_BELOW = 0.80
 
-# CASCADE edge-scoring weights
+# CASCADE edge-scoring weights.
+# W_EDGE_STRUCTURE raised 0.4→0.7 (2026-07-13): the curvature-sequencing race
+# (research/curvature_sequencing.py) showed easy-first is the WORST policy for
+# reaching percolation; readiness-gated bridge-first wins (+0.07 AUPC). The
+# readiness gate lives in edge_frontier_candidates, so weighting structure more
+# steers toward learnable bridges without abandoning the ZPD.
 W_EDGE_GAIN = 0.8
-W_EDGE_STRUCTURE = 0.4
+W_EDGE_STRUCTURE = 0.7
 W_EDGE_NOVEL = 0.15
 W_EDGE_DIAG = 0.6         # causal net implicated this edge as the repair target
 

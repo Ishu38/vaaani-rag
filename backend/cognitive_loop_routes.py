@@ -143,6 +143,19 @@ def post_evidence(body: EvidenceIn) -> dict:
             "exposures": belief.exposures,
             "mastered": belief.mastered}
 
+    # Contrastive L1: a phoneme attempt moves the substitution belief BEFORE we
+    # diagnose, so the cause-net reads this attempt's evidence.
+    _l1 = str(body.meta.get("l1", "en"))
+    if _l1 != "en" and body.node_id.startswith("phoneme-"):
+        try:
+            import l1_confusion as lc
+            lc.note_production(body.student_id, _l1, body.node_id,
+                               correct=(body.outcome == "correct"),
+                               confidence=body.confidence)
+            lc.suppress_on_mastery(body.student_id, _l1, body.node_id, belief.mastery)
+        except Exception:
+            pass
+
     # Causal net: on a miss, diagnose WHY from the CASCADE edge beliefs and
     # name the edge to repair. On a correct edge, clear any open diagnosis.
     if body.outcome in ("incorrect", "partial"):
@@ -211,6 +224,22 @@ def get_diagnose(student_id: str, node_id: str = Query(...),
         raise HTTPException(404, f"unknown graph node: {node_id}")
     return cause_net.diagnose(student_id, node_id, world,
                               outcome="incorrect", l1=l1, persist=False).to_dict()
+
+
+@router.get("/confusion/{student_id}")
+def get_confusion(student_id: str, l1: str = Query(...)) -> dict:
+    """Contrastive L1 confusion field: the learner's live substitution beliefs
+    (target phoneme → L1 attractor), strongest first. Suppressed as the contrast
+    is mastered. The quantitative basis of the cause-net's l1_interference."""
+    import l1_confusion as lc
+    world = _get_world()
+    beliefs = lc.snapshot(student_id, l1)
+    return {"l1": l1,
+            "confusions": [{
+                "target": b.target, "attractor": b.attractor,
+                "target_ipa": world.display(b.target),
+                "attractor_ipa": world.display(b.attractor),
+                "belief": round(b.belief, 3)} for b in beliefs]}
 
 
 @router.get("/edge-twin/{student_id}")
