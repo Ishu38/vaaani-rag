@@ -197,6 +197,15 @@
     if(ak) u+='&ak='+encodeURIComponent(ak);
     return u;
   }
+  // English vowel (espeak IPA) -> Sound Lab vowel-pad symbol; + long/short pairs
+  var VMAP={'iː':'i','i':'i','ɪ':'ɪ','e':'e','ɛ':'e','æ':'æ','ə':'ə','ɜ':'ə','ɜː':'ə',
+    'ʌ':'ɑ','ɑ':'ɑ','ɑː':'ɑ','ɒ':'ɔ','ɔ':'ɔ','ɔː':'ɔ','o':'o','oʊ':'o','əʊ':'o','ʊ':'ʊ','u':'u','uː':'u'};
+  var LPAIR={'iː':'ɪ','ɪ':'iː','uː':'ʊ','ʊ':'uː'};   // sheep↔ship, pool↔pull
+  function vowelLink(ipa){
+    var pad=VMAP[ipa]; if(!pad) return null;
+    var lp=LPAIR[ipa], from=lp?VMAP[lp]:null;
+    return '/sound-lab?to='+encodeURIComponent(pad)+(from?'&from='+encodeURIComponent(from):'')+'&kind=vowel&l1='+encodeURIComponent(l1);
+  }
 
   async function lookup(){
     var w = ($('wordIn').value||'').trim();
@@ -211,10 +220,13 @@
       $('theIpa').textContent = '/'+d.ipa+'/';
       var row = $('phonRow'); row.innerHTML='';
       (d.phonemes||[]).forEach(function(p){
-        var el = document.createElement(p.node_id? 'a':'span');
-        el.className = 'phon'+(p.node_id?' mapped':'');
-        if(p.node_id){ el.href='/sound-lab'; }
-        el.innerHTML = esc(p.ipa)+(p.node_id?'<small>build</small>':'');
+        var vlink = p.node_id ? null : vowelLink(p.ipa);
+        var tappable = p.node_id || vlink;
+        var el = document.createElement(tappable ? 'a' : 'span');
+        el.className = 'phon'+(tappable?' mapped':'');
+        if(p.node_id) el.href = gc(p.ipa, null, null);      // consonant → guided contrast
+        else if(vlink) el.href = vlink;                     // vowel → build / length contrast
+        el.innerHTML = esc(p.ipa)+(tappable?'<small>build</small>':'');
         row.appendChild(el);
       });
       $('wordOut').style.display='block';

@@ -380,6 +380,25 @@ updateReadout(500,1500);
   const btnFor=c=>consRow.querySelector('button[data-c="'+c+'"]');
   const akTag = ak ? ' <span style="opacity:.8">('+ak+')</span>' : '';
 
+  // Vowel branch — land on the target vowel; if it has a short/long partner,
+  // teach how and why it differs (tongue position + how long you HOLD it).
+  const vTo=VOWELS.find(x=>x.s===toIpa), vFrom=VOWELS.find(x=>x.s===fromIpa);
+  if(!to && vTo){
+    const p=posOf(vTo.f1,vTo.f2); handle.style.left=p.x+'%'; handle.style.top=p.y+'%';
+    setFormants(vTo.f1,vTo.f2); updateReadout(vTo.f1,vTo.f2);
+    const clean=w=>w.replace(/<[^>]+>/g,'');
+    let msg;
+    if(vFrom){
+      const higher=vTo.f1<vFrom.f1, fronter=vTo.f2>vFrom.f2;
+      msg='Two close vowels: /'+vFrom.s+'/ ('+clean(vFrom.w)+') and /'+vTo.s+'/ ('+clean(vTo.w)+'). For <b>/'+vTo.s+'/</b> your tongue is '+(higher?'higher':'lower')+(fronter?' and more forward':'')+' — and you <b>hold it longer</b>. /'+vFrom.s+'/ is quicker and more relaxed. Press in the box and drag between the two spots — feel your tongue move and the sound stretch.';
+    } else {
+      msg='Build <b>/'+vTo.s+'/</b> ('+clean(vTo.w)+'). Press and hold inside the box — feel where your tongue sits, and hold it to stretch the sound.';
+    }
+    banner.innerHTML='<b>A vowel: /'+toIpa+'/</b>'+akTag+'<div class="step">'+msg+'</div>';
+    jumpTo(vTo);
+    return;
+  }
+
   if(!to){ banner.innerHTML='<b>Make /'+toIpa+'/</b>'+akTag+'<div class="step">This sound is built a special way — press play below and copy what you hear.</div>'; return; }
 
   let lastC=null;
