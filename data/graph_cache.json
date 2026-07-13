@@ -1,0 +1,7943 @@
+{
+  "words": {
+    "triangle": {
+      "display": "triangle",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a shape with three corners",
+      "morphology": {
+        "root": "TRI",
+        "root_key": "tri",
+        "meaning": "three"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod"
+      ],
+      "discovery": {
+        "next": [
+          "triplets",
+          "tripod"
+        ],
+        "prev": [],
+        "ready": "Now that you know triangle, you can discover: triplets, tripod."
+      },
+      "errors": {
+        "fakes": [
+          "trip",
+          "trumpet"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TRI family but they don't: trip, trumpet."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "tricycle": {
+      "display": "tricycle",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a cycle with three wheels",
+      "morphology": {
+        "root": "TRI",
+        "root_key": "tri",
+        "meaning": "three"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod"
+      ],
+      "discovery": {
+        "next": [
+          "triplets",
+          "tripod"
+        ],
+        "prev": [],
+        "ready": "Now that you know tricycle, you can discover: triplets, tripod."
+      },
+      "errors": {
+        "fakes": [
+          "trip",
+          "trumpet"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TRI family but they don't: trip, trumpet."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "trio": {
+      "display": "trio",
+      "type": "word",
+      "grade": 1,
+      "gloss": "three friends together",
+      "morphology": {
+        "root": "TRI",
+        "root_key": "tri",
+        "meaning": "three"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod"
+      ],
+      "discovery": {
+        "next": [
+          "triplets",
+          "tripod"
+        ],
+        "prev": [],
+        "ready": "Now that you know trio, you can discover: triplets, tripod."
+      },
+      "errors": {
+        "fakes": [
+          "trip",
+          "trumpet"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TRI family but they don't: trip, trumpet."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "triplets": {
+      "display": "triplets",
+      "type": "word",
+      "grade": 1,
+      "gloss": "three babies born at once",
+      "morphology": {
+        "root": "TRI",
+        "root_key": "tri",
+        "meaning": "three"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "triangle",
+          "tricycle",
+          "trio"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "trip",
+          "trumpet"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TRI family but they don't: trip, trumpet."
+      },
+      "prerequisites": [
+        "triangle",
+        "tricycle",
+        "trio"
+      ],
+      "prerequisite_display": [
+        "triangle",
+        "tricycle",
+        "trio"
+      ],
+      "prerequisite_chain": "Before you can learn triplets, you should know: triangle → tricycle → trio."
+    },
+    "tripod": {
+      "display": "tripod",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a stand with three legs",
+      "morphology": {
+        "root": "TRI",
+        "root_key": "tri",
+        "meaning": "three",
+        "combo": true,
+        "roots": [
+          "tri",
+          "ped"
+        ],
+        "combo_gloss": "a three-FOOTED stand"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod"
+      ],
+      "discovery": {
+        "next": [
+          "pedicure",
+          "centipede"
+        ],
+        "prev": [
+          "triangle",
+          "tricycle",
+          "trio"
+        ],
+        "ready": "Now that you know tripod, you can discover: pedicure, centipede."
+      },
+      "errors": {
+        "fakes": [
+          "trip",
+          "trumpet"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TRI family but they don't: trip, trumpet."
+      },
+      "prerequisites": [
+        "triangle",
+        "tricycle",
+        "trio"
+      ],
+      "prerequisite_display": [
+        "triangle",
+        "tricycle",
+        "trio"
+      ],
+      "prerequisite_chain": "Before you can learn tripod, you should know: triangle → tricycle → trio."
+    },
+    "unicorn": {
+      "display": "unicorn",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a horse with one horn",
+      "morphology": {
+        "root": "UNI",
+        "root_key": "uni",
+        "meaning": "one"
+      },
+      "phonics": {
+        "phoneme": "j",
+        "phoneme_key": "phoneme-y",
+        "graphemes": [
+          "y"
+        ]
+      },
+      "family": [
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unique",
+        "unite"
+      ],
+      "discovery": {
+        "next": [
+          "unite",
+          "unique"
+        ],
+        "prev": [],
+        "ready": "Now that you know unicorn, you can discover: unite, unique."
+      },
+      "errors": {
+        "fakes": [
+          "until",
+          "uncle"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the UNI family but they don't: until, uncle."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "unicycle": {
+      "display": "unicycle",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a cycle with one wheel",
+      "morphology": {
+        "root": "UNI",
+        "root_key": "uni",
+        "meaning": "one"
+      },
+      "phonics": {
+        "phoneme": "j",
+        "phoneme_key": "phoneme-y",
+        "graphemes": [
+          "y"
+        ]
+      },
+      "family": [
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unique",
+        "unite"
+      ],
+      "discovery": {
+        "next": [
+          "unite",
+          "unique"
+        ],
+        "prev": [],
+        "ready": "Now that you know unicycle, you can discover: unite, unique."
+      },
+      "errors": {
+        "fakes": [
+          "until",
+          "uncle"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the UNI family but they don't: until, uncle."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "uniform": {
+      "display": "uniform",
+      "type": "word",
+      "grade": 1,
+      "gloss": "one same dress for everyone",
+      "morphology": {
+        "root": "UNI",
+        "root_key": "uni",
+        "meaning": "one"
+      },
+      "phonics": {
+        "phoneme": "j",
+        "phoneme_key": "phoneme-y",
+        "graphemes": [
+          "y"
+        ]
+      },
+      "family": [
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unique",
+        "unite"
+      ],
+      "discovery": {
+        "next": [
+          "unite",
+          "unique"
+        ],
+        "prev": [],
+        "ready": "Now that you know uniform, you can discover: unite, unique."
+      },
+      "errors": {
+        "fakes": [
+          "until",
+          "uncle"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the UNI family but they don't: until, uncle."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "unite": {
+      "display": "unite",
+      "type": "word",
+      "grade": 1,
+      "gloss": "to join into one",
+      "morphology": {
+        "root": "UNI",
+        "root_key": "uni",
+        "meaning": "one"
+      },
+      "phonics": {
+        "phoneme": "j",
+        "phoneme_key": "phoneme-y",
+        "graphemes": [
+          "y"
+        ]
+      },
+      "family": [
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unique",
+        "unite"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "unicorn",
+          "unicycle",
+          "uniform"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "until",
+          "uncle"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the UNI family but they don't: until, uncle."
+      },
+      "prerequisites": [
+        "unicorn",
+        "unicycle",
+        "uniform"
+      ],
+      "prerequisite_display": [
+        "unicorn",
+        "unicycle",
+        "uniform"
+      ],
+      "prerequisite_chain": "Before you can learn unite, you should know: unicorn → unicycle → uniform."
+    },
+    "unique": {
+      "display": "unique",
+      "type": "word",
+      "grade": 1,
+      "gloss": "the only one like it",
+      "morphology": {
+        "root": "UNI",
+        "root_key": "uni",
+        "meaning": "one"
+      },
+      "phonics": {
+        "phoneme": "j",
+        "phoneme_key": "phoneme-y",
+        "graphemes": [
+          "y"
+        ]
+      },
+      "family": [
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unique",
+        "unite"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "unicorn",
+          "unicycle",
+          "uniform"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "until",
+          "uncle"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the UNI family but they don't: until, uncle."
+      },
+      "prerequisites": [
+        "unicorn",
+        "unicycle",
+        "uniform"
+      ],
+      "prerequisite_display": [
+        "unicorn",
+        "unicycle",
+        "uniform"
+      ],
+      "prerequisite_chain": "Before you can learn unique, you should know: unicorn → unicycle → uniform."
+    },
+    "bicycle": {
+      "display": "bicycle",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a cycle with two wheels",
+      "morphology": {
+        "root": "BI",
+        "root_key": "bi",
+        "meaning": "two"
+      },
+      "phonics": {
+        "phoneme": "b",
+        "phoneme_key": "phoneme-b",
+        "graphemes": [
+          "b"
+        ]
+      },
+      "family": [
+        "bicycle",
+        "bilingual",
+        "binoculars",
+        "biped",
+        "biweekly"
+      ],
+      "discovery": {
+        "next": [
+          "bilingual",
+          "biweekly"
+        ],
+        "prev": [],
+        "ready": "Now that you know bicycle, you can discover: bilingual, biweekly."
+      },
+      "errors": {
+        "fakes": [
+          "big",
+          "bird"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the BI family but they don't: big, bird."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "binoculars": {
+      "display": "binoculars",
+      "type": "word",
+      "grade": 1,
+      "gloss": "two tubes to see far",
+      "morphology": {
+        "root": "BI",
+        "root_key": "bi",
+        "meaning": "two"
+      },
+      "phonics": {
+        "phoneme": "b",
+        "phoneme_key": "phoneme-b",
+        "graphemes": [
+          "b"
+        ]
+      },
+      "family": [
+        "bicycle",
+        "bilingual",
+        "binoculars",
+        "biped",
+        "biweekly"
+      ],
+      "discovery": {
+        "next": [
+          "bilingual",
+          "biweekly"
+        ],
+        "prev": [],
+        "ready": "Now that you know binoculars, you can discover: bilingual, biweekly."
+      },
+      "errors": {
+        "fakes": [
+          "big",
+          "bird"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the BI family but they don't: big, bird."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "biped": {
+      "display": "biped",
+      "type": "word",
+      "grade": 1,
+      "gloss": "an animal with two feet",
+      "morphology": {
+        "root": "BI",
+        "root_key": "bi",
+        "meaning": "two"
+      },
+      "phonics": {
+        "phoneme": "b",
+        "phoneme_key": "phoneme-b",
+        "graphemes": [
+          "b"
+        ]
+      },
+      "family": [
+        "bicycle",
+        "bilingual",
+        "binoculars",
+        "biped",
+        "biweekly"
+      ],
+      "discovery": {
+        "next": [
+          "bilingual",
+          "biweekly"
+        ],
+        "prev": [],
+        "ready": "Now that you know biped, you can discover: bilingual, biweekly."
+      },
+      "errors": {
+        "fakes": [
+          "big",
+          "bird"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the BI family but they don't: big, bird."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bilingual": {
+      "display": "bilingual",
+      "type": "word",
+      "grade": 1,
+      "gloss": "speaking two languages",
+      "morphology": {
+        "root": "BI",
+        "root_key": "bi",
+        "meaning": "two"
+      },
+      "phonics": {
+        "phoneme": "b",
+        "phoneme_key": "phoneme-b",
+        "graphemes": [
+          "b"
+        ]
+      },
+      "family": [
+        "bicycle",
+        "bilingual",
+        "binoculars",
+        "biped",
+        "biweekly"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "bicycle",
+          "binoculars",
+          "biped"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "big",
+          "bird"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the BI family but they don't: big, bird."
+      },
+      "prerequisites": [
+        "bicycle",
+        "binoculars",
+        "biped"
+      ],
+      "prerequisite_display": [
+        "bicycle",
+        "binoculars",
+        "biped"
+      ],
+      "prerequisite_chain": "Before you can learn bilingual, you should know: bicycle → binoculars → biped."
+    },
+    "biweekly": {
+      "display": "biweekly",
+      "type": "word",
+      "grade": 1,
+      "gloss": "every two weeks",
+      "morphology": {
+        "root": "BI",
+        "root_key": "bi",
+        "meaning": "two"
+      },
+      "phonics": {
+        "phoneme": "b",
+        "phoneme_key": "phoneme-b",
+        "graphemes": [
+          "b"
+        ]
+      },
+      "family": [
+        "bicycle",
+        "bilingual",
+        "binoculars",
+        "biped",
+        "biweekly"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "bicycle",
+          "binoculars",
+          "biped"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "big",
+          "bird"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the BI family but they don't: big, bird."
+      },
+      "prerequisites": [
+        "bicycle",
+        "binoculars",
+        "biped"
+      ],
+      "prerequisite_display": [
+        "bicycle",
+        "binoculars",
+        "biped"
+      ],
+      "prerequisite_chain": "Before you can learn biweekly, you should know: bicycle → binoculars → biped."
+    },
+    "octopus": {
+      "display": "octopus",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a sea animal with eight arms",
+      "morphology": {
+        "root": "OCTO",
+        "root_key": "octo",
+        "meaning": "eight"
+      },
+      "phonics": {
+        "phoneme": "phoneme-o",
+        "phoneme_key": "phoneme-o",
+        "graphemes": []
+      },
+      "family": [
+        "octagon",
+        "octave",
+        "octet",
+        "october",
+        "octopus"
+      ],
+      "discovery": {
+        "next": [
+          "octave",
+          "octet"
+        ],
+        "prev": [],
+        "ready": "Now that you know octopus, you can discover: octave, octet."
+      },
+      "errors": {
+        "fakes": [
+          "doctor",
+          "octane"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the OCTO family but they don't: doctor, octane."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "octagon": {
+      "display": "octagon",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a shape with eight sides",
+      "morphology": {
+        "root": "OCTO",
+        "root_key": "octo",
+        "meaning": "eight"
+      },
+      "phonics": {
+        "phoneme": "phoneme-o",
+        "phoneme_key": "phoneme-o",
+        "graphemes": []
+      },
+      "family": [
+        "octagon",
+        "octave",
+        "octet",
+        "october",
+        "octopus"
+      ],
+      "discovery": {
+        "next": [
+          "octave",
+          "octet"
+        ],
+        "prev": [],
+        "ready": "Now that you know octagon, you can discover: octave, octet."
+      },
+      "errors": {
+        "fakes": [
+          "doctor",
+          "octane"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the OCTO family but they don't: doctor, octane."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "october": {
+      "display": "october",
+      "type": "word",
+      "grade": 1,
+      "gloss": "once the eighth month",
+      "morphology": {
+        "root": "OCTO",
+        "root_key": "octo",
+        "meaning": "eight"
+      },
+      "phonics": {
+        "phoneme": "phoneme-o",
+        "phoneme_key": "phoneme-o",
+        "graphemes": []
+      },
+      "family": [
+        "octagon",
+        "octave",
+        "octet",
+        "october",
+        "octopus"
+      ],
+      "discovery": {
+        "next": [
+          "octave",
+          "octet"
+        ],
+        "prev": [],
+        "ready": "Now that you know october, you can discover: octave, octet."
+      },
+      "errors": {
+        "fakes": [
+          "doctor",
+          "octane"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the OCTO family but they don't: doctor, octane."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "octave": {
+      "display": "octave",
+      "type": "word",
+      "grade": 1,
+      "gloss": "eight notes in music",
+      "morphology": {
+        "root": "OCTO",
+        "root_key": "octo",
+        "meaning": "eight"
+      },
+      "phonics": {
+        "phoneme": "phoneme-o",
+        "phoneme_key": "phoneme-o",
+        "graphemes": []
+      },
+      "family": [
+        "octagon",
+        "octave",
+        "octet",
+        "october",
+        "octopus"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "octopus",
+          "octagon",
+          "october"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "doctor",
+          "octane"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the OCTO family but they don't: doctor, octane."
+      },
+      "prerequisites": [
+        "octopus",
+        "octagon",
+        "october"
+      ],
+      "prerequisite_display": [
+        "octopus",
+        "octagon",
+        "october"
+      ],
+      "prerequisite_chain": "Before you can learn octave, you should know: octopus → octagon → october."
+    },
+    "octet": {
+      "display": "octet",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a group of eight",
+      "morphology": {
+        "root": "OCTO",
+        "root_key": "octo",
+        "meaning": "eight"
+      },
+      "phonics": {
+        "phoneme": "phoneme-o",
+        "phoneme_key": "phoneme-o",
+        "graphemes": []
+      },
+      "family": [
+        "octagon",
+        "octave",
+        "octet",
+        "october",
+        "octopus"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "octopus",
+          "octagon",
+          "october"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "doctor",
+          "octane"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the OCTO family but they don't: doctor, octane."
+      },
+      "prerequisites": [
+        "octopus",
+        "octagon",
+        "october"
+      ],
+      "prerequisite_display": [
+        "octopus",
+        "octagon",
+        "october"
+      ],
+      "prerequisite_chain": "Before you can learn octet, you should know: octopus → octagon → october."
+    },
+    "century": {
+      "display": "century",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a hundred years",
+      "morphology": {
+        "root": "CENT",
+        "root_key": "cent",
+        "meaning": "hundred"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "centenary",
+        "centimetre",
+        "centipede",
+        "century",
+        "percent"
+      ],
+      "discovery": {
+        "next": [
+          "centenary",
+          "centimetre"
+        ],
+        "prev": [],
+        "ready": "Now that you know century, you can discover: centenary, centimetre."
+      },
+      "errors": {
+        "fakes": [
+          "center",
+          "scent"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the CENT family but they don't: center, scent."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "centipede": {
+      "display": "centipede",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a bug with many (a hundred!) feet",
+      "morphology": {
+        "root": "CENT",
+        "root_key": "cent",
+        "meaning": "hundred",
+        "combo": true,
+        "roots": [
+          "cent",
+          "ped"
+        ],
+        "combo_gloss": "a hundred-FOOTED bug"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "centenary",
+        "centimetre",
+        "centipede",
+        "century",
+        "percent"
+      ],
+      "discovery": {
+        "next": [
+          "centenary",
+          "centimetre"
+        ],
+        "prev": [
+          "tripod",
+          "pedal",
+          "pedestrian"
+        ],
+        "ready": "Now that you know centipede, you can discover: centenary, centimetre."
+      },
+      "errors": {
+        "fakes": [
+          "center",
+          "scent"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the CENT family but they don't: center, scent."
+      },
+      "prerequisites": [
+        "tripod",
+        "pedal",
+        "pedestrian",
+        "triangle",
+        "tricycle"
+      ],
+      "prerequisite_display": [
+        "tripod",
+        "pedal",
+        "pedestrian",
+        "triangle",
+        "tricycle"
+      ],
+      "prerequisite_chain": "Before you can learn centipede, you should know: tripod → pedal → pedestrian → triangle."
+    },
+    "percent": {
+      "display": "percent",
+      "type": "word",
+      "grade": 1,
+      "gloss": "out of a hundred",
+      "morphology": {
+        "root": "CENT",
+        "root_key": "cent",
+        "meaning": "hundred"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "centenary",
+        "centimetre",
+        "centipede",
+        "century",
+        "percent"
+      ],
+      "discovery": {
+        "next": [
+          "centenary",
+          "centimetre"
+        ],
+        "prev": [],
+        "ready": "Now that you know percent, you can discover: centenary, centimetre."
+      },
+      "errors": {
+        "fakes": [
+          "center",
+          "scent"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the CENT family but they don't: center, scent."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "centenary": {
+      "display": "centenary",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a hundredth birthday",
+      "morphology": {
+        "root": "CENT",
+        "root_key": "cent",
+        "meaning": "hundred"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "centenary",
+        "centimetre",
+        "centipede",
+        "century",
+        "percent"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "century",
+          "centipede",
+          "percent"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "center",
+          "scent"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the CENT family but they don't: center, scent."
+      },
+      "prerequisites": [
+        "century",
+        "centipede",
+        "percent",
+        "tripod",
+        "pedal",
+        "triangle"
+      ],
+      "prerequisite_display": [
+        "century",
+        "centipede",
+        "percent",
+        "tripod",
+        "pedal",
+        "triangle"
+      ],
+      "prerequisite_chain": "Before you can learn centenary, you should know: century → centipede → percent → tripod."
+    },
+    "centimetre": {
+      "display": "centimetre",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a hundredth of a metre",
+      "morphology": {
+        "root": "CENT",
+        "root_key": "cent",
+        "meaning": "hundred"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "centenary",
+        "centimetre",
+        "centipede",
+        "century",
+        "percent"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "century",
+          "centipede",
+          "percent"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "center",
+          "scent"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the CENT family but they don't: center, scent."
+      },
+      "prerequisites": [
+        "century",
+        "centipede",
+        "percent",
+        "tripod",
+        "pedal",
+        "triangle"
+      ],
+      "prerequisite_display": [
+        "century",
+        "centipede",
+        "percent",
+        "tripod",
+        "pedal",
+        "triangle"
+      ],
+      "prerequisite_chain": "Before you can learn centimetre, you should know: century → centipede → percent → tripod."
+    },
+    "dentist": {
+      "display": "dentist",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a doctor for teeth",
+      "morphology": {
+        "root": "DENT",
+        "root_key": "dent",
+        "meaning": "tooth"
+      },
+      "phonics": {
+        "phoneme": "d",
+        "phoneme_key": "phoneme-d",
+        "graphemes": [
+          "d"
+        ]
+      },
+      "family": [
+        "dental",
+        "dentist",
+        "denture",
+        "indent",
+        "trident"
+      ],
+      "discovery": {
+        "next": [
+          "denture",
+          "indent"
+        ],
+        "prev": [],
+        "ready": "Now that you know dentist, you can discover: denture, indent."
+      },
+      "errors": {
+        "fakes": [
+          "dent",
+          "denim"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the DENT family but they don't: dent, denim."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "dental": {
+      "display": "dental",
+      "type": "word",
+      "grade": 1,
+      "gloss": "about teeth",
+      "morphology": {
+        "root": "DENT",
+        "root_key": "dent",
+        "meaning": "tooth"
+      },
+      "phonics": {
+        "phoneme": "d",
+        "phoneme_key": "phoneme-d",
+        "graphemes": [
+          "d"
+        ]
+      },
+      "family": [
+        "dental",
+        "dentist",
+        "denture",
+        "indent",
+        "trident"
+      ],
+      "discovery": {
+        "next": [
+          "denture",
+          "indent"
+        ],
+        "prev": [],
+        "ready": "Now that you know dental, you can discover: denture, indent."
+      },
+      "errors": {
+        "fakes": [
+          "dent",
+          "denim"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the DENT family but they don't: dent, denim."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "trident": {
+      "display": "trident",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a spear with three teeth",
+      "morphology": {
+        "root": "DENT",
+        "root_key": "dent",
+        "meaning": "tooth"
+      },
+      "phonics": {
+        "phoneme": "d",
+        "phoneme_key": "phoneme-d",
+        "graphemes": [
+          "d"
+        ]
+      },
+      "family": [
+        "dental",
+        "dentist",
+        "denture",
+        "indent",
+        "trident"
+      ],
+      "discovery": {
+        "next": [
+          "denture",
+          "indent"
+        ],
+        "prev": [],
+        "ready": "Now that you know trident, you can discover: denture, indent."
+      },
+      "errors": {
+        "fakes": [
+          "dent",
+          "denim"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the DENT family but they don't: dent, denim."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "denture": {
+      "display": "denture",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a set of new teeth",
+      "morphology": {
+        "root": "DENT",
+        "root_key": "dent",
+        "meaning": "tooth"
+      },
+      "phonics": {
+        "phoneme": "d",
+        "phoneme_key": "phoneme-d",
+        "graphemes": [
+          "d"
+        ]
+      },
+      "family": [
+        "dental",
+        "dentist",
+        "denture",
+        "indent",
+        "trident"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "dentist",
+          "dental",
+          "trident"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "dent",
+          "denim"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the DENT family but they don't: dent, denim."
+      },
+      "prerequisites": [
+        "dentist",
+        "dental",
+        "trident"
+      ],
+      "prerequisite_display": [
+        "dentist",
+        "dental",
+        "trident"
+      ],
+      "prerequisite_chain": "Before you can learn denture, you should know: dentist → dental → trident."
+    },
+    "indent": {
+      "display": "indent",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a little tooth-shaped notch",
+      "morphology": {
+        "root": "DENT",
+        "root_key": "dent",
+        "meaning": "tooth"
+      },
+      "phonics": {
+        "phoneme": "d",
+        "phoneme_key": "phoneme-d",
+        "graphemes": [
+          "d"
+        ]
+      },
+      "family": [
+        "dental",
+        "dentist",
+        "denture",
+        "indent",
+        "trident"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "dentist",
+          "dental",
+          "trident"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "dent",
+          "denim"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the DENT family but they don't: dent, denim."
+      },
+      "prerequisites": [
+        "dentist",
+        "dental",
+        "trident"
+      ],
+      "prerequisite_display": [
+        "dentist",
+        "dental",
+        "trident"
+      ],
+      "prerequisite_chain": "Before you can learn indent, you should know: dentist → dental → trident."
+    },
+    "pedal": {
+      "display": "pedal",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a lever you push with your foot",
+      "morphology": {
+        "root": "PED",
+        "root_key": "ped",
+        "meaning": "foot"
+      },
+      "phonics": {
+        "phoneme": "p",
+        "phoneme_key": "phoneme-p",
+        "graphemes": [
+          "p"
+        ]
+      },
+      "family": [
+        "centipede",
+        "pedal",
+        "pedestrian",
+        "pedicure",
+        "tripod"
+      ],
+      "discovery": {
+        "next": [
+          "pedicure",
+          "centipede"
+        ],
+        "prev": [],
+        "ready": "Now that you know pedal, you can discover: pedicure, centipede."
+      },
+      "errors": {
+        "fakes": [
+          "speed",
+          "pedigree"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the PED family but they don't: speed, pedigree."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "pedestrian": {
+      "display": "pedestrian",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a person going on foot",
+      "morphology": {
+        "root": "PED",
+        "root_key": "ped",
+        "meaning": "foot"
+      },
+      "phonics": {
+        "phoneme": "p",
+        "phoneme_key": "phoneme-p",
+        "graphemes": [
+          "p"
+        ]
+      },
+      "family": [
+        "centipede",
+        "pedal",
+        "pedestrian",
+        "pedicure",
+        "tripod"
+      ],
+      "discovery": {
+        "next": [
+          "pedicure",
+          "centipede"
+        ],
+        "prev": [],
+        "ready": "Now that you know pedestrian, you can discover: pedicure, centipede."
+      },
+      "errors": {
+        "fakes": [
+          "speed",
+          "pedigree"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the PED family but they don't: speed, pedigree."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "pedicure": {
+      "display": "pedicure",
+      "type": "word",
+      "grade": 1,
+      "gloss": "care for the feet",
+      "morphology": {
+        "root": "PED",
+        "root_key": "ped",
+        "meaning": "foot"
+      },
+      "phonics": {
+        "phoneme": "p",
+        "phoneme_key": "phoneme-p",
+        "graphemes": [
+          "p"
+        ]
+      },
+      "family": [
+        "centipede",
+        "pedal",
+        "pedestrian",
+        "pedicure",
+        "tripod"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "tripod",
+          "pedal",
+          "pedestrian"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "speed",
+          "pedigree"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the PED family but they don't: speed, pedigree."
+      },
+      "prerequisites": [
+        "tripod",
+        "pedal",
+        "pedestrian",
+        "triangle",
+        "tricycle"
+      ],
+      "prerequisite_display": [
+        "tripod",
+        "pedal",
+        "pedestrian",
+        "triangle",
+        "tricycle"
+      ],
+      "prerequisite_chain": "Before you can learn pedicure, you should know: tripod → pedal → pedestrian → triangle."
+    },
+    "manual": {
+      "display": "manual",
+      "type": "word",
+      "grade": 1,
+      "gloss": "done by hand",
+      "morphology": {
+        "root": "MANU",
+        "root_key": "manu",
+        "meaning": "hand"
+      },
+      "phonics": {
+        "phoneme": "m",
+        "phoneme_key": "phoneme-m",
+        "graphemes": [
+          "m"
+        ]
+      },
+      "family": [
+        "manage",
+        "manicure",
+        "manual",
+        "manufacture",
+        "manuscript"
+      ],
+      "discovery": {
+        "next": [
+          "manuscript",
+          "manage"
+        ],
+        "prev": [],
+        "ready": "Now that you know manual, you can discover: manuscript, manage."
+      },
+      "errors": {
+        "fakes": [
+          "many",
+          "manner"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the MANU family but they don't: many, manner."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "manicure": {
+      "display": "manicure",
+      "type": "word",
+      "grade": 1,
+      "gloss": "care for the hands",
+      "morphology": {
+        "root": "MANU",
+        "root_key": "manu",
+        "meaning": "hand"
+      },
+      "phonics": {
+        "phoneme": "m",
+        "phoneme_key": "phoneme-m",
+        "graphemes": [
+          "m"
+        ]
+      },
+      "family": [
+        "manage",
+        "manicure",
+        "manual",
+        "manufacture",
+        "manuscript"
+      ],
+      "discovery": {
+        "next": [
+          "manuscript",
+          "manage"
+        ],
+        "prev": [],
+        "ready": "Now that you know manicure, you can discover: manuscript, manage."
+      },
+      "errors": {
+        "fakes": [
+          "many",
+          "manner"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the MANU family but they don't: many, manner."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "manufacture": {
+      "display": "manufacture",
+      "type": "word",
+      "grade": 1,
+      "gloss": "to make (first, by hand)",
+      "morphology": {
+        "root": "MANU",
+        "root_key": "manu",
+        "meaning": "hand"
+      },
+      "phonics": {
+        "phoneme": "m",
+        "phoneme_key": "phoneme-m",
+        "graphemes": [
+          "m"
+        ]
+      },
+      "family": [
+        "manage",
+        "manicure",
+        "manual",
+        "manufacture",
+        "manuscript"
+      ],
+      "discovery": {
+        "next": [
+          "manuscript",
+          "manage"
+        ],
+        "prev": [],
+        "ready": "Now that you know manufacture, you can discover: manuscript, manage."
+      },
+      "errors": {
+        "fakes": [
+          "many",
+          "manner"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the MANU family but they don't: many, manner."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "manuscript": {
+      "display": "manuscript",
+      "type": "word",
+      "grade": 1,
+      "gloss": "something written by hand",
+      "morphology": {
+        "root": "MANU",
+        "root_key": "manu",
+        "meaning": "hand",
+        "combo": true,
+        "roots": [
+          "manu",
+          "scrib"
+        ],
+        "combo_gloss": "something WRITTEN by HAND"
+      },
+      "phonics": {
+        "phoneme": "m",
+        "phoneme_key": "phoneme-m",
+        "graphemes": [
+          "m"
+        ]
+      },
+      "family": [
+        "manage",
+        "manicure",
+        "manual",
+        "manufacture",
+        "manuscript"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "manual",
+          "manicure",
+          "manufacture"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "many",
+          "manner"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the MANU family but they don't: many, manner."
+      },
+      "prerequisites": [
+        "manual",
+        "manicure",
+        "manufacture"
+      ],
+      "prerequisite_display": [
+        "manual",
+        "manicure",
+        "manufacture"
+      ],
+      "prerequisite_chain": "Before you can learn manuscript, you should know: manual → manicure → manufacture."
+    },
+    "manage": {
+      "display": "manage",
+      "type": "word",
+      "grade": 1,
+      "gloss": "to handle something",
+      "morphology": {
+        "root": "MANU",
+        "root_key": "manu",
+        "meaning": "hand"
+      },
+      "phonics": {
+        "phoneme": "m",
+        "phoneme_key": "phoneme-m",
+        "graphemes": [
+          "m"
+        ]
+      },
+      "family": [
+        "manage",
+        "manicure",
+        "manual",
+        "manufacture",
+        "manuscript"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "manual",
+          "manicure",
+          "manufacture"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "many",
+          "manner"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the MANU family but they don't: many, manner."
+      },
+      "prerequisites": [
+        "manual",
+        "manicure",
+        "manufacture"
+      ],
+      "prerequisite_display": [
+        "manual",
+        "manicure",
+        "manufacture"
+      ],
+      "prerequisite_chain": "Before you can learn manage, you should know: manual → manicure → manufacture."
+    },
+    "aquarium": {
+      "display": "aquarium",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a glass home for fish and water",
+      "morphology": {
+        "root": "AQUA",
+        "root_key": "aqua",
+        "meaning": "water"
+      },
+      "phonics": {
+        "phoneme": "phoneme-a",
+        "phoneme_key": "phoneme-a",
+        "graphemes": []
+      },
+      "family": [
+        "aquanaut",
+        "aquaplane",
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "discovery": {
+        "next": [
+          "aquanaut",
+          "aquaplane"
+        ],
+        "prev": [],
+        "ready": "Now that you know aquarium, you can discover: aquanaut, aquaplane."
+      },
+      "errors": {
+        "fakes": [
+          "square",
+          "quack"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the AQUA family but they don't: square, quack."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "aquatic": {
+      "display": "aquatic",
+      "type": "word",
+      "grade": 1,
+      "gloss": "living in water",
+      "morphology": {
+        "root": "AQUA",
+        "root_key": "aqua",
+        "meaning": "water"
+      },
+      "phonics": {
+        "phoneme": "phoneme-a",
+        "phoneme_key": "phoneme-a",
+        "graphemes": []
+      },
+      "family": [
+        "aquanaut",
+        "aquaplane",
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "discovery": {
+        "next": [
+          "aquanaut",
+          "aquaplane"
+        ],
+        "prev": [],
+        "ready": "Now that you know aquatic, you can discover: aquanaut, aquaplane."
+      },
+      "errors": {
+        "fakes": [
+          "square",
+          "quack"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the AQUA family but they don't: square, quack."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "aqueduct": {
+      "display": "aqueduct",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a bridge that carries water",
+      "morphology": {
+        "root": "AQUA",
+        "root_key": "aqua",
+        "meaning": "water"
+      },
+      "phonics": {
+        "phoneme": "phoneme-a",
+        "phoneme_key": "phoneme-a",
+        "graphemes": []
+      },
+      "family": [
+        "aquanaut",
+        "aquaplane",
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "discovery": {
+        "next": [
+          "aquanaut",
+          "aquaplane"
+        ],
+        "prev": [],
+        "ready": "Now that you know aqueduct, you can discover: aquanaut, aquaplane."
+      },
+      "errors": {
+        "fakes": [
+          "square",
+          "quack"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the AQUA family but they don't: square, quack."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "aquanaut": {
+      "display": "aquanaut",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a diver who explores underwater",
+      "morphology": {
+        "root": "AQUA",
+        "root_key": "aqua",
+        "meaning": "water"
+      },
+      "phonics": {
+        "phoneme": "phoneme-a",
+        "phoneme_key": "phoneme-a",
+        "graphemes": []
+      },
+      "family": [
+        "aquanaut",
+        "aquaplane",
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "aquarium",
+          "aquatic",
+          "aqueduct"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "square",
+          "quack"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the AQUA family but they don't: square, quack."
+      },
+      "prerequisites": [
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "prerequisite_display": [
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "prerequisite_chain": "Before you can learn aquanaut, you should know: aquarium → aquatic → aqueduct."
+    },
+    "aquaplane": {
+      "display": "aquaplane",
+      "type": "word",
+      "grade": 1,
+      "gloss": "to slide on water",
+      "morphology": {
+        "root": "AQUA",
+        "root_key": "aqua",
+        "meaning": "water"
+      },
+      "phonics": {
+        "phoneme": "phoneme-a",
+        "phoneme_key": "phoneme-a",
+        "graphemes": []
+      },
+      "family": [
+        "aquanaut",
+        "aquaplane",
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "aquarium",
+          "aquatic",
+          "aqueduct"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "square",
+          "quack"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the AQUA family but they don't: square, quack."
+      },
+      "prerequisites": [
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "prerequisite_display": [
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "prerequisite_chain": "Before you can learn aquaplane, you should know: aquarium → aquatic → aqueduct."
+    },
+    "solar": {
+      "display": "solar",
+      "type": "word",
+      "grade": 1,
+      "gloss": "about the sun",
+      "morphology": {
+        "root": "SOL",
+        "root_key": "sol",
+        "meaning": "sun"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "parasol",
+        "solar",
+        "solar panel",
+        "solarium",
+        "solstice"
+      ],
+      "discovery": {
+        "next": [
+          "solstice",
+          "solar panel"
+        ],
+        "prev": [],
+        "ready": "Now that you know solar, you can discover: solstice, solar panel."
+      },
+      "errors": {
+        "fakes": [
+          "solid",
+          "sold"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the SOL family but they don't: solid, sold."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "solarium": {
+      "display": "solarium",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a sunny glass room",
+      "morphology": {
+        "root": "SOL",
+        "root_key": "sol",
+        "meaning": "sun"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "parasol",
+        "solar",
+        "solar panel",
+        "solarium",
+        "solstice"
+      ],
+      "discovery": {
+        "next": [
+          "solstice",
+          "solar panel"
+        ],
+        "prev": [],
+        "ready": "Now that you know solarium, you can discover: solstice, solar panel."
+      },
+      "errors": {
+        "fakes": [
+          "solid",
+          "sold"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the SOL family but they don't: solid, sold."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "parasol": {
+      "display": "parasol",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a shade against the sun",
+      "morphology": {
+        "root": "SOL",
+        "root_key": "sol",
+        "meaning": "sun"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "parasol",
+        "solar",
+        "solar panel",
+        "solarium",
+        "solstice"
+      ],
+      "discovery": {
+        "next": [
+          "solstice",
+          "solar panel"
+        ],
+        "prev": [],
+        "ready": "Now that you know parasol, you can discover: solstice, solar panel."
+      },
+      "errors": {
+        "fakes": [
+          "solid",
+          "sold"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the SOL family but they don't: solid, sold."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "solstice": {
+      "display": "solstice",
+      "type": "word",
+      "grade": 1,
+      "gloss": "the day the sun stands highest or lowest",
+      "morphology": {
+        "root": "SOL",
+        "root_key": "sol",
+        "meaning": "sun"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "parasol",
+        "solar",
+        "solar panel",
+        "solarium",
+        "solstice"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "solar",
+          "solarium",
+          "parasol"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "solid",
+          "sold"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the SOL family but they don't: solid, sold."
+      },
+      "prerequisites": [
+        "solar",
+        "solarium",
+        "parasol"
+      ],
+      "prerequisite_display": [
+        "solar",
+        "solarium",
+        "parasol"
+      ],
+      "prerequisite_chain": "Before you can learn solstice, you should know: solar → solarium → parasol."
+    },
+    "solar panel": {
+      "display": "solar panel",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a plate that drinks sunlight",
+      "morphology": {
+        "root": "SOL",
+        "root_key": "sol",
+        "meaning": "sun"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "parasol",
+        "solar",
+        "solar panel",
+        "solarium",
+        "solstice"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "solar",
+          "solarium",
+          "parasol"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "solid",
+          "sold"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the SOL family but they don't: solid, sold."
+      },
+      "prerequisites": [
+        "solar",
+        "solarium",
+        "parasol"
+      ],
+      "prerequisite_display": [
+        "solar",
+        "solarium",
+        "parasol"
+      ],
+      "prerequisite_chain": "Before you can learn solar panel, you should know: solar → solarium → parasol."
+    },
+    "lunar": {
+      "display": "lunar",
+      "type": "word",
+      "grade": 1,
+      "gloss": "about the moon",
+      "morphology": {
+        "root": "LUNA",
+        "root_key": "luna",
+        "meaning": "moon"
+      },
+      "phonics": {
+        "phoneme": "l",
+        "phoneme_key": "phoneme-l",
+        "graphemes": [
+          "l"
+        ]
+      },
+      "family": [
+        "interlunar",
+        "lunamoth",
+        "lunar",
+        "lunar eclipse",
+        "lunatic"
+      ],
+      "discovery": {
+        "next": [
+          "lunar eclipse",
+          "interlunar"
+        ],
+        "prev": [],
+        "ready": "Now that you know lunar, you can discover: lunar eclipse, interlunar."
+      },
+      "errors": {
+        "fakes": [
+          "lunch",
+          "lung"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the LUNA family but they don't: lunch, lung."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "lunatic": {
+      "display": "lunatic",
+      "type": "word",
+      "grade": 1,
+      "gloss": "once meant 'moon-struck'",
+      "morphology": {
+        "root": "LUNA",
+        "root_key": "luna",
+        "meaning": "moon"
+      },
+      "phonics": {
+        "phoneme": "l",
+        "phoneme_key": "phoneme-l",
+        "graphemes": [
+          "l"
+        ]
+      },
+      "family": [
+        "interlunar",
+        "lunamoth",
+        "lunar",
+        "lunar eclipse",
+        "lunatic"
+      ],
+      "discovery": {
+        "next": [
+          "lunar eclipse",
+          "interlunar"
+        ],
+        "prev": [],
+        "ready": "Now that you know lunatic, you can discover: lunar eclipse, interlunar."
+      },
+      "errors": {
+        "fakes": [
+          "lunch",
+          "lung"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the LUNA family but they don't: lunch, lung."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "lunamoth": {
+      "display": "lunamoth",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a moth pale as the moon",
+      "morphology": {
+        "root": "LUNA",
+        "root_key": "luna",
+        "meaning": "moon"
+      },
+      "phonics": {
+        "phoneme": "l",
+        "phoneme_key": "phoneme-l",
+        "graphemes": [
+          "l"
+        ]
+      },
+      "family": [
+        "interlunar",
+        "lunamoth",
+        "lunar",
+        "lunar eclipse",
+        "lunatic"
+      ],
+      "discovery": {
+        "next": [
+          "lunar eclipse",
+          "interlunar"
+        ],
+        "prev": [],
+        "ready": "Now that you know lunamoth, you can discover: lunar eclipse, interlunar."
+      },
+      "errors": {
+        "fakes": [
+          "lunch",
+          "lung"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the LUNA family but they don't: lunch, lung."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "lunar eclipse": {
+      "display": "lunar eclipse",
+      "type": "word",
+      "grade": 1,
+      "gloss": "when the moon goes dark",
+      "morphology": {
+        "root": "LUNA",
+        "root_key": "luna",
+        "meaning": "moon"
+      },
+      "phonics": {
+        "phoneme": "l",
+        "phoneme_key": "phoneme-l",
+        "graphemes": [
+          "l"
+        ]
+      },
+      "family": [
+        "interlunar",
+        "lunamoth",
+        "lunar",
+        "lunar eclipse",
+        "lunatic"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "lunar",
+          "lunatic",
+          "lunamoth"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "lunch",
+          "lung"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the LUNA family but they don't: lunch, lung."
+      },
+      "prerequisites": [
+        "lunar",
+        "lunatic",
+        "lunamoth"
+      ],
+      "prerequisite_display": [
+        "lunar",
+        "lunatic",
+        "lunamoth"
+      ],
+      "prerequisite_chain": "Before you can learn lunar eclipse, you should know: lunar → lunatic → lunamoth."
+    },
+    "interlunar": {
+      "display": "interlunar",
+      "type": "word",
+      "grade": 1,
+      "gloss": "the dark time between moons",
+      "morphology": {
+        "root": "LUNA",
+        "root_key": "luna",
+        "meaning": "moon"
+      },
+      "phonics": {
+        "phoneme": "l",
+        "phoneme_key": "phoneme-l",
+        "graphemes": [
+          "l"
+        ]
+      },
+      "family": [
+        "interlunar",
+        "lunamoth",
+        "lunar",
+        "lunar eclipse",
+        "lunatic"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "lunar",
+          "lunatic",
+          "lunamoth"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "lunch",
+          "lung"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the LUNA family but they don't: lunch, lung."
+      },
+      "prerequisites": [
+        "lunar",
+        "lunatic",
+        "lunamoth"
+      ],
+      "prerequisite_display": [
+        "lunar",
+        "lunatic",
+        "lunamoth"
+      ],
+      "prerequisite_chain": "Before you can learn interlunar, you should know: lunar → lunatic → lunamoth."
+    },
+    "terrain": {
+      "display": "terrain",
+      "type": "word",
+      "grade": 1,
+      "gloss": "the shape of the land",
+      "morphology": {
+        "root": "TERR",
+        "root_key": "terr",
+        "meaning": "earth, land"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "subterranean",
+        "terrace",
+        "terrain",
+        "terrarium",
+        "territory"
+      ],
+      "discovery": {
+        "next": [
+          "terrace",
+          "subterranean"
+        ],
+        "prev": [],
+        "ready": "Now that you know terrain, you can discover: terrace, subterranean."
+      },
+      "errors": {
+        "fakes": [
+          "terror",
+          "terrible"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TERR family but they don't: terror, terrible."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "territory": {
+      "display": "territory",
+      "type": "word",
+      "grade": 1,
+      "gloss": "an area of land",
+      "morphology": {
+        "root": "TERR",
+        "root_key": "terr",
+        "meaning": "earth, land"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "subterranean",
+        "terrace",
+        "terrain",
+        "terrarium",
+        "territory"
+      ],
+      "discovery": {
+        "next": [
+          "terrace",
+          "subterranean"
+        ],
+        "prev": [],
+        "ready": "Now that you know territory, you can discover: terrace, subterranean."
+      },
+      "errors": {
+        "fakes": [
+          "terror",
+          "terrible"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TERR family but they don't: terror, terrible."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "terrarium": {
+      "display": "terrarium",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a little glass garden of earth",
+      "morphology": {
+        "root": "TERR",
+        "root_key": "terr",
+        "meaning": "earth, land"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "subterranean",
+        "terrace",
+        "terrain",
+        "terrarium",
+        "territory"
+      ],
+      "discovery": {
+        "next": [
+          "terrace",
+          "subterranean"
+        ],
+        "prev": [],
+        "ready": "Now that you know terrarium, you can discover: terrace, subterranean."
+      },
+      "errors": {
+        "fakes": [
+          "terror",
+          "terrible"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TERR family but they don't: terror, terrible."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "terrace": {
+      "display": "terrace",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a flat step of land",
+      "morphology": {
+        "root": "TERR",
+        "root_key": "terr",
+        "meaning": "earth, land"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "subterranean",
+        "terrace",
+        "terrain",
+        "terrarium",
+        "territory"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "terrain",
+          "territory",
+          "terrarium"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "terror",
+          "terrible"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TERR family but they don't: terror, terrible."
+      },
+      "prerequisites": [
+        "terrain",
+        "territory",
+        "terrarium"
+      ],
+      "prerequisite_display": [
+        "terrain",
+        "territory",
+        "terrarium"
+      ],
+      "prerequisite_chain": "Before you can learn terrace, you should know: terrain → territory → terrarium."
+    },
+    "subterranean": {
+      "display": "subterranean",
+      "type": "word",
+      "grade": 1,
+      "gloss": "under the ground",
+      "morphology": {
+        "root": "TERR",
+        "root_key": "terr",
+        "meaning": "earth, land"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "subterranean",
+        "terrace",
+        "terrain",
+        "terrarium",
+        "territory"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "terrain",
+          "territory",
+          "terrarium"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "terror",
+          "terrible"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TERR family but they don't: terror, terrible."
+      },
+      "prerequisites": [
+        "terrain",
+        "territory",
+        "terrarium"
+      ],
+      "prerequisite_display": [
+        "terrain",
+        "territory",
+        "terrarium"
+      ],
+      "prerequisite_chain": "Before you can learn subterranean, you should know: terrain → territory → terrarium."
+    },
+    "floral": {
+      "display": "floral",
+      "type": "word",
+      "grade": 1,
+      "gloss": "covered in flowers",
+      "morphology": {
+        "root": "FLOR",
+        "root_key": "flor",
+        "meaning": "flower"
+      },
+      "phonics": {
+        "phoneme": "f",
+        "phoneme_key": "phoneme-f",
+        "graphemes": [
+          "f",
+          "ph",
+          "gh"
+        ]
+      },
+      "family": [
+        "flora",
+        "floral",
+        "floral crown",
+        "florist",
+        "flourish"
+      ],
+      "discovery": {
+        "next": [
+          "flourish",
+          "floral crown"
+        ],
+        "prev": [],
+        "ready": "Now that you know floral, you can discover: flourish, floral crown."
+      },
+      "errors": {
+        "fakes": [
+          "floor",
+          "flour"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the FLOR family but they don't: floor, flour."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "florist": {
+      "display": "florist",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a person who sells flowers",
+      "morphology": {
+        "root": "FLOR",
+        "root_key": "flor",
+        "meaning": "flower"
+      },
+      "phonics": {
+        "phoneme": "f",
+        "phoneme_key": "phoneme-f",
+        "graphemes": [
+          "f",
+          "ph",
+          "gh"
+        ]
+      },
+      "family": [
+        "flora",
+        "floral",
+        "floral crown",
+        "florist",
+        "flourish"
+      ],
+      "discovery": {
+        "next": [
+          "flourish",
+          "floral crown"
+        ],
+        "prev": [],
+        "ready": "Now that you know florist, you can discover: flourish, floral crown."
+      },
+      "errors": {
+        "fakes": [
+          "floor",
+          "flour"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the FLOR family but they don't: floor, flour."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "flora": {
+      "display": "flora",
+      "type": "word",
+      "grade": 1,
+      "gloss": "all the plants of a place",
+      "morphology": {
+        "root": "FLOR",
+        "root_key": "flor",
+        "meaning": "flower"
+      },
+      "phonics": {
+        "phoneme": "f",
+        "phoneme_key": "phoneme-f",
+        "graphemes": [
+          "f",
+          "ph",
+          "gh"
+        ]
+      },
+      "family": [
+        "flora",
+        "floral",
+        "floral crown",
+        "florist",
+        "flourish"
+      ],
+      "discovery": {
+        "next": [
+          "flourish",
+          "floral crown"
+        ],
+        "prev": [],
+        "ready": "Now that you know flora, you can discover: flourish, floral crown."
+      },
+      "errors": {
+        "fakes": [
+          "floor",
+          "flour"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the FLOR family but they don't: floor, flour."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "flourish": {
+      "display": "flourish",
+      "type": "word",
+      "grade": 1,
+      "gloss": "to bloom and grow well",
+      "morphology": {
+        "root": "FLOR",
+        "root_key": "flor",
+        "meaning": "flower"
+      },
+      "phonics": {
+        "phoneme": "f",
+        "phoneme_key": "phoneme-f",
+        "graphemes": [
+          "f",
+          "ph",
+          "gh"
+        ]
+      },
+      "family": [
+        "flora",
+        "floral",
+        "floral crown",
+        "florist",
+        "flourish"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "floral",
+          "florist",
+          "flora"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "floor",
+          "flour"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the FLOR family but they don't: floor, flour."
+      },
+      "prerequisites": [
+        "floral",
+        "florist",
+        "flora"
+      ],
+      "prerequisite_display": [
+        "floral",
+        "florist",
+        "flora"
+      ],
+      "prerequisite_chain": "Before you can learn flourish, you should know: floral → florist → flora."
+    },
+    "floral crown": {
+      "display": "floral crown",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a ring of flowers",
+      "morphology": {
+        "root": "FLOR",
+        "root_key": "flor",
+        "meaning": "flower"
+      },
+      "phonics": {
+        "phoneme": "f",
+        "phoneme_key": "phoneme-f",
+        "graphemes": [
+          "f",
+          "ph",
+          "gh"
+        ]
+      },
+      "family": [
+        "flora",
+        "floral",
+        "floral crown",
+        "florist",
+        "flourish"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "floral",
+          "florist",
+          "flora"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "floor",
+          "flour"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the FLOR family but they don't: floor, flour."
+      },
+      "prerequisites": [
+        "floral",
+        "florist",
+        "flora"
+      ],
+      "prerequisite_display": [
+        "floral",
+        "florist",
+        "flora"
+      ],
+      "prerequisite_chain": "Before you can learn floral crown, you should know: floral → florist → flora."
+    },
+    "zoo": {
+      "display": "ZOO",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a word root meaning 'animal'",
+      "morphology": {},
+      "phonics": {
+        "phoneme": "z",
+        "phoneme_key": "phoneme-z",
+        "graphemes": [
+          "s",
+          "z"
+        ]
+      },
+      "family": [],
+      "discovery": {
+        "next": [
+          "zoologist",
+          "protozoa"
+        ],
+        "prev": [],
+        "ready": "Now that you know ZOO, you can discover: zoologist, protozoa."
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "zoology": {
+      "display": "zoology",
+      "type": "word",
+      "grade": 1,
+      "gloss": "the study of animals",
+      "morphology": {
+        "root": "ZOO",
+        "root_key": "zoo",
+        "meaning": "animal"
+      },
+      "phonics": {
+        "phoneme": "z",
+        "phoneme_key": "phoneme-z",
+        "graphemes": [
+          "s",
+          "z"
+        ]
+      },
+      "family": [
+        "protozoa",
+        "zookeeper",
+        "zoologist",
+        "zoology"
+      ],
+      "discovery": {
+        "next": [
+          "zoologist",
+          "protozoa"
+        ],
+        "prev": [],
+        "ready": "Now that you know zoology, you can discover: zoologist, protozoa."
+      },
+      "errors": {
+        "fakes": [
+          "zoom",
+          "zone"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the ZOO family but they don't: zoom, zone."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "zookeeper": {
+      "display": "zookeeper",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a person who cares for zoo animals",
+      "morphology": {
+        "root": "ZOO",
+        "root_key": "zoo",
+        "meaning": "animal"
+      },
+      "phonics": {
+        "phoneme": "z",
+        "phoneme_key": "phoneme-z",
+        "graphemes": [
+          "s",
+          "z"
+        ]
+      },
+      "family": [
+        "protozoa",
+        "zookeeper",
+        "zoologist",
+        "zoology"
+      ],
+      "discovery": {
+        "next": [
+          "zoologist",
+          "protozoa"
+        ],
+        "prev": [],
+        "ready": "Now that you know zookeeper, you can discover: zoologist, protozoa."
+      },
+      "errors": {
+        "fakes": [
+          "zoom",
+          "zone"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the ZOO family but they don't: zoom, zone."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "zoologist": {
+      "display": "zoologist",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a scientist who studies animals",
+      "morphology": {
+        "root": "ZOO",
+        "root_key": "zoo",
+        "meaning": "animal"
+      },
+      "phonics": {
+        "phoneme": "z",
+        "phoneme_key": "phoneme-z",
+        "graphemes": [
+          "s",
+          "z"
+        ]
+      },
+      "family": [
+        "protozoa",
+        "zookeeper",
+        "zoologist",
+        "zoology"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "ZOO",
+          "zoology",
+          "zookeeper"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "zoom",
+          "zone"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the ZOO family but they don't: zoom, zone."
+      },
+      "prerequisites": [
+        "zoo",
+        "zoology",
+        "zookeeper"
+      ],
+      "prerequisite_display": [
+        "ZOO",
+        "zoology",
+        "zookeeper"
+      ],
+      "prerequisite_chain": "Before you can learn zoologist, you should know: ZOO → zoology → zookeeper."
+    },
+    "protozoa": {
+      "display": "protozoa",
+      "type": "word",
+      "grade": 1,
+      "gloss": "the tiniest animals",
+      "morphology": {
+        "root": "ZOO",
+        "root_key": "zoo",
+        "meaning": "animal"
+      },
+      "phonics": {
+        "phoneme": "z",
+        "phoneme_key": "phoneme-z",
+        "graphemes": [
+          "s",
+          "z"
+        ]
+      },
+      "family": [
+        "protozoa",
+        "zookeeper",
+        "zoologist",
+        "zoology"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "ZOO",
+          "zoology",
+          "zookeeper"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "zoom",
+          "zone"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the ZOO family but they don't: zoom, zone."
+      },
+      "prerequisites": [
+        "zoo",
+        "zoology",
+        "zookeeper"
+      ],
+      "prerequisite_display": [
+        "ZOO",
+        "zoology",
+        "zookeeper"
+      ],
+      "prerequisite_chain": "Before you can learn protozoa, you should know: ZOO → zoology → zookeeper."
+    },
+    "novel": {
+      "display": "novel",
+      "type": "word",
+      "grade": 1,
+      "gloss": "new and fresh (also a new story-book)",
+      "morphology": {
+        "root": "NOV",
+        "root_key": "nov",
+        "meaning": "new"
+      },
+      "phonics": {
+        "phoneme": "n",
+        "phoneme_key": "phoneme-n",
+        "graphemes": [
+          "n",
+          "kn",
+          "gn"
+        ]
+      },
+      "family": [
+        "innovate",
+        "novel",
+        "novelty",
+        "novice",
+        "renovate"
+      ],
+      "discovery": {
+        "next": [
+          "innovate",
+          "novelty"
+        ],
+        "prev": [],
+        "ready": "Now that you know novel, you can discover: innovate, novelty."
+      },
+      "errors": {
+        "fakes": [
+          "november",
+          "none"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the NOV family but they don't: november, none."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "novice": {
+      "display": "novice",
+      "type": "word",
+      "grade": 1,
+      "gloss": "someone new at a thing",
+      "morphology": {
+        "root": "NOV",
+        "root_key": "nov",
+        "meaning": "new"
+      },
+      "phonics": {
+        "phoneme": "n",
+        "phoneme_key": "phoneme-n",
+        "graphemes": [
+          "n",
+          "kn",
+          "gn"
+        ]
+      },
+      "family": [
+        "innovate",
+        "novel",
+        "novelty",
+        "novice",
+        "renovate"
+      ],
+      "discovery": {
+        "next": [
+          "innovate",
+          "novelty"
+        ],
+        "prev": [],
+        "ready": "Now that you know novice, you can discover: innovate, novelty."
+      },
+      "errors": {
+        "fakes": [
+          "november",
+          "none"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the NOV family but they don't: november, none."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "renovate": {
+      "display": "renovate",
+      "type": "word",
+      "grade": 1,
+      "gloss": "to make new again",
+      "morphology": {
+        "root": "NOV",
+        "root_key": "nov",
+        "meaning": "new"
+      },
+      "phonics": {
+        "phoneme": "n",
+        "phoneme_key": "phoneme-n",
+        "graphemes": [
+          "n",
+          "kn",
+          "gn"
+        ]
+      },
+      "family": [
+        "innovate",
+        "novel",
+        "novelty",
+        "novice",
+        "renovate"
+      ],
+      "discovery": {
+        "next": [
+          "innovate",
+          "novelty"
+        ],
+        "prev": [],
+        "ready": "Now that you know renovate, you can discover: innovate, novelty."
+      },
+      "errors": {
+        "fakes": [
+          "november",
+          "none"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the NOV family but they don't: november, none."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "innovate": {
+      "display": "innovate",
+      "type": "word",
+      "grade": 1,
+      "gloss": "to bring in something new",
+      "morphology": {
+        "root": "NOV",
+        "root_key": "nov",
+        "meaning": "new"
+      },
+      "phonics": {
+        "phoneme": "n",
+        "phoneme_key": "phoneme-n",
+        "graphemes": [
+          "n",
+          "kn",
+          "gn"
+        ]
+      },
+      "family": [
+        "innovate",
+        "novel",
+        "novelty",
+        "novice",
+        "renovate"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "novel",
+          "novice",
+          "renovate"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "november",
+          "none"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the NOV family but they don't: november, none."
+      },
+      "prerequisites": [
+        "novel",
+        "novice",
+        "renovate"
+      ],
+      "prerequisite_display": [
+        "novel",
+        "novice",
+        "renovate"
+      ],
+      "prerequisite_chain": "Before you can learn innovate, you should know: novel → novice → renovate."
+    },
+    "novelty": {
+      "display": "novelty",
+      "type": "word",
+      "grade": 1,
+      "gloss": "a brand-new thing",
+      "morphology": {
+        "root": "NOV",
+        "root_key": "nov",
+        "meaning": "new"
+      },
+      "phonics": {
+        "phoneme": "n",
+        "phoneme_key": "phoneme-n",
+        "graphemes": [
+          "n",
+          "kn",
+          "gn"
+        ]
+      },
+      "family": [
+        "innovate",
+        "novel",
+        "novelty",
+        "novice",
+        "renovate"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "novel",
+          "novice",
+          "renovate"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "november",
+          "none"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the NOV family but they don't: november, none."
+      },
+      "prerequisites": [
+        "novel",
+        "novice",
+        "renovate"
+      ],
+      "prerequisite_display": [
+        "novel",
+        "novice",
+        "renovate"
+      ],
+      "prerequisite_chain": "Before you can learn novelty, you should know: novel → novice → renovate."
+    },
+    "persons": {
+      "display": "persons",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PERSON",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "people": {
+      "display": "people",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PERSON",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "personal": {
+      "display": "personal",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PERSON",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "personality": {
+      "display": "personality",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PERSON",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "personify": {
+      "display": "personify",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PERSON",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "fatherly": {
+      "display": "fatherly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FATHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "fatherhood": {
+      "display": "fatherhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FATHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "grandfather": {
+      "display": "grandfather",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FATHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "dad": {
+      "display": "dad",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FATHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "daddy": {
+      "display": "daddy",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FATHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "motherly": {
+      "display": "motherly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MOTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "motherhood": {
+      "display": "motherhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MOTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "grandmother": {
+      "display": "grandmother",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MOTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "mom": {
+      "display": "mom",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MOTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "mommy": {
+      "display": "mommy",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MOTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "parents": {
+      "display": "parents",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PARENT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "parental": {
+      "display": "parental",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PARENT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "parenthood": {
+      "display": "parenthood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PARENT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "parenting": {
+      "display": "parenting",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PARENT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "guardian": {
+      "display": "guardian",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root PARENT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "children": {
+      "display": "children",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHILD",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "childhood": {
+      "display": "childhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHILD",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "childlike": {
+      "display": "childlike",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHILD",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "childish": {
+      "display": "childish",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHILD",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "baby": {
+      "display": "baby",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHILD",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "infant": {
+      "display": "infant",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHILD",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "toddler": {
+      "display": "toddler",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHILD",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "families": {
+      "display": "families",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FAMILY",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "familiar": {
+      "display": "familiar",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FAMILY",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "familial": {
+      "display": "familial",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FAMILY",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "relative": {
+      "display": "relative",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FAMILY",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "kin": {
+      "display": "kin",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FAMILY",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "household": {
+      "display": "household",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FAMILY",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "brothers": {
+      "display": "brothers",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BROTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "brotherly": {
+      "display": "brotherly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BROTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "brotherhood": {
+      "display": "brotherhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BROTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "sibling": {
+      "display": "sibling",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BROTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "stepbrother": {
+      "display": "stepbrother",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BROTHER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "sisters": {
+      "display": "sisters",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root SISTER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "sisterly": {
+      "display": "sisterly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root SISTER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "sisterhood": {
+      "display": "sisterhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root SISTER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "stepsister": {
+      "display": "stepsister",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root SISTER",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "friends": {
+      "display": "friends",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FRIEND",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "friendly": {
+      "display": "friendly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FRIEND",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "friendship": {
+      "display": "friendship",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FRIEND",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "befriend": {
+      "display": "befriend",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FRIEND",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "unfriendly": {
+      "display": "unfriendly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FRIEND",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "friendless": {
+      "display": "friendless",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FRIEND",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "neighbours": {
+      "display": "neighbours",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root NEIGHBOR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "neighbourhood": {
+      "display": "neighbourhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root NEIGHBOR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "neighbourly": {
+      "display": "neighbourly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root NEIGHBOR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "neighbouring": {
+      "display": "neighbouring",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root NEIGHBOR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "neighborly": {
+      "display": "neighborly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root NEIGHBOR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "men": {
+      "display": "men",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "manly": {
+      "display": "manly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "manhood": {
+      "display": "manhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "mankind": {
+      "display": "mankind",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "gentleman": {
+      "display": "gentleman",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "human": {
+      "display": "human",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root MAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "women": {
+      "display": "women",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root WOMAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "womanly": {
+      "display": "womanly",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root WOMAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "womanhood": {
+      "display": "womanhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root WOMAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "womankind": {
+      "display": "womankind",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root WOMAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "lady": {
+      "display": "lady",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root WOMAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "female": {
+      "display": "female",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root WOMAN",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "boy": {
+      "display": "boy",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOY / GIRL",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "boys": {
+      "display": "boys",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOY / GIRL",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "boyhood": {
+      "display": "boyhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOY / GIRL",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "boyish": {
+      "display": "boyish",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOY / GIRL",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "girl": {
+      "display": "girl",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOY / GIRL",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "girls": {
+      "display": "girls",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOY / GIRL",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "girlhood": {
+      "display": "girlhood",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOY / GIRL",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "girlish": {
+      "display": "girlish",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOY / GIRL",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "chairs": {
+      "display": "chairs",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHAIR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "armchair": {
+      "display": "armchair",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHAIR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "wheelchair": {
+      "display": "wheelchair",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHAIR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bench": {
+      "display": "bench",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHAIR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "seat": {
+      "display": "seat",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHAIR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "throne": {
+      "display": "throne",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHAIR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "stool": {
+      "display": "stool",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CHAIR",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "tables": {
+      "display": "tables",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root TABLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "tabletop": {
+      "display": "tabletop",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root TABLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "tablecloth": {
+      "display": "tablecloth",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root TABLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "timetable": {
+      "display": "timetable",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root TABLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "tablet": {
+      "display": "tablet",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root TABLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "dining table": {
+      "display": "dining table",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root TABLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "cups": {
+      "display": "cups",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CUP",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "teacup": {
+      "display": "teacup",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CUP",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "cupful": {
+      "display": "cupful",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CUP",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "cupcake": {
+      "display": "cupcake",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CUP",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "cupboard": {
+      "display": "cupboard",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CUP",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bottles": {
+      "display": "bottles",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOTTLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bottled": {
+      "display": "bottled",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOTTLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bottlecap": {
+      "display": "bottlecap",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOTTLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "water bottle": {
+      "display": "water bottle",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOTTLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "feeding bottle": {
+      "display": "feeding bottle",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOTTLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "books": {
+      "display": "books",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOOK",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "booklet": {
+      "display": "booklet",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOOK",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bookcase": {
+      "display": "bookcase",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOOK",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bookmark": {
+      "display": "bookmark",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOOK",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "notebook": {
+      "display": "notebook",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOOK",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "storybook": {
+      "display": "storybook",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOOK",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "textbook": {
+      "display": "textbook",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root BOOK",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "dogs": {
+      "display": "dogs",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root DOG",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "doghouse": {
+      "display": "doghouse",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root DOG",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "doggy": {
+      "display": "doggy",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root DOG",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "puppy": {
+      "display": "puppy",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root DOG",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "hound": {
+      "display": "hound",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root DOG",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "canine": {
+      "display": "canine",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root DOG",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "cats": {
+      "display": "cats",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "catnip": {
+      "display": "catnip",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "catlike": {
+      "display": "catlike",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "caterwaul": {
+      "display": "caterwaul",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "kitten": {
+      "display": "kitten",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "feline": {
+      "display": "feline",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root CAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "food": {
+      "display": "food",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "foods": {
+      "display": "foods",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "feed": {
+      "display": "feed",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "foodie": {
+      "display": "foodie",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "apple": {
+      "display": "apple",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "banana": {
+      "display": "banana",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bread": {
+      "display": "bread",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "pizza": {
+      "display": "pizza",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "rice": {
+      "display": "rice",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "sandwich": {
+      "display": "sandwich",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "cake": {
+      "display": "cake",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "carrot": {
+      "display": "carrot",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root FOOD / EAT",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "car": {
+      "display": "car",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "cars": {
+      "display": "cars",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bike": {
+      "display": "bike",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bus": {
+      "display": "bus",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "train": {
+      "display": "train",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "truck": {
+      "display": "truck",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "motorcycle": {
+      "display": "motorcycle",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "aeroplane": {
+      "display": "aeroplane",
+      "type": "word",
+      "grade": 2,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {
+        "phoneme": "phoneme-a",
+        "phoneme_key": "phoneme-a",
+        "graphemes": []
+      },
+      "family": [],
+      "discovery": {
+        "next": [
+          "aerodrome",
+          "aerodynamic"
+        ],
+        "prev": [],
+        "ready": "Now that you know aeroplane, you can discover: aerodrome, aerodynamic."
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "boat": {
+      "display": "boat",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root VEHICLE",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "house": {
+      "display": "house",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "homes": {
+      "display": "homes",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "homely": {
+      "display": "homely",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "homework": {
+      "display": "homework",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "homeless": {
+      "display": "homeless",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bed": {
+      "display": "bed",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "door": {
+      "display": "door",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "window": {
+      "display": "window",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "roof": {
+      "display": "roof",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "kitchen": {
+      "display": "kitchen",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "bathroom": {
+      "display": "bathroom",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "garden": {
+      "display": "garden",
+      "type": "word",
+      "grade": null,
+      "gloss": "A word derived from or related to the root HOME",
+      "morphology": {},
+      "phonics": {},
+      "family": [],
+      "discovery": {
+        "next": [],
+        "prev": []
+      },
+      "errors": {},
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "biography": {
+      "display": "biography",
+      "type": "word",
+      "grade": 2,
+      "gloss": "the WRITING of a LIFE (combines bio + graph)",
+      "morphology": {
+        "root": "bio",
+        "root_key": "bio",
+        "meaning": "life",
+        "combo": true,
+        "roots": [
+          "bio",
+          "graph"
+        ],
+        "combo_gloss": "the WRITING of a LIFE"
+      },
+      "phonics": {
+        "phoneme": "b",
+        "phoneme_key": "phoneme-b",
+        "graphemes": [
+          "b"
+        ]
+      },
+      "family": [
+        "biography"
+      ],
+      "discovery": {
+        "next": [
+          "antibiotic",
+          "biodiversity"
+        ],
+        "prev": [
+          "graph",
+          "photograph",
+          "autograph"
+        ],
+        "ready": "Now that you know biography, you can discover: antibiotic, biodiversity."
+      },
+      "errors": {
+        "fakes": [
+          "big",
+          "bingo"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the BIO family but they don't: big, bingo."
+      },
+      "prerequisites": [
+        "photograph"
+      ],
+      "prerequisite_display": [
+        "photograph"
+      ],
+      "prerequisite_chain": "Before you can learn biography, you should know: photograph."
+    },
+    "geography": {
+      "display": "geography",
+      "type": "word",
+      "grade": 2,
+      "gloss": "WRITING about the EARTH (combines geo + graph)",
+      "morphology": {
+        "root": "geo",
+        "root_key": "geo",
+        "meaning": "earth",
+        "combo": true,
+        "roots": [
+          "geo",
+          "graph"
+        ],
+        "combo_gloss": "WRITING about the EARTH"
+      },
+      "phonics": {
+        "phoneme": "dʒ",
+        "phoneme_key": "phoneme-j",
+        "graphemes": [
+          "g",
+          "dge",
+          "j"
+        ]
+      },
+      "family": [
+        "geography"
+      ],
+      "discovery": {
+        "next": [
+          "geothermal",
+          "geode"
+        ],
+        "prev": [],
+        "ready": "Now that you know geography, you can discover: geothermal, geode."
+      },
+      "errors": {
+        "fakes": [
+          "george",
+          "geometry-of"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the GEO family but they don't: george, geometry-of."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "microscope": {
+      "display": "microscope",
+      "type": "word",
+      "grade": 2,
+      "gloss": "a tool to LOOK at SMALL things (combines micro + scope)",
+      "morphology": {
+        "root": "micro",
+        "root_key": "micro",
+        "meaning": "small",
+        "combo": true,
+        "roots": [
+          "micro",
+          "scope"
+        ],
+        "combo_gloss": "a tool to LOOK at SMALL things"
+      },
+      "phonics": {
+        "phoneme": "m",
+        "phoneme_key": "phoneme-m",
+        "graphemes": [
+          "m"
+        ]
+      },
+      "family": [
+        "microphone",
+        "microscope"
+      ],
+      "discovery": {
+        "next": [
+          "microbe",
+          "microwave",
+          "kaleidoscope",
+          "stethoscope"
+        ],
+        "prev": [],
+        "ready": "Now that you know microscope, you can discover: microbe, microwave, kaleidoscope, stethoscope."
+      },
+      "errors": {
+        "fakes": [
+          "mirror",
+          "micra"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the MICRO family but they don't: mirror, micra."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "microphone": {
+      "display": "microphone",
+      "type": "word",
+      "grade": 2,
+      "gloss": "a tool that catches a SMALL SOUND (combines micro + phon)",
+      "morphology": {
+        "root": "micro",
+        "root_key": "micro",
+        "meaning": "small",
+        "combo": true,
+        "roots": [
+          "micro",
+          "phon"
+        ],
+        "combo_gloss": "a tool that catches a SMALL SOUND"
+      },
+      "phonics": {
+        "phoneme": "m",
+        "phoneme_key": "phoneme-m",
+        "graphemes": [
+          "m"
+        ]
+      },
+      "family": [
+        "microphone",
+        "microscope"
+      ],
+      "discovery": {
+        "next": [
+          "microbe",
+          "microwave",
+          "megaphone",
+          "saxophone"
+        ],
+        "prev": [],
+        "ready": "Now that you know microphone, you can discover: microbe, microwave, megaphone, saxophone."
+      },
+      "errors": {
+        "fakes": [
+          "mirror",
+          "micra"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the MICRO family but they don't: mirror, micra."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "megaphone": {
+      "display": "megaphone",
+      "type": "word",
+      "grade": 2,
+      "gloss": "a cone that makes a voice BIG-SOUND (combines mega + phon)",
+      "morphology": {
+        "root": "mega",
+        "root_key": "mega",
+        "meaning": "big",
+        "combo": true,
+        "roots": [
+          "mega",
+          "phon"
+        ],
+        "combo_gloss": "a cone that makes a voice BIG-SOUND"
+      },
+      "phonics": {
+        "phoneme": "m",
+        "phoneme_key": "phoneme-m",
+        "graphemes": [
+          "m"
+        ]
+      },
+      "family": [
+        "megaphone"
+      ],
+      "discovery": {
+        "next": [
+          "megastar",
+          "megafauna"
+        ],
+        "prev": [
+          "microphone",
+          "phone",
+          "symphony"
+        ],
+        "ready": "Now that you know megaphone, you can discover: megastar, megafauna."
+      },
+      "errors": {
+        "fakes": [
+          "mega-no",
+          "meadow"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the MEGA family but they don't: mega-no, meadow."
+      },
+      "prerequisites": [
+        "microphone"
+      ],
+      "prerequisite_display": [
+        "microphone"
+      ],
+      "prerequisite_chain": "Before you can learn megaphone, you should know: microphone."
+    },
+    "telescope": {
+      "display": "telescope",
+      "type": "word",
+      "grade": 2,
+      "gloss": "a tool to LOOK at FAR things (combines tele + scope)",
+      "morphology": {
+        "root": "scope",
+        "root_key": "scope",
+        "meaning": "to look, to watch",
+        "combo": true,
+        "roots": [
+          "tele",
+          "scope"
+        ],
+        "combo_gloss": "a tool to LOOK at FAR things"
+      },
+      "phonics": {
+        "phoneme": "s",
+        "phoneme_key": "phoneme-s",
+        "graphemes": [
+          "c",
+          "s"
+        ]
+      },
+      "family": [
+        "microscope",
+        "telescope"
+      ],
+      "discovery": {
+        "next": [
+          "kaleidoscope",
+          "stethoscope",
+          "telegraph",
+          "teleport"
+        ],
+        "prev": [],
+        "ready": "Now that you know telescope, you can discover: kaleidoscope, stethoscope, telegraph, teleport."
+      },
+      "errors": {
+        "fakes": [
+          "scoop",
+          "scope-out"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the SCOPE family but they don't: scoop, scope-out."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "transport": {
+      "display": "transport",
+      "type": "word",
+      "grade": 2,
+      "gloss": "to CARRY (and pull) across — moving things from place to place (combines port + tract)",
+      "morphology": {
+        "root": "port",
+        "root_key": "port",
+        "meaning": "to carry",
+        "combo": true,
+        "roots": [
+          "port",
+          "tract"
+        ],
+        "combo_gloss": "to CARRY (and pull) across — moving things from place to place"
+      },
+      "phonics": {
+        "phoneme": "p",
+        "phoneme_key": "phoneme-p",
+        "graphemes": [
+          "p"
+        ]
+      },
+      "family": [
+        "transport"
+      ],
+      "discovery": {
+        "next": [
+          "export",
+          "porter"
+        ],
+        "prev": [],
+        "ready": "Now that you know transport, you can discover: export, porter."
+      },
+      "errors": {
+        "fakes": [
+          "portion",
+          "portrait"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the PORT family but they don't: portion, portrait."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "photograph": {
+      "display": "photograph",
+      "type": "word",
+      "grade": 3,
+      "gloss": "a picture DRAWN with LIGHT (combines photo + graph)",
+      "morphology": {
+        "root": "graph",
+        "root_key": "graph",
+        "meaning": "to write, to draw",
+        "combo": true,
+        "roots": [
+          "photo",
+          "graph"
+        ],
+        "combo_gloss": "a picture DRAWN with LIGHT"
+      },
+      "phonics": {
+        "phoneme": "g",
+        "phoneme_key": "phoneme-g",
+        "graphemes": [
+          "g"
+        ]
+      },
+      "family": [
+        "biography",
+        "geography",
+        "photograph",
+        "telegraph"
+      ],
+      "discovery": {
+        "next": [
+          "paragraph",
+          "biography",
+          "photogenic",
+          "telephoto"
+        ],
+        "prev": [],
+        "ready": "Now that you know photograph, you can discover: paragraph, biography, photogenic, telephoto."
+      },
+      "errors": {
+        "fakes": [
+          "grab",
+          "grape"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the GRAPH family but they don't: grab, grape."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "telephone": {
+      "display": "telephone",
+      "type": "word",
+      "grade": 3,
+      "gloss": "a FAR VOICE you can hear (combines tele + phon)",
+      "morphology": {
+        "root": "tele",
+        "root_key": "tele",
+        "meaning": "far, distant",
+        "combo": true,
+        "roots": [
+          "tele",
+          "phon"
+        ],
+        "combo_gloss": "a FAR VOICE you can hear"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "telegraph",
+        "telephone",
+        "telescope"
+      ],
+      "discovery": {
+        "next": [
+          "telegraph",
+          "teleport"
+        ],
+        "prev": [],
+        "ready": "Now that you know telephone, you can discover: telegraph, teleport."
+      },
+      "errors": {
+        "fakes": [
+          "tell",
+          "tile"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the TELE family but they don't: tell, tile."
+      },
+      "prerequisites": [],
+      "prerequisite_display": []
+    },
+    "telegraph": {
+      "display": "telegraph",
+      "type": "word",
+      "grade": 3,
+      "gloss": "WRITING sent FAR (combines tele + graph)",
+      "morphology": {
+        "root": "graph",
+        "root_key": "graph",
+        "meaning": "to write, to draw",
+        "combo": true,
+        "roots": [
+          "tele",
+          "graph"
+        ],
+        "combo_gloss": "WRITING sent FAR"
+      },
+      "phonics": {
+        "phoneme": "t",
+        "phoneme_key": "phoneme-t",
+        "graphemes": [
+          "t"
+        ]
+      },
+      "family": [
+        "biography",
+        "geography",
+        "photograph",
+        "telegraph"
+      ],
+      "discovery": {
+        "next": [],
+        "prev": [
+          "telescope",
+          "telephone",
+          "television"
+        ]
+      },
+      "errors": {
+        "fakes": [
+          "grab",
+          "grape"
+        ],
+        "watch_for": "Watch out! These words look like they belong to the GRAPH family but they don't: grab, grape."
+      },
+      "prerequisites": [
+        "telescope",
+        "telephone"
+      ],
+      "prerequisite_display": [
+        "telescope",
+        "telephone"
+      ],
+      "prerequisite_chain": "Before you can learn telegraph, you should know: telescope → telephone."
+    }
+  },
+  "roots": {
+    "tri": {
+      "display": "TRI",
+      "type": "root",
+      "grade": 1,
+      "meaning": "three",
+      "words": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod"
+      ],
+      "fakes": [
+        "trip",
+        "trumpet"
+      ],
+      "family_ready": "The TRI family: triangle, tricycle, trio, triplets, tripod. Each word carries the idea of 'three'.",
+      "story": "Meet Tri, a tiny magical friend.",
+      "char": "Tri",
+      "emoji": "3️⃣",
+      "conn": {
+        "type": "cognate",
+        "src": "त्रि (tri)",
+        "hi": "तीन (teen)",
+        "bn": "তিন (tin)"
+      },
+      "etymology_links": {
+        "English root TRI ↔ Hindi तीन (teen)": "तीन (teen)",
+        "English root TRI ↔ Bengali তিন (tin)": "তিন (tin)",
+        "English root TRI ↔ Sanskrit त्रि (tri)": "त्रि (tri)",
+        "English root TRI ↔ English TRI": "TRI"
+      }
+    },
+    "uni": {
+      "display": "UNI",
+      "type": "root",
+      "grade": 1,
+      "meaning": "one",
+      "words": [
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unique",
+        "unite"
+      ],
+      "fakes": [
+        "until",
+        "uncle"
+      ],
+      "family_ready": "The UNI family: unicorn, unicycle, uniform, unique, unite. Each word carries the idea of 'one'.",
+      "story": "Meet Uni, who loves being the only one.",
+      "char": "Uni",
+      "emoji": "1️⃣",
+      "conn": {
+        "type": "translation",
+        "hi": "एक (ek)",
+        "bn": "এক (ek)"
+      },
+      "etymology_links": {
+        "English root UNI ↔ Hindi एक (ek)": "एक (ek)",
+        "English root UNI ↔ Bengali এক (ek)": "এক (ek)",
+        "English root UNI ↔ English UNI": "UNI"
+      }
+    },
+    "bi": {
+      "display": "BI",
+      "type": "root",
+      "grade": 1,
+      "meaning": "two",
+      "words": [
+        "bicycle",
+        "bilingual",
+        "binoculars",
+        "biped",
+        "biweekly"
+      ],
+      "fakes": [
+        "big",
+        "bird"
+      ],
+      "family_ready": "The BI family: bicycle, bilingual, binoculars, biped, biweekly. Each word carries the idea of 'two'.",
+      "story": "Meet Bi, who always comes in twos.",
+      "char": "Bi",
+      "emoji": "2️⃣",
+      "conn": {
+        "type": "cognate",
+        "src": "द्वि (dvi)",
+        "hi": "दो (do)",
+        "bn": "দুই (dui)"
+      },
+      "etymology_links": {
+        "English root BI ↔ Hindi दो (do)": "दो (do)",
+        "English root BI ↔ Bengali দুই (dui)": "দুই (dui)",
+        "English root BI ↔ Sanskrit द्वि (dvi)": "द्वि (dvi)",
+        "English root BI ↔ English BI": "BI"
+      }
+    },
+    "octo": {
+      "display": "OCTO",
+      "type": "root",
+      "grade": 1,
+      "meaning": "eight",
+      "words": [
+        "octagon",
+        "octave",
+        "octet",
+        "october",
+        "octopus"
+      ],
+      "fakes": [
+        "doctor",
+        "octane"
+      ],
+      "family_ready": "The OCTO family: octagon, octave, octet, october, octopus. Each word carries the idea of 'eight'.",
+      "story": "Meet Octo, the friend with eight of everything.",
+      "char": "Octo",
+      "emoji": "8️⃣",
+      "conn": {
+        "type": "cognate",
+        "src": "अष्ट (aṣṭa)",
+        "hi": "आठ (aath)",
+        "bn": "আট (aat)"
+      },
+      "etymology_links": {
+        "English root OCTO ↔ Hindi आठ (aath)": "आठ (aath)",
+        "English root OCTO ↔ Bengali আট (aat)": "আট (aat)",
+        "English root OCTO ↔ Sanskrit अष्ट (aṣṭa)": "अष्ट (aṣṭa)",
+        "English root OCTO ↔ English OCTO": "OCTO"
+      }
+    },
+    "cent": {
+      "display": "CENT",
+      "type": "root",
+      "grade": 1,
+      "meaning": "hundred",
+      "words": [
+        "centenary",
+        "centimetre",
+        "centipede",
+        "century",
+        "percent"
+      ],
+      "fakes": [
+        "center",
+        "scent"
+      ],
+      "family_ready": "The CENT family: centenary, centimetre, centipede, century, percent. Each word carries the idea of 'hundred'.",
+      "story": "Meet Cent, who loves the big number hundred!",
+      "char": "Cent",
+      "emoji": "💯",
+      "conn": {
+        "type": "cognate",
+        "src": "शत (śata)",
+        "hi": "सौ (sau)",
+        "bn": "একশো (eksho)"
+      },
+      "etymology_links": {
+        "English root CENT ↔ Hindi सौ (sau)": "सौ (sau)",
+        "English root CENT ↔ Bengali একশো (eksho)": "একশো (eksho)",
+        "English root CENT ↔ Sanskrit शत (śata)": "शत (śata)",
+        "English root CENT ↔ English CENT": "CENT"
+      }
+    },
+    "dent": {
+      "display": "DENT",
+      "type": "root",
+      "grade": 1,
+      "meaning": "tooth",
+      "words": [
+        "dental",
+        "dentist",
+        "denture",
+        "indent",
+        "trident"
+      ],
+      "fakes": [
+        "dent",
+        "denim"
+      ],
+      "family_ready": "The DENT family: dental, dentist, denture, indent, trident. Each word carries the idea of 'tooth'.",
+      "story": "Meet Denta, who keeps every tooth shiny.",
+      "char": "Denta",
+      "emoji": "🦷",
+      "conn": {
+        "type": "cognate",
+        "src": "दन्त (danta)",
+        "hi": "दाँत (daant)",
+        "bn": "দাঁত (daant)"
+      },
+      "etymology_links": {
+        "English root DENT ↔ Hindi दाँत (daant)": "दाँत (daant)",
+        "English root DENT ↔ Bengali দাঁত (daant)": "দাঁত (daant)",
+        "English root DENT ↔ Sanskrit दन्त (danta)": "दन्त (danta)",
+        "English root DENT ↔ English DENT": "DENT"
+      }
+    },
+    "ped": {
+      "display": "PED",
+      "type": "root",
+      "grade": 1,
+      "meaning": "foot",
+      "words": [
+        "centipede",
+        "pedal",
+        "pedestrian",
+        "pedicure",
+        "tripod"
+      ],
+      "fakes": [
+        "speed",
+        "pedigree"
+      ],
+      "family_ready": "The PED family: centipede, pedal, pedestrian, pedicure, tripod. Each word carries the idea of 'foot'.",
+      "story": "Meet Ped, who is all about feet!",
+      "char": "Ped",
+      "emoji": "🦶",
+      "conn": {
+        "type": "cognate",
+        "src": "पद (pada)",
+        "hi": "पैर / पद (pair / pad)",
+        "bn": "পা / পদ (paa / pad)"
+      },
+      "etymology_links": {
+        "English root PED ↔ Hindi पैर / पद (pair / pad)": "पैर / पद (pair / pad)",
+        "English root PED ↔ Bengali পা / পদ (paa / pad)": "পা / পদ (paa / pad)",
+        "English root PED ↔ Sanskrit पद (pada)": "पद (pada)",
+        "English root PED ↔ English PED": "PED"
+      }
+    },
+    "manu": {
+      "display": "MANU",
+      "type": "root",
+      "grade": 1,
+      "meaning": "hand",
+      "words": [
+        "manage",
+        "manicure",
+        "manual",
+        "manufacture",
+        "manuscript"
+      ],
+      "fakes": [
+        "many",
+        "manner"
+      ],
+      "family_ready": "The MANU family: manage, manicure, manual, manufacture, manuscript. Each word carries the idea of 'hand'.",
+      "story": "Meet Manny, whose hands can make anything.",
+      "char": "Manny",
+      "emoji": "✋",
+      "conn": {
+        "type": "translation",
+        "hi": "हाथ (haath)",
+        "bn": "হাত (haat)"
+      },
+      "etymology_links": {
+        "English root MANU ↔ Hindi हाथ (haath)": "हाथ (haath)",
+        "English root MANU ↔ Bengali হাত (haat)": "হাত (haat)",
+        "English root MANU ↔ English MANU": "MANU"
+      }
+    },
+    "aqua": {
+      "display": "AQUA",
+      "type": "root",
+      "grade": 1,
+      "meaning": "water",
+      "words": [
+        "aquanaut",
+        "aquaplane",
+        "aquarium",
+        "aquatic",
+        "aqueduct"
+      ],
+      "fakes": [
+        "square",
+        "quack"
+      ],
+      "family_ready": "The AQUA family: aquanaut, aquaplane, aquarium, aquatic, aqueduct. Each word carries the idea of 'water'.",
+      "story": "Meet Aqua, who carries water everywhere.",
+      "char": "Aqua",
+      "emoji": "💧",
+      "conn": {
+        "type": "translation",
+        "hi": "जल / पानी (jal / paani)",
+        "bn": "জল / পানি (jol / paani)"
+      },
+      "etymology_links": {
+        "English root AQUA ↔ Hindi जल / पानी (jal / paani)": "जल / पानी (jal / paani)",
+        "English root AQUA ↔ Bengali জল / পানি (jol / paani)": "জল / পানি (jol / paani)",
+        "English root AQUA ↔ English AQUA": "AQUA"
+      }
+    },
+    "sol": {
+      "display": "SOL",
+      "type": "root",
+      "grade": 1,
+      "meaning": "sun",
+      "words": [
+        "parasol",
+        "solar",
+        "solar panel",
+        "solarium",
+        "solstice"
+      ],
+      "fakes": [
+        "solid",
+        "sold"
+      ],
+      "family_ready": "The SOL family: parasol, solar, solar panel, solarium, solstice. Each word carries the idea of 'sun'.",
+      "story": "Meet Sol, bright and warm like the sun.",
+      "char": "Sol",
+      "emoji": "☀️",
+      "conn": {
+        "type": "cognate",
+        "src": "सूर्य (sūrya)",
+        "hi": "सूरज (sooraj)",
+        "bn": "সূর্য (surjo)"
+      },
+      "etymology_links": {
+        "English root SOL ↔ Hindi सूरज (sooraj)": "सूरज (sooraj)",
+        "English root SOL ↔ Bengali সূর্য (surjo)": "সূর্য (surjo)",
+        "English root SOL ↔ Sanskrit सूर्य (sūrya)": "सूर्य (sūrya)",
+        "English root SOL ↔ English SOL": "SOL"
+      }
+    },
+    "luna": {
+      "display": "LUNA",
+      "type": "root",
+      "grade": 1,
+      "meaning": "moon",
+      "words": [
+        "interlunar",
+        "lunamoth",
+        "lunar",
+        "lunar eclipse",
+        "lunatic"
+      ],
+      "fakes": [
+        "lunch",
+        "lung"
+      ],
+      "family_ready": "The LUNA family: interlunar, lunamoth, lunar, lunar eclipse, lunatic. Each word carries the idea of 'moon'.",
+      "story": "Meet Luna, soft and silver like the moon.",
+      "char": "Luna",
+      "emoji": "🌙",
+      "conn": {
+        "type": "translation",
+        "hi": "चाँद (chaand)",
+        "bn": "চাঁদ (chaand)"
+      },
+      "etymology_links": {
+        "English root LUNA ↔ Hindi चाँद (chaand)": "चाँद (chaand)",
+        "English root LUNA ↔ Bengali চাঁদ (chaand)": "চাঁদ (chaand)",
+        "English root LUNA ↔ English LUNA": "LUNA"
+      }
+    },
+    "terr": {
+      "display": "TERR",
+      "type": "root",
+      "grade": 1,
+      "meaning": "earth, land",
+      "words": [
+        "subterranean",
+        "terrace",
+        "terrain",
+        "terrarium",
+        "territory"
+      ],
+      "fakes": [
+        "terror",
+        "terrible"
+      ],
+      "family_ready": "The TERR family: subterranean, terrace, terrain, terrarium, territory. Each word carries the idea of 'earth, land'.",
+      "story": "Meet Terra, who loves the good brown earth.",
+      "char": "Terra",
+      "emoji": "🌍",
+      "conn": {
+        "type": "translation",
+        "hi": "धरती (dharti)",
+        "bn": "মাটি (maati)"
+      },
+      "etymology_links": {
+        "English root TERR ↔ Hindi धरती (dharti)": "धरती (dharti)",
+        "English root TERR ↔ Bengali মাটি (maati)": "মাটি (maati)",
+        "English root TERR ↔ English TERR": "TERR"
+      }
+    },
+    "flor": {
+      "display": "FLOR",
+      "type": "root",
+      "grade": 1,
+      "meaning": "flower",
+      "words": [
+        "flora",
+        "floral",
+        "floral crown",
+        "florist",
+        "flourish"
+      ],
+      "fakes": [
+        "floor",
+        "flour"
+      ],
+      "family_ready": "The FLOR family: flora, floral, floral crown, florist, flourish. Each word carries the idea of 'flower'.",
+      "story": "Meet Flora, who makes flowers bloom.",
+      "char": "Flora",
+      "emoji": "🌸",
+      "conn": {
+        "type": "translation",
+        "hi": "फूल (phool)",
+        "bn": "ফুল (phul)"
+      },
+      "etymology_links": {
+        "English root FLOR ↔ Hindi फूल (phool)": "फूल (phool)",
+        "English root FLOR ↔ Bengali ফুল (phul)": "ফুল (phul)",
+        "English root FLOR ↔ English FLOR": "FLOR"
+      }
+    },
+    "nov": {
+      "display": "NOV",
+      "type": "root",
+      "grade": 1,
+      "meaning": "new",
+      "words": [
+        "innovate",
+        "novel",
+        "novelty",
+        "novice",
+        "renovate"
+      ],
+      "fakes": [
+        "november",
+        "none"
+      ],
+      "family_ready": "The NOV family: innovate, novel, novelty, novice, renovate. Each word carries the idea of 'new'.",
+      "story": "Meet Nova, who loves everything new.",
+      "char": "Nova",
+      "emoji": "✨",
+      "conn": {
+        "type": "cognate",
+        "src": "नव (nava)",
+        "hi": "नया (nayaa)",
+        "bn": "নতুন (notun)"
+      },
+      "etymology_links": {
+        "English root NOV ↔ Hindi नया (nayaa)": "नया (nayaa)",
+        "English root NOV ↔ Bengali নতুন (notun)": "নতুন (notun)",
+        "English root NOV ↔ Sanskrit नव (nava)": "नव (nava)",
+        "English root NOV ↔ English NOV": "NOV"
+      }
+    },
+    "person": {
+      "display": "PERSON",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "father": {
+      "display": "FATHER",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "mother": {
+      "display": "MOTHER",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "parent": {
+      "display": "PARENT",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "child": {
+      "display": "CHILD",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "family": {
+      "display": "FAMILY",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "brother": {
+      "display": "BROTHER",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "sister": {
+      "display": "SISTER",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "friend": {
+      "display": "FRIEND",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "neighbor": {
+      "display": "NEIGHBOR",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "man": {
+      "display": "MAN",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "woman": {
+      "display": "WOMAN",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "boy / girl": {
+      "display": "BOY / GIRL",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "chair": {
+      "display": "CHAIR",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "table": {
+      "display": "TABLE",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "cup": {
+      "display": "CUP",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "bottle": {
+      "display": "BOTTLE",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "dog": {
+      "display": "DOG",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "cat": {
+      "display": "CAT",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "food / eat": {
+      "display": "FOOD / EAT",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "vehicle": {
+      "display": "VEHICLE",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    },
+    "home": {
+      "display": "HOME",
+      "type": "root",
+      "grade": null,
+      "meaning": "",
+      "words": [],
+      "fakes": [],
+      "family_ready": "",
+      "etymology_links": {}
+    }
+  },
+  "phonemes": {
+    "phoneme-f": {
+      "display": "f",
+      "voice": false,
+      "place": "Labiodental",
+      "manner": "Fricative",
+      "examples": [
+        "fan",
+        "fish",
+        "leaf",
+        "coffee"
+      ],
+      "aliases": [
+        "Fan Sound",
+        "the fan sound"
+      ],
+      "graphemes": [
+        "f",
+        "ph",
+        "gh"
+      ]
+    },
+    "phoneme-v": {
+      "display": "v",
+      "voice": true,
+      "place": "Labiodental",
+      "manner": "Fricative",
+      "examples": [
+        "van",
+        "river",
+        "love",
+        "give"
+      ],
+      "aliases": [
+        "Vroom Sound"
+      ],
+      "graphemes": [
+        "v"
+      ]
+    },
+    "phoneme-m": {
+      "display": "m",
+      "voice": true,
+      "place": "Bilabial",
+      "manner": "Nasal",
+      "examples": [
+        "man",
+        "moon",
+        "mat",
+        "summer"
+      ],
+      "aliases": [
+        "Humming Sound",
+        "the humming sound"
+      ],
+      "graphemes": [
+        "m"
+      ]
+    },
+    "phoneme-n": {
+      "display": "n",
+      "voice": true,
+      "place": "Alveolar",
+      "manner": "Nasal",
+      "examples": [
+        "no",
+        "net",
+        "can",
+        "penny"
+      ],
+      "aliases": [
+        "Nose Sound",
+        "the nose sound"
+      ],
+      "graphemes": [
+        "n",
+        "kn",
+        "gn"
+      ]
+    },
+    "phoneme-ng": {
+      "display": "ŋ",
+      "voice": true,
+      "place": "Velar",
+      "manner": "Nasal",
+      "examples": [
+        "sing",
+        "ring",
+        "finger",
+        "long"
+      ],
+      "aliases": [
+        "Ring Sound"
+      ],
+      "graphemes": [
+        "ng"
+      ]
+    },
+    "phoneme-p": {
+      "display": "p",
+      "voice": false,
+      "place": "Bilabial",
+      "manner": "Plosive",
+      "examples": [
+        "pat",
+        "pin",
+        "cup",
+        "apple"
+      ],
+      "aliases": [
+        "Pop Sound"
+      ],
+      "graphemes": [
+        "p"
+      ]
+    },
+    "phoneme-b": {
+      "display": "b",
+      "voice": true,
+      "place": "Bilabial",
+      "manner": "Plosive",
+      "examples": [
+        "bat",
+        "bin",
+        "cab",
+        "rubber"
+      ],
+      "aliases": [
+        "Bounce Sound"
+      ],
+      "graphemes": [
+        "b"
+      ]
+    },
+    "phoneme-t": {
+      "display": "t",
+      "voice": false,
+      "place": "Alveolar",
+      "manner": "Plosive",
+      "examples": [
+        "top",
+        "cat",
+        "sit",
+        "letter"
+      ],
+      "aliases": [
+        "Tongue-Tap Sound"
+      ],
+      "graphemes": [
+        "t"
+      ]
+    },
+    "phoneme-d": {
+      "display": "d",
+      "voice": true,
+      "place": "Alveolar",
+      "manner": "Plosive",
+      "examples": [
+        "dog",
+        "dig",
+        "bed",
+        "ladder"
+      ],
+      "aliases": [
+        "Drum Sound"
+      ],
+      "graphemes": [
+        "d"
+      ]
+    },
+    "phoneme-k": {
+      "display": "k",
+      "voice": false,
+      "place": "Velar",
+      "manner": "Plosive",
+      "examples": [
+        "cat",
+        "kit",
+        "duck",
+        "packet"
+      ],
+      "aliases": [
+        "Click Sound"
+      ],
+      "graphemes": [
+        "k",
+        "c",
+        "ck"
+      ]
+    },
+    "phoneme-g": {
+      "display": "g",
+      "voice": true,
+      "place": "Velar",
+      "manner": "Plosive",
+      "examples": [
+        "go",
+        "got",
+        "bag",
+        "bigger"
+      ],
+      "aliases": [
+        "Growl Sound"
+      ],
+      "graphemes": [
+        "g"
+      ]
+    },
+    "phoneme-h": {
+      "display": "h",
+      "voice": false,
+      "place": "Glottal",
+      "manner": "Fricative",
+      "examples": [
+        "hat",
+        "hot",
+        "hen",
+        "behind"
+      ],
+      "aliases": [
+        "Breath Sound"
+      ],
+      "graphemes": [
+        "h",
+        "wh"
+      ]
+    },
+    "phoneme-l": {
+      "display": "l",
+      "voice": true,
+      "place": "Alveolar",
+      "manner": "Lateral",
+      "examples": [
+        "let",
+        "log",
+        "bell",
+        "call"
+      ],
+      "aliases": [
+        "Lift Sound"
+      ],
+      "graphemes": [
+        "l"
+      ]
+    },
+    "phoneme-r": {
+      "display": "r",
+      "voice": true,
+      "place": "Alveolar",
+      "manner": "Approximant",
+      "examples": [
+        "red",
+        "ran",
+        "car",
+        "around"
+      ],
+      "aliases": [
+        "Roll Sound"
+      ],
+      "graphemes": [
+        "r",
+        "wr"
+      ]
+    },
+    "phoneme-w": {
+      "display": "w",
+      "voice": true,
+      "place": "Labial-velar",
+      "manner": "Approximant",
+      "examples": [
+        "wet",
+        "win",
+        "cow",
+        "away"
+      ],
+      "aliases": [
+        "Wind Sound"
+      ],
+      "graphemes": [
+        "wh",
+        "w"
+      ]
+    },
+    "phoneme-y": {
+      "display": "j",
+      "voice": true,
+      "place": "Palatal",
+      "manner": "Approximant",
+      "examples": [
+        "yes",
+        "yam",
+        "boy",
+        "beyond"
+      ],
+      "aliases": [
+        "Yell Sound"
+      ],
+      "graphemes": [
+        "y"
+      ]
+    },
+    "phoneme-s": {
+      "display": "s",
+      "voice": false,
+      "place": "Alveolar",
+      "manner": "Fricative",
+      "examples": [
+        "sun",
+        "sit",
+        "bus",
+        "class"
+      ],
+      "aliases": [
+        "Snake Sound",
+        "the snake sound"
+      ],
+      "graphemes": [
+        "c",
+        "s"
+      ]
+    },
+    "phoneme-z": {
+      "display": "z",
+      "voice": true,
+      "place": "Alveolar",
+      "manner": "Fricative",
+      "examples": [
+        "zip",
+        "zoo",
+        "buzz",
+        "lazy"
+      ],
+      "aliases": [
+        "Buzz Sound"
+      ],
+      "graphemes": [
+        "s",
+        "z"
+      ]
+    },
+    "phoneme-sh": {
+      "display": "ʃ",
+      "voice": false,
+      "place": "Postalveolar",
+      "manner": "Fricative",
+      "examples": [
+        "ship",
+        "fish",
+        "wish",
+        "shed"
+      ],
+      "aliases": [
+        "Quiet Sound"
+      ],
+      "graphemes": [
+        "sh"
+      ]
+    },
+    "phoneme-zh": {
+      "display": "ʒ",
+      "voice": true,
+      "place": "Postalveolar",
+      "manner": "Fricative",
+      "examples": [
+        "measure",
+        "vision",
+        "beige"
+      ],
+      "aliases": [
+        "Treasure Sound"
+      ],
+      "graphemes": []
+    },
+    "phoneme-ch": {
+      "display": "tʃ",
+      "voice": false,
+      "place": "Postalveolar",
+      "manner": "Affricate",
+      "examples": [
+        "chip",
+        "chat",
+        "rich",
+        "watch"
+      ],
+      "aliases": [
+        "Choo-Choo Sound"
+      ],
+      "graphemes": [
+        "ch",
+        "tch"
+      ]
+    },
+    "phoneme-j": {
+      "display": "dʒ",
+      "voice": true,
+      "place": "Postalveolar",
+      "manner": "Affricate",
+      "examples": [
+        "jam",
+        "jet",
+        "judge",
+        "age"
+      ],
+      "aliases": [
+        "Jump Sound"
+      ],
+      "graphemes": [
+        "g",
+        "dge",
+        "j"
+      ]
+    },
+    "phoneme-th": {
+      "display": "θ",
+      "voice": false,
+      "place": "Dental",
+      "manner": "Fricative",
+      "examples": [
+        "think",
+        "thumb",
+        "bath",
+        "three"
+      ],
+      "aliases": [
+        "Tongue-Peek Sound"
+      ],
+      "graphemes": [
+        "th"
+      ]
+    },
+    "phoneme-dh": {
+      "display": "ð",
+      "voice": true,
+      "place": "Dental",
+      "manner": "Fricative",
+      "examples": [
+        "this",
+        "that",
+        "mother",
+        "father"
+      ],
+      "aliases": [
+        "Voice-Tongue-Peek Sound"
+      ],
+      "graphemes": [
+        "th"
+      ]
+    }
+  },
+  "graphemes": {
+    "grapheme-f": {
+      "display": "f",
+      "phonemes": [
+        "f"
+      ]
+    },
+    "grapheme-ph": {
+      "display": "ph",
+      "phonemes": [
+        "f"
+      ]
+    },
+    "grapheme-gh": {
+      "display": "gh",
+      "phonemes": [
+        "f"
+      ]
+    },
+    "grapheme-v": {
+      "display": "v",
+      "phonemes": [
+        "v"
+      ]
+    },
+    "grapheme-m": {
+      "display": "m",
+      "phonemes": [
+        "m"
+      ]
+    },
+    "grapheme-n": {
+      "display": "n",
+      "phonemes": [
+        "n"
+      ]
+    },
+    "grapheme-kn": {
+      "display": "kn",
+      "phonemes": [
+        "n"
+      ]
+    },
+    "grapheme-gn": {
+      "display": "gn",
+      "phonemes": [
+        "n"
+      ]
+    },
+    "grapheme-ng": {
+      "display": "ng",
+      "phonemes": [
+        "ŋ"
+      ]
+    },
+    "grapheme-p": {
+      "display": "p",
+      "phonemes": [
+        "p"
+      ]
+    },
+    "grapheme-b": {
+      "display": "b",
+      "phonemes": [
+        "b"
+      ]
+    },
+    "grapheme-t": {
+      "display": "t",
+      "phonemes": [
+        "t"
+      ]
+    },
+    "grapheme-d": {
+      "display": "d",
+      "phonemes": [
+        "d"
+      ]
+    },
+    "grapheme-k": {
+      "display": "k",
+      "phonemes": [
+        "k"
+      ]
+    },
+    "grapheme-c": {
+      "display": "c",
+      "phonemes": [
+        "k",
+        "s"
+      ]
+    },
+    "grapheme-ck": {
+      "display": "ck",
+      "phonemes": [
+        "k"
+      ]
+    },
+    "grapheme-ch": {
+      "display": "ch",
+      "phonemes": [
+        "tʃ"
+      ]
+    },
+    "grapheme-tch": {
+      "display": "tch",
+      "phonemes": [
+        "tʃ"
+      ]
+    },
+    "grapheme-g": {
+      "display": "g",
+      "phonemes": [
+        "g",
+        "dʒ"
+      ]
+    },
+    "grapheme-dge": {
+      "display": "dge",
+      "phonemes": [
+        "dʒ"
+      ]
+    },
+    "grapheme-j": {
+      "display": "j",
+      "phonemes": [
+        "dʒ"
+      ]
+    },
+    "grapheme-h": {
+      "display": "h",
+      "phonemes": [
+        "h"
+      ]
+    },
+    "grapheme-wh": {
+      "display": "wh",
+      "phonemes": [
+        "w",
+        "h"
+      ]
+    },
+    "grapheme-w": {
+      "display": "w",
+      "phonemes": [
+        "w"
+      ]
+    },
+    "grapheme-l": {
+      "display": "l",
+      "phonemes": [
+        "l"
+      ]
+    },
+    "grapheme-r": {
+      "display": "r",
+      "phonemes": [
+        "r"
+      ]
+    },
+    "grapheme-wr": {
+      "display": "wr",
+      "phonemes": [
+        "r"
+      ]
+    },
+    "grapheme-y": {
+      "display": "y",
+      "phonemes": [
+        "j"
+      ]
+    },
+    "grapheme-s": {
+      "display": "s",
+      "phonemes": [
+        "s",
+        "z"
+      ]
+    },
+    "grapheme-z": {
+      "display": "z",
+      "phonemes": [
+        "z"
+      ]
+    },
+    "grapheme-sh": {
+      "display": "sh",
+      "phonemes": [
+        "ʃ"
+      ]
+    },
+    "grapheme-th": {
+      "display": "th",
+      "phonemes": [
+        "θ",
+        "ð"
+      ]
+    }
+  },
+  "indexes": {
+    "by_alias": {
+      "fan sound": "phoneme-f",
+      "the fan sound": "phoneme-f",
+      "vroom sound": "phoneme-v",
+      "humming sound": "phoneme-m",
+      "the humming sound": "phoneme-m",
+      "nose sound": "phoneme-n",
+      "the nose sound": "phoneme-n",
+      "ring sound": "phoneme-ng",
+      "pop sound": "phoneme-p",
+      "bounce sound": "phoneme-b",
+      "tongue-tap sound": "phoneme-t",
+      "drum sound": "phoneme-d",
+      "click sound": "phoneme-k",
+      "growl sound": "phoneme-g",
+      "breath sound": "phoneme-h",
+      "lift sound": "phoneme-l",
+      "roll sound": "phoneme-r",
+      "wind sound": "phoneme-w",
+      "yell sound": "phoneme-y",
+      "snake sound": "phoneme-s",
+      "the snake sound": "phoneme-s",
+      "buzz sound": "phoneme-z",
+      "quiet sound": "phoneme-sh",
+      "treasure sound": "phoneme-zh",
+      "choo-choo sound": "phoneme-ch",
+      "jump sound": "phoneme-j",
+      "tongue-peek sound": "phoneme-th",
+      "voice-tongue-peek sound": "phoneme-dh"
+    },
+    "by_grade": {
+      "1": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod",
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unite",
+        "unique",
+        "bicycle",
+        "binoculars",
+        "biped",
+        "bilingual",
+        "biweekly",
+        "octopus",
+        "octagon",
+        "october",
+        "octave",
+        "octet",
+        "century",
+        "centipede",
+        "percent",
+        "centenary",
+        "centimetre",
+        "dentist",
+        "dental",
+        "trident",
+        "denture",
+        "indent",
+        "pedal",
+        "pedestrian",
+        "pedicure",
+        "manual",
+        "manicure",
+        "manufacture",
+        "manuscript",
+        "manage",
+        "aquarium",
+        "aquatic",
+        "aqueduct",
+        "aquanaut",
+        "aquaplane",
+        "solar",
+        "solarium",
+        "parasol",
+        "solstice",
+        "solar panel",
+        "lunar",
+        "lunatic",
+        "lunamoth",
+        "lunar eclipse",
+        "interlunar",
+        "terrain",
+        "territory",
+        "terrarium",
+        "terrace",
+        "subterranean",
+        "floral",
+        "florist",
+        "flora",
+        "flourish",
+        "floral crown",
+        "zoo",
+        "zoology",
+        "zookeeper",
+        "zoologist",
+        "protozoa",
+        "novel",
+        "novice",
+        "renovate",
+        "innovate",
+        "novelty"
+      ],
+      "2": [
+        "aeroplane",
+        "biography",
+        "geography",
+        "microscope",
+        "microphone",
+        "megaphone",
+        "telescope",
+        "transport"
+      ],
+      "3": [
+        "photograph",
+        "telephone",
+        "telegraph"
+      ]
+    },
+    "by_root": {
+      "tri": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod"
+      ],
+      "uni": [
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unite",
+        "unique"
+      ],
+      "bi": [
+        "bicycle",
+        "binoculars",
+        "biped",
+        "bilingual",
+        "biweekly"
+      ],
+      "octo": [
+        "octopus",
+        "octagon",
+        "october",
+        "octave",
+        "octet"
+      ],
+      "cent": [
+        "century",
+        "centipede",
+        "percent",
+        "centenary",
+        "centimetre"
+      ],
+      "dent": [
+        "dentist",
+        "dental",
+        "trident",
+        "denture",
+        "indent"
+      ],
+      "ped": [
+        "pedal",
+        "pedestrian",
+        "pedicure"
+      ],
+      "manu": [
+        "manual",
+        "manicure",
+        "manufacture",
+        "manuscript",
+        "manage"
+      ],
+      "aqua": [
+        "aquarium",
+        "aquatic",
+        "aqueduct",
+        "aquanaut",
+        "aquaplane"
+      ],
+      "sol": [
+        "solar",
+        "solarium",
+        "parasol",
+        "solstice",
+        "solar panel"
+      ],
+      "luna": [
+        "lunar",
+        "lunatic",
+        "lunamoth",
+        "lunar eclipse",
+        "interlunar"
+      ],
+      "terr": [
+        "terrain",
+        "territory",
+        "terrarium",
+        "terrace",
+        "subterranean"
+      ],
+      "flor": [
+        "floral",
+        "florist",
+        "flora",
+        "flourish",
+        "floral crown"
+      ],
+      "zoo": [
+        "zoology",
+        "zookeeper",
+        "zoologist",
+        "protozoa"
+      ],
+      "nov": [
+        "novel",
+        "novice",
+        "renovate",
+        "innovate",
+        "novelty"
+      ],
+      "bio": [
+        "biography"
+      ],
+      "geo": [
+        "geography"
+      ],
+      "micro": [
+        "microscope",
+        "microphone"
+      ],
+      "mega": [
+        "megaphone"
+      ],
+      "scope": [
+        "telescope"
+      ],
+      "port": [
+        "transport"
+      ],
+      "graph": [
+        "photograph",
+        "telegraph"
+      ],
+      "tele": [
+        "telephone"
+      ]
+    },
+    "by_phoneme": {
+      "phoneme-t": [
+        "triangle",
+        "tricycle",
+        "trio",
+        "triplets",
+        "tripod",
+        "terrain",
+        "territory",
+        "terrarium",
+        "terrace",
+        "subterranean",
+        "telephone",
+        "telegraph"
+      ],
+      "phoneme-y": [
+        "unicorn",
+        "unicycle",
+        "uniform",
+        "unite",
+        "unique"
+      ],
+      "phoneme-b": [
+        "bicycle",
+        "binoculars",
+        "biped",
+        "bilingual",
+        "biweekly",
+        "biography"
+      ],
+      "phoneme-o": [
+        "octopus",
+        "octagon",
+        "october",
+        "octave",
+        "octet"
+      ],
+      "phoneme-s": [
+        "century",
+        "centipede",
+        "percent",
+        "centenary",
+        "centimetre",
+        "solar",
+        "solarium",
+        "parasol",
+        "solstice",
+        "solar panel",
+        "telescope"
+      ],
+      "phoneme-d": [
+        "dentist",
+        "dental",
+        "trident",
+        "denture",
+        "indent"
+      ],
+      "phoneme-p": [
+        "pedal",
+        "pedestrian",
+        "pedicure",
+        "transport"
+      ],
+      "phoneme-m": [
+        "manual",
+        "manicure",
+        "manufacture",
+        "manuscript",
+        "manage",
+        "microscope",
+        "microphone",
+        "megaphone"
+      ],
+      "phoneme-a": [
+        "aquarium",
+        "aquatic",
+        "aqueduct",
+        "aquanaut",
+        "aquaplane",
+        "aeroplane"
+      ],
+      "phoneme-l": [
+        "lunar",
+        "lunatic",
+        "lunamoth",
+        "lunar eclipse",
+        "interlunar"
+      ],
+      "phoneme-f": [
+        "floral",
+        "florist",
+        "flora",
+        "flourish",
+        "floral crown"
+      ],
+      "phoneme-z": [
+        "zoo",
+        "zoology",
+        "zookeeper",
+        "zoologist",
+        "protozoa"
+      ],
+      "phoneme-n": [
+        "novel",
+        "novice",
+        "renovate",
+        "innovate",
+        "novelty"
+      ],
+      "phoneme-j": [
+        "geography"
+      ],
+      "phoneme-g": [
+        "photograph"
+      ]
+    }
+  },
+  "stats": {
+    "total_words": 231,
+    "total_roots": 36,
+    "total_phonemes": 24,
+    "total_graphemes": 32,
+    "total_aliases": 28,
+    "deterministic_coverage": "231 words answerable without LLM — covering 36 root families"
+  },
+  "built_at": "2026-07-08 07:39:18 UTC"
+}

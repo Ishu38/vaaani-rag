@@ -18,41 +18,52 @@
   nav a:hover { color:var(--text); }
   main { max-width:800px; margin:40px auto; padding:0 24px; }
   h2 { font-size:24px; font-weight:700; margin-bottom:8px; }
-  .muted { color:var(--muted); font-size:14px; margin-bottom:24px; }
-  .card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:24px; }
-  .btn { border:none; border-radius:8px; padding:12px 24px; font-family:inherit; font-weight:600; font-size:15px; cursor:pointer; transition:all .15s; }
-  .btn-primary { background:var(--accent); color:#fff; width:100%; }
-  .btn-primary:hover { background:#1e40af; }
-  .btn-secondary { background:var(--panel2); color:var(--text); border:1px solid var(--border); }
-  .btn-danger { background:var(--danger); color:#fff; }
-  .btn-sm { padding:8px 16px; font-size:13px; }
-  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.muted { color:var(--muted); font-size:14px; margin-bottom:24px; }
+.card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:24px; }
+.btn { border:none; border-radius:8px; padding:12px 24px; font-family:inherit; font-weight:600; font-size:15px; cursor:pointer; transition:all.15s; }
+.btn-primary { background:var(--accent); color:#fff; width:100%; }
+.btn-primary:hover { background:#1e40af; }
+.btn-secondary { background:var(--panel2); color:var(--text); border:1px solid var(--border); }
+.btn-danger { background:var(--danger); color:#fff; }
+.btn-sm { padding:8px 16px; font-size:13px; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
   label { font-size:13px; color:var(--muted); margin-bottom:4px; display:block; }
   select, input[type=range] { width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-family:inherit; background:var(--panel2); color:var(--text); font-size:14px; }
   input[type=range] { padding:0; }
-  .timer { font-size:28px; font-weight:800; text-align:center; padding:12px; }
-  .timer.urgent { color:var(--danger); animation:pulse .8s infinite; }
+.timer { font-size:28px; font-weight:800; text-align:center; padding:12px; }
+.timer.urgent { color:var(--danger); animation:pulse.8s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-  .question-box { background:var(--panel2); padding:20px; border-radius:10px; margin:16px 0; font-size:15px; line-height:1.6; }
-  .answer-input { width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-family:inherit; font-size:16px; margin:12px 0; background:var(--bg); }
-  .answer-input:focus { outline:none; border-color:var(--accent); }
-  .coaching { background:#fff3cd; border:1px solid #ffc107; border-radius:8px; padding:12px 16px; margin:8px 0; font-size:13px; color:#856404; font-weight:500; }
-  .score-bar { display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--panel2); border-radius:8px; margin:8px 0; }
-  .stress-indicator { height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin:8px 0; }
-  .stress-indicator div { height:100%; transition:width .3s,background .3s; }
-  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; text-align:center; }
-  .mini-stat { padding:8px; }
-  .mini-stat .val { font-size:20px; font-weight:700; }
-  .mini-stat .lbl { font-size:11px; color:var(--muted); }
+.question-box { background:var(--panel2); padding:20px; border-radius:10px; margin:16px 0; font-size:15px; line-height:1.6; }
+.answer-input { width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-family:inherit; font-size:16px; margin:12px 0; background:var(--bg); }
+.answer-input:focus { outline:none; border-color:var(--accent); }
+.coaching { background:#fff3cd; border:1px solid #ffc107; border-radius:8px; padding:12px 16px; margin:8px 0; font-size:13px; color:#856404; font-weight:500; }
+.confidence-row { margin:12px 0; }
+.confidence-row label { font-size:14px; font-weight:600; color:var(--text); display:block; margin-bottom:6px; }
+.conf-val { font-size:18px; font-weight:700; color:var(--accent); }
+.conf-pct { font-size:14px; color:var(--muted); margin-left:2px; }
+.confidence-slider { width:100%; height:8px; border-radius:4px; background:var(--border); -webkit-appearance:none; appearance:none; outline:none; cursor:pointer; }
+.confidence-slider::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); cursor:pointer; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+.confidence-slider::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:var(--accent); cursor:pointer; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+.conf-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:4px; }
+.confidence-feedback { border-radius:8px; padding:10px 14px; margin:8px 0; font-size:13px; font-weight:500; }
+.confidence-feedback.overconfident { background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.3); color:#c0392b; }
+.confidence-feedback.underconfident { background:rgba(39,174,96,0.08); border:1px solid rgba(39,174,96,0.3); color:#27ae60; }
+.confidence-feedback.well_calibrated { background:rgba(37,99,235,0.06); border:1px solid rgba(37,99,235,0.2); color:#2563eb; }
+.score-bar { display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--panel2); border-radius:8px; margin:8px 0; }
+.stress-indicator { height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin:8px 0; }
+.stress-indicator div { height:100%; transition:width.3s,background.3s; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; text-align:center; }
+.mini-stat { padding:8px; }
+.mini-stat.val { font-size:20px; font-weight:700; }
+.mini-stat.lbl { font-size:11px; color:var(--muted); }
   #post-session { text-align:center; padding:40px; }
-  .grade { font-size:64px; font-weight:900; }
+.grade { font-size:64px; font-weight:900; }
 </style>
 </head>
 <body>
 <nav>
-  <a href="/app" style="font-weight:700;font-size:16px;">← Vaaani</a>
+  <a href="/" style="font-weight:700;font-size:16px;">← Vaaani</a>
   <div style="display:flex;gap:24px">
-    <a href="/app">Chat</a>
     <a href="/graph-view">Graph</a>
     <a href="/cognitive">Cognitive X-Ray</a>
     <a href="/simulation" style="color:var(--text);font-weight:600;">Simulation</a>
@@ -60,7 +71,7 @@
 </nav>
 <main>
   <h2>Exam Pressure Simulation</h2>
-  <p class="muted">Adaptive psychological combat training. Build resilience under timed JEE conditions.</p>
+  <p class="muted">Adaptive practice under pressure. Build resilience and recall under timed exam conditions.</p>
   <div id="config-panel"></div>
   <div id="session-panel" style="display:none"></div>
   <div id="post-session" style="display:none"></div>
@@ -72,7 +83,7 @@ function showConfig(){
   document.getElementById('config-panel').innerHTML = `<div class="card">
     <h3>Configure Simulation</h3>
     <div class="grid2">
-      <div><label>Subject</label><select id="cfg-subject"><option>Physics</option><option>Math</option></select></div>
+      <div><label>Subject</label><select id="cfg-subject"><option>Phonetics</option><option>Phonology</option><option>Morphology</option><option>Syntax</option><option>Semantics</option><option>Etymology</option></select></div>
       <div><label>Time Pressure (0=relaxed, 1=extreme)</label><input type="range" id="cfg-timePressure" min="0" max="1" step="0.1" value="0.5"></div>
       <div><label>Negative Marking</label><select id="cfg-negMarking"><option value="0.25">25% (-1 for wrong, +4 correct)</option><option value="0">No negative marking</option><option value="0.5">50%</option></select></div>
       <div><label>Questions</label><select id="cfg-count"><option value="10">10 (quick)</option><option value="20">20</option><option value="30" selected>30 (full)</option></select></div>
@@ -129,14 +140,19 @@ function renderSession(d){
         <p style="margin-top:8px">${q.query||''}</p>
       </div>
       <input class="answer-input" id="answerInput" placeholder="Type your answer..." autocomplete="off" onkeydown="if(event.key==='Enter')submit()">
+      <div class="confidence-row">
+        <label for="confidenceSlider">How sure are you? <span id="confVal" class="conf-val">50</span><span class="conf-pct">%</span></label>
+        <input type="range" id="confidenceSlider" min="0" max="100" step="5" value="50" class="confidence-slider"
+               oninput="document.getElementById('confVal').textContent=this.value">
+        <div class="conf-labels"><span>Just guessing</span><span>Very sure</span></div>
+      </div>
       <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="btn btn-sm btn-secondary" onclick="submitConfidence(5)">Sure ✓</button>
-        <button class="btn btn-sm btn-secondary" onclick="submitConfidence(3)">Maybe</button>
-        <button class="btn btn-sm btn-secondary" onclick="submitConfidence(1)">Guessing</button>
+        <button class="btn btn-sm btn-primary" onclick="submit()">Submit Answer</button>
         <button class="btn btn-sm btn-danger" onclick="skip()">Skip →</button>
       </div>
       ${d.coaching_interjection?`<div class="coaching">${d.coaching_interjection}</div>`:''}
-      ${d.was_correct!==null?`<div style="margin-top:8px;color:${d.was_correct?'var(--success)':'var(--danger)'};font-weight:600">${d.was_correct?'Correct!':'Wrong.'} <span style="font-weight:400;color:var(--muted);font-size:12px">Answer: ${q.answer||''}</span></div>`:''}
+      ${d.confidence_feedback?`<div class="confidence-feedback ${d.confidence_feedback.type||''}">${d.confidence_feedback.text||''}</div>`:''}
+      ${d.was_correct!==null?`<div style="margin-top:8px;color:${d.was_correct?'var(--success)':'var(--danger)'};font-weight:600">${d.was_correct?'Correct!':'Wrong.'} <span style="font-weight:400;color:var(--muted);font-size:12px">Answer: ${(d.answered_question||{}).answer||''}</span></div>`:''}
     </div>`;
   document.getElementById('answerInput').focus();
 }
@@ -144,13 +160,17 @@ function renderSession(d){
 async function submitWithConfidence(c){
   const ans = document.getElementById('answerInput').value;
   if(!ans.trim())return;
-  const r = await fetch('/simulation/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sessionId,answer:ans,confidence_1to5:c})});
+  // Read confidence from the slider (0-100). Fall back to the passed value
+  // for backward compatibility (old submitConfidence calls).
+  const slider = document.getElementById('confidenceSlider');
+  const conf0to100 = slider ? parseInt(slider.value) : c;
+  const r = await fetch('/simulation/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sessionId,answer:ans,confidence_0to100:conf0to100})});
   const d = await r.json();
   if(d.state==='complete') showResults(d);
   else { currentQ=d.current_question; renderSession(d); startTimer(d.time_remaining); }
 }
 function submitConfidence(c){ submitWithConfidence(c); }
-async function submit(){ submitWithConfidence(0); }
+async function submit(){ submitWithConfidence(50); }
 async function skip(){
   const r = await fetch('/simulation/skip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sessionId,skip:true})});
   const d = await r.json();
@@ -190,9 +210,11 @@ function showResults(d){
         <div class="mini-stat"><div class="val">${d.skipped||0}</div><div class="lbl">Skipped</div></div>
       </div>
       <p style="margin-top:12px;color:var(--muted);font-size:13px">Avg response: ${(d.avg_response_ms/1000).toFixed(1)}s per question</p>
-      <div style="margin-top:16px;display:flex;gap:12px">
+      <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
         <button class="btn btn-sm btn-primary" onclick="location.reload()">New Session</button>
-        <a href="/cognitive" class="btn btn-sm btn-secondary" style="text-decoration:none;display:inline-block">View Cognitive X-Ray</a>
+        <a href="/cognitive" class="btn btn-sm btn-secondary" style="text-decoration:none;display:inline-block">See your Cognitive X-Ray →</a>
+        <a href="/app?from=simulation" class="btn btn-sm btn-secondary" style="text-decoration:none;display:inline-block">Ask the tutor about what you got wrong</a>
+        <a href="/graph-view" class="btn btn-sm btn-secondary" style="text-decoration:none;display:inline-block">See your knowledge graph</a>
       </div>
     </div>`;
 }

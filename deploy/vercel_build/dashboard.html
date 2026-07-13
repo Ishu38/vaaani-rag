@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>School Dashboard — Vaaani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+<link rel="stylesheet" href="/auth.css" />
+<style>
+.dash-shell { padding: calc(var(--nav-h) + 32px) 24px 60px; }
+.dash-head { max-width: 1180px; margin: 0 auto 28px; }
+.dash-head h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.dash-head p { font-size: 14px; color: var(--c-muted-strong); margin-top: 6px; }
+.dash-wrap { max-width: 1180px; margin: 0 auto; }
+
+.school-selector {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+  padding: 16px 20px; background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 12px;
+}
+.school-selector select {
+  background: var(--c-bg-2); border: 1px solid var(--c-border); color: var(--c-text);
+  padding: 8px 12px; border-radius: 8px; font: inherit; font-size: 14px; min-width: 280px;
+}
+.school-selector.invite-code {
+  margin-left: auto; font-size: 13px; color: var(--c-muted);
+}
+.school-selector.invite-code strong {
+  font-family: monospace; font-size: 14px; color: var(--c-text);
+  background: var(--c-bg-2); padding: 4px 8px; border-radius: 4px; letter-spacing: 0.06em;
+}
+.school-selector.invite-code button {
+  margin-left: 6px; font-size: 12px; background: var(--c-bg-2); border: 1px solid var(--c-border);
+  color: var(--c-muted-strong); padding: 4px 8px; border-radius: 4px; cursor: pointer;
+}
+
+/* Overview stat tiles */
+.overview-stats {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 24px;
+}
+.ov-tile {
+  background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 10px; padding: 18px 16px; text-align: center;
+}
+.ov-tile.ov-val { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; color: var(--c-text); }
+.ov-tile.ov-label { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-muted); font-weight: 600; margin-top: 6px; }
+.ov-tile.highlight.ov-val { color: var(--c-accent); }
+.ov-tile.ov-unit { font-size: 14px; color: var(--c-muted); font-weight: 500; }
+
+/* Two-column layout */
+.dash-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 22px; margin-bottom: 24px; }
+@media (max-width: 960px) {.dash-grid { grid-template-columns: 1fr; }.overview-stats { grid-template-columns: repeat(3, 1fr); } }
+
+.dash-card {
+  background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 14px; padding: 24px;
+}
+.dash-card h2 {
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--c-muted); font-weight: 600; margin-bottom: 18px;
+}
+
+/* Student list */
+.student-table { width: 100%; border-collapse: collapse; }
+.student-table th,.student-table td {
+  padding: 10px 14px; text-align: left; font-size: 13px;
+  border-bottom: 1px dashed var(--c-border);
+}
+.student-table th {
+  font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--c-muted); font-weight: 600; border-bottom: 1px solid var(--c-border);
+}
+.student-table tr:hover td { background: var(--c-surface-2); }
+.student-table.mastery-cell {
+  display: flex; align-items: center; gap: 8px;
+}
+.mini-bar {
+  width: 60px; height: 4px; background: var(--c-bg); border-radius: 999px; overflow: hidden;
+}
+.mini-bar span { display: block; height: 100%; background: var(--c-accent); border-radius: 999px; }
+
+/* Query feed */
+.query-feed { display: flex; flex-direction: column; gap: 10px; max-height: 540px; overflow-y: auto; }
+.query-item {
+  padding: 12px 14px; background: var(--c-bg-2); border: 1px solid var(--c-border);
+  border-radius: 8px; font-size: 13px;
+}
+.query-item.q-student { font-weight: 600; color: var(--c-text); display: flex; justify-content: space-between; align-items: center; }
+.query-item.q-student.q-time { font-size: 11px; color: var(--c-muted); font-weight: 400; }
+.query-item.q-text { color: var(--c-muted-strong); margin-top: 4px; line-height: 1.5; }
+.query-item.q-meta { margin-top: 6px; display: flex; gap: 10px; font-size: 11px; color: var(--c-muted); }
+.query-item.q-meta span { background: var(--c-surface); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); }
+
+/* Guardrails panel */
+.guardrail-form { display: flex; flex-direction: column; gap: 14px; }
+.guardrail-form.field { margin-bottom: 0; }
+.guardrail-form label { font-size: 12px; color: var(--c-muted-strong); font-weight: 500; }
+.guardrail-form input,.guardrail-form select,.guardrail-form textarea {
+  width: 100%; background: var(--c-bg-2); border: 1px solid var(--c-border);
+  color: var(--c-text); padding: 10px 12px; border-radius: 8px;
+  font: inherit; font-size: 13px; outline: none;
+  transition: border-color 0.15s var(--ease-out);
+}
+.guardrail-form input:focus,.guardrail-form select:focus,.guardrail-form textarea:focus {
+  border-color: var(--c-accent);
+}
+.guardrail-form textarea { min-height: 80px; resize: vertical; }
+.guardrail-form.check-row {
+  display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--c-text);
+}
+.guardrail-form.check-row input[type=checkbox] { width: auto; accent-color: var(--c-accent); }
+
+.section-toggle {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; background: var(--c-bg-2); border: 1px solid var(--c-border);
+  border-radius: 8px; cursor: pointer; font-size: 13px; margin-bottom: 12px;
+  color: var(--c-text); font-weight: 500;
+  transition: border-color 0.2s var(--ease-out);
+}
+.section-toggle:hover { border-color: var(--c-accent); }
+.section-toggle.arrow { margin-left: auto; transition: transform 0.2s var(--ease-out); }
+.section-toggle.open.arrow { transform: rotate(180deg); }
+.collapse-panel { display: none; margin-bottom: 20px; }
+.collapse-panel.open { display: block; }
+
+.create-school-form {
+  display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;
+  padding: 16px 20px; background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: 12px; margin-bottom: 24px;
+}
+.create-school-form.field { margin-bottom: 0; flex: 1; min-width: 200px; }
+.create-school-form input {
+  background: var(--c-bg-2); border: 1px solid var(--c-border);
+  color: var(--c-text); padding: 10px 12px; border-radius: 8px;
+  font: inherit; font-size: 14px; outline: none; width: 100%;
+}
+.create-school-form input:focus { border-color: var(--c-accent); }
+
+.empty-school { text-align: center; padding: 60px 32px; }
+.empty-school h3 { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+.empty-school p { font-size: 14px; color: var(--c-muted-strong); max-width: 480px; margin: 0 auto 22px; line-height: 1.6; }
+
+.tag {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 10.5px; letter-spacing: 0.08em; font-weight: 600;
+}
+.tag.admin { background: rgba(77,105,78,0.12); color: var(--c-accent); }
+.tag.teacher { background: rgba(91,141,239,0.1); color: #3a5d9b; }
+.tag.student { background: rgba(95,184,138,0.1); color: #2f8a55; }
+.tag.parent { background: rgba(212,169,87,0.12); color: #8a6520; }
+
+#guardrailStatus, #joinStatus, #createStatus { margin-top: 10px; }
+
+/* ---- Public preview banner + CTAs ---- */
+.preview-banner {
+  max-width: 1180px; margin: 0 auto 18px;
+  padding: 10px 18px;
+  background: rgba(212,169,87,0.10);
+  border: 1px solid rgba(212,169,87,0.35);
+  border-radius: 10px;
+  font-size: 13px; color: #8a6520; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+}
+.preview-banner.dot { width: 8px; height: 8px; border-radius: 50%; background: #c39752; display: inline-block; }
+.preview-banner strong { font-weight: 700; }
+
+.preview-cta {
+  max-width: 1180px; margin: 32px auto 0;
+  padding: 28px 32px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  text-align: center;
+}
+.preview-cta h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+.preview-cta p { font-size: 14px; color: var(--c-muted-strong); margin-bottom: 22px; max-width: 520px; margin-left:auto; margin-right:auto; }
+.preview-cta.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.preview-disclaimer {
+  max-width: 1180px; margin: 18px auto 0;
+  padding: 12px 18px;
+  font-size: 12px; color: var(--c-muted);
+  text-align: center;
+}
+
+/* Insight panels for preview */
+.concept-list { display: flex; flex-direction: column; gap: 8px; }
+.concept-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; background: var(--c-bg-2);
+  border: 1px solid var(--c-border); border-radius: 8px;
+  font-size: 13px;
+}
+.concept-row.c-name { flex: 1; color: var(--c-text); font-weight: 500; }
+.concept-row.c-count { color: var(--c-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.concept-row.c-bar { width: 70px; height: 4px; background: var(--c-bg); border-radius: 999px; overflow: hidden; }
+.concept-row.c-bar span { display:block; height:100%; background: var(--c-accent); }
+.concept-row.struggling.c-bar span { background: #d49457; }
+
+/* Leader insights ("what to act on") */
+.li-card { border-left: 4px solid var(--c-accent); margin-bottom: 24px; }
+.li-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.li-eng { font-size: 12px; color: var(--c-muted); font-variant-numeric: tabular-nums; }
+.li-actions { margin: 14px 0 18px; display: flex; flex-direction: column; gap: 10px; }
+.li-action { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.5; color: var(--c-text); }
+.li-num { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--c-accent); color: #fff;
+  font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+.li-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+@media (max-width: 720px) {.li-cols { grid-template-columns: 1fr; } }
+.li-cols h3 { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-muted); margin: 0 0 10px; font-weight: 600; }
+.li-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; border-bottom: 1px solid var(--c-border); }
+.li-name { flex: 1; color: var(--c-text); font-weight: 500; }
+.li-bar { width: 70px; height: 5px; background: var(--c-bg); border-radius: 999px; overflow: hidden; }
+.li-bar span { display: block; height: 100%; background: #d49457; }
+.li-val { color: var(--c-muted); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.li-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.li-chip { padding: 6px 11px; background: var(--c-bg-2); border: 1px solid var(--c-border); border-radius: 20px; font-size: 12.5px; color: var(--c-text); }
+.li-chip b { color: var(--c-accent); margin-left: 3px; }
+.li-empty { color: var(--c-muted); font-size: 13px; font-style: italic; }
+</style>
+<script>(function(){var s=document.createElement('style');s.id='__vg';s.textContent='html{visibility:hidden!important}';document.documentElement.appendChild(s);var done=false;function show(){if(done)return;done=true;var e=document.getElementById('__vg');if(e)e.remove();}function go(){if(done)return;done=true;location.replace('/login?next='+encodeURIComponent(location.pathname+location.search));}var t=setTimeout(show,7000);fetch('/auth/me').then(function(r){if(r.ok){return r.json().then(function(d){clearTimeout(t);(d&&d.user)?show():go();});}clearTimeout(t);if(r.status===401||r.status===403){go();}else{show();}}).catch(function(){clearTimeout(t);show();});})();</script></head>
+<body class="auth-shell">
+
+<nav class="nav scrolled" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/cognitive">X-Ray</a>
+    <a href="/simulation">Sim</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/account">My Account</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="dash-shell" id="app">
+  <!-- loaded by JS -->
+  <div id="loading" style="text-align:center;padding:60px;color:var(--c-muted);">Loading dashboard…</div>
+</main>
+
+<script src="/auth.js?v=20260526a"></script>
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+const state = { user: null, schools: [], activeSchool: null, activeDashboard: null, parentDashboard: null };
+
+async function init() {
+  state.user = await Auth.me();
+  if (!state.user) { renderPublicPreview(); return; }
+
+  const r = await Auth.json('/auth/schools');
+  state.schools = (r.ok && r.data && r.data.schools)? r.data.schools : [];
+  render();
+  if (state.schools.length > 0) {
+    const sid = state.activeSchool?.id || state.schools[0].id;
+    state.activeSchool = state.schools.find(s => s.id === sid);
+    loadActiveDashboard(sid);
+  }
+}
+
+async function loadActiveDashboard(sid) {
+  state.activeSchool = state.schools.find(s => s.id === sid) || state.schools[0];
+  const role = state.activeSchool?.role;
+  if (role === 'parent') {
+    const r = await Auth.json(`/auth/schools/${sid}/parent-dashboard`);
+    state.parentDashboard = r.ok? r.data : null;
+    state.activeDashboard = null;
+  } else {
+    const r = await Auth.json(`/auth/schools/${sid}/dashboard`);
+    state.activeDashboard = r.ok? r.data : null;
+    state.parentDashboard = null;
+  }
+  render();
+}
+
+function renderPublicPreview() {
+  // Seeded demo data — realistic numbers for a single Indian private school
+  // running a Class 8 English & Linguistics pilot. Banner makes the preview status explicit.
+  const demo = {
+    school_name: "Demo: Saraswati Vidya Mandir",
+    blocked: 47,
+    active: 32,
+    enrolled: 40,
+    queries_week: 421,
+    curriculum: "CBSE Class 8 English — Phonetics & Grammar",
+    queries: [
+      { who: "Riya M.", when: "today, 14:22", text: "Why is the 'p' in 'spin' not aspirated like in 'pin'?", intent: "concept", tokens: 380 },
+      { who: "Arjun K.", when: "today, 13:51", text: "Q3. Define phoneme, morpheme and grapheme. (5 marks)", intent: "blocked", tokens: 0, blocked: true },
+      { who: "Priya N.", when: "today, 12:08", text: "Can you explain assimilation with a real example?", intent: "concept", tokens: 412 },
+      { who: "Karan S.", when: "today, 11:34", text: "What's the difference between a phoneme and an allophone?", intent: "concept", tokens: 296 },
+      { who: "Sneha B.", when: "today, 10:55", text: "Why do many Bengali speakers say 'iskool' for 'school'?", intent: "concept", tokens: 358 },
+      { who: "Aditya P.", when: "yesterday", text: "Do all the questions from grammar exercise 5 for me.", intent: "blocked", tokens: 0, blocked: true },
+      { who: "Meera D.", when: "yesterday", text: "What's the difference between a prefix and a root?", intent: "concept", tokens: 244 },
+      { who: "Rohan T.", when: "yesterday", text: "Why does 'unhappiness' have three morphemes?", intent: "concept", tokens: 318 },
+    ],
+    top_concepts: [
+      { name: "Morphemes & word formation", count: 18, weight: 100 },
+      { name: "The IPA & vowel sounds", count: 12, weight: 67 },
+      { name: "Phonemes & allophones", count: 9, weight: 50 },
+      { name: "Syntax & sentence structure", count: 7, weight: 39 },
+      { name: "Etymology & word roots", count: 5, weight: 28 },
+    ],
+    struggling: [
+      { name: "Transcribing words in IPA", reasks: 8, weight: 100 },
+      { name: "Derivational vs inflectional affixes", reasks: 6, weight: 75 },
+      { name: "Identifying parts of speech", reasks: 4, weight: 50 },
+    ],
+  };
+
+  const queryItems = demo.queries.map(q => `
+    <div class="query-item" ${q.blocked? 'style="border-color:rgba(212,108,87,0.4);background:rgba(212,108,87,0.05);"' : ''}>
+      <div class="q-student"><span>${q.who}</span><span class="q-time">${q.when}</span></div>
+      <div class="q-text">${escapeHtml(q.text)}</div>
+      <div class="q-meta">
+        ${q.blocked
+? '<span style="background:rgba(212,108,87,0.12);color:#a64a37;border-color:rgba(212,108,87,0.3);"> blocked — exam-style</span>'
+          : `<span>${q.intent}</span><span>${q.tokens} tokens</span>`}
+      </div>
+    </div>`).join('');
+
+  const conceptRows = demo.top_concepts.map(c => `
+    <div class="concept-row">
+      <span class="c-name">${escapeHtml(c.name)}</span>
+      <span class="c-bar"><span style="width:${c.weight}%"></span></span>
+      <span class="c-count">${c.count}×</span>
+    </div>`).join('');
+
+  const strugglingRows = demo.struggling.map(c => `
+    <div class="concept-row struggling">
+      <span class="c-name">${escapeHtml(c.name)}</span>
+      <span class="c-bar"><span style="width:${c.weight}%"></span></span>
+      <span class="c-count">${c.reasks} re-asks</span>
+    </div>`).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="preview-banner">
+      <span class="dot"></span>
+      <span><strong>Demo Preview.</strong> This is what your school's admin sees after you sign in and create your school. The numbers below are seeded sample data, not live users.</span>
+    </div>
+
+    <div class="dash-head">
+      <h1>School Dashboard</h1>
+      <p>${demo.school_name} · scope locked to <strong>${demo.curriculum}</strong> · this week</p>
+    </div>
+
+    <div class="dash-wrap">
+      <div class="overview-stats">
+        <div class="ov-tile highlight">
+          <div class="ov-val">${demo.blocked}</div>
+          <div class="ov-label"> Cheating attempts blocked</div>
+        </div>
+        <div class="ov-tile">
+          <div class="ov-val">${demo.active}<span class="ov-unit">/${demo.enrolled}</span></div>
+          <div class="ov-label">Active students (week)</div>
+        </div>
+        <div class="ov-tile">
+          <div class="ov-val" style="font-size:18px;letter-spacing:0.01em;">${demo.curriculum}</div>
+          <div class="ov-label">Curriculum scope</div>
+        </div>
+        <div class="ov-tile">
+          <div class="ov-val">${demo.queries_week}</div>
+          <div class="ov-label">Questions answered</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-card">
+          <h2>Recent student queries (last 24h)</h2>
+          <div class="query-feed">${queryItems}</div>
+          <p style="margin-top:12px;font-size:11.5px;color:var(--c-muted);">
+            Queries flagged were exam-style prompts caught by server-side Socratic guardrails — students never saw a direct answer.
+          </p>
+        </div>
+        <div class="dash-card">
+          <h2>Top concepts this week</h2>
+          <div class="concept-list">${conceptRows}</div>
+          <h2 style="margin-top:24px;"> Where students need help</h2>
+          <p style="font-size:11.5px;color:var(--c-muted);margin-bottom:10px;">Concepts asked repeatedly across multiple students — flag these in your next class.</p>
+          <div class="concept-list">${strugglingRows}</div>
+        </div>
+      </div>
+
+      <div class="preview-cta">
+        <h2>Set up your school in 60 seconds</h2>
+        <p>Create your school (or join one with your invite code), then invite teachers, students, and parents — each gets their own view. Admins manage guardrails. Teachers see student usage. Parents see their linked child's progress on web + Telegram.</p>
+        <div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:0 auto 18px;max-width:720px;font-size:12.5px;color:var(--c-muted-strong);">
+          <span> Admin view — full school</span>
+          <span> Teacher view — students + queries</span>
+          <span> Parent view — your child's progress</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/signup?next=/dashboard" style="padding:12px 24px;font-size:14px;">Create my school free</a>
+          <a class="btn btn-ghost" href="/login?next=/dashboard" style="padding:12px 24px;font-size:14px;">I have an account</a>
+        </div>
+      </div>
+
+      <div class="preview-disclaimer">
+        Sample data shown for product walkthrough. Real schools see only their own students, queries, and guardrail events. Vaaani is licensed under Business Source 1.1; commercial school deployment is via subscription. <strong>© 2025-2026 Neil Shankar Ray.</strong> "Vaaani" — TM application pending (India).
+      </div>
+    </div>`;
+
+}
+
+function render() {
+  const el = document.getElementById('app');
+  if (state.schools.length === 0) {
+    el.innerHTML = renderEmpty();
+  } else {
+    el.innerHTML = renderDashboard();
+  }
+  bindEvents();
+}
+
+function renderEmpty() {
+  return `
+    <div class="dash-head"><h1>School Dashboard</h1><p>Create or join a school to manage your students.</p></div>
+    <div class="dash-wrap">
+      <div class="create-school-form">
+        <div class="field"><label>Create a new school</label><input id="newSchoolName" type="text" placeholder="e.g. Delhi Public School, R.K. Puram" /></div>
+        <button class="btn btn-primary" id="createSchoolBtn">Create School</button>
+      </div>
+      <div class="empty-school">
+        <h3>Or join an existing school</h3>
+        <p>If your school already uses Vaaani, ask your admin for the invite code.</p>
+        <div style="display:flex;gap:10px;justify-content:center;align-items:flex-end;">
+          <div class="field" style="margin-bottom:0;"><input id="joinCode" type="text" placeholder="Enter invite code" style="min-width:220px;" /></div>
+          <button class="btn btn-primary" id="joinSchoolBtn" style="margin-bottom:0;">Join</button>
+        </div>
+        <div class="status-msg" id="joinStatus" style="display:none;"></div>
+      </div>
+      <div class="status-msg" id="createStatus" style="display:none;"></div>
+    </div>`;
+}
+
+function renderDashboard() {
+  const schoolOpts = state.schools.map(s =>
+    `<option value="${s.id}" ${state.activeSchool && state.activeSchool.id === s.id? 'selected' : ''}>${escapeHtml(s.name)} (${escapeHtml(s.code)}) — ${s.role}</option>`
+  ).join('');
+
+  const active = state.activeSchool || state.schools[0];
+  const role = active?.role || 'student';
+
+  let body = '';
+  if (role === 'parent') {
+    const pd = state.parentDashboard;
+    body = pd? renderParentDashboard(pd) : '<div style="text-align:center;padding:40px;color:var(--c-muted);">Loading parent dashboard…</div>';
+  } else if (role === 'admin' || role === 'teacher') {
+    const d = state.activeDashboard;
+    if (d) {
+      body = renderLeaderInsights(d) + renderStats(d) + renderStudents(d) + renderQueries(d) + (role === 'admin'? renderParentLinkAdmin(active, d) : '') + renderGuardrails(active);
+    } else {
+      body = '<div style="text-align:center;padding:40px;color:var(--c-muted);">Loading school data…</div>';
+    }
+  } else {
+    body = `<div class="dash-card" style="text-align:center;padding:40px;">
+      <h2>Student view</h2>
+      <p style="color:var(--c-muted-strong);margin:12px auto;max-width:480px;">You're enrolled as a student in ${escapeHtml(active.name)}. Your school's curriculum scope and guardrails are already configured for you.</p>
+    </div>`;
+  }
+
+  const subtitle = role === 'parent'
+? `Parent view — ${escapeHtml(active.name)}`
+    : role === 'admin'
+? 'Monitor student usage, configure guardrails, manage parent links.'
+      : 'Monitor student usage and configure guardrails.';
+
+  return `
+    <div class="dash-head"><h1>School Dashboard</h1><p>${subtitle}</p></div>
+    <div class="dash-wrap">
+      <div class="school-selector">
+        <select id="schoolSelect">${schoolOpts}</select>
+        ${role!== 'student'? `<span class="invite-code" id="inviteSpan">
+          Invite code: <strong>${escapeHtml(active.code)}</strong>
+          <button id="copyCodeBtn" title="Copy invite code">Copy</button>
+        </span>` : ''}
+        <button class="btn btn-ghost" id="joinOtherBtn">+ Join another school</button>
+      </div>
+      <div id="joinPanel" style="display:none;margin-bottom:20px;">
+        <div class="create-school-form">
+          <div class="field"><label>Join school by code</label><input id="joinCode2" type="text" placeholder="Invite code" /></div>
+          <button class="btn btn-primary" id="doJoinBtn">Join</button>
+          <button class="btn btn-ghost" id="cancelJoinBtn">Cancel</button>
+        </div>
+        <div class="status-msg" id="joinStatus2" style="display:none;"></div>
+      </div>
+      ${body}
+    </div>`;
+}
+
+function renderParentDashboard(pd) {
+  const sch = pd.school || {};
+  const sum = pd.school_summary || {};
+  const children = pd.children || [];
+
+  const schoolStats = `
+    <div class="overview-stats">
+      <div class="ov-tile"><div class="ov-val">${sum.total_members || 0}</div><div class="ov-label">School members</div></div>
+      <div class="ov-tile"><div class="ov-val">${sum.active_students || 0}</div><div class="ov-label">Students in school</div></div>
+      <div class="ov-tile"><div class="ov-val">${sum.queries_this_school || 0}</div><div class="ov-label">School-wide queries</div></div>
+      <div class="ov-tile" style="grid-column: span 3;"><div class="ov-val" style="font-size:16px;letter-spacing:0.01em;">${escapeHtml(sch.curriculum || '—')}</div><div class="ov-label">Curriculum scope your child studies under</div></div>
+    </div>`;
+
+  let childrenBlock;
+  if (pd.children_unlinked) {
+    childrenBlock = `
+      <div class="dash-card" style="text-align:center;padding:40px;">
+        <h2 style="margin-bottom:14px;">Your child's progress will appear here</h2>
+        <p style="color:var(--c-muted-strong);max-width:520px;margin:0 auto 18px;line-height:1.6;">
+          To see your child's individual queries, mastery progress, and weekly summary, ask <strong>${escapeHtml(sch.name)}</strong>'s admin to link your account to your child's account.
+          They'll need your email (${escapeHtml(state.user.email)}) and your child's email registered in this school.
+        </p>
+        <p style="color:var(--c-muted);font-size:12px;max-width:460px;margin:0 auto;">
+          Your child's data is private — Vaaani never shares it with other parents, and the school admin can only see aggregate stats, not individual chat content.
+        </p>
+      </div>`;
+  } else {
+    childrenBlock = children.map(c => `
+      <div class="dash-card" style="margin-bottom:18px;">
+        <h2 style="text-transform:none;letter-spacing:0;font-size:18px;font-weight:600;color:var(--c-text);">${escapeHtml(c.name)}</h2>
+        <p style="font-size:12px;color:var(--c-muted);margin-top:-8px;margin-bottom:18px;">${escapeHtml(c.email)} · linked ${c.linked_at? c.linked_at.slice(0,10) : ''}</p>
+        <div class="overview-stats" style="grid-template-columns:repeat(3,1fr);">
+          <div class="ov-tile"><div class="ov-val">${c.queries_total}</div><div class="ov-label">Recent queries</div></div>
+          <div class="ov-tile"><div class="ov-val">${c.skills_tracked}</div><div class="ov-label">Topics studied</div></div>
+          <div class="ov-tile highlight"><div class="ov-val">${c.avg_mastery}<span class="ov-unit">/5</span></div><div class="ov-label">Avg mastery</div></div>
+        </div>
+        <h3 style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--c-muted);font-weight:600;margin:20px 0 12px;">Recent questions</h3>
+        <div class="query-feed">${c.queries_recent.length === 0
+? '<div class="empty-state" style="padding:18px;color:var(--c-muted);">No questions asked yet. Encourage your child to use Vaaani for homework support.</div>'
+            : c.queries_recent.map(q => `<div class="query-item">
+                <div class="q-student"><span>${escapeHtml(c.name)}</span><span class="q-time">${q.at? q.at.slice(0,16).replace('T',' ') : ''}</span></div>
+                <div class="q-text">${escapeHtml(q.query)}</div>
+                <div class="q-meta"><span>${escapeHtml(q.intent || 'concept')}</span></div>
+              </div>`).join('')
+          }</div>
+      </div>`).join('');
+  }
+
+  return `
+    ${schoolStats}
+    <div class="dash-card" style="background:rgba(212,169,87,0.08);border-color:rgba(212,169,87,0.3);margin-bottom:24px;">
+      <h2 style="color:#8a6520;">Welcome — what this view shows</h2>
+      <p style="font-size:13px;color:var(--c-muted-strong);line-height:1.6;">
+        As a parent you can see (1) the overall activity of your child's school so you know how engaged the cohort is, and (2) your own child's queries, topics, and mastery once a school admin links your account. Vaaani enforces Socratic guardrails on every student answer — your child is being guided to think, not handed direct answers.
+      </p>
+    </div>
+    ${childrenBlock}`;
+}
+
+function renderParentLinkAdmin(school, d) {
+  const studentOpts = (d.students || []).map(s => `<option value="${escapeHtml(s.email)}">${escapeHtml(s.name || s.email)} (${escapeHtml(s.email)})</option>`).join('');
+  return `
+    <div class="dash-card" style="margin-top:24px;">
+      <div class="section-toggle" id="parentLinkToggle">
+        Link a parent to a student
+        <span class="arrow">▼</span>
+      </div>
+      <div class="collapse-panel" id="parentLinkPanel">
+        <p style="font-size:13px;color:var(--c-muted);margin-bottom:14px;">
+          Once a parent and student have both joined this school (parent via the invite code with role=parent, student with role=student), link them here so the parent can see their child's progress.
+        </p>
+        <div class="guardrail-form">
+          <div class="field">
+            <label>Parent email</label>
+            <input id="plParentEmail" type="email" placeholder="parent@example.com" />
+          </div>
+          <div class="field">
+            <label>Student</label>
+            <select id="plStudentEmail">
+              <option value="">— choose a student —</option>
+              ${studentOpts}
+            </select>
+          </div>
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="button" id="createLinkBtn">Link parent ↔ student</button>
+          </div>
+          <div class="status-msg" id="parentLinkStatus" style="display:none;"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderLeaderInsights(d) {
+  const li = d.leader_insights;
+  if (!li) return '';
+  const grade = li.grade_level? ` · ${escapeHtml(li.grade_level)}` : '';
+  const eng = li.engagement || {};
+  const actions = (li.actions || []).map((a, i) =>
+    `<div class="li-action"><span class="li-num">${i + 1}</span><span>${escapeHtml(a)}</span></div>`
+  ).join('');
+  const weak = (li.weak_topics || []).map(w => {
+    const pct = Math.round(((w.avg_mastery || 0) / 5) * 100);
+    return `<div class="li-row"><span class="li-name">${escapeHtml(w.display || w.topic)}</span>
+      <span class="li-bar"><span style="width:${pct}%"></span></span>
+      <span class="li-val">${(w.avg_mastery || 0).toFixed(1)}/5 · ${w.students}</span></div>`;
+  }).join('') || '<div class="li-empty">No weak topics surfaced yet.</div>';
+  const mis = (li.misconceptions || []).map(m =>
+    `<span class="li-chip">${escapeHtml(m.label)} <b>${m.count}</b></span>`
+  ).join('') || '<div class="li-empty">No misconceptions logged yet.</div>';
+  return `
+  <div class="dash-card li-card">
+    <div class="li-head">
+      <h2>What to act on${grade}</h2>
+      <span class="li-eng">${eng.active || 0}/${eng.total || 0} students active</span>
+    </div>
+    <div class="li-actions">${actions}</div>
+    <div class="li-cols">
+      <div><h3>Weakest topics (cohort avg mastery)</h3>${weak}</div>
+      <div><h3>Most common mistakes</h3><div class="li-chips">${mis}</div></div>
+    </div>
+  </div>`;
+}
+
+function renderStats(d) {
+  const c = d.member_counts || {};
+  const totalQ = d.total_queries || 0;
+  const totalT = d.total_tokens || 0;
+  return `
+    <div class="overview-stats">
+      <div class="ov-tile"><div class="ov-val">${c.total || 0}</div><div class="ov-label">Total members</div></div>
+      <div class="ov-tile"><div class="ov-val">${c.student || 0}</div><div class="ov-label">Students</div></div>
+      <div class="ov-tile"><div class="ov-val">${c.teacher || 0}</div><div class="ov-label">Teachers</div></div>
+      <div class="ov-tile highlight"><div class="ov-val">${totalQ}</div><div class="ov-label">Total queries</div></div>
+      <div class="ov-tile highlight"><div class="ov-val">${(totalT / 1000).toFixed(1)}<span class="ov-unit">k</span></div><div class="ov-label">Tokens used</div></div>
+      <div class="ov-tile highlight"><div class="ov-val">${d.students? d.students.length : 0}</div><div class="ov-label">Active students</div></div>
+    </div>`;
+}
+
+function renderStudents(d) {
+  const students = d.students || [];
+  let rows = '';
+  students.forEach(s => {
+    const sk = s.skills || {};
+    const pct = Math.round(((sk.avg_mastery || 0) / 5) * 100);
+    rows += `<tr>
+      <td>${escapeHtml(s.name || '—')}</td>
+      <td style="color:var(--c-muted);font-size:12px;">${escapeHtml(s.email)}</td>
+      <td>${sk.skills_tracked || 0}</td>
+      <td><div class="mastery-cell"><div class="mini-bar"><span style="width:${pct}%"></span></div> ${(sk.avg_mastery || 0).toFixed(1)}</div></td>
+      <td>${sk.strong_count || 0}</td>
+    </tr>`;
+  });
+  return `
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h2>Students (${students.length})</h2>
+        <div style="overflow-x:auto;">
+          <table class="student-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Skills tracked</th><th>Avg mastery</th><th>Strong (≥4)</th></tr></thead>
+            <tbody>${rows || '<tr><td colspan="5" style="text-align:center;color:var(--c-muted);">No students enrolled yet. Share the invite code to onboard students.</td></tr>'}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="dash-card">
+        ${renderQueries(d)}
+      </div>
+    </div>`;
+}
+
+function renderQueries(d) {
+  const qs = d.recent_queries || [];
+  let items = '';
+  qs.forEach(q => {
+    items += `<div class="query-item">
+      <div class="q-student"><span>${escapeHtml(q.student_name)}</span><span class="q-time">${q.at? q.at.slice(0,16).replace('T',' ') : ''}</span></div>
+      <div class="q-text">${escapeHtml(q.query)}</div>
+      <div class="q-meta"><span>${escapeHtml(q.intent || 'knowledge')}</span><span>${q.tokens} tokens</span></div>
+    </div>`;
+  });
+  return `<h2>Recent student queries</h2>
+    <div class="query-feed">${items || '<div class="empty-state">No queries yet. Students will appear here as they use Vaaani.</div>'}</div>`;
+}
+
+function renderGuardrails(school) {
+  const g = school.guardrails || {};
+  return `
+    <div class="dash-card" style="margin-top:24px;">
+      <div class="section-toggle" id="guardrailToggle">
+        Curriculum Guardrails & Socratic Enforcement
+        <span class="arrow">▼</span>
+      </div>
+      <div class="collapse-panel" id="guardrailPanel">
+        <p style="font-size:13px;color:var(--c-muted);margin-bottom:16px;">
+          Configure how students receive answers. You can scope responses to a specific curriculum (CBSE, ICSE, State Board) and enforce Socratic questioning so students don't get direct answers to exam papers.
+        </p>
+        <div class="guardrail-form" id="guardrailForm">
+          <div class="field">
+            <label>Board / Syllabus</label>
+            <select id="grBoard">
+              <option value="">— None —</option>
+              <option value="CBSE" ${g.board === 'CBSE'? 'selected' : ''}>CBSE</option>
+              <option value="ICSE" ${g.board === 'ICSE'? 'selected' : ''}>ICSE</option>
+              <option value="State Board" ${g.board === 'State Board'? 'selected' : ''}>State Board</option>
+              <option value="IB" ${g.board === 'IB'? 'selected' : ''}>IB</option>
+              <option value="IGCSE" ${g.board === 'IGCSE'? 'selected' : ''}>IGCSE</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Grade Level</label>
+            <select id="grGrade">
+              <option value="">— None —</option>
+              ${renderGradeOptions(g.grade_level || '')}
+            </select>
+          </div>
+          <div class="field">
+            <label>Allowed Subjects (comma-separated)</label>
+            <input id="grSubjects" type="text" value="${escapeHtml((g.allowed_subjects || []).join(', '))}" placeholder="e.g. Phonetics, Morphology, Syntax, Etymology" />
+          </div>
+          <div class="field">
+            <label>Curriculum Context (e.g. "CBSE Class 8 English — phonetics & grammar")</label>
+            <textarea id="grCurriculum" placeholder="Describe the curriculum scope for your school...">${escapeHtml(g.curriculum || '')}</textarea>
+          </div>
+          <div class="field">
+            <label>Socratic Enforcement Level</label>
+            <select id="grSocratic">
+              <option value="strict" ${g.socratic_level === 'strict'? 'selected' : ''}>Strict — never give direct answers</option>
+              <option value="moderate" ${(!g.socratic_level || g.socratic_level === 'moderate')? 'selected' : ''}>Moderate — guide, confirm reasoning (recommended)</option>
+              <option value="light" ${g.socratic_level === 'light'? 'selected' : ''}>Light — prefer questions but allow worked examples</option>
+            </select>
+          </div>
+          <div class="auth-actions">
+            <button class="btn btn-primary" type="button" id="saveGuardrailsBtn">Save guardrails</button>
+          </div>
+          <div class="status-msg" id="guardrailStatus" style="display:none;"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderGradeOptions(selected) {
+  const grades = [
+    'Class 1','Class 2','Class 3','Class 4','Class 5',
+    'Class 6','Class 7','Class 8','Class 9','Class 10',
+    'Class 11','Class 12'
+  ];
+  return grades.map(g => `<option value="${g}" ${g === selected? 'selected' : ''}>${g}</option>`).join('');
+}
+
+async function loadDashboard(schoolId) {
+  return loadActiveDashboard(schoolId);
+}
+
+function bindEvents() {
+  const sel = document.getElementById('schoolSelect');
+  if (sel) {
+    sel.addEventListener('change', () => {
+      const sid = parseInt(sel.value);
+      state.activeSchool = state.schools.find(s => s.id === sid);
+      state.activeDashboard = null;
+      state.parentDashboard = null;
+      loadActiveDashboard(sid);
+    });
+  }
+
+  const plToggle = document.getElementById('parentLinkToggle');
+  const plPanel = document.getElementById('parentLinkPanel');
+  if (plToggle && plPanel) {
+    plToggle.addEventListener('click', () => {
+      const open = plPanel.classList.toggle('open');
+      plToggle.classList.toggle('open', open);
+    });
+  }
+
+  const createLink = document.getElementById('createLinkBtn');
+  if (createLink) {
+    createLink.addEventListener('click', async () => {
+      const sid = state.activeSchool?.id;
+      const parent_email = document.getElementById('plParentEmail').value.trim();
+      const student_email = document.getElementById('plStudentEmail').value.trim();
+      const el = document.getElementById('parentLinkStatus');
+      if (!parent_email ||!student_email) { Auth.setStatus(el, 'err', 'Enter both parent email and pick a student.'); return; }
+      const r = await Auth.json(`/auth/schools/${sid}/parent-links`, { method: 'POST', body: JSON.stringify({ parent_email, student_email }) });
+      if (!r.ok) { Auth.setStatus(el, 'err', r.data?.detail || 'Link failed.'); return; }
+      Auth.setStatus(el, 'ok', `Linked ${parent_email} → ${student_email}. The parent will see this child's activity in their parent dashboard.`);
+      document.getElementById('plParentEmail').value = '';
+      document.getElementById('plStudentEmail').value = '';
+    });
+  }
+
+  const createBtn = document.getElementById('createSchoolBtn');
+  if (createBtn) {
+    createBtn.addEventListener('click', async () => {
+      const name = document.getElementById('newSchoolName').value.trim();
+      if (!name) { Auth.setStatus(document.getElementById('createStatus'), 'err', 'Enter a school name.'); return; }
+      const r = await Auth.json('/auth/schools', { method: 'POST', body: JSON.stringify({ name }) });
+      if (!r.ok) { Auth.setStatus(document.getElementById('createStatus'), 'err', r.data?.detail || 'Failed to create school.'); return; }
+      await init(); // refresh everything
+    });
+  }
+
+  const joinBtn = document.getElementById('joinSchoolBtn');
+  if (joinBtn) {
+    joinBtn.addEventListener('click', async () => {
+      const code = document.getElementById('joinCode').value.trim();
+      if (!code) { Auth.setStatus(document.getElementById('joinStatus'), 'err', 'Enter an invite code.'); return; }
+      const r = await Auth.json('/auth/schools/join', { method: 'POST', body: JSON.stringify({ code }) });
+      if (!r.ok) { Auth.setStatus(document.getElementById('joinStatus'), 'err', r.data?.detail || 'Invalid code.'); return; }
+      await init();
+    });
+  }
+
+  const copyBtn = document.getElementById('copyCodeBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const code = state.activeSchool?.code || '';
+      navigator.clipboard.writeText(code).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+      });
+    });
+  }
+
+  const joinOther = document.getElementById('joinOtherBtn');
+  if (joinOther) {
+    joinOther.addEventListener('click', () => {
+      document.getElementById('joinPanel').style.display = 'block';
+    });
+  }
+  const cancelJoin = document.getElementById('cancelJoinBtn');
+  if (cancelJoin) {
+    cancelJoin.addEventListener('click', () => {
+      document.getElementById('joinPanel').style.display = 'none';
+    });
+  }
+  const doJoinBtn = document.getElementById('doJoinBtn');
+  if (doJoinBtn) {
+    doJoinBtn.addEventListener('click', async () => {
+      const code = document.getElementById('joinCode2').value.trim();
+      if (!code) { Auth.setStatus(document.getElementById('joinStatus2'), 'err', 'Enter an invite code.'); return; }
+      const r = await Auth.json('/auth/schools/join', { method: 'POST', body: JSON.stringify({ code }) });
+      if (!r.ok) { Auth.setStatus(document.getElementById('joinStatus2'), 'err', r.data?.detail || 'Invalid code.'); return; }
+      document.getElementById('joinPanel').style.display = 'none';
+      await init();
+    });
+  }
+
+  const guardToggle = document.getElementById('guardrailToggle');
+  const guardPanel = document.getElementById('guardrailPanel');
+  if (guardToggle && guardPanel) {
+    guardToggle.addEventListener('click', () => {
+      const open = guardPanel.classList.toggle('open');
+      guardToggle.classList.toggle('open', open);
+    });
+  }
+
+  const saveG = document.getElementById('saveGuardrailsBtn');
+  if (saveG) {
+    saveG.addEventListener('click', async () => {
+      const sid = state.activeSchool?.id;
+      if (!sid) return;
+      const body = {
+        board: document.getElementById('grBoard').value,
+        grade_level: document.getElementById('grGrade').value,
+        allowed_subjects: document.getElementById('grSubjects').value.split(',').map(s => s.trim()).filter(Boolean),
+        curriculum: document.getElementById('grCurriculum').value,
+        socratic_level: document.getElementById('grSocratic').value,
+        allow_direct_answers: false, // Socratic enforcement is non-negotiable — no admin override
+      };
+      const r = await Auth.json(`/auth/schools/${sid}/guardrails`, { method: 'PUT', body: JSON.stringify(body) });
+      const el = document.getElementById('guardrailStatus');
+      if (!r.ok) { Auth.setStatus(el, 'err', r.data?.detail || 'Failed to save guardrails.'); return; }
+      Auth.setStatus(el, 'ok', 'Guardrails saved.');
+      state.activeSchool.guardrails = r.data.guardrails;
+      state.activeDashboard = null;
+      setTimeout(() => { loadDashboard(sid); }, 500);
+    });
+  }
+}
+
+init();
+</script>
+</body>
+</html>

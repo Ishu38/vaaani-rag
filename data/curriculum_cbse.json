@@ -1,0 +1,58 @@
+{
+  "_description": "CBSE English Language Curriculum — Grade 1-8 phonics and word-structure requirements.",
+  "name": "CBSE English",
+  "version": "1.0",
+  "grades": {
+    "1": {
+      "label": "Class 1 — Beginning to Listen and Say",
+      "required_roots": ["tri", "uni", "bi"],
+      "required_words": ["triangle", "unicycle", "bicycle", "tricycle"],
+      "phonics_focus": ["m", "s", "f", "n", "p", "b", "t", "d"],
+      "outcomes": ["Recognize letter sounds", "Blend simple CVC words"]
+    },
+    "2": {
+      "label": "Class 2 — Sound Builders",
+      "required_roots": ["tri", "uni", "bi", "octo", "cent", "dent", "ped"],
+      "required_words": ["triangle", "tricycle", "unicycle", "bicycle", "octopus", "century", "dentist", "pedal"],
+      "phonics_focus": ["sh", "ch", "th", "ng", "k", "g", "h", "l"],
+      "outcomes": ["Identify digraphs", "Build word families"]
+    },
+    "3": {
+      "label": "Class 3 — Pattern Hunters",
+      "required_roots": ["manu", "aqua", "sol", "luna", "terr", "flor"],
+      "required_words": ["manual", "aquarium", "solar", "lunar", "terrain", "floral"],
+      "phonics_focus": ["r", "w", "y", "v", "z", "j"],
+      "outcomes": ["Spot root patterns", "Infer word meaning"]
+    },
+    "4": {
+      "label": "Class 4 — Word Detectives",
+      "required_roots": ["zoo", "nov", "mari", "astro", "aero", "bio", "geo"],
+      "required_words": ["zoo", "novelty", "marine", "astronaut", "aeroplane", "biology", "geography"],
+      "outcomes": ["Trace word origins", "Build compound words"]
+    },
+    "5": {
+      "label": "Class 5 — Meaning Makers",
+      "required_roots": ["micro", "mega", "scope", "port", "matr", "patr", "frater"],
+      "required_words": ["microscope", "megaphone", "telescope", "portable", "matriarch", "patriarch", "fraternity"],
+      "outcomes": ["Analyze word structure", "Latin/Greek roots"]
+    },
+    "6": {
+      "label": "Class 6 — Linguistic Scientists",
+      "required_roots": ["herb", "anim", "nam", "spect", "dict", "scrib", "graph"],
+      "required_words": ["herbivore", "animal", "nominate", "spectacle", "dictate", "describe", "graphite"],
+      "outcomes": ["Systematic word analysis", "IPA notation introduced"]
+    },
+    "7": {
+      "label": "Class 7 — Origin Detectives",
+      "required_roots": ["tele", "photo", "phon", "struct", "vid", "therm"],
+      "required_words": ["telephone", "photo", "phonics", "structure", "video", "thermal"],
+      "outcomes": ["Multi-root compounds", "Etymology across languages"]
+    },
+    "8": {
+      "label": "Class 8 — Language Explorers",
+      "required_roots": ["mot", "rupt", "tract", "multi", "mort"],
+      "required_words": ["motion", "erupt", "tractor", "multiply", "mortal"],
+      "outcomes": ["Full morphological analysis", "Independent word discovery"]
+    }
+  }
+}

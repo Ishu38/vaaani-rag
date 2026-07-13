@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Exam Pressure Simulation — Vaaani</title>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fff3d5; --panel:#fbedc6; --panel2:#f0dda8; --border:#e0cc93; --text:#2563eb; --muted:#7a8b6f; --accent:#2563eb; --warn:#a06a1e; --danger:#c0392b; --success:#27ae60; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; }
+  nav { display:flex; justify-content:space-between; padding:16px 32px; border-bottom:1px solid var(--border); background:rgba(255,243,213,0.85); backdrop-filter:blur(12px); }
+  nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:14px; }
+  nav a:hover { color:var(--text); }
+  main { max-width:800px; margin:40px auto; padding:0 24px; }
+  h2 { font-size:24px; font-weight:700; margin-bottom:8px; }
+.muted { color:var(--muted); font-size:14px; margin-bottom:24px; }
+.card { background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:24px; }
+.btn { border:none; border-radius:8px; padding:12px 24px; font-family:inherit; font-weight:600; font-size:15px; cursor:pointer; transition:all.15s; }
+.btn-primary { background:var(--accent); color:#fff; width:100%; }
+.btn-primary:hover { background:#1e40af; }
+.btn-secondary { background:var(--panel2); color:var(--text); border:1px solid var(--border); }
+.btn-danger { background:var(--danger); color:#fff; }
+.btn-sm { padding:8px 16px; font-size:13px; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  label { font-size:13px; color:var(--muted); margin-bottom:4px; display:block; }
+  select, input[type=range] { width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; font-family:inherit; background:var(--panel2); color:var(--text); font-size:14px; }
+  input[type=range] { padding:0; }
+.timer { font-size:28px; font-weight:800; text-align:center; padding:12px; }
+.timer.urgent { color:var(--danger); animation:pulse.8s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+.question-box { background:var(--panel2); padding:20px; border-radius:10px; margin:16px 0; font-size:15px; line-height:1.6; }
+.answer-input { width:100%; padding:12px 16px; border:2px solid var(--border); border-radius:8px; font-family:inherit; font-size:16px; margin:12px 0; background:var(--bg); }
+.answer-input:focus { outline:none; border-color:var(--accent); }
+.coaching { background:#fff3cd; border:1px solid #ffc107; border-radius:8px; padding:12px 16px; margin:8px 0; font-size:13px; color:#856404; font-weight:500; }
+.confidence-row { margin:12px 0; }
+.confidence-row label { font-size:14px; font-weight:600; color:var(--text); display:block; margin-bottom:6px; }
+.conf-val { font-size:18px; font-weight:700; color:var(--accent); }
+.conf-pct { font-size:14px; color:var(--muted); margin-left:2px; }
+.confidence-slider { width:100%; height:8px; border-radius:4px; background:var(--border); -webkit-appearance:none; appearance:none; outline:none; cursor:pointer; }
+.confidence-slider::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--accent); cursor:pointer; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+.confidence-slider::-moz-range-thumb { width:22px; height:22px; border-radius:50%; background:var(--accent); cursor:pointer; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+.conf-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:4px; }
+.confidence-feedback { border-radius:8px; padding:10px 14px; margin:8px 0; font-size:13px; font-weight:500; }
+.confidence-feedback.overconfident { background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.3); color:#c0392b; }
+.confidence-feedback.underconfident { background:rgba(39,174,96,0.08); border:1px solid rgba(39,174,96,0.3); color:#27ae60; }
+.confidence-feedback.well_calibrated { background:rgba(37,99,235,0.06); border:1px solid rgba(37,99,235,0.2); color:#2563eb; }
+.score-bar { display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--panel2); border-radius:8px; margin:8px 0; }
+.stress-indicator { height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin:8px 0; }
+.stress-indicator div { height:100%; transition:width.3s,background.3s; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; text-align:center; }
+.mini-stat { padding:8px; }
+.mini-stat.val { font-size:20px; font-weight:700; }
+.mini-stat.lbl { font-size:11px; color:var(--muted); }
+  #post-session { text-align:center; padding:40px; }
+.grade { font-size:64px; font-weight:900; }
+</style>
+<script>(function(){var s=document.createElement('style');s.id='__vg';s.textContent='html{visibility:hidden!important}';document.documentElement.appendChild(s);var done=false;function show(){if(done)return;done=true;var e=document.getElementById('__vg');if(e)e.remove();}function go(){if(done)return;done=true;location.replace('/login?next='+encodeURIComponent(location.pathname+location.search));}var t=setTimeout(show,7000);fetch('/auth/me').then(function(r){if(r.ok){return r.json().then(function(d){clearTimeout(t);(d&&d.user)?show():go();});}clearTimeout(t);if(r.status===401||r.status===403){go();}else{show();}}).catch(function(){clearTimeout(t);show();});})();</script></head>
+<body>
+<nav>
+  <a href="/" style="font-weight:700;font-size:16px;">← Vaaani</a>
+  <div style="display:flex;gap:24px">
+    <a href="/graph-view">Graph</a>
+    <a href="/cognitive">Cognitive X-Ray</a>
+    <a href="/simulation" style="color:var(--text);font-weight:600;">Simulation</a>
+  </div>
+</nav>
+<main>
+  <h2>Exam Pressure Simulation</h2>
+  <p class="muted">Adaptive practice under pressure. Build resilience and recall under timed exam conditions.</p>
+  <div id="config-panel"></div>
+  <div id="session-panel" style="display:none"></div>
+  <div id="post-session" style="display:none"></div>
+</main>
+<script>
+let sessionId=null, currentQ=null;
+
+function showConfig(){
+  document.getElementById('config-panel').innerHTML = `<div class="card">
+    <h3>Configure Simulation</h3>
+    <div class="grid2">
+      <div><label>Subject</label><select id="cfg-subject"><option>Phonetics</option><option>Phonology</option><option>Morphology</option><option>Syntax</option><option>Semantics</option><option>Etymology</option></select></div>
+      <div><label>Time Pressure (0=relaxed, 1=extreme)</label><input type="range" id="cfg-timePressure" min="0" max="1" step="0.1" value="0.5"></div>
+      <div><label>Negative Marking</label><select id="cfg-negMarking"><option value="0.25">25% (-1 for wrong, +4 correct)</option><option value="0">No negative marking</option><option value="0.5">50%</option></select></div>
+      <div><label>Questions</label><select id="cfg-count"><option value="10">10 (quick)</option><option value="20">20</option><option value="30" selected>30 (full)</option></select></div>
+      <div><label>Time Limit (seconds)</label><select id="cfg-time"><option value="600">10 min</option><option value="1800">30 min</option><option value="3600" selected>60 min</option></select></div>
+      <div><label>Recovery Coaching</label><select id="cfg-recovery"><option value="1" selected>On</option><option value="0">Off</option></select></div>
+      <div><label>Fatigue Simulation</label><select id="cfg-fatigue"><option value="1" selected>On</option><option value="0">Off</option></select></div>
+      <div><label>Distraction Density</label><select id="cfg-distract"><option value="0.1">Rare</option><option value="0.3" selected>Moderate</option><option value="0.6">Frequent</option></select></div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="start()">Start Simulation</button>
+  </div>`;
+}
+showConfig();
+
+async function start(){
+  const cfg = {
+    subject: document.getElementById('cfg-subject').value,
+    time_pressure: parseFloat(document.getElementById('cfg-timePressure').value),
+    negative_marking: parseFloat(document.getElementById('cfg-negMarking').value),
+    distraction_density: parseFloat(document.getElementById('cfg-distract').value),
+    recovery_enabled: document.getElementById('cfg-recovery').value=='1',
+    fatigue_simulation: document.getElementById('cfg-fatigue').value=='1',
+    total_questions: parseInt(document.getElementById('cfg-count').value),
+    time_limit_seconds: parseInt(document.getElementById('cfg-time').value),
+  };
+  const r = await fetch('/simulation/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)});
+  if(r.status === 401){
+    document.getElementById('config-panel').innerHTML =
+      '<div class="card" style="text-align:center;padding:40px"><h3>Sign in to start a simulation</h3><p class="muted" style="margin:12px 0">The exam-pressure simulator scores against your ingested corpus, so it needs a Vaaani account.</p><a class="btn btn-primary" href="/login">Sign in</a> &nbsp; <a class="btn btn-ghost" href="/signup">Create account</a></div>';
+    return;
+  }
+  const data = await r.json();
+  if(data.error){alert(data.error);return;}
+  sessionId=data.session_id; currentQ=data.current_question;
+  document.getElementById('config-panel').style.display='none';
+  renderSession(data);
+  startTimer(data.time_remaining);
+}
+
+function renderSession(d){
+  const q=d.current_question||{};
+  let tCls = d.time_remaining<300?'urgent':'';
+  document.getElementById('session-panel').style.display='block';
+  document.getElementById('session-panel').innerHTML = `
+    <div class="card">
+      <div class="timer ${tCls}" id="timer">${fmtTime(d.time_remaining)}</div>
+      <div class="grid3">
+        <div class="mini-stat"><div class="val">${d.score||0}</div><div class="lbl">Score</div></div>
+        <div class="mini-stat"><div class="val">${d.accuracy||0}%</div><div class="lbl">Accuracy</div></div>
+        <div class="mini-stat"><div class="val">${d.question_index+1}/${d.total_questions}</div><div class="lbl">Question</div></div>
+      </div>
+      <div class="stress-indicator"><div id="stress-bar" style="width:${(d.stress_level||0)*100}%;background:${d.stress_level>0.7?'#c0392b':d.stress_level>0.4?'#e67e22':'#27ae60'}"></div></div>
+      <div class="question-box">
+        <span style="color:var(--muted);font-size:12px">${q.topic||''} · Difficulty ${q.difficulty||1}</span>
+        <p style="margin-top:8px">${q.query||''}</p>
+      </div>
+      <input class="answer-input" id="answerInput" placeholder="Type your answer..." autocomplete="off" onkeydown="if(event.key==='Enter')submit()">
+      <div class="confidence-row">
+        <label for="confidenceSlider">How sure are you? <span id="confVal" class="conf-val">50</span><span class="conf-pct">%</span></label>
+        <input type="range" id="confidenceSlider" min="0" max="100" step="5" value="50" class="confidence-slider"
+               oninput="document.getElementById('confVal').textContent=this.value">
+        <div class="conf-labels"><span>Just guessing</span><span>Very sure</span></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-sm btn-primary" onclick="submit()">Submit Answer</button>
+        <button class="btn btn-sm btn-danger" onclick="skip()">Skip →</button>
+      </div>
+      ${d.coaching_interjection?`<div class="coaching">${d.coaching_interjection}</div>`:''}
+      ${d.confidence_feedback?`<div class="confidence-feedback ${d.confidence_feedback.type||''}">${d.confidence_feedback.text||''}</div>`:''}
+      ${d.was_correct!==null?`<div style="margin-top:8px;color:${d.was_correct?'var(--success)':'var(--danger)'};font-weight:600">${d.was_correct?'Correct!':'Wrong.'} <span style="font-weight:400;color:var(--muted);font-size:12px">Answer: ${(d.answered_question||{}).answer||''}</span></div>`:''}
+    </div>`;
+  document.getElementById('answerInput').focus();
+}
+
+async function submitWithConfidence(c){
+  const ans = document.getElementById('answerInput').value;
+  if(!ans.trim())return;
+  // Read confidence from the slider (0-100). Fall back to the passed value
+  // for backward compatibility (old submitConfidence calls).
+  const slider = document.getElementById('confidenceSlider');
+  const conf0to100 = slider ? parseInt(slider.value) : c;
+  const r = await fetch('/simulation/answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sessionId,answer:ans,confidence_0to100:conf0to100})});
+  const d = await r.json();
+  if(d.state==='complete') showResults(d);
+  else { currentQ=d.current_question; renderSession(d); startTimer(d.time_remaining); }
+}
+function submitConfidence(c){ submitWithConfidence(c); }
+async function submit(){ submitWithConfidence(50); }
+async function skip(){
+  const r = await fetch('/simulation/skip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session_id:sessionId,skip:true})});
+  const d = await r.json();
+  if(d.state==='complete') showResults(d);
+  else { currentQ=d.current_question; renderSession(d); startTimer(d.time_remaining); }
+}
+let timerInterval;
+function startTimer(secs){
+  clearInterval(timerInterval);
+  let remaining = secs;
+  timerInterval = setInterval(()=>{
+    remaining = Math.max(0,remaining-1);
+    const el = document.getElementById('timer');
+    if(el) { el.textContent=fmtTime(remaining); if(remaining<300)el.classList.add('urgent'); }
+    if(remaining<=0) clearInterval(timerInterval);
+  },1000);
+}
+function fmtTime(s){ const m=Math.floor(s/60),sec=s%60; return `${m}:${sec.toString().padStart(2,'0')}`; }
+function showResults(d){
+  clearInterval(timerInterval);
+  document.getElementById('session-panel').style.display='none';
+  document.getElementById('post-session').style.display='block';
+  const acc = d.accuracy||0;
+  let grade = acc>=90?'A+':acc>=75?'A':acc>=60?'B':'C';
+  document.getElementById('post-session').innerHTML = `
+    <div class="card">
+      <h3>Session Complete</h3>
+      <div class="grade" style="color:${acc>=75?'var(--success)':acc>=50?'#e67e22':'var(--danger)'}">${grade}</div>
+      <div class="grid3" style="margin:16px 0">
+        <div class="mini-stat"><div class="val">${d.score}/${d.max_score}</div><div class="lbl">Score</div></div>
+        <div class="mini-stat"><div class="val">${acc}%</div><div class="lbl">Accuracy</div></div>
+        <div class="mini-stat"><div class="val">${d.stress_resilience.toFixed(2)}</div><div class="lbl">Resilience</div></div>
+      </div>
+      <div class="grid3">
+        <div class="mini-stat"><div class="val">${d.correct||0}</div><div class="lbl">Correct</div></div>
+        <div class="mini-stat"><div class="val">${d.wrong||0}</div><div class="lbl">Wrong</div></div>
+        <div class="mini-stat"><div class="val">${d.skipped||0}</div><div class="lbl">Skipped</div></div>
+      </div>
+      <p style="margin-top:12px;color:var(--muted);font-size:13px">Avg response: ${(d.avg_response_ms/1000).toFixed(1)}s per question</p>
+      <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-primary" onclick="location.reload()">New Session</button>
+        <a href="/cognitive" class="btn btn-sm btn-secondary" style="text-decoration:none;display:inline-block">See your Cognitive X-Ray →</a>
+        <a href="/app?from=simulation" class="btn btn-sm btn-secondary" style="text-decoration:none;display:inline-block">Ask the tutor about what you got wrong</a>
+        <a href="/graph-view" class="btn btn-sm btn-secondary" style="text-decoration:none;display:inline-block">See your knowledge graph</a>
+      </div>
+    </div>`;
+}
+</script>
+</body>
+</html>

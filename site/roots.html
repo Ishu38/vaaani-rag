@@ -1,0 +1,1149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="Word Roots from Vaaani — see how English words are built from a small set of root words and affixes. Learn the root first, then the sound. Click any root to grow its word family." />
+<meta name="theme-color" content="#2563eb" />
+<title>Word Families — Vaaani</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/page.css" />
+
+<style>
+  :root {
+    --rt-accent: #2563eb; /* prefix */
+    --rt-root: #d4761e; /* root */
+    --rt-suffix: #1f9d6b; /* suffix */
+    --rt-ink: #1c1c28;
+    --rt-muted: #6b6b7b;
+    --rt-line: #e6e6ee;
+    --rt-card: #ffffff;
+  }
+.rt-wrap { max-width: 1120px; margin: 0 auto; padding: calc(var(--nav-h) + 24px) 24px 96px; }
+.rt-hero { text-align: center; padding: 8px 0 22px; }
+.rt-hero .eyebrow { color: var(--rt-accent); }
+.rt-hero h1 { font-size: clamp(30px, 5vw, 52px); line-height: 1.04; margin: 10px 0 14px; letter-spacing: -0.02em; }
+.rt-hero h1.serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; color: var(--rt-accent); font-weight: 400; }
+.rt-hero p { color: var(--rt-muted); max-width: 660px; margin: 0 auto; font-size: 17px; line-height: 1.6; }
+
+.rt-legend { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin:16px 0 4px; font-size:13px; color:var(--rt-muted); }
+.rt-legend .lg { display:inline-flex; align-items:center; gap:7px; }
+.rt-legend .sw { width:14px; height:14px; border-radius:5px; }
+.sw.pre { background: var(--rt-accent); }.sw.root { background: var(--rt-root); }.sw.suf { background: var(--rt-suffix); }
+
+  /* root chips */
+.rt-section-title { font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--rt-muted); margin:30px 0 12px; }
+.rt-roots { display:flex; flex-wrap:wrap; gap:10px; }
+.rt-rootchip { display:inline-flex; align-items:center; gap:9px; padding:11px 15px; border:1px solid var(--rt-line); background:var(--rt-card);
+    border-radius:13px; cursor:pointer; transition:transform.12s, box-shadow.12s, border-color.12s; font:inherit; }
+.rt-rootchip:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(20,20,40,.09); border-color:var(--rt-root); }
+.rt-rootchip.active { background:var(--rt-root); border-color:var(--rt-root); color:#fff; }
+.rt-rootchip .emoji { font-size:18px; }
+.rt-rootchip .rname { font-weight:700; font-size:15px; }
+.rt-rootchip .rmean { font-size:12.5px; color:var(--rt-muted); }
+.rt-rootchip.active .rname,
+.rt-rootchip.active .rmean { color:rgba(255,255,255,.85); }
+
+  /* family panel */
+.rt-family { margin-top:26px; }
+.rt-fhead { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px; }
+.rt-fhead .froot { font-size:30px; font-weight:800; color:var(--rt-root); }
+.rt-fhead .forigin { font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--rt-muted); border:1px solid var(--rt-line); border-radius:20px; padding:3px 10px; }
+.rt-fhead .fmean { font-size:16px; color:var(--rt-ink); }
+.rt-fsub { color:var(--rt-muted); font-size:14px; margin-bottom:16px; }
+.rt-words { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:14px; }
+.rt-word { border:1px solid var(--rt-line); border-radius:14px; padding:16px; background:var(--rt-card); transition:box-shadow.12s, transform.12s; }
+.rt-word:hover { box-shadow:0 8px 22px rgba(20,20,40,.07); transform:translateY(-2px); }
+.rt-eq { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.rt-morph { padding:6px 11px; border-radius:9px; font-weight:700; font-size:15px; color:#fff; }
+.rt-morph.pre { background:var(--rt-accent); }.rt-morph.root { background:var(--rt-root); }.rt-morph.suf { background:var(--rt-suffix); }
+.rt-plus { color:var(--rt-muted); font-weight:600; }
+.rt-arrow { color:var(--rt-muted); margin:0 2px; }
+.rt-built { font-size:20px; font-weight:800; color:var(--rt-ink); }
+.rt-gloss { color:var(--rt-muted); font-size:14px; margin-top:10px; line-height:1.5; }
+.rt-hear { margin-top:12px; display:inline-flex; align-items:center; gap:7px; background:none; border:1px solid var(--rt-line); border-radius:10px; padding:7px 12px; font:inherit; font-size:13px; font-weight:600; color:var(--rt-accent); cursor:pointer; }
+.rt-hear:hover { background:var(--rt-accent); color:#fff; border-color:var(--rt-accent); }
+.rt-hear svg { width:15px; height:15px; }
+
+  /* build-it game */
+.rt-build { margin-top:48px; border:1px solid var(--rt-line); border-radius:18px; padding:26px; background:linear-gradient(180deg,#fbfcff,#fff); }
+.rt-build h2 { font-size:24px; margin-bottom:4px; }
+.rt-build p.sub { color:var(--rt-muted); margin-bottom:18px; font-size:15px; }
+.rt-build .controls { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+.rt-build label { display:block; font-size:12px; font-weight:600; color:var(--rt-muted); margin-bottom:5px; }
+.rt-build select { font:inherit; padding:10px 12px; border:1px solid var(--rt-line); border-radius:10px; background:#fff; min-width:140px; }
+.rt-build .eqpreview { font-size:22px; font-weight:800; margin:20px 0 6px; min-height:30px; }
+.rt-result { font-size:15px; min-height:24px; }
+.rt-result.ok { color:var(--rt-suffix); font-weight:600; }
+.rt-result.no { color:var(--rt-muted); }
+.rt-score { margin-top:14px; font-size:13px; color:var(--rt-muted); }
+.rt-score b { color:var(--rt-root); }
+
+.rt-next { text-align:center; margin-top:52px; padding:34px; border:1px dashed var(--rt-line); border-radius:18px; }
+.rt-next h2 { font-size:24px; margin-bottom:8px; }
+.rt-next p { color:var(--rt-muted); margin-bottom:18px; }
+
+  /* grade bar — mirrors the IPA chart so the two tools feel like one curriculum */
+.rt-gradebar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:6px 0}
+.rt-gbtn{display:flex;flex-direction:column;align-items:center;gap:2px;border:1.5px solid var(--rt-line);background:#fff;border-radius:14px;padding:9px 14px;cursor:pointer;min-width:122px;transition:.15s;font:inherit}
+.rt-gbtn:hover{border-color:#9aa3ff}
+.rt-gbtn.active{border-color:var(--rt-accent);background:#eef2ff;box-shadow:0 2px 10px rgba(37,99,235,.12)}
+.rt-gbtn .gn{font-weight:700;font-size:13px;color:var(--rt-accent)}
+.rt-gbtn .gt{font-weight:600;font-size:13px;color:var(--rt-ink)}
+.rt-gbtn .gs{font-size:11px;color:var(--rt-muted)}
+.rt-mission{text-align:center;font-size:14px;color:#6f3a0e;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px 14px;margin:14px auto 4px;max-width:680px}
+  /* grown-up names (origin, "root/prefix/suffix") stay hidden until Grade 5 — the firewall */
+body:not(.grade-5) .forigin{display:none}
+body:not(.grade-5) .rt-legend em{display:none}
+.rt-fsub .grownname{display:none}
+body.grade-5 .rt-fsub .grownname{display:inline}
+body.grade-5 .rt-fsub .kidname{display:none}
+
+  /* ---- flashcard review overlay ---- */
+.rt-review-overlay{display:none;position:fixed;inset:0;background:rgba(12,12,30,.82);z-index:1000;justify-content:center;align-items:center;padding:20px}
+.rt-review-overlay.on{display:flex}
+.rt-review-card{background:#fff;border-radius:20px;padding:30px 26px 24px;max-width:480px;width:100%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.22);max-height:90vh;overflow-y:auto}
+.rt-review-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--rt-muted);line-height:1;padding:4px 8px;border-radius:8px}
+.rt-review-close:hover{background:#f0f0f5}
+.rt-review-progress{font-size:12px;color:var(--rt-muted);margin-bottom:12px;text-align:center}
+.rt-review-word{font-size:34px;font-weight:800;text-align:center;margin:14px 0;color:var(--rt-ink);line-height:1.2}
+.rt-review-prompt{font-size:15px;color:var(--rt-ink);text-align:center;margin-bottom:16px;line-height:1.5}
+.rt-review-choices{display:flex;flex-direction:column;gap:8px}
+.rt-choice{width:100%;text-align:left;padding:12px 15px;border:1.5px solid var(--rt-line);border-radius:12px;background:#fff;font:inherit;font-size:14px;cursor:pointer;transition:border-color.12s,background.12s}
+.rt-choice:hover{border-color:var(--rt-accent);background:#f4f6ff}
+.rt-choice.correct{border-color:var(--rt-suffix);background:#f0fdf4;color:#166534;pointer-events:none}
+.rt-choice.wrong{border-color:#dc2626;background:#fef2f2;color:#991b1b;pointer-events:none}
+.rt-choice:disabled{pointer-events:none;opacity:.75}
+.rt-review-feedback{text-align:center;font-size:14px;font-weight:600;margin-top:14px;min-height:22px}
+.rt-review-feedback.ok{color:var(--rt-suffix)}
+.rt-review-feedback.no{color:#dc2626}
+.rt-review-next{display:none;margin:14px auto 0;padding:10px 24px;border:none;border-radius:10px;background:var(--rt-accent);color:#fff;font:inherit;font-weight:600;cursor:pointer;font-size:14px}
+.rt-review-next.show{display:block}
+.rt-review-next:hover{filter:brightness(1.08)}
+.rt-tap-target{cursor:pointer;transition:color.15s}
+.rt-tap-target:hover{outline:2px solid var(--rt-root);border-radius:4px;outline-offset:2px}
+.rt-tap-target.correct{color:var(--rt-root)!important;font-weight:800}
+.rt-tap-target.wrong{color:#dc2626!important}
+
+  /* ---- Meet a Stranger (reading transfer) ---- */
+.rt-strangers{margin-top:22px;border:1.5px dashed var(--rt-line);border-radius:16px;padding:18px;background:#fbfbff}
+.rt-strangers h3{font-size:16px;margin:0 0 2px;color:var(--rt-ink)}
+.rt-strangers .ssub{font-size:13px;color:var(--rt-muted);margin-bottom:14px}
+.rt-stranger-card{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--rt-line)}
+.rt-stranger-card:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.rt-stranger-word{font-size:22px;font-weight:800;color:var(--rt-root)}
+.rt-stranger-sentence{font-size:13px;color:var(--rt-muted);font-style:italic;margin:4px 0 10px;line-height:1.45}
+.rt-schoice{display:inline-block;margin:0 6px 6px 0;padding:8px 13px;border:1.5px solid var(--rt-line);border-radius:10px;background:#fff;font:inherit;font-size:13px;cursor:pointer;transition:.12s}
+.rt-schoice:hover{border-color:var(--rt-accent);background:#f4f6ff}
+.rt-schoice.correct{border-color:var(--rt-suffix);background:#f0fdf4;color:#166534;pointer-events:none}
+.rt-schoice.wrong{border-color:#dc2626;background:#fef2f2;color:#991b1b;pointer-events:none}
+.rt-schoice:disabled{pointer-events:none;opacity:.75}
+.rt-stranger-feedback{font-size:13px;font-weight:600;margin-top:6px;min-height:20px}
+.rt-stranger-feedback.ok{color:var(--rt-suffix)}
+.rt-stranger-feedback.no{color:#dc2626}
+
+  /* ---- mastery bars ---- */
+.rt-mastery-summary{display:flex;gap:22px;flex-wrap:wrap;font-size:12px;color:var(--rt-muted);margin:0 0 6px}
+.rt-mastery-summary b{color:var(--rt-ink)}
+.rt-rootchip{position:relative;overflow:hidden;flex-direction:column}
+.rt-rootchip .rt-mastery-mini{width:100%;height:3px;background:var(--rt-line);margin-top:6px;border-radius:0 0 6px 6px;overflow:hidden;position:absolute;bottom:0;left:0}
+.rt-rootchip .rt-mastery-fill{height:100%;background:var(--rt-suffix);border-radius:inherit;transition:width.4s;width:0%}
+.rt-rootchip.active .rt-mastery-mini{background:rgba(255,255,255,.3)}
+.rt-rootchip.active .rt-mastery-fill{background:#fff}
+.rt-rootchip .chip-inner{display:flex;align-items:center;gap:9px;padding-bottom:5px}
+
+  /* ---- pronunciation accordion ---- */
+.rt-pronote{margin-top:10px;border-top:1px solid var(--rt-line);padding-top:8px}
+.rt-pronote-trigger{background:none;border:none;font:inherit;font-size:12px;font-weight:600;color:var(--rt-accent);cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:4px}
+.rt-pronote-trigger:hover{text-decoration:underline}
+.rt-pronote-trigger .chevron{display:inline-block;transition:transform.2s;font-size:10px}
+.rt-pronote-trigger.open .chevron{transform:rotate(180deg)}
+.rt-pronote-body{display:none;font-size:12.5px;color:var(--rt-muted);line-height:1.55;margin-top:6px;padding:9px 11px;background:#fffbeb;border-radius:8px;border:1px solid #fde68a}
+.rt-pronote-body .rt-ipa-link{color:var(--rt-accent);font-weight:700;text-decoration:none;border-bottom:1px dotted var(--rt-accent)}
+.rt-pronote-body.open{display:block}
+
+  /* ---- evidence panel ---- */
+.rt-evidence{margin-top:48px}
+.rt-evidence>summary{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--rt-muted);cursor:pointer;padding:8px 0;user-select:none}
+.rt-evidence>summary:hover{color:var(--rt-accent)}
+.rt-ev-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;padding:14px 0}
+.rt-ev-stat{border:1px solid var(--rt-line);border-radius:12px;padding:12px 14px;text-align:center;background:var(--rt-card)}
+.rt-ev-stat .n{font-size:26px;font-weight:800;color:var(--rt-accent)}
+.rt-ev-stat .l{font-size:11px;color:var(--rt-muted);margin-top:2px}
+
+  /* ---- cognate bridge ---- */
+.rt-cognate{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#7c4a12;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:3px 9px;margin-left:8px;vertical-align:middle}
+.rt-cognate .clang{font-weight:800}
+.rt-lmlink{font-size:11px;font-weight:700;color:#2563eb;text-decoration:none;border-bottom:1px dotted #2563eb;margin-left:8px;white-space:nowrap}
+
+  /* ---- sentence display ---- */
+.rt-sentence{font-size:13px;font-style:italic;color:var(--rt-muted);margin-top:6px;padding:7px 11px;background:#f9f9fc;border-radius:8px;line-height:1.5}
+.rt-sentence em{font-style:normal;font-weight:700;color:var(--rt-root)}
+
+  /* ---- review launch button ---- */
+.rt-review-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:9px 16px;border:1.5px solid var(--rt-accent);border-radius:10px;background:var(--rt-accent);color:#fff;font:inherit;font-weight:600;font-size:14px;cursor:pointer;transition:filter.12s}
+.rt-review-btn:hover{filter:brightness(1.08)}
+.rt-review-btn:active{transform:scale(.98)}
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled" id="nav">
+  <a class="brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+      <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+      <path d="M4 12 L12 4 L20 12 L12 20 Z" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.6"/>
+      <path d="M4 12 L12 12 M12 4 L12 20 M20 12 L12 12" stroke="currentColor" stroke-width="0.5" opacity="0.4" fill="none"/>
+    </svg>
+    <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/roots" class="active">Word Roots</a>
+    <a href="/ipa">IPA Chart</a>
+    <a href="/sound-lab">Sound Lab</a>
+    <a href="/cognitive">Diagnostics</a>
+    <a href="/about">About</a>
+  </div>
+  <div class="nav-cta" id="navAuth"></div>
+</nav>
+
+<main class="page" style="padding-top: 92px;">
+  <div class="rt-wrap">
+    <a class="back-link" href="/">← Back</a>
+
+    <section class="rt-hero">
+      <p class="eyebrow" id="rtEyebrow">// Pick your grade</p>
+      <h1>Most English words are <span class="serif">built, not memorised.</span></h1>
+      <p id="rtHeroDesc">Every family of words has a little <em>piece</em> hiding inside them all — and once you've discovered what it means, you can decode words you've never met instead of cramming them. (And yes — grown-ups call that heart piece a <strong>root</strong>. You've earned the word.) Pick a family below and watch it grow.</p>
+      <div class="rt-legend" id="rtLegend">
+        <span class="lg"><span class="sw pre"></span> front piece <em>(prefix)</em></span>
+        <span class="lg"><span class="sw root"></span> heart piece <em>(root)</em></span>
+        <span class="lg"><span class="sw suf"></span> end piece <em>(suffix)</em></span>
+      </div>
+    </section>
+
+    <div class="rt-gradebar" id="rtGradeBar"></div>
+    <div class="rt-mission" id="rtMission"></div>
+
+    <div class="rt-mastery-summary" id="rtMasterySummary"></div>
+
+    <div class="rt-section-title" id="rtSectionTitle">Pick a word family</div>
+    <div class="rt-roots" id="rootChips"></div>
+
+    <section class="rt-family" id="family"></section>
+
+    <section class="rt-build" id="rtBuild">
+      <h2 id="rtBuildTitle">Build a word yourself</h2>
+      <p class="sub" id="rtBuildSub">Snap a front piece onto a heart piece and see what you make. Find the real words and grow your collection.</p>
+      <div class="controls">
+        <div>
+          <label for="bPre" id="bLabelPre">Front piece</label>
+          <select id="bPre"></select>
+        </div>
+        <div>
+          <label for="bRoot" id="bLabelRoot">Heart piece</label>
+          <select id="bRoot"></select>
+        </div>
+        <div>
+          <label for="bSuf" id="bLabelSuf">End piece</label>
+          <select id="bSuf"></select>
+        </div>
+      </div>
+      <div class="eqpreview" id="bPreview">—</div>
+      <div class="rt-result no" id="bResult">Choose pieces above to build a word.</div>
+      <div class="rt-score">Real words discovered: <b id="bFound">0</b> / <span id="bTotal">0</span></div>
+    </section>
+
+    <details class="rt-evidence" id="rtEvidence">
+      <summary>Your Progress (Evidence)</summary>
+      <div class="rt-ev-body" id="rtEvidenceBody"></div>
+    </details>
+
+    <section class="rt-next">
+      <h2>Now hear how they <em>sound</em></h2>
+      <p>You know what the parts mean — next, see how each sound is made.</p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a class="btn btn-primary lg" href="/ipa">Open the IPA chart <span class="arr">→</span></a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="rt-review-overlay" id="rtReviewOverlay">
+  <div class="rt-review-card" id="rtReviewCard"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="4" cy="12" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="20" cy="12" r="2"/>
+          <circle cx="12" cy="20" r="2"/><circle cx="12" cy="12" r="1.5"/>
+        </svg>
+        <span class="brand-word"><span>Vaa</span><span class="accent">ani</span></span>
+      </div>
+      <p>A discovery-based linguistics tutor for school children.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <a href="/roots">Word Roots</a>
+      <a href="/ipa">IPA Chart</a>
+    </div>
+    <div class="footer-col">
+      <h5>Legal</h5>
+      <a href="/privacy">Privacy notice</a>
+      <a href="mailto:iamanushka32@gmail.com">Grievance officer</a>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+  <div class="container footer-line">
+    <span>Designed and Developed by <strong>Neil Shankar Ray</strong>, IIT Patna</span>
+    <span>© 2026 – 2028 · All rights reserved</span>
+  </div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const joinWord = parts => parts.map(p => p[0]).join('');
+
+// ---- Data (expanded with pedagogy fields) ----
+const ROOTS = [
+  { root:'port', origin:'Latin', meaning:'to carry', emoji:'📦',
+    sentence:'The shop will import toys from Japan and export shoes to France.',
+    pronote:'<b>Watch the /p/</b> — bring both lips together, then release with a crisp puff. Keep it short, not breathy like Hindi फ (ph). The /t/ needs your tongue tip right behind your top teeth.',
+    decoy:['portal','portion'],
+    strangers:[
+      { word:'deport', parts:[['de','pre'],['port','root']], gloss:'to send someone out of a country', sentence:'The government decided to deport the visitor.', distractors:['to carry goods in','to look closely','to build something'] },
+      { word:'portfolio', parts:[['port','root'],['folio','root']], gloss:'a case for carrying papers or a collection of work', sentence:'She showed her art portfolio at the interview.', distractors:['a type of boat','a writing tool','a measurement device'] },
+    ],
+    words:[
+      { parts:[['im','pre'],['port','root']], gloss:'to carry IN — bring goods into a country' },
+      { parts:[['ex','pre'],['port','root']], gloss:'to carry OUT — send goods abroad' },
+      { parts:[['trans','pre'],['port','root']], gloss:'to carry ACROSS from one place to another' },
+      { parts:[['port','root'],['able','suf']], gloss:'ABLE to be carried — light enough to move' },
+      { parts:[['port','root'],['er','suf']], gloss:'a person who carries things' },
+    ]},
+  { root:'dict', origin:'Latin', meaning:'to say / speak', emoji:'🗣️',
+    sentence:'The teacher asked us to predict what happens next in the story.',
+    pronote:'<b>Tongue placement for /d/</b> — tip behind top teeth (not curled back like Hindi ड). For the final /kt/, move your tongue from the back (k) to the front (t) quickly. Practice: dik-t.',
+    cognate:{lang:'Sanskrit',word:'diśati (दिशति)',meaning:'points out, shows'},
+    strangers:[
+      { word:'verdict', parts:[['ver','pre'],['dict','root']], gloss:'the decision spoken by a jury', sentence:'The jury returned a verdict of not guilty.', distractors:['a type of poem','a loud noise','a fast runner'] },
+      { word:'edict', parts:[['e','pre'],['dict','root']], gloss:'an official order spoken by a ruler', sentence:'The king issued an edict that all schools must open.', distractors:['a building material','a musical instrument','a type of food'] },
+    ],
+    words:[
+      { parts:[['pre','pre'],['dict','root']], gloss:'to say what will happen BEFORE it does' },
+      { parts:[['contra','pre'],['dict','root']], gloss:'to speak AGAINST what was said' },
+      { parts:[['dict','root'],['ate','suf']], gloss:'to say aloud for someone to write down' },
+      { parts:[['dict','root'],['ionary','suf']], gloss:'a book that lists what words say (mean)' },
+    ]},
+  { root:'spect', origin:'Latin', meaning:'to look / watch', emoji:'👀',
+    sentence:'Please respect your elders and inspect your work carefully.',
+    pronote:'<b>The /sp/ cluster is tricky for Indian-English speakers.</b> Start with /s/ (hiss like a snake), then /p/ (lips together). Don\'t add an extra "i" before the /s/ — say "spect," not "ispect."',
+    cognate:{lang:'Sanskrit',word:'paśyati (पश्यति)',meaning:'sees'},
+    strangers:[
+      { word:'prospect', parts:[['pro','pre'],['spect','root']], gloss:'looking forward to something in the future', sentence:'The prospect of summer vacation made everyone happy.', distractors:['a painful memory','a difficult test','a loud argument'] },
+      { word:'perspective', parts:[['per','pre'],['spect','root'],['ive','suf']], gloss:'a way of looking at things, a point of view', sentence:'From her perspective, the problem looked different.', distractors:['a cooking recipe','a dance move','a weather pattern'] },
+    ],
+    words:[
+      { parts:[['in','pre'],['spect','root']], gloss:'to look closely INTO something' },
+      { parts:[['re','pre'],['spect','root']], gloss:'to look BACK at — to regard highly' },
+      { parts:[['spect','root'],['ator','suf']], gloss:'a person who watches' },
+      { parts:[['spect','root'],['acles','suf']], gloss:'things you look through — glasses' },
+    ]},
+  { root:'struct', origin:'Latin', meaning:'to build', emoji:'🏗️',
+    sentence:'The children used blocks to construct a tall tower.',
+    pronote:'<b>The /str/ cluster</b> — three sounds in a row. Start with /s/ (hiss), then /t/ (tongue behind teeth), then /r/ (curl tongue back slightly). Practice slowly: sss-t-rrr-uct. Keep the /r/ soft, not rolled.',
+    strangers:[
+      { word:'construct', parts:[['con','pre'],['struct','root']], gloss:'to build something together', sentence:'They plan to construct a new bridge.', distractors:['to tear down','to write quickly','to sing loudly'] },
+      { word:'obstruct', parts:[['ob','pre'],['struct','root']], gloss:'to block or build in the way', sentence:'The fallen tree obstructs the road.', distractors:['to clean thoroughly','to paint beautifully','to run fast'] },
+    ],
+    words:[
+      { parts:[['con','pre'],['struct','root']], gloss:'to build TOGETHER, to make' },
+      { parts:[['de','pre'],['struct','root']], gloss:'to UN-build, to tear down' },
+      { parts:[['in','pre'],['struct','root']], gloss:'to build knowledge INTO someone — to teach' },
+      { parts:[['struct','root'],['ure','suf']], gloss:'a thing that has been built' },
+    ]},
+  { root:'scrib / script', origin:'Latin', meaning:'to write', emoji:'✍️',
+    sentence:'The doctor will prescribe medicine after examining you.',
+    pronote:'<b>The /skr/ cluster</b> — /s/ (hiss) → /k/ (back of tongue to roof) → /r/. The "b" in scrib is often silent — say it as /skr/. For script, the /p/ at the end is light. Practice: skr-ibe, skr-ipt.',
+    strangers:[
+      { word:'describe', parts:[['de','pre'],['scribe','root']], gloss:'to write down what something is like', sentence:'Can you describe the animal you saw?', distractors:['to run away','to cook food','to count numbers'] },
+      { word:'subscription', parts:[['sub','pre'],['script','root'],['ion','suf']], gloss:'writing your name under an agreement to receive something regularly', sentence:'She bought a subscription to the magazine.', distractors:['a type of medicine','a garden tool','a loud cheer'] },
+    ],
+    words:[
+      { parts:[['de','pre'],['scribe','root']], gloss:'to write DOWN what something is like' },
+      { parts:[['pre','pre'],['scribe','root']], gloss:'to write an order BEFORE (a doctor prescribes)' },
+      { parts:[['script','root'],['ure','suf']], gloss:'sacred writing' },
+      { parts:[['manu','pre'],['script','root']], gloss:'something written by HAND' },
+    ]},
+  { root:'vis / vid', origin:'Latin', meaning:'to see', emoji:'👁️',
+    sentence:'From this hilltop, the vision of the valley is incredible.',
+    pronote:'<b>The /v/ needs your top teeth gently on your bottom lip</b> — not both lips together like /w/. Feel the vibration of your vocal cords. Common Indian-English mix-up: saying "wis" instead of "vis." Bite your lip gently and hum.',
+    cognate:{lang:'Sanskrit',word:'veda (वेद)',meaning:'knowledge, seeing'},
+    strangers:[
+      { word:'visual', parts:[['vis','root'],['ual','suf']], gloss:'relating to seeing or sight', sentence:'The teacher used visual aids to explain the lesson.', distractors:['relating to sound','relating to taste','relating to speed'] },
+      { word:'evident', parts:[['e','pre'],['vid','root'],['ent','suf']], gloss:'clearly seen, obvious', sentence:'It was evident that she had practiced hard.', distractors:['completely hidden','slightly warm','very quiet'] },
+    ],
+    words:[
+      { parts:[['vis','root'],['ion','suf']], gloss:'the act or power of seeing' },
+      { parts:[['vis','root'],['ible','suf']], gloss:'ABLE to be seen' },
+      { parts:[['vid','root'],['eo','suf']], gloss:'moving pictures you watch' },
+      { parts:[['vis','root'],['it','suf']], gloss:'to go and see someone' },
+    ]},
+  { root:'aud', origin:'Latin', meaning:'to hear', emoji:'👂',
+    sentence:'The audience clapped loudly after the beautiful audio performance.',
+    pronote:'<b>The /ɔː/ vowel</b> (like "awe-d") — open your mouth medium-wide and round your lips slightly. Don\'t shorten it to the Hindi ऑ or say "od." Hold the vowel for a beat: awww-d.',
+    strangers:[
+      { word:'audible', parts:[['aud','root'],['ible','suf']], gloss:'able to be heard', sentence:'Her whisper was barely audible.', distractors:['able to be seen','able to be touched','able to be tasted'] },
+      { word:'audit', parts:[['aud','root'],['it','suf']], gloss:'an official hearing or examination of accounts', sentence:'The company faces an audit next week.', distractors:['a type of dance','a cooking method','a garden plant'] },
+    ],
+    words:[
+      { parts:[['aud','root'],['io','suf']], gloss:'sound that you hear' },
+      { parts:[['aud','root'],['ience','suf']], gloss:'the people who hear or watch' },
+      { parts:[['aud','root'],['itorium','suf']], gloss:'a hall built for hearing' },
+    ]},
+  { root:'tele', origin:'Greek', meaning:'far / distant', emoji:'📡',
+    sentence:'I used the telephone to call my grandmother in Delhi.',
+    pronote:'<b>The /t/ is crisp</b> — tongue behind top teeth (alveolar), not curled back like Hindi ट (retroflex). Also, stress the <b>first</b> syllable: TÉ-le-phone, not te-LÉ-phone. Let the /e/ be short and clear.',
+    strangers:[
+      { word:'telescope', parts:[['tele','root'],['scope','root']], gloss:'a tool for seeing things far away', sentence:'He looked at the stars through his telescope.', distractors:['a tool for measuring heat','a tool for writing','a tool for listening'] },
+      { word:'telegram', parts:[['tele','root'],['gram','root']], gloss:'a message written from far away', sentence:'They received a telegram with good news.', distractors:['a weight measure','a type of painting','a musical note'] },
+    ],
+    words:[
+      { parts:[['tele','root'],['phone','root']], gloss:'sound (phone) carried from FAR away' },
+      { parts:[['tele','root'],['vision','root']], gloss:'seeing (vision) something FAR away' },
+      { parts:[['tele','root'],['scope','root']], gloss:'a tool to look (scope) at things FAR away' },
+    ]},
+  { root:'graph', origin:'Greek', meaning:'to write / draw', emoji:'📊',
+    sentence:'She took a photograph of the beautiful sunset over the Ganga.',
+    pronote:'<b>The /gr/ cluster</b> — /g/ (back of tongue rises to roof) → /r/. The /ph/ at the end is just /f/ — no puff of air, no extra vowel. Say "graf," not "graph-uh." One clean syllable.',
+    strangers:[
+      { word:'biography', parts:[['bio','root'],['graph','root'],['y','suf']], gloss:'writing about someone\'s life', sentence:'She read a biography of Mahatma Gandhi.', distractors:['a geography textbook','a biology experiment','a type of photograph'] },
+      { word:'graphic', parts:[['graph','root'],['ic','suf']], gloss:'relating to writing or drawing, vivid and clear', sentence:'The movie had graphic scenes of the storm.', distractors:['relating to music','relating to numbers','relating to cooking'] },
+    ],
+    words:[
+      { parts:[['photo','root'],['graph','root']], gloss:'a picture drawn by LIGHT (photo)' },
+      { parts:[['auto','root'],['graph','root']], gloss:'writing your OWN (auto) name' },
+      { parts:[['para','pre'],['graph','root']], gloss:'a written passage' },
+    ]},
+  { root:'therm', origin:'Greek', meaning:'heat', emoji:'🌡️',
+    sentence:'The thermometer showed that the tea was still too hot to drink.',
+    pronote:'<b>The /θ/ (th sound)</b> — stick your tongue tip <em>between</em> your teeth and blow softly. Indian English speakers often substitute /t/ or /th/ — make sure your tongue is through your teeth, not behind them. Practice: th-th-therm.',
+    cognate:{lang:'Sanskrit',word:'gharma (घर्म)',meaning:'heat'},
+    strangers:[
+      { word:'thermal', parts:[['therm','root'],['al','suf']], gloss:'relating to heat', sentence:'She wore thermal socks in the snow.', distractors:['relating to water','relating to light','relating to wind'] },
+      { word:'hypothermia', parts:[['hypo','pre'],['therm','root'],['ia','suf']], gloss:'a dangerous condition when the body gets dangerously cold', sentence:'The hiker nearly got hypothermia in the blizzard.', distractors:['a type of fever','a skin rash','a broken bone'] },
+    ],
+    words:[
+      { parts:[['therm','root'],['ometer','suf']], gloss:'a tool to MEASURE heat' },
+      { parts:[['therm','root'],['al','suf']], gloss:'relating to heat' },
+      { parts:[['therm','root'],['os','suf']], gloss:'a flask that keeps heat in' },
+    ]},
+];
+
+// ---- state ----
+let currentGrade = 2;
+let activeChip = null;
+let currentRoot = null;
+let currentFamilyIndex = -1;
+
+// ---- mastery (localStorage) ----
+const MASTERY_KEY = 'vaaani_roots_mastery_v2';
+let mastery = loadMastery();
+
+function loadMastery() {
+  try {
+    const raw = localStorage.getItem(MASTERY_KEY);
+    if (raw) { const m = JSON.parse(raw); if (m.families && m.families.length === ROOTS.length) return m; }
+  } catch(e) {}
+  return defaultMastery();
+}
+function defaultMastery() {
+  const families = ROOTS.map(() => ({ reviewed:0, correct:0, strangers:0, strangerCorrect:0, built:0 }));
+  return { families, totalReviewed:0, totalCorrect:0, totalStrangers:0, totalStrangerCorrect:0, totalBuilt:0 };
+}
+function saveMastery() { try { localStorage.setItem(MASTERY_KEY, JSON.stringify(mastery)); } catch(e) {} }
+function recordEngagement(fi, type, correct) {
+  if (!mastery.families[fi]) return;
+  const m = mastery.families[fi];
+  if (type === 'review') { m.reviewed++; if (correct) { m.correct++; mastery.totalCorrect++; } mastery.totalReviewed++; }
+  if (type === 'stranger') { m.strangers++; if (correct) { m.strangerCorrect++; mastery.totalStrangerCorrect++; } mastery.totalStrangers++; }
+  if (type === 'build') { m.built++; mastery.totalBuilt++; }
+  saveMastery();
+  updateAllMasteryUI();
+}
+function familyMasteryPercent(fi) {
+  const m = mastery.families[fi];
+  const total = m.reviewed + m.strangers + m.built;
+  if (total === 0) return 0;
+  return Math.round((m.correct + m.strangerCorrect + m.built) / total * 100);
+}
+function updateAllMasteryUI() { renderMasteryBars(); renderMasterySummary(); renderEvidencePanel(); }
+function resetMastery() { mastery = defaultMastery(); saveMastery(); updateAllMasteryUI(); }
+
+// ---- grade definitions ----
+const GRADES = [
+  { g:1, t:'Word Explorer',  s:'Recognition',  hero:'Some words carry a tiny secret inside. Look at the <strong>orange letters</strong> — can you spot the same little piece hiding in every word of a family? That piece <em>is</em> the family. Once you see it, you can meet a hundred new words without memorising a single one.', m:'Mission: meet a word family — can you spot the little piece hiding inside every word?' },
+  { g:2, t:'Family Finder',  s:'Sorting',      hero:'Not every word that shares the same letters truly belongs to the same family. Look at the coloured pieces below and decide — is this word <em>really</em> part of the family, or does it only pretend? Sort the real from the impostors.', m:'Mission: which words REALLY belong to the family — and which only pretend?' },
+  { g:3, t:'Word Detective', s:'Inference',    hero:'You can already spot the shared heart piece. Now turn it into a <strong>clue</strong>. If you know what the piece means, you can guess what a word you have <em>never</em> met means — no dictionary, no teacher. Just you and the clue.', m:'Mission: use the shared piece as a clue to unlock a word you have never met.' },
+  { g:4, t:'Meaning Maker',  s:'Construction', hero:'You are the builder now. Snap a front piece onto a heart piece — and maybe add an end piece — to create a brand-new word. The real challenge: <strong>explain how you knew</strong> what it meant, using only the pieces you combined.', m:'Mission: combine two pieces you already own into a brand-new word — and explain how you knew.' },
+  { g:5, t:'Linguistic Scientist', s:'Naming', hero:'You have earned the grown-up names: <strong>prefix</strong>, <strong>root</strong>, and <strong>suffix</strong>. And now you get to learn where each piece was born — Latin, Greek, and beyond. The whole world of English words is built from these little pieces, and you can read their birth certificates.', m:'Mission: the grown-up names are unlocked — root, prefix, suffix, and where each piece came from.' },
+];
+
+// ---- grade bar ----
+function renderGradeBar() {
+  const bar = $('rtGradeBar');
+  bar.innerHTML = GRADES.map(G => `<button class="rt-gbtn" data-g="${G.g}"><span class="gn">Grade ${G.g}</span><span class="gt">${G.t}</span><span class="gs">${G.s}</span></button>`).join('');
+  bar.querySelectorAll('.rt-gbtn').forEach(b => b.onclick = () => setGrade(+b.dataset.g));
+}
+
+// ---- legend (grade-specific) ----
+function buildLegend(g) {
+  if (g === 1) return `<span class="lg"><span class="sw root"></span> heart piece — the little piece they all share</span>`;
+  if (g === 2) return `<span class="lg"><span class="sw pre"></span> front piece</span>
+    <span class="lg"><span class="sw root"></span> heart piece — the little piece they all share</span>`;
+  if (g === 5) return `<span class="lg"><span class="sw pre"></span> prefix <em>(the piece at the front)</em></span>
+    <span class="lg"><span class="sw root"></span> root <em>(the heart of the word)</em></span>
+    <span class="lg"><span class="sw suf"></span> suffix <em>(the piece at the end)</em></span>`;
+  return `<span class="lg"><span class="sw pre"></span> front piece <em>(prefix)</em></span>
+    <span class="lg"><span class="sw root"></span> heart piece <em>(root)</em></span>
+    <span class="lg"><span class="sw suf"></span> end piece <em>(suffix)</em></span>`;
+}
+
+// ---- root chips (with mastery mini-bars) ----
+function renderRootChips(g) {
+  const c = $('rootChips');
+  c.innerHTML = '';
+  ROOTS.forEach((r, fi) => {
+    const b = document.createElement('button');
+    b.className = 'rt-rootchip';
+    const originTag = (g >= 5) ? ` <span style="font-size:10px;font-weight:600;background:var(--rt-muted);color:#fff;border-radius:6px;padding:2px 7px;margin-left:4px">${r.origin}</span>` : '';
+    const score = familyMasteryPercent(fi);
+    b.innerHTML = `<span class="chip-inner"><span class="emoji">${r.emoji||''}</span><span><span class="rname">${r.root}</span> <span class="rmean">${r.meaning}</span>${originTag}</span></span>
+      <div class="rt-mastery-mini"><div class="rt-mastery-fill" style="width:${score}%"></div></div>`;
+    b.addEventListener('click', () => selectRoot(b, r, fi, g));
+    c.appendChild(b);
+  });
+}
+
+// ---- highlight root piece inside a word (G1) ----
+function highlightRoot(word, rootStr) {
+  if (!rootStr) return word;
+  const idx = word.toLowerCase().indexOf(rootStr.toLowerCase());
+  if (idx === -1) return word;
+  const before = word.substring(0, idx);
+  const match = word.substring(idx, idx + rootStr.length);
+  const after = word.substring(idx + rootStr.length);
+  return `${before}<span style="color:var(--rt-root);font-weight:800">${match}</span>${after}`;
+}
+
+// ---- sentence with family word highlighted ----
+function renderSentence(r) {
+  if (!r.sentence) return '';
+  const word = joinWord(r.words[0].parts);
+  const idx = r.sentence.toLowerCase().indexOf(word.toLowerCase());
+  let html = r.sentence;
+  if (idx >= 0) {
+    html = r.sentence.substring(0, idx) + '<em>' + r.sentence.substring(idx, idx + word.length) + '</em>' + r.sentence.substring(idx + word.length);
+  }
+  return `<div class="rt-sentence">${html}</div>`;
+}
+
+// ---- pronunciation accordion ----
+// Two-way link with the IPA chart: every single /phoneme/ cited in a pronote becomes a
+// link to /ipa?s=<phoneme>, which auto-selects + plays it (same pattern as the Sound Lab).
+// Clusters (/sp/, /str/, /kt/, /ph/…) aren't single phonemes, so they stay plain text.
+const RT_IPA_SYMS = new Set(['p','b','m','f','v','θ','ð','t','d','n','s','z','l','ʃ','ʒ','tʃ','dʒ','ɹ','j','k','g','ŋ','w','h','iː','ɪ','e','æ','ə','ɜː','ʌ','ɑː','ɒ','ɔː','ʊ','uː','eɪ','aɪ','ɔɪ','aʊ','əʊ','ɪə','eə','ʊə']);
+const RT_IPA_ALIAS = { 'r':'ɹ' };  // pronotes write the English r as /r/; the chart symbol is ɹ
+function linkifyPhonemes(html) {
+  return html.replace(/\/([^\/\s<>]{1,3})\//g, (m, sym) => {
+    const target = RT_IPA_ALIAS[sym] || sym;
+    if (RT_IPA_SYMS.has(target))
+      return `<a class="rt-ipa-link" href="/ipa?s=${encodeURIComponent(target)}" title="See ${sym} in the IPA chart">/${sym}/</a>`;
+    return m;
+  });
+}
+function renderProNote(r) {
+  if (!r.pronote) return '';
+  return `<div class="rt-pronote">
+    <button class="rt-pronote-trigger" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+      How to say it <span class="chevron">▾</span>
+    </button>
+    <div class="rt-pronote-body">${linkifyPhonemes(r.pronote)}</div>
+  </div>`;
+}
+
+// ---- cognate bridge ----
+function renderCognate(r, g) {
+  if (g < 4 || !r.cognate) return '';
+  return `<span class="rt-cognate"><span class="clang">${r.cognate.lang}</span> ${r.cognate.word} = ${r.cognate.meaning}</span>`;
+}
+
+// ---- family panel (grade-specific, with all pedagogy features) ----
+function renderFamily(r, fi, g) {
+  const fam = $('family');
+  g = g || currentGrade;
+
+  const cards = r.words.map((w, wi) => {
+    const word = joinWord(w.parts);
+
+    if (g === 1) {
+      const rootStr = w.parts.filter(p => p[1] === 'root').map(p => p[0]).join('');
+      return `<div class="rt-word">
+        <div class="rt-eq"><span class="rt-built">${highlightRoot(word, rootStr)}</span></div>
+        <div class="rt-gloss">${w.gloss}</div>
+        <button class="rt-hear" data-say="${word}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14"/></svg>
+          Hear it
+        </button>
+      </div>`;
+    }
+
+    if (g === 2) {
+      const preParts = w.parts.filter(p => p[1] === 'pre');
+      const rootParts = w.parts.filter(p => p[1] === 'root');
+      const eqPieces = [
+        ...preParts.map(p => `<span class="rt-morph pre">${p[0]}</span>`),
+        ...rootParts.map(p => `<span class="rt-morph root">${p[0]}</span>`),
+      ];
+      const eq = eqPieces.length > 1 ? eqPieces.join(' <span class="rt-plus">+</span> ') : eqPieces.join('');
+      return `<div class="rt-word">
+        <div class="rt-eq">${eq}<span class="rt-arrow">→</span><span class="rt-built">${word}</span></div>
+        <div class="rt-gloss">${w.gloss}</div>
+        <button class="rt-hear" data-say="${word}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14"/></svg>
+          Hear it
+        </button>
+      </div>`;
+    }
+
+    if (g === 3) {
+      const eq = w.parts.map((p, i) =>
+        `${i ? '<span class="rt-plus">+</span>' : ''}<span class="rt-morph ${p[1]}">${p[0]}</span>`
+      ).join('');
+      if (wi >= 2) {
+        return `<div class="rt-word">
+          <div class="rt-eq">${eq}<span class="rt-arrow">→</span><span class="rt-built">${word}</span></div>
+          <div class="rt-gloss rt-infer" style="background:#fff7ed;border:1px dashed #fed7aa;border-radius:8px;padding:8px 10px;margin-top:10px;cursor:pointer">
+            <span style="color:#9a3412;font-weight:600">Detective work:</span> What do you think this word means? <em>(click to check)</em>
+            <span class="rt-gloss-hidden" style="display:none">${w.gloss}</span>
+          </div>
+          <button class="rt-hear" data-say="${word}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14"/></svg>
+            Hear it
+          </button>
+        </div>`;
+      }
+      return `<div class="rt-word">
+        <div class="rt-eq">${eq}<span class="rt-arrow">→</span><span class="rt-built">${word}</span></div>
+        <div class="rt-gloss">${w.gloss}</div>
+        <button class="rt-hear" data-say="${word}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14"/></svg>
+          Hear it
+        </button>
+      </div>`;
+    }
+
+    // G4 & G5: full morphological breakdown
+    const eq = w.parts.map((p, i) =>
+      `${i ? '<span class="rt-plus">+</span>' : ''}<span class="rt-morph ${p[1]}">${p[0]}</span>`
+    ).join('');
+    return `<div class="rt-word">
+      <div class="rt-eq">${eq}<span class="rt-arrow">→</span><span class="rt-built">${word}</span></div>
+      <div class="rt-gloss">${w.gloss}</div>
+      <button class="rt-hear" data-say="${word}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19 5a8 8 0 0 1 0 14"/></svg>
+        Hear it
+      </button>
+    </div>`;
+  }).join('');
+
+  const originBadge = (g >= 5) ? `<span class="forigin">${r.origin}</span>` : '';
+  const cognateTag = renderCognate(r, g);
+
+  let caption = '';
+  if (g === 1) caption = `See the orange piece? It is the <span class="kidname">same little piece</span> hiding inside every word below!`;
+  else if (g === 2) caption = `Every real family word below carries the meaning "<strong>${r.meaning}</strong>". <span class="kidname">The orange piece is the heart they all share.</span>`;
+  else if (g === 5) caption = `Every word below carries the meaning "<strong>${r.meaning}</strong>". <span class="grownname">The orange part is the root — the heart every family word is built around.</span>`;
+  else caption = `Every word below carries the meaning "<strong>${r.meaning}</strong>". <span class="kidname">The orange part is the little piece they all share.</span><span class="grownname">The orange part is the root.</span>`;
+
+  const reviewLabel = g === 1 ? 'Practice spotting pieces' : g === 2 ? 'Sort the family' : g === 3 ? 'Test your detective skill' : g === 4 ? 'Review this family' : 'Review this family';
+
+  const strangersHTML = (g >= 2 && r.strangers && r.strangers.length) ? renderStrangers(r, fi, g) : '';
+
+  fam.innerHTML = `
+    <div class="rt-fhead">
+      <span class="froot">${r.root}</span>
+      ${originBadge}${cognateTag}
+      <span class="fmean">— ${r.meaning}</span>
+      <a class="rt-lmlink" href="/language-map" title="See how roots travel across languages">🌐 Trace across languages →</a>
+    </div>
+    <div class="rt-fsub">${caption}</div>
+    ${renderSentence(r)}
+    ${renderProNote(r)}
+    <div class="rt-words" style="margin-top:14px">${cards}</div>
+    ${strangersHTML}
+    <button class="rt-review-btn" onclick="openReview(${fi})">${reviewLabel}</button>`;
+
+  fam.querySelectorAll('.rt-hear').forEach(b => b.addEventListener('click', () => speak(b.dataset.say)));
+
+  fam.querySelectorAll('.rt-infer').forEach(el => {
+    const hidden = el.querySelector('.rt-gloss-hidden');
+    if (!hidden) return;
+    el.addEventListener('click', () => {
+      if (hidden.style.display === 'none') {
+        hidden.style.display = 'inline';
+        el.style.background = '#f0fdf4';
+        el.style.borderColor = '#16a34a';
+        el.querySelector('em').textContent = '(tap to hide)';
+      } else {
+        hidden.style.display = 'none';
+        el.style.background = '#fff7ed';
+        el.style.borderColor = '#fed7aa';
+        el.querySelector('em').textContent = '(click to check)';
+      }
+    });
+  });
+
+  fam.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ---- select root ----
+function selectRoot(chip, r, fi, g) {
+  if (activeChip) activeChip.classList.remove('active');
+  chip.classList.add('active');
+  activeChip = chip;
+  currentRoot = r;
+  currentFamilyIndex = fi;
+  renderFamily(r, fi, g || currentGrade);
+}
+
+// ==================== review mode (flashcard overlay) ====================
+let reviewState = null;
+
+function openReview(fi, g) {
+  const r = ROOTS[fi];
+  g = g || currentGrade;
+  let cards = [];
+
+  if (g === 1) {
+    cards = r.words.map(w => ({
+      type:'taproot', word:joinWord(w.parts),
+      rootStr: w.parts.filter(p => p[1]==='root').map(p => p[0]).join(''),
+      gloss: w.gloss,
+    }));
+  } else if (g === 2) {
+    const reals = r.words.map(w => ({ type:'belongs', word:joinWord(w.parts), gloss:w.gloss, answer:true }));
+    const fakes = (r.decoy||[]).map(d => ({ type:'belongs', word:d, answer:false }));
+    cards = shuffle([...reals, ...fakes]);
+  } else if (g === 3) {
+    cards = r.words.map(w => {
+      const correct = w.gloss;
+      const distractors = getDistractors(r, w, 2);
+      return { type:'infer', word:joinWord(w.parts), rootClue:r.meaning, choices:shuffle([correct, ...distractors]), correct, parts:w.parts };
+    });
+  } else {
+    cards = r.words.map(w => ({
+      type:'build', gloss:w.gloss, correct:joinWord(w.parts),
+      correctParts: w.parts, choices: generateBuildChoices(w.parts, r),
+    }));
+  }
+
+  reviewState = { familyIndex:fi, cards, currentIndex:0, correct:0, grade:g, answered:false };
+  $('rtReviewOverlay').classList.add('on');
+  renderReviewCard();
+}
+
+function closeReview() {
+  $('rtReviewOverlay').classList.remove('on');
+  reviewState = null;
+}
+
+function renderReviewCard() {
+  if (!reviewState) return;
+  const { cards, currentIndex, correct, grade:g } = reviewState;
+  const cardEl = $('rtReviewCard');
+  reviewState.answered = false;
+
+  if (currentIndex >= cards.length) {
+    renderReviewComplete();
+    return;
+  }
+
+  const card = cards[currentIndex];
+  let html = `<button class="rt-review-close" onclick="closeReview()">×</button>`;
+  html += `<div class="rt-review-progress">Card ${currentIndex+1} of ${cards.length} · ${correct} correct so far</div>`;
+
+  if (card.type === 'taproot') {
+    html += `<div class="rt-review-prompt">Tap the <strong>orange piece</strong> hiding inside:</div>`;
+    html += `<div class="rt-review-word" id="rtReviewTapWord"></div>`;
+    html += `<div class="rt-review-feedback" id="rtReviewFeedback"></div>`;
+    html += `<button class="rt-review-next" id="rtReviewNext" onclick="nextReviewCard()">Next →</button>`;
+    cardEl.innerHTML = html;
+    const tw = $('rtReviewTapWord');
+    if (tw) {
+      const w = card.word, rs = card.rootStr;
+      const idx = w.toLowerCase().indexOf(rs.toLowerCase());
+      if (idx >= 0) {
+        const before = w.substring(0, idx);
+        const match = w.substring(idx, idx + rs.length);
+        const after = w.substring(idx + rs.length);
+        tw.innerHTML = `${before}<span class="rt-tap-target" id="rtTapCorrect" onclick="checkTapRoot(true)">${match}</span>${after}`;
+        // make non-root letters also tappable but wrong
+        tw.querySelectorAll('span').forEach(s => { if (s.id !== 'rtTapCorrect') s.className = 'rt-tap-target'; });
+        tw.addEventListener('click', function(e) {
+          if (e.target === tw || e.target.id !== 'rtTapCorrect') checkTapRoot(false);
+        });
+      }
+    }
+    return;
+  }
+
+  if (card.type === 'belongs') {
+    html += `<div class="rt-review-word">${card.word}</div>`;
+    html += `<div class="rt-review-prompt">Does <strong>${card.word}</strong> belong to the <em>${ROOTS[reviewState.familyIndex].root}</em> family?</div>`;
+    html += `<div class="rt-review-choices">
+      <button class="rt-choice" onclick="checkReviewAnswer(true)">Yes — it belongs!</button>
+      <button class="rt-choice" onclick="checkReviewAnswer(false)">No — it's pretending!</button>
+    </div>`;
+  } else if (card.type === 'infer') {
+    html += `<div class="rt-review-word">${card.word}</div>`;
+    html += `<div class="rt-review-prompt">If the heart piece means "<strong>${card.rootClue}</strong>", what does <strong>${card.word}</strong> mean?</div>`;
+    html += `<div class="rt-review-choices">${card.choices.map((c,i) => `<button class="rt-choice" onclick="checkReviewAnswer(${i})">${c}</button>`).join('')}</div>`;
+  } else if (card.type === 'build') {
+    html += `<div class="rt-review-prompt">Which pieces build a word that means: "<strong>${card.gloss}</strong>"?</div>`;
+    html += `<div class="rt-review-choices">${card.choices.map((c,i) => `<button class="rt-choice" onclick="checkReviewAnswer(${i})">${c}</button>`).join('')}</div>`;
+  }
+
+  html += `<div class="rt-review-feedback" id="rtReviewFeedback"></div>`;
+  html += `<button class="rt-review-next" id="rtReviewNext" onclick="nextReviewCard()">Next →</button>`;
+  cardEl.innerHTML = html;
+}
+
+function checkTapRoot(isCorrect) {
+  if (!reviewState || reviewState.answered) return;
+  reviewState.answered = true;
+  const fb = $('rtReviewFeedback');
+  const next = $('rtReviewNext');
+  const target = document.getElementById('rtTapCorrect');
+  if (isCorrect) {
+    reviewState.correct++;
+    fb.className = 'rt-review-feedback ok';
+    fb.textContent = 'Yes! That is the shared piece. ' + reviewState.cards[reviewState.currentIndex].gloss;
+    if (target) target.classList.add('correct');
+  } else {
+    fb.className = 'rt-review-feedback no';
+    fb.textContent = 'Not quite. The orange letters are the shared piece — tap those!';
+    if (target) { target.classList.add('correct'); target.style.outline = '2px solid var(--rt-suffix)'; }
+  }
+  recordEngagement(reviewState.familyIndex, 'review', isCorrect);
+  if (next) next.classList.add('show');
+  // disable all tap targets
+  document.querySelectorAll('.rt-tap-target').forEach(s => s.style.pointerEvents = 'none');
+}
+
+function checkReviewAnswer(ans) {
+  if (!reviewState || reviewState.answered) return;
+  reviewState.answered = true;
+  const card = reviewState.cards[reviewState.currentIndex];
+  const fb = $('rtReviewFeedback');
+  const next = $('rtReviewNext');
+  const choices = document.querySelectorAll('.rt-choice');
+
+  let isCorrect = false;
+  if (card.type === 'belongs') isCorrect = (ans === card.answer);
+  else if (card.type === 'infer') isCorrect = (card.choices[ans] === card.correct);
+  else if (card.type === 'build') isCorrect = (card.choices[ans] === card.correct);
+
+  if (isCorrect) {
+    reviewState.correct++;
+    fb.className = 'rt-review-feedback ok';
+    fb.textContent = 'Correct! ' + (card.gloss || card.correct || '');
+  } else {
+    fb.className = 'rt-review-feedback no';
+    fb.textContent = 'Not quite. The answer is: ' + (card.correct || card.gloss || (card.answer ? 'Yes' : 'No'));
+  }
+
+  recordEngagement(reviewState.familyIndex, 'review', isCorrect);
+
+  // Mark choice buttons
+  if (card.type === 'belongs') {
+    choices.forEach(b => {
+      const val = b.textContent.includes('Yes');
+      b.classList.add(val === card.answer ? 'correct' : 'wrong');
+    });
+  } else if (card.type === 'infer' || card.type === 'build') {
+    choices.forEach((b, i) => {
+      if (card.choices[i] === card.correct) b.classList.add('correct');
+      else b.classList.add('wrong');
+    });
+  }
+
+  if (next) next.classList.add('show');
+}
+
+function nextReviewCard() {
+  if (!reviewState) return;
+  reviewState.currentIndex++;
+  renderReviewCard();
+}
+
+function renderReviewComplete() {
+  const { cards, correct, familyIndex:fi, grade:g } = reviewState;
+  const pct = Math.round(correct / cards.length * 100);
+  const cardEl = $('rtReviewCard');
+  let msg = pct >= 80 ? 'Outstanding! You really know this family.' :
+            pct >= 50 ? 'Good work! Try again to lock it in.' :
+            'Keep practising — each round builds stronger memory.';
+  cardEl.innerHTML = `
+    <button class="rt-review-close" onclick="closeReview()">×</button>
+    <div style="text-align:center;padding:20px 0">
+      <div style="font-size:48px;margin-bottom:8px">${pct >= 80 ? '★' : pct >= 50 ? '✦' : '✧'}</div>
+      <div style="font-size:28px;font-weight:800;color:var(--rt-ink)">${correct} / ${cards.length}</div>
+      <div style="font-size:15px;color:var(--rt-muted);margin:8px 0 14px">${msg}</div>
+      <button class="rt-review-btn" onclick="openReview(${fi},${g})" style="margin-right:8px">Try again</button>
+      <button class="rt-review-btn" onclick="closeReview()" style="background:#fff;color:var(--rt-accent);border:1.5px solid var(--rt-accent)">Done</button>
+    </div>`;
+}
+
+// ---- strangers (reading transfer) ----
+function renderStrangers(r, fi, g) {
+  if (!r.strangers || !r.strangers.length) return '';
+  const cards = r.strangers.map((s, si) => `
+    <div class="rt-stranger-card" id="sCard${fi}_${si}">
+      <div class="rt-stranger-word">${s.word}</div>
+      <div class="rt-stranger-sentence">"${s.sentence}"</div>
+      <div style="font-size:13px;color:var(--rt-muted);margin-bottom:8px">If the heart piece means "<strong>${r.meaning}</strong>", what do you think <strong>${s.word}</strong> means?</div>
+      <div id="sChoices${fi}_${si}">
+        ${shuffle([s.gloss, ...s.distractors]).map((c,i) => `<button class="rt-schoice" onclick="checkStrangerAnswer(${fi},${si},${i},'${escapeHTML(c)}')">${c}</button>`).join('')}
+      </div>
+      <div class="rt-stranger-feedback" id="sFb${fi}_${si}"></div>
+    </div>`).join('');
+  return `<div class="rt-strangers">
+    <h3>Meet strangers using the same piece</h3>
+    <div class="ssub">You've never seen these words before. Use what you know to figure them out.</div>
+    ${cards}
+  </div>`;
+}
+
+function escapeHTML(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function checkStrangerAnswer(fi, si, choiceIdx, chosenText) {
+  const r = ROOTS[fi];
+  const s = r.strangers[si];
+  const isCorrect = chosenText === s.gloss;
+  const fb = document.getElementById('sFb'+fi+'_'+si);
+  if (!fb || fb.dataset.answered) return;
+  fb.dataset.answered = '1';
+
+  const buttons = document.querySelectorAll('#sChoices'+fi+'_'+si+' .rt-schoice');
+  buttons.forEach((b, i) => {
+    b.disabled = true;
+    if (b.textContent === s.gloss) b.classList.add('correct');
+    else b.classList.add('wrong');
+  });
+
+  if (isCorrect) {
+    fb.className = 'rt-stranger-feedback ok';
+    fb.textContent = 'You figured it out! This is what transfer looks like.';
+  } else {
+    fb.className = 'rt-stranger-feedback no';
+    fb.textContent = 'The root clue leads to: ' + s.gloss;
+  }
+  recordEngagement(fi, 'stranger', isCorrect);
+}
+
+// ---- utilities ----
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
+function getDistractors(r, currentWord, count) {
+  const allGlosses = [];
+  ROOTS.forEach(r2 => r2.words.forEach(w => { if (w.gloss !== currentWord.gloss) allGlosses.push(w.gloss); }));
+  return shuffle(allGlosses).slice(0, count);
+}
+
+function generateBuildChoices(correctParts, r) {
+  const correct = joinWord(correctParts);
+  const choices = [correct];
+  const roots = uniq(ROOTS.flatMap(r2 => r2.words.flatMap(w => w.parts.filter(p => p[1]==='root').map(p => p[0]))));
+  const pres = uniq(ROOTS.flatMap(r2 => r2.words.flatMap(w => w.parts.filter(p => p[1]==='pre').map(p => p[0]))));
+  const sufs = uniq(ROOTS.flatMap(r2 => r2.words.flatMap(w => w.parts.filter(p => p[1]==='suf').map(p => p[0]))));
+  while (choices.length < 4) {
+    const p = pres[Math.floor(Math.random() * pres.length)] || '';
+    const rt = correctParts.filter(p => p[1]==='root').map(p => p[0])[0] || roots[Math.floor(Math.random() * roots.length)];
+    const s = sufs[Math.floor(Math.random() * sufs.length)] || '';
+    const w = p + rt + s;
+    if (w !== correct && !choices.includes(w)) choices.push(w);
+  }
+  return shuffle(choices);
+}
+
+// ---- build-it game ----
+const ALL_WORDS = {};
+ROOTS.forEach(r => r.words.forEach(w => { ALL_WORDS[joinWord(w.parts)] = w.gloss; }));
+const found = new Set();
+let builderReady = false;
+
+function uniq(arr) { return [...new Set(arr)]; }
+function fill(sel, opts) { sel.innerHTML = opts.map(o => `<option value="${o==='—'?'':o}">${o}</option>`).join(''); }
+
+function tryBuild() {
+  const pre = $('bPre').value, root = $('bRoot').value, suf = $('bSuf').value;
+  const word = (pre + root + suf);
+  $('bPreview').innerHTML =
+    `${pre ? `<span class="rt-morph pre">${pre}</span> ` : ''}<span class="rt-morph root">${root || '…'}</span>${suf ? ` <span class="rt-morph suf">${suf}</span>` : ''}` +
+    (root ? ` <span class="rt-arrow">→</span> <span style="color:var(--rt-ink)">${word}</span>` : '');
+  const res = $('bResult');
+  const verb = currentGrade >= 5 ? 'root' : 'heart piece';
+  if (!root) {
+    res.className = 'rt-result no';
+    res.textContent = `Pick a ${verb} to start building.`;
+    return;
+  }
+  if (ALL_WORDS[word]) {
+    res.className = 'rt-result ok';
+    res.innerHTML = ` <b>${word}</b> — ${ALL_WORDS[word]}`;
+    if (!found.has(word)) { found.add(word); $('bFound').textContent = found.size; speak(word); }
+    if (currentFamilyIndex >= 0) recordEngagement(currentFamilyIndex, 'build', true);
+  } else {
+    res.className = 'rt-result no';
+    res.textContent = `"${word}" isn't a standard word — try another combination.`;
+  }
+}
+
+function setupBuilder() {
+  const pres = uniq(['—', ...ROOTS.flatMap(r => r.words.flatMap(w => w.parts.filter(p => p[1]==='pre').map(p => p[0])))]);
+  const roots = uniq(ROOTS.flatMap(r => r.words.flatMap(w => w.parts.filter(p => p[1]==='root').map(p => p[0]))));
+  const sufs = uniq(['—', ...ROOTS.flatMap(r => r.words.flatMap(w => w.parts.filter(p => p[1]==='suf').map(p => p[0])))]);
+  fill($('bPre'), pres); fill($('bRoot'), roots); fill($('bSuf'), sufs);
+  $('bTotal').textContent = Object.keys(ALL_WORDS).length;
+  ['bPre','bRoot','bSuf'].forEach(id => $(id).addEventListener('change', tryBuild));
+  builderReady = true;
+  tryBuild();
+}
+
+// ---- TTS ----
+let enVoice = null;
+function pickVoice() {
+  const v = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  enVoice = v.find(x => /en[-_]GB/i.test(x.lang)) || v.find(x => /en[-_]US/i.test(x.lang)) || v.find(x => /^en/i.test(x.lang)) || null;
+}
+if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(word) {
+  if (!window.speechSynthesis || !word) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = enVoice ? enVoice.lang : 'en-GB';
+  if (enVoice) u.voice = enVoice;
+  u.rate = .85;
+  speechSynthesis.speak(u);
+}
+
+// ---- mastery UI ----
+function renderMasteryBars() {
+  const chips = $('rootChips').querySelectorAll('.rt-rootchip');
+  chips.forEach((chip, i) => {
+    const fill = chip.querySelector('.rt-mastery-fill');
+    if (fill) fill.style.width = familyMasteryPercent(i) + '%';
+  });
+}
+
+function renderMasterySummary() {
+  const el = $('rtMasterySummary');
+  if (!el) return;
+  const total = mastery.totalReviewed + mastery.totalStrangers + mastery.totalBuilt;
+  const correct = mastery.totalCorrect + mastery.totalStrangerCorrect + mastery.totalBuilt;
+  const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+  const explored = mastery.families.filter(f => (f.reviewed + f.strangers + f.built) > 0).length;
+  el.innerHTML = `<span><b>${explored}</b> / ${ROOTS.length} families explored</span><span><b>${total}</b> words attempted</span><span><b>${pct}%</b> accuracy</span>`;
+}
+
+function renderEvidencePanel() {
+  const body = $('rtEvidenceBody');
+  if (!body) return;
+  const total = mastery.totalReviewed + mastery.totalStrangers + mastery.totalBuilt;
+  const correct = mastery.totalCorrect + mastery.totalStrangerCorrect + mastery.totalBuilt;
+  const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+  const explored = mastery.families.filter(f => (f.reviewed + f.strangers + f.built) > 0).length;
+  body.innerHTML = `
+    <div class="rt-ev-stat"><div class="n">${explored}</div><div class="l">families explored</div></div>
+    <div class="rt-ev-stat"><div class="n">${total}</div><div class="l">total attempts</div></div>
+    <div class="rt-ev-stat"><div class="n">${pct}%</div><div class="l">accuracy</div></div>
+    <div class="rt-ev-stat"><div class="n">${mastery.totalStrangers}</div><div class="l">transfer tests</div></div>
+    <div class="rt-ev-stat"><div class="n">${found.size}</div><div class="l">words built</div></div>
+    <div class="rt-ev-stat"><button class="rt-review-btn" style="background:#fff;color:var(--rt-muted);border:1px solid var(--rt-line);font-size:12px;padding:8px 12px" onclick="resetMastery()">Reset progress</button></div>`;
+}
+
+// ---- set grade: full page refresh ----
+function setGrade(g) {
+  currentGrade = g;
+  document.body.className = document.body.className.replace(/\bgrade-\d\b/g, '').trim() + ' grade-' + g;
+  const G = GRADES[g - 1];
+  $('rtEyebrow').textContent = `// Grade ${g} · ${G.t}`;
+  $('rtHeroDesc').innerHTML = G.hero;
+  $('rtMission').textContent = G.m;
+  $('rtLegend').innerHTML = buildLegend(g);
+  $('rtGradeBar').querySelectorAll('.rt-gbtn').forEach(b => b.classList.toggle('active', +b.dataset.g === g));
+  if (g === 1) $('rtSectionTitle').textContent = 'Meet a word family';
+  else if (g === 2) $('rtSectionTitle').textContent = 'Find the real families';
+  else $('rtSectionTitle').textContent = 'Pick a word family';
+  const build = $('rtBuild');
+  if (g <= 2) { build.style.display = 'none'; }
+  else {
+    build.style.display = '';
+    if (g >= 5) {
+      $('rtBuildTitle').textContent = 'Build a word yourself';
+      $('rtBuildSub').textContent = 'Combine a prefix, a root, and a suffix to form real words. Grow your collection.';
+      $('bLabelPre').textContent = 'Prefix'; $('bLabelRoot').textContent = 'Root'; $('bLabelSuf').textContent = 'Suffix';
+    } else {
+      $('rtBuildTitle').textContent = 'Build a word yourself';
+      $('rtBuildSub').textContent = 'Snap a front piece onto a heart piece and see what you make. Find the real words and grow your collection.';
+      $('bLabelPre').textContent = 'Front piece'; $('bLabelRoot').textContent = 'Heart piece'; $('bLabelSuf').textContent = 'End piece';
+    }
+  }
+  renderRootChips(g);
+  if (currentRoot && currentFamilyIndex >= 0) {
+    const chip = $('rootChips').children[currentFamilyIndex];
+    if (chip) selectRoot(chip, currentRoot, currentFamilyIndex, g);
+  }
+  updateAllMasteryUI();
+  if (builderReady) tryBuild();
+  try { localStorage.setItem('vaaani_roots_grade', String(g)); } catch(e) {}
+}
+
+// ---- boot ----
+renderGradeBar();
+const _g = Math.min(5, Math.max(1, parseInt(localStorage.getItem('vaaani_roots_grade') || '2', 10)));
+setGrade(_g);
+setupBuilder();
+currentRoot = ROOTS[0];
+currentFamilyIndex = 0;
+const firstChip = $('rootChips').firstElementChild;
+if (firstChip) selectRoot(firstChip, ROOTS[0], 0, _g);
+
+// deep-link from the Language Map: /roots?root=<root> opens that family directly
+const _wantRoot = new URLSearchParams(location.search).get('root');
+if (_wantRoot) {
+  const _i = ROOTS.findIndex(r => r.root === _wantRoot);
+  if (_i >= 0) { const _chip = $('rootChips').children[_i]; if (_chip) selectRoot(_chip, ROOTS[_i], _i, _g); }
+}
+</script>
+</body>
+</html>

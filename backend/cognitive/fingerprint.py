@@ -9,16 +9,16 @@ from .classifier import ERROR_TYPES
 ERROR_LABELS = {
     "memorization_override": "Rote Memorization",
     "conceptual_gap": "Conceptual Gap",
-    "algebraic_slip": "Algebraic Slips",
-    "dimensional_error": "Dimensional Errors",
+    "terminology_confusion": "Term Mix-ups",
+    "spelling_sound_conflation": "Letters vs Sounds",
+    "l1_transfer": "Mother-Tongue Transfer",
+    "overgeneralisation": "Rule Overgeneralisation",
     "overconfidence": "Overconfidence",
     "underconfidence": "Underconfidence",
     "impulsive": "Impulsive Solving",
     "shortcut_dependency": "Shortcut Dependency",
     "fragile_understanding": "Fragile Understanding",
     "visualization_weakness": "Visualization Gap",
-    "unit_confusion": "Unit Confusion",
-    "sign_error": "Sign Errors",
     "no_error": "Correct",
 }
 

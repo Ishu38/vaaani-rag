@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vaaani — Discovery Mission</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, system-ui, sans-serif; background: #f5f3f0; color: #1a1a2e; min-height: 100vh; }
+.top-bar { background: #fff; border-bottom: 1px solid #e2e0da; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+.brand { font-weight: 800; font-size: 20px; }
+.brand span:first-child { color: #1a1a2e; }
+.brand span.a { color: #2563eb; }
+.pills { display: flex; gap: 8px; }
+.pill { background: #eef2ff; color: #2563eb; padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; }
+.pill.good { background: #dcfce7; color: #166534; }
+.pill.warn { background: #fef3c7; color: #92400e; }
+.layout { max-width: 720px; margin: 0 auto; padding: 24px 16px; }
+.card { background: #fff; border-radius: 16px; padding: 28px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.card h2 { font-size: 22px; margin-bottom: 8px; }
+.card .reason { font-size: 13px; color: #6b7280; margin-bottom: 16px; font-style: italic; }
+.instructions { font-size: 17px; line-height: 1.6; margin-bottom: 20px; color: #374151; }
+.items { margin-bottom: 16px; }
+.item { background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
+.item:hover { border-color: #93c5fd; background: #eff6ff; }
+.item.selected { border-color: #2563eb; background: #dbeafe; }
+.item.correct { border-color: #16a34a; background: #dcfce7; }
+.item.incorrect { border-color: #dc2626; background: #fef2f2; }
+.item .prompt { font-weight: 600; font-size: 15px; }
+.item .word { font-size: 18px; margin-top: 4px; color: #1f2937; }
+.companion { font-size: 14px; color: #6b7280; padding: 12px; background: #fefce8; border-radius: 10px; margin-bottom: 16px; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { padding: 12px 24px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary { background: #2563eb; color: #fff; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-ghost { background: transparent; color: #2563eb; border: 2px solid #2563eb; }
+.btn-ghost:hover { background: #eff6ff; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.sidebar { position: fixed; right: 16px; top: 80px; width: 260px; }
+.side-card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); font-size: 13px; }
+.side-card h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; margin-bottom: 8px; }
+.side-card .val { font-size: 22px; font-weight: 700; color: #1a1a2e; }
+.side-card .sub { color: #6b7280; font-size: 12px; }
+.loading { text-align: center; padding: 60px 20px; color: #6b7280; font-size: 16px; }
+.error-msg { background: #fef2f2; color: #dc2626; padding: 16px; border-radius: 10px; margin-bottom: 16px; }
+.edge-badge { display: inline-block; background: #f3e8ff; color: #7c3aed; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-left: 6px; }
+.config { margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+.config input, .config select { padding: 8px 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; width: 120px; }
+.config label { font-size: 12px; color: #6b7280; }
+@media (max-width: 1040px) { .sidebar { display: none; } }
+</style>
+<script>(function(){var s=document.createElement('style');s.id='__vg';s.textContent='html{visibility:hidden!important}';document.documentElement.appendChild(s);var done=false;function show(){if(done)return;done=true;var e=document.getElementById('__vg');if(e)e.remove();}function go(){if(done)return;done=true;location.replace('/login?next='+encodeURIComponent(location.pathname+location.search));}var t=setTimeout(show,7000);fetch('/auth/me').then(function(r){if(r.ok){return r.json().then(function(d){clearTimeout(t);(d&&d.user)?show():go();});}clearTimeout(t);if(r.status===401||r.status===403){go();}else{show();}}).catch(function(){clearTimeout(t);show();});})();</script></head>
+<body>
+<div class="top-bar">
+  <div class="brand"><span>Vaa</span><span class="a">ani</span></div>
+  <div class="pills" id="topPills"></div>
+</div>
+
+<div style="display:flex; max-width:1040px; margin:0 auto;">
+  <div class="layout" id="main">
+    <div class="config">
+      <div><label>Student ID</label><br><input id="cfgId" value="1" type="text"></div>
+      <div><label>L1</label><br>
+        <select id="cfgL1" style="padding:8px 12px;border:2px solid #e5e7eb;border-radius:8px;font-size:14px;width:120px;">
+          <option value="">None</option>
+          <option value="bn" selected>Bengali</option>
+          <option value="hi">Hindi</option>
+          <option value="ta">Tamil</option>
+          <option value="te">Telugu</option>
+        </select>
+      </div>
+      <div><label>Grade</label><br>
+        <select id="cfgGrade" style="padding:8px 12px;border:2px solid #e5e7eb;border-radius:8px;font-size:14px;width:120px;">
+          <option value="2">Grade 2</option>
+          <option value="3" selected>Grade 3</option>
+          <option value="4">Grade 4</option>
+          <option value="5">Grade 5</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end"><button class="btn btn-primary" onclick="newMission()">New Mission</button></div>
+    </div>
+    <div id="content"><div class="loading">Loading your mission...</div></div>
+  </div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="side-card">
+      <h4>Twin (Nodes)</h4>
+      <div class="val" id="stWinNodes">—</div>
+      <div class="sub">tracked</div>
+      <div class="val" style="font-size:16px;margin-top:4px;" id="stWinMastered">—</div>
+      <div class="sub">mastered</div>
+      <div class="val" style="font-size:16px;margin-top:4px;" id="stWinEdge">—</div>
+      <div class="sub">edges tracked</div>
+    </div>
+    <div class="side-card">
+      <h4>Expedition</h4>
+      <div style="font-size:14px;font-weight:600;" id="stExp">none</div>
+    </div>
+    <div class="side-card">
+      <h4>Evidence</h4>
+      <div class="val" id="stEv">—</div>
+      <div class="sub">total events</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+let currentMission = null;
+let selectedOption = null;
+let evidenceSent = false;
+
+async function fetchJSON(url, opts) {
+  const r = await fetch(API + url, opts);
+  if (!r.ok) throw new Error(`${r.status}: ${await r.text()}`);
+  return r.json();
+}
+
+async function refreshSidebar() {
+  const sid = document.getElementById('cfgId').value || '1';
+  try {
+    const t = await fetchJSON(`/loop/twin/${sid}`);
+    document.getElementById('stWinNodes').textContent = t.nodes_tracked;
+    document.getElementById('stWinMastered').textContent = `${t.mastered} mastered`;
+  } catch(e) {}
+  try {
+    const et = await fetchJSON(`/loop/edge-twin/${sid}`);
+    document.getElementById('stWinEdge').textContent = `${et.edges_tracked} edges (${et.mastered} mastered)`;
+  } catch(e) {}
+  try {
+    const ls = await fetchJSON(`/loop/learner/${sid}`);
+    document.getElementById('stEv').textContent = ls.learner.total_evidence;
+    const exp = ls.learner.active_expedition;
+    document.getElementById('stExp').textContent = exp ? `${exp.display} (${exp.step}/${exp.total})` : 'none';
+    // top pills
+    const pills = [];
+    pills.push(`<span class="pill">${ls.learner.nodes_tracked} nodes</span>`);
+    if (ls.learner.mastered_nodes.length) pills.push(`<span class="pill good">${ls.learner.mastered_nodes.length} mastered</span>`);
+    if (ls.learner.review_due_count) pills.push(`<span class="pill warn">${ls.learner.review_due_count} review</span>`);
+    if (ls.learner.primary_weakness) pills.push(`<span class="pill">Weak: ${ls.learner.primary_weakness}</span>`);
+    document.getElementById('topPills').innerHTML = pills.join('');
+  } catch(e) {}
+}
+
+async function newMission() {
+  const sid = document.getElementById('cfgId').value || '1';
+  const l1 = document.getElementById('cfgL1').value;
+  const grade = document.getElementById('cfgGrade').value;
+  evidenceSent = false;
+  selectedOption = null;
+  document.getElementById('content').innerHTML = '<div class="loading">Loading your mission...</div>';
+
+  let url = `/loop/discover/${sid}?grade=${grade}&source=smoke-test`;
+  if (l1) url += `&l1=${l1}`;
+
+  try {
+    currentMission = await fetchJSON(url);
+    renderMission(currentMission);
+    refreshSidebar();
+  } catch(e) {
+    document.getElementById('content').innerHTML = `<div class="error-msg">Failed: ${e.message}</div>`;
+  }
+}
+
+function renderMission(m) {
+  const d = m.decision;
+  const a = m.activity;
+  const kindBadge = d.edge_key ? `<span class="edge-badge">CASCADE edge</span>` : '';
+  let html = `<div class="card">
+    <h2>${a.title}${kindBadge}</h2>
+    <div class="reason">${d.reason}</div>
+    <div class="instructions">${a.instructions}</div>`;
+
+  if (a.items && a.items.length) {
+    html += '<div class="items">';
+    a.items.forEach((item, i) => {
+      if (item.word) {
+        html += `<div class="item"><div class="word">${item.word}</div></div>`;
+      } else if (item.connection) {
+        html += `<div class="item"><div class="prompt">Connection:</div><div class="word">${item.connection}</div></div>`;
+      } else if (item.prompt && item.options) {
+        html += `<div style="font-weight:600;margin-bottom:8px;">${item.prompt}</div>`;
+        item.options.forEach(opt => {
+          html += `<div class="item option" data-opt="${opt}" data-answer="${item.answer || ''}" onclick="selectOption(this)">
+            <div class="word">${opt}</div>
+          </div>`;
+        });
+      } else if (item.prompt) {
+        html += `<div class="item">
+          <div class="prompt">${item.prompt}</div>
+          ${item.example ? `<div class="word" style="margin-top:6px;color:#6b7280;">Example: ${item.example}</div>` : ''}
+          ${item.hint ? `<div style="font-size:12px;color:#9ca3af;margin-top:4px;">${item.hint}</div>` : ''}
+        </div>`;
+      }
+    });
+    html += '</div>';
+  }
+
+  html += `<div class="actions">
+    <button class="btn btn-primary" id="btnCorrect" onclick="submitEvidence('correct')">Got it right ✓</button>
+    <button class="btn btn-ghost" onclick="submitEvidence('incorrect')">Need help ✗</button>
+    <button class="btn btn-ghost" onclick="skipMission()">Skip ⏭</button>
+  </div>`;
+
+  if (m.expedition && m.expedition.status) {
+    html += `<div style="margin-top:12px;font-size:13px;color:#6b7280;">Expedition: ${m.expedition.display} — Step ${m.expedition.step}/${m.expedition.total} (${m.expedition.status})</div>`;
+  }
+
+  if (m.companion) {
+    html += `<div class="companion">Vaaani: ${m.companion}</div>`;
+  }
+
+  html += '</div>';
+  document.getElementById('content').innerHTML = html;
+}
+
+function selectOption(el) {
+  if (evidenceSent) return;
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedOption = el.dataset.opt;
+}
+
+async function submitEvidence(outcome) {
+  if (evidenceSent) return;
+  const sid = document.getElementById('cfgId').value || '1';
+  const nodeId = currentMission.decision.node_id;
+  const edgeKey = currentMission.decision.edge_key || '';
+
+  // Visual feedback
+  if (outcome === 'correct') {
+    document.getElementById('btnCorrect').disabled = true;
+    document.querySelectorAll('.option.selected').forEach(o => o.classList.add('correct'));
+  } else {
+    document.querySelectorAll('.option.selected').forEach(o => o.classList.add('incorrect'));
+  }
+  evidenceSent = true;
+
+  try {
+    await fetchJSON('/loop/evidence', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        student_id: sid,
+        node_id: nodeId,
+        edge_key: edgeKey,
+        source: 'mission',
+        outcome: outcome,
+        confidence: 0.9,
+        meta: {primary: true, selected: selectedOption}
+      })
+    });
+
+    document.getElementById('content').insertAdjacentHTML('beforeend',
+      `<div style="text-align:center;margin-top:16px;">
+        <p style="color:#166534;font-weight:600;">Evidence recorded: ${outcome}${edgeKey ? ' (edge: ' + edgeKey + ')' : ''}</p>
+        <button class="btn btn-primary" style="margin-top:8px;" onclick="newMission()">Next Mission →</button>
+      </div>`);
+    refreshSidebar();
+  } catch(e) {
+    document.getElementById('content').insertAdjacentHTML('beforeend',
+      `<div class="error-msg">Failed: ${e.message}</div>`);
+  }
+}
+
+function skipMission() {
+  newMission();
+}
+
+// Auto-load first mission
+window.addEventListener('DOMContentLoaded', () => {
+  newMission();
+  setInterval(refreshSidebar, 5000);
+});
+</script>
+</body>
+</html>

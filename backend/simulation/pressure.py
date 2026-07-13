@@ -24,7 +24,7 @@ class PressureConfig:
     fatigue_simulation: bool = True      # hard patch after 60% of session
     total_questions: int = 30
     time_limit_seconds: int = 3600       # default 60 min
-    subject: str = "Physics"
+    subject: str = "Phonetics"
 
 
 @dataclass

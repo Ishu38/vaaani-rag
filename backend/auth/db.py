@@ -64,6 +64,14 @@ CREATE TABLE IF NOT EXISTS email_verification_tokens (
 );
 CREATE INDEX IF NOT EXISTS ix_evt_user ON email_verification_tokens(user_id);
 
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    token TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    expires_at TEXT NOT NULL,
+    used_at TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_prt_user ON password_reset_tokens(user_id);
+
 CREATE TABLE IF NOT EXISTS phone_otps (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -118,7 +126,7 @@ CREATE TABLE IF NOT EXISTS student_skills (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     topic TEXT NOT NULL,
     display TEXT NOT NULL,                -- human-friendly name (entity display)
-    subject TEXT,                          -- 'physics' | 'math' | 'english' | 'writing' | ...
+    subject TEXT,                          -- 'phonetics' | 'morphology' | 'syntax' | 'semantics' | ...
     mastery REAL NOT NULL DEFAULT 2.0,      -- clamped to [0, 5]
     interval_days REAL NOT NULL DEFAULT 1.0, -- SM-2-lite review spacing
     attempts INTEGER NOT NULL DEFAULT 0,

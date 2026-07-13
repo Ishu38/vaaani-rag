@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Today's Mission — Vaaani</title>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fff3d5; --panel:#fbedc6; --border:#e0cc93; --ink:#243056; --muted:#7a8b6f; --accent:#2563eb; --good:#155724; --goodbg:#d4edda; --warnbg:#fff3cd; --warntx:#856404; --badbg:#f8d7da; --badtx:#721c24; --night:#131b33; --nightink:#dfe6ff; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; min-height:100vh; }
+  nav { display:flex; justify-content:space-between; align-items:center; padding:16px 32px; border-bottom:1px solid var(--border); background:rgba(255,243,213,0.85); backdrop-filter:blur(12px); position:sticky; top:0; z-index:5; }
+  nav .links a { color:var(--muted); text-decoration:none; font-weight:500; font-size:14px; margin-left:18px; }
+  nav .links a:hover { color:var(--ink); }
+  nav .brand { font-weight:800; color:var(--ink); text-decoration:none; font-size:16px; }
+  nav .brand span { color:var(--accent); }
+  main { max-width:860px; margin:30px auto 80px; padding:0 24px; }
+
+  /* ── Companion ── */
+  .companion { display:flex; gap:14px; align-items:flex-start; margin-bottom:22px; }
+  .companion .avatar { width:46px; height:46px; flex:0 0 46px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #7c9bff, var(--accent)); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(37,99,235,.35); }
+  .companion .avatar svg { width:26px; height:26px; }
+  .speech { background:#fff; border:1px solid var(--border); border-radius:4px 16px 16px 16px; padding:13px 17px; font-size:14.5px; line-height:1.6; max-width:640px; }
+  .speech .mem { color:var(--muted); font-style:italic; display:block; margin-top:4px; }
+
+  /* ── Expedition bar ── */
+  .exp-bar { display:flex; align-items:center; gap:14px; background:linear-gradient(90deg,#243056,#31418a); color:#fff; border-radius:14px; padding:13px 18px; margin-bottom:18px; }
+  .exp-bar .name { font-weight:800; font-size:15px; }
+  .exp-bar .name small { display:block; font-weight:500; font-size:11px; opacity:.75; letter-spacing:.06em; text-transform:uppercase; }
+  .exp-dots { display:flex; gap:7px; margin-left:auto; }
+  .exp-dots span { width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,.25); }
+  .exp-dots span.done { background:#ffd166; box-shadow:0 0 8px rgba(255,209,102,.7); }
+  .exp-dots span.now { background:#fff; }
+
+  /* ── Mission card ── */
+  .card { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:26px; margin-bottom:20px; }
+  .kind { display:inline-block; padding:4px 12px; border-radius:999px; font-size:11.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-bottom:12px; }
+  .kind.learn { background:#e7eeff; color:#1b3f9e; }
+  .kind.review { background:var(--warnbg); color:var(--warntx); }
+  .kind.probe { background:#efe3f7; color:#5b2d7e; }
+  .kind.edge { background:#f3e8ff; color:#7c3aed; }
+  .m-title { font-size:22px; font-weight:800; margin-bottom:6px; }
+  .m-instructions { font-size:15px; line-height:1.65; margin-bottom:16px; max-width:660px; }
+  .items { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .chip { background:#fff; border:1px solid var(--border); border-radius:10px; padding:10px 16px; font-size:15px; font-weight:600; }
+
+  /* tap-to-answer options */
+  .opt-q { font-size:15px; font-weight:700; margin-bottom:10px; }
+  .opts { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+  .opt { background:#fff; border:2px solid var(--border); border-radius:12px; padding:14px 22px; font-size:17px; font-weight:700; cursor:pointer; font-family:inherit; transition:transform .08s, border-color .15s; }
+  .opt:hover { transform:translateY(-2px); border-color:var(--accent); }
+  .opt.right { background:var(--goodbg); border-color:#28a745; color:var(--good); animation:pop .35s; }
+  .opt.wrong { background:var(--badbg); border-color:#dc3545; color:var(--badtx); animation:shake .3s; }
+  .opt[disabled] { cursor:default; opacity:.75; }
+  @keyframes pop { 40% { transform:scale(1.12); } }
+  @keyframes shake { 25% { transform:translateX(-5px); } 75% { transform:translateX(5px); } }
+  .opt-feedback { font-size:14px; font-weight:600; margin:-4px 0 14px; min-height:20px; }
+  .opt-feedback.good { color:var(--good); }
+  .opt-feedback.bad { color:var(--badtx); }
+
+  .build { margin:4px 0 18px; }
+  .build-label { display:block; font-size:13px; font-weight:700; margin-bottom:8px; }
+  .build-controls { display:flex; gap:10px; flex-wrap:wrap; }
+  .build-controls input { flex:1; min-width:200px; border:2px solid var(--border); border-radius:10px; padding:12px 14px; font-size:16px; font-family:inherit; background:#fff; color:var(--ink); }
+  .build-controls input:focus { outline:none; border-color:var(--accent); }
+  .btn { border:none; border-radius:10px; padding:13px 20px; font-size:14.5px; font-weight:700; cursor:pointer; font-family:inherit; transition:transform .06s; }
+  .btn:active { transform:scale(.97); }
+  .btn.check { background:var(--accent); color:#fff; }
+  .btn.good { background:var(--goodbg); color:var(--good); }
+  .btn.mid  { background:var(--warnbg); color:var(--warntx); }
+  .btn.hard { background:var(--badbg); color:var(--badtx); }
+  .btn[disabled] { opacity:.5; cursor:wait; }
+  .build-feedback { margin-top:10px; font-size:13.5px; line-height:1.5; border-radius:10px; }
+  .build-feedback.good { background:var(--goodbg); color:var(--good); padding:10px 14px; }
+  .build-feedback.nudge { background:var(--warnbg); color:var(--warntx); padding:10px 14px; }
+
+  .why { margin:14px 0 20px; font-size:13px; }
+  .why summary { cursor:pointer; color:var(--accent); font-weight:600; }
+  .why .body { margin-top:8px; background:#fff; border:1px dashed var(--border); border-radius:10px; padding:12px 14px; color:var(--muted); line-height:1.55; }
+  .why .p { color:var(--ink); font-weight:700; }
+  .outcome { display:flex; gap:10px; flex-wrap:wrap; }
+
+  /* ── Universe ── */
+  .universe { background:var(--night); border-radius:16px; padding:24px 26px; color:var(--nightink); margin-bottom:20px; }
+  .universe h3 { font-size:16px; font-weight:800; margin-bottom:2px; color:#fff; }
+  .universe .sub { font-size:12.5px; opacity:.65; margin-bottom:12px; }
+  .universe svg { width:100%; height:340px; display:block; }
+  .u-worlds { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .u-world { font-size:12px; font-weight:700; border:1px solid rgba(255,209,102,.5); color:#ffd166; border-radius:999px; padding:4px 12px; }
+  .star { transition:r .4s; }
+  .star.lit { filter:drop-shadow(0 0 4px rgba(255,209,102,.9)); }
+  @keyframes twinkle { 50% { opacity:.55; } }
+  .star.tw { animation:twinkle 2.6s infinite; }
+
+  #status { text-align:center; padding:50px 20px; color:var(--muted); }
+  .banner { background:var(--warnbg); border:1px solid #ffc107; color:var(--warntx); border-radius:10px; padding:12px 16px; font-size:13.5px; margin-bottom:18px; display:none; }
+  .banner.show { display:block; }
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:10px; padding:11px 22px; font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:20; }
+  .toast.show { opacity:1; }
+  .toast.gold { background:#8a6d00; }
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="/">Vaa<span>ani</span></a>
+  <div class="links">
+    <a href="/dashboard">Dashboard</a>
+    <a href="/roots">Word Roots</a>
+    <a href="/sound-lab">Sound Lab</a>
+    <a href="/account">Account</a>
+  </div>
+</nav>
+
+<main>
+  <div class="companion">
+    <div class="avatar" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6">
+        <circle cx="4" cy="12" r="1.7" fill="#fff"/><circle cx="12" cy="4" r="1.7" fill="#fff"/>
+        <circle cx="20" cy="12" r="1.7" fill="#fff"/><circle cx="12" cy="20" r="1.7" fill="#fff"/>
+        <path d="M4 12 L12 4 L20 12 L12 20 Z" opacity=".7"/>
+      </svg>
+    </div>
+    <div class="speech">
+      <span id="cGreeting">Waking up your map…</span>
+      <span class="mem" id="cMemory"></span>
+    </div>
+  </div>
+
+  <div class="exp-bar" id="expBar" style="display:none;">
+    <div class="name"><small>Expedition</small><span id="expName"></span></div>
+    <div class="exp-dots" id="expDots"></div>
+  </div>
+
+  <div class="banner" id="banner"></div>
+  <div id="status">Finding your next step…</div>
+
+  <div class="card" id="mission" style="display:none;">
+    <span class="kind" id="mKind">learn</span>
+    <div class="m-title" id="mTitle"></div>
+    <p class="m-instructions" id="mInstr"></p>
+
+    <div class="items" id="mItems"></div>
+
+    <div id="optBlock" style="display:none;">
+      <div class="opt-q" id="optQ"></div>
+      <div class="opts" id="optBtns"></div>
+      <div class="opt-feedback" id="optFb"></div>
+    </div>
+
+    <div class="build" id="buildRow" style="display:none;">
+      <label class="build-label" for="buildInput" id="buildLabel">Build your word here:</label>
+      <div class="build-controls">
+        <input type="text" id="buildInput" autocomplete="off" spellcheck="false" placeholder="type your new word…"/>
+        <button class="btn check" id="buildCheck">Check</button>
+      </div>
+      <div class="build-feedback" id="buildFeedback"></div>
+    </div>
+
+    <div class="build" id="earRow" style="display:none;">
+      <label class="build-label" id="earLabel">Say it out loud — Vaaani is listening:</label>
+      <div class="build-controls">
+        <button class="btn check" id="earBtn">🎤 Say “<span id="earWord"></span>”</button>
+      </div>
+      <div class="build-feedback" id="earFeedback"></div>
+    </div>
+
+    <details class="why">
+      <summary>Why this mission?</summary>
+      <div class="body" id="mWhy"></div>
+    </details>
+
+    <div class="outcome" id="honesty">
+      <button class="btn good" data-outcome="correct">I did it ✓</button>
+      <button class="btn mid"  data-outcome="partial">Partly — it was tricky</button>
+      <button class="btn hard" data-outcome="incorrect">Couldn't do it yet</button>
+    </div>
+  </div>
+
+  <div class="universe" id="universe" style="display:none;">
+    <h3>Your universe</h3>
+    <div class="sub">Every star is a word or sound you've met. Bright stars are mastered. Finish an expedition and its world lights up gold.</div>
+    <svg id="uSvg" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="u-worlds" id="uWorlds"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="/auth.js"></script>
+<script>
+(function () {
+  'use strict';
+  var sid=null, mission=null, busy=false;
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ var d=document.createElement('div'); d.textContent = s==null?'':String(s); return d.innerHTML; }
+  function toast(msg, gold){ var t=$('toast'); t.textContent=msg; t.className='toast show'+(gold?' gold':''); setTimeout(function(){ t.classList.remove('show'); }, gold?3200:1800); }
+  function showBanner(m){ var b=$('banner'); b.textContent=m; b.classList.add('show'); }
+
+  function guestId(){
+    var k='vaaani_loop_student', v=localStorage.getItem(k);
+    if(!v){ v='guest_'+Math.random().toString(36).slice(2,10)+Date.now().toString(36); localStorage.setItem(k,v); }
+    return v;
+  }
+  async function studentId(){
+    try{ var u=await Auth.me(); if(u&&(u.id||u.email)) return 'u_'+(u.id||u.email); }catch(e){}
+    return guestId();
+  }
+
+  /* ── mission rendering ── */
+  function renderMission(data){
+    mission=data;
+    var d=data.decision, a=data.activity, comp=data.companion||{}, exp=data.expedition;
+
+    $('cGreeting').textContent = comp.greeting || 'Ready when you are.';
+    $('cMemory').textContent = [comp.memory_line, comp.arc_line].filter(Boolean).join('  ');
+
+    if(exp && exp.status==='active'){
+      $('expName').textContent = 'the '+exp.display+' world';
+      var dots=$('expDots'); dots.innerHTML='';
+      for(var i=1;i<=exp.total;i++){
+        var s=document.createElement('span');
+        if(i<exp.step) s.className='done'; else if(i===exp.step) s.className='now';
+        dots.appendChild(s);
+      }
+      $('expBar').style.display='flex';
+    } else { $('expBar').style.display='none'; }
+
+    var kindEl=$('mKind');
+    kindEl.textContent = d.kind==='probe'?'quick check':d.kind==='edge_sequence'?'connection':d.kind;
+    kindEl.className='kind '+(d.kind==='review'?'review':d.kind==='probe'?'probe':d.kind==='edge_sequence'?'edge':'learn');
+    $('mTitle').textContent=a.title;
+    $('mInstr').textContent=a.instructions;
+
+    var items=$('mItems'); items.innerHTML='';
+    var isTap = a.activity_type==='sound_detective' || a.activity_type==='bridge_match';
+    if(!isTap){
+      (a.items||[]).forEach(function(it){
+        if(it.word||it.bridge||it.connection||it.prompt){
+          var el=document.createElement('div'); el.className='chip';
+          el.textContent=it.word||it.bridge||it.connection||it.prompt; items.appendChild(el);
+        }
+      });
+    }
+
+    // tap-to-answer (measured evidence — no honor buttons for these)
+    var ob=$('optBlock'), honesty=$('honesty');
+    if(isTap && a.items && a.items[0] && a.items[0].options){
+      var item=a.items[0];
+      $('optQ').textContent=item.prompt;
+      var btns=$('optBtns'); btns.innerHTML=''; $('optFb').textContent=''; $('optFb').className='opt-feedback';
+      item.options.forEach(function(op){
+        var b=document.createElement('button'); b.className='opt'; b.textContent=op;
+        b.addEventListener('click', function(){ tapAnswer(b, op, item.answer); });
+        btns.appendChild(b);
+      });
+      ob.style.display='block'; honesty.style.display='none';
+    } else {
+      ob.style.display='none'; honesty.style.display='flex';
+    }
+
+    setupBuildBox(data);
+    setupEar(data);
+    var why;
+    if(d.kind==='edge_sequence' && d.edge_key){
+      var ep=d.edge_key.split('::'), pretty=function(x){return String(x||'').replace(/_/g,' ');};
+      why='Connecting two things you already know — “'+esc(pretty(ep[0]))+'” and “'+esc(pretty(ep[1]))+'” — so they lock together into one idea.';
+    } else {
+      why=esc(d.reason);
+    }
+    $('mWhy').innerHTML = why+'<br/><span class="p">Predicted success: '+Math.round(d.p_success*100)+'% — the sweet spot where learning happens.</span>';
+    $('status').style.display='none';
+    $('mission').style.display='block';
+  }
+
+  var answered=false;
+  function tapAnswer(btn, chosen, answer){
+    if(answered||busy) return;
+    var right = chosen===answer;
+    btn.classList.add(right?'right':'wrong');
+    if(right){
+      answered=true;
+      document.querySelectorAll('.opt').forEach(function(b){ b.disabled=true; });
+      $('optFb').textContent='Measured and recorded — that is the one.';
+      $('optFb').className='opt-feedback good';
+      setTimeout(function(){ submitOutcome('correct'); }, 900);
+    } else {
+      $('optFb').textContent='Not that one — say them out loud again. Your ears know.';
+      $('optFb').className='opt-feedback bad';
+      // one wrong tap = recorded as partial when they eventually find it
+      btn.disabled=true;
+      mission._hadMiss=true;
+    }
+  }
+
+  /* build box (word_building symbolic check; free note for open types) */
+  var builtWord=null;
+  function setupBuildBox(data){
+    var row=$('buildRow'), input=$('buildInput'), fb=$('buildFeedback');
+    builtWord=null; answered=false; input.value=''; fb.className='build-feedback'; fb.textContent='';
+    var a=data.activity, d=data.decision;
+    if(a.activity_type==='word_building'){
+      $('buildLabel').textContent='Build your word here — it must carry the piece “'+d.display+'”:';
+      input.placeholder='type your new '+d.display.toLowerCase()+'-word…';
+      row.style.display='block';
+    } else if(a.activity_type==='discovery'||a.activity_type==='probe'||a.activity_type==='review_recall'){
+      $('buildLabel').textContent='Write your answer here (one sentence is enough):';
+      input.placeholder='your answer…';
+      row.style.display='block';
+    } else row.style.display='none';
+  }
+  function checkBuild(){
+    if(!mission) return;
+    var input=$('buildInput'), fb=$('buildFeedback');
+    var val=(input.value||'').trim();
+    if(!val){ fb.className='build-feedback nudge'; fb.textContent='Type something first — have a guess!'; return; }
+    builtWord=val;
+    var a=mission.activity, d=mission.decision;
+    if(a.activity_type==='word_building'){
+      var piece=d.display.toLowerCase();
+      var word=val.toLowerCase().replace(/[^a-z\-]/g,'');
+      var known=(a.items||[]).map(function(it){ return String(it.word||'').toLowerCase(); });
+      if(word.indexOf(piece)===-1){ fb.className='build-feedback nudge'; fb.textContent='Hmm — “'+val+'” doesn’t seem to carry “'+d.display+'”. Where does the piece sit in the example words?'; }
+      else if(known.indexOf(word)!==-1){ fb.className='build-feedback nudge'; fb.textContent='“'+val+'” is already on the board — invent or remember a different one?'; }
+      else { fb.className='build-feedback good'; fb.textContent='Yes! “'+val+'” carries “'+d.display+'”. Press “I did it ✓” to lock it in.'; }
+    } else { fb.className='build-feedback good'; fb.textContent='Saved with your mission — press an honesty button to finish.'; }
+  }
+
+  /* ── pronunciation ear (perception channel: your voice → evidence) ── */
+  var earAvailable=false, earBusy=false;
+  (async function(){
+    try{
+      var r=await fetch('/loop/pronounce/available',{credentials:'same-origin'});
+      earAvailable=r.ok && (await r.json()).available===true;
+    }catch(e){ earAvailable=false; }
+  })();
+  function setupEar(data){
+    var row=$('earRow'), d=data.decision;
+    var word=(d.display||'').trim();
+    // needs the ear channel, a mic, and a speakable target (not a bare symbol)
+    var ok = earAvailable && word.length>=2 && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder;
+    if(!ok){ row.style.display='none'; return; }
+    $('earWord').textContent=word;
+    $('earFeedback').textContent=''; $('earFeedback').className='build-feedback';
+    row.style.display='block';
+  }
+  async function recordAndCheck(){
+    if(earBusy||!mission) return;
+    earBusy=true;
+    var btn=$('earBtn'), fb=$('earFeedback');
+    btn.disabled=true;
+    try{
+      var stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      var rec=new MediaRecorder(stream), chunks=[];
+      rec.ondataavailable=function(e){ if(e.data.size) chunks.push(e.data); };
+      fb.className='build-feedback nudge'; fb.textContent='Listening… say it now!';
+      rec.start();
+      await new Promise(function(res){ setTimeout(res, 2500); });
+      rec.stop();
+      await new Promise(function(res){ rec.onstop=res; });
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      fb.textContent='Checking your sounds…';
+      var blob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});
+      var fd=new FormData();
+      fd.append('audio', blob, 'clip.webm');
+      fd.append('node_id', mission.decision.node_id);
+      fd.append('target_text', mission.decision.display);
+      var r=await fetch('/loop/pronounce/'+encodeURIComponent(sid),{method:'POST',credentials:'same-origin',body:fd});
+      if(r.status===503){ earAvailable=false; $('earRow').style.display='none'; return; }
+      var jr=await r.json().catch(function(){return {};});
+      if(!r.ok){ fb.className='build-feedback nudge'; fb.textContent='Hmm, that didn’t go through — try once more?'; return; }
+      if(!jr.recorded){
+        fb.className='build-feedback nudge';
+        fb.textContent='I couldn’t hear that clearly enough to measure — no worries, nothing was recorded. Try closer to the mic?';
+        return;
+      }
+      var phones=(jr.phone_updates||[]).length;
+      if(jr.outcome==='correct'){
+        fb.className='build-feedback good';
+        fb.textContent='Measured: beautifully said!'+(phones?' ('+phones+' sounds recorded to your map)':'');
+      } else if(jr.outcome==='partial'){
+        fb.className='build-feedback good';
+        fb.textContent='Measured: nearly there — some sounds landed, some want more practice.'+(phones?' ('+phones+' sounds recorded)':'');
+      } else {
+        fb.className='build-feedback nudge';
+        fb.textContent='Measured and recorded — this word wants more practice. Hear it in the Sound Lab, then try again.';
+      }
+      await drawUniverse();
+    }catch(e){
+      fb.className='build-feedback nudge';
+      fb.textContent=(e&&e.name==='NotAllowedError')?'Mic permission was blocked — allow it to use your voice.':'Recording didn’t work on this device.';
+    } finally {
+      earBusy=false; btn.disabled=false;
+    }
+  }
+
+  /* ── loop ── */
+  async function loadMission(){
+    $('status').style.display='block'; $('mission').style.display='none';
+    try{
+      var r=await fetch('/loop/mission/'+encodeURIComponent(sid),{credentials:'same-origin'});
+      if(!r.ok) throw new Error(r.status);
+      renderMission(await r.json());
+    }catch(e){
+      $('status').style.display='none';
+      showBanner('The learning engine is waking up (about a minute after a restart). Refresh shortly.');
+    }
+  }
+
+  async function submitOutcome(outcome){
+    if(busy||!mission) return;
+    busy=true;
+    document.querySelectorAll('.outcome .btn').forEach(function(b){ b.disabled=true; });
+    try{
+      if(mission._hadMiss && outcome==='correct') outcome='partial';
+      var credits=(mission.activity&&mission.activity.credits)||[mission.decision.node_id];
+      var edgeKey=(mission.decision&&mission.decision.edge_key)||'';
+      var l1=localStorage.getItem('vaaani_l1')||'en';
+      var typed=($('buildInput').value||'').trim();
+      var unlocked=null, diagMsg=null;
+      for(var i=0;i<credits.length;i++){
+        var meta={primary:i===0, l1:l1};
+        if(typed) meta.learner_answer=typed.slice(0,200);
+        var payload={student_id:sid,node_id:credits[i],source:'mission',outcome:outcome,meta:meta};
+        if(i===0 && edgeKey) payload.edge_key=edgeKey;  // CASCADE: primary credit carries the edge belief
+        var r=await fetch('/loop/evidence',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',
+          body:JSON.stringify(payload)});
+        var jr=await r.json().catch(function(){return {};});
+        if(jr.world_unlocked) unlocked=jr.world_unlocked;
+        if(i===0 && jr.diagnosis && jr.diagnosis.explanation) diagMsg=jr.diagnosis.explanation;  // cause-net "why"
+      }
+      if(unlocked){ toast('🌟 The '+unlocked+' world is LIT! Look at your universe.', true); }
+      else if(diagMsg){ toast(diagMsg, true); }  // plain-language cause on a miss
+      else toast(outcome==='correct'?'Recorded — your map just grew.':outcome==='partial'?'Recorded — tricky is where growth lives.':'Recorded — this will come back at the right time.');
+      await drawUniverse();
+      await loadMission();
+    } finally {
+      busy=false;
+      document.querySelectorAll('.outcome .btn').forEach(function(b){ b.disabled=false; });
+    }
+  }
+
+  /* ── universe constellation ── */
+  async function drawUniverse(){
+    try{
+      var r=await fetch('/loop/universe/'+encodeURIComponent(sid),{credentials:'same-origin'});
+      if(!r.ok) return;
+      var u=await r.json();
+      if(!u.stars.length){ $('universe').style.display='none'; return; }
+      var svg=$('uSvg'); var W=800,H=340,cx=W/2,cy=H/2;
+      var pos={}, n=u.stars.length;
+      // deterministic spiral: stable positions per node id
+      u.stars.forEach(function(s,i){
+        var h=Math.abs(hashStr(s.id));
+        var ang=(h%360)*Math.PI/180, rad=40+((h>>3)%125)+i*2.2;
+        pos[s.id]={x:cx+Math.cos(ang)*rad*1.9, y:cy+Math.sin(ang)*Math.min(rad,130)};
+      });
+      var parts=[];
+      u.links.slice(0,220).forEach(function(l){
+        var a=pos[l.a], b=pos[l.b]; if(!a||!b) return;
+        parts.push('<line x1="'+a.x.toFixed(1)+'" y1="'+a.y.toFixed(1)+'" x2="'+b.x.toFixed(1)+'" y2="'+b.y.toFixed(1)+'" stroke="rgba(160,180,255,.16)" stroke-width="1"/>');
+      });
+      u.stars.forEach(function(s,i){
+        var p=pos[s.id], r0=3+s.mastery*6, lit=s.mastery>=0.95;
+        parts.push('<circle class="star'+(lit?' lit':' tw')+'" style="animation-delay:'+((i%7)*0.4)+'s" cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="'+r0.toFixed(1)+'" fill="'+(lit?'#ffd166':'rgba(190,205,255,'+(0.35+s.mastery*0.6)+')')+'"/>');
+        if(s.mastery>0.5||lit) parts.push('<text x="'+(p.x+r0+4).toFixed(1)+'" y="'+(p.y+4).toFixed(1)+'" font-size="10" fill="rgba(223,230,255,.8)" font-family="Inter">'+esc(s.display)+'</text>');
+      });
+      svg.innerHTML=parts.join('');
+      var w=$('uWorlds'); w.innerHTML='';
+      (u.worlds||[]).forEach(function(x){ var d=document.createElement('span'); d.className='u-world'; d.textContent='🌟 '+x.display; w.appendChild(d); });
+      $('universe').style.display='block';
+    }catch(e){}
+  }
+  function hashStr(s){ var h=0; for(var i=0;i<s.length;i++){ h=((h<<5)-h+s.charCodeAt(i))|0; } return h; }
+
+  document.querySelectorAll('.outcome .btn').forEach(function(b){
+    b.addEventListener('click',function(){ submitOutcome(b.getAttribute('data-outcome')); });
+  });
+  $('buildCheck').addEventListener('click',checkBuild);
+  $('buildInput').addEventListener('keydown',function(e){ if(e.key==='Enter') checkBuild(); });
+  $('earBtn').addEventListener('click',recordAndCheck);
+
+  (async function init(){
+    sid=await studentId();
+    await loadMission();
+    await drawUniverse();
+  })();
+})();
+</script>
+</body>
+</html>

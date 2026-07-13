@@ -11,7 +11,7 @@ router = APIRouter(prefix="/simulation", tags=["simulation"])
 
 
 class StartRequest(BaseModel):
-    subject: str = "Physics"
+    subject: str = "Phonetics"
     time_pressure: float = 0.5
     negative_marking: float = 0.25
     distraction_density: float = 0.3
@@ -25,6 +25,7 @@ class AnswerRequest(BaseModel):
     session_id: str
     answer: str = ""
     confidence_1to5: int = 0
+    confidence_0to100: int | None = None
     skip: bool = False
 
 
@@ -78,16 +79,24 @@ def simulation_answer(
     if req.skip:
         result = engine.skip(req.session_id)
     else:
+        # Derive confidence_1to5 from confidence_0to100 if the new field is used
+        conf_1to5 = req.confidence_1to5
+        conf_0to100 = req.confidence_0to100
+        if conf_0to100 is not None:
+            conf_1to5 = max(1, min(5, round(conf_0to100 / 20)))
+        else:
+            conf_0to100 = conf_1to5 * 20
         result = engine.answer(
-            req.session_id, req.answer, req.confidence_1to5
+            req.session_id, req.answer, conf_1to5, conf_0to100
         )
 
     if "error" in result:
         raise HTTPException(400, result["error"])
 
-    # Feed cognitive X-Ray if session has user context
+    # Feed cognitive X-Ray if session has user context. Use the question the
+    # student actually answered — current_question is already the NEXT one.
     if "was_correct" in result and result.get("was_correct") is not None:
-        q = result.get("current_question", {})
+        q = result.get("answered_question", {})
         topic = q.get("topic", "")
         try:
             from cognitive.detector import analyze_turn
@@ -98,11 +107,44 @@ def simulation_answer(
                 student_answer=req.answer,
                 correct_answer=q.get("answer", ""),
                 topic=topic,
-                confidence_1to5=req.confidence_1to5,
+                confidence_1to5=conf_1to5,
+                confidence_0to100=conf_0to100,
                 response_ms=result.get("response_ms", 0),
                 is_correct=result.get("was_correct", False),
                 session_id=req.session_id,
             )
+        except Exception:
+            pass
+
+        # Bridge to spaced repetition: confidence-weighted mastery update
+        try:
+            from adaptive.spaced import apply_confidence
+            apply_confidence(
+                user_id=user_id,
+                node_id=topic or q.get("topic", ""),
+                display=topic or q.get("topic", ""),
+                confidence_0to100=conf_0to100,
+                was_correct=result.get("was_correct", False),
+            )
+        except Exception:
+            pass
+
+        # Bridge to the Cognitive Twin: graded answer -> evidence -> BKT update.
+        # Emits only when the question resolves to a real graph node; the
+        # response carries twin_update so the wiring is externally visible.
+        try:
+            from .evidence_bridge import emit_quiz_evidence
+            session = engine.get_session(req.session_id)
+            twin_update = emit_quiz_evidence(
+                user_id=user_id,
+                subject=session.config.subject if session else "",
+                question=q,
+                was_correct=result.get("was_correct", False),
+                response_ms=result.get("response_ms", 0),
+                session_id=req.session_id,
+            )
+            if twin_update:
+                result["twin_update"] = twin_update
         except Exception:
             pass
 

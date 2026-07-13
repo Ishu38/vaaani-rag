@@ -25,14 +25,14 @@
   background: var(--c-bg-2); border: 1px solid var(--c-border); color: var(--c-text);
   padding: 8px 12px; border-radius: 8px; font: inherit; font-size: 14px; min-width: 280px;
 }
-.school-selector .invite-code {
+.school-selector.invite-code {
   margin-left: auto; font-size: 13px; color: var(--c-muted);
 }
-.school-selector .invite-code strong {
+.school-selector.invite-code strong {
   font-family: monospace; font-size: 14px; color: var(--c-text);
   background: var(--c-bg-2); padding: 4px 8px; border-radius: 4px; letter-spacing: 0.06em;
 }
-.school-selector .invite-code button {
+.school-selector.invite-code button {
   margin-left: 6px; font-size: 12px; background: var(--c-bg-2); border: 1px solid var(--c-border);
   color: var(--c-muted-strong); padding: 4px 8px; border-radius: 4px; cursor: pointer;
 }
@@ -45,14 +45,14 @@
   background: var(--c-surface); border: 1px solid var(--c-border);
   border-radius: 10px; padding: 18px 16px; text-align: center;
 }
-.ov-tile .ov-val { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; color: var(--c-text); }
-.ov-tile .ov-label { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-muted); font-weight: 600; margin-top: 6px; }
-.ov-tile.highlight .ov-val { color: var(--c-accent); }
-.ov-tile .ov-unit { font-size: 14px; color: var(--c-muted); font-weight: 500; }
+.ov-tile.ov-val { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; color: var(--c-text); }
+.ov-tile.ov-label { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--c-muted); font-weight: 600; margin-top: 6px; }
+.ov-tile.highlight.ov-val { color: var(--c-accent); }
+.ov-tile.ov-unit { font-size: 14px; color: var(--c-muted); font-weight: 500; }
 
 /* Two-column layout */
 .dash-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 22px; margin-bottom: 24px; }
-@media (max-width: 960px) { .dash-grid { grid-template-columns: 1fr; } .overview-stats { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 960px) {.dash-grid { grid-template-columns: 1fr; }.overview-stats { grid-template-columns: repeat(3, 1fr); } }
 
 .dash-card {
   background: var(--c-surface); border: 1px solid var(--c-border);
@@ -65,7 +65,7 @@
 
 /* Student list */
 .student-table { width: 100%; border-collapse: collapse; }
-.student-table th, .student-table td {
+.student-table th,.student-table td {
   padding: 10px 14px; text-align: left; font-size: 13px;
   border-bottom: 1px dashed var(--c-border);
 }
@@ -74,7 +74,7 @@
   color: var(--c-muted); font-weight: 600; border-bottom: 1px solid var(--c-border);
 }
 .student-table tr:hover td { background: var(--c-surface-2); }
-.student-table .mastery-cell {
+.student-table.mastery-cell {
   display: flex; align-items: center; gap: 8px;
 }
 .mini-bar {
@@ -88,30 +88,30 @@
   padding: 12px 14px; background: var(--c-bg-2); border: 1px solid var(--c-border);
   border-radius: 8px; font-size: 13px;
 }
-.query-item .q-student { font-weight: 600; color: var(--c-text); display: flex; justify-content: space-between; align-items: center; }
-.query-item .q-student .q-time { font-size: 11px; color: var(--c-muted); font-weight: 400; }
-.query-item .q-text { color: var(--c-muted-strong); margin-top: 4px; line-height: 1.5; }
-.query-item .q-meta { margin-top: 6px; display: flex; gap: 10px; font-size: 11px; color: var(--c-muted); }
-.query-item .q-meta span { background: var(--c-surface); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); }
+.query-item.q-student { font-weight: 600; color: var(--c-text); display: flex; justify-content: space-between; align-items: center; }
+.query-item.q-student.q-time { font-size: 11px; color: var(--c-muted); font-weight: 400; }
+.query-item.q-text { color: var(--c-muted-strong); margin-top: 4px; line-height: 1.5; }
+.query-item.q-meta { margin-top: 6px; display: flex; gap: 10px; font-size: 11px; color: var(--c-muted); }
+.query-item.q-meta span { background: var(--c-surface); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--c-border); }
 
 /* Guardrails panel */
 .guardrail-form { display: flex; flex-direction: column; gap: 14px; }
-.guardrail-form .field { margin-bottom: 0; }
+.guardrail-form.field { margin-bottom: 0; }
 .guardrail-form label { font-size: 12px; color: var(--c-muted-strong); font-weight: 500; }
-.guardrail-form input, .guardrail-form select, .guardrail-form textarea {
+.guardrail-form input,.guardrail-form select,.guardrail-form textarea {
   width: 100%; background: var(--c-bg-2); border: 1px solid var(--c-border);
   color: var(--c-text); padding: 10px 12px; border-radius: 8px;
   font: inherit; font-size: 13px; outline: none;
   transition: border-color 0.15s var(--ease-out);
 }
-.guardrail-form input:focus, .guardrail-form select:focus, .guardrail-form textarea:focus {
+.guardrail-form input:focus,.guardrail-form select:focus,.guardrail-form textarea:focus {
   border-color: var(--c-accent);
 }
 .guardrail-form textarea { min-height: 80px; resize: vertical; }
-.guardrail-form .check-row {
+.guardrail-form.check-row {
   display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--c-text);
 }
-.guardrail-form .check-row input[type=checkbox] { width: auto; accent-color: var(--c-accent); }
+.guardrail-form.check-row input[type=checkbox] { width: auto; accent-color: var(--c-accent); }
 
 .section-toggle {
   display: flex; align-items: center; gap: 10px;
@@ -121,8 +121,8 @@
   transition: border-color 0.2s var(--ease-out);
 }
 .section-toggle:hover { border-color: var(--c-accent); }
-.section-toggle .arrow { margin-left: auto; transition: transform 0.2s var(--ease-out); }
-.section-toggle.open .arrow { transform: rotate(180deg); }
+.section-toggle.arrow { margin-left: auto; transition: transform 0.2s var(--ease-out); }
+.section-toggle.open.arrow { transform: rotate(180deg); }
 .collapse-panel { display: none; margin-bottom: 20px; }
 .collapse-panel.open { display: block; }
 
@@ -131,7 +131,7 @@
   padding: 16px 20px; background: var(--c-surface); border: 1px solid var(--c-border);
   border-radius: 12px; margin-bottom: 24px;
 }
-.create-school-form .field { margin-bottom: 0; flex: 1; min-width: 200px; }
+.create-school-form.field { margin-bottom: 0; flex: 1; min-width: 200px; }
 .create-school-form input {
   background: var(--c-bg-2); border: 1px solid var(--c-border);
   color: var(--c-text); padding: 10px 12px; border-radius: 8px;
@@ -164,7 +164,7 @@
   font-size: 13px; color: #8a6520; font-weight: 500;
   display: flex; align-items: center; gap: 10px;
 }
-.preview-banner .dot { width: 8px; height: 8px; border-radius: 50%; background: #c39752; display: inline-block; }
+.preview-banner.dot { width: 8px; height: 8px; border-radius: 50%; background: #c39752; display: inline-block; }
 .preview-banner strong { font-weight: 700; }
 
 .preview-cta {
@@ -177,7 +177,7 @@
 }
 .preview-cta h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
 .preview-cta p { font-size: 14px; color: var(--c-muted-strong); margin-bottom: 22px; max-width: 520px; margin-left:auto; margin-right:auto; }
-.preview-cta .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.preview-cta.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
 .preview-disclaimer {
   max-width: 1180px; margin: 18px auto 0;
@@ -194,11 +194,32 @@
   border: 1px solid var(--c-border); border-radius: 8px;
   font-size: 13px;
 }
-.concept-row .c-name { flex: 1; color: var(--c-text); font-weight: 500; }
-.concept-row .c-count { color: var(--c-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
-.concept-row .c-bar { width: 70px; height: 4px; background: var(--c-bg); border-radius: 999px; overflow: hidden; }
-.concept-row .c-bar span { display:block; height:100%; background: var(--c-accent); }
-.concept-row.struggling .c-bar span { background: #d49457; }
+.concept-row.c-name { flex: 1; color: var(--c-text); font-weight: 500; }
+.concept-row.c-count { color: var(--c-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.concept-row.c-bar { width: 70px; height: 4px; background: var(--c-bg); border-radius: 999px; overflow: hidden; }
+.concept-row.c-bar span { display:block; height:100%; background: var(--c-accent); }
+.concept-row.struggling.c-bar span { background: #d49457; }
+
+/* Leader insights ("what to act on") */
+.li-card { border-left: 4px solid var(--c-accent); margin-bottom: 24px; }
+.li-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.li-eng { font-size: 12px; color: var(--c-muted); font-variant-numeric: tabular-nums; }
+.li-actions { margin: 14px 0 18px; display: flex; flex-direction: column; gap: 10px; }
+.li-action { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.5; color: var(--c-text); }
+.li-num { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--c-accent); color: #fff;
+  font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+.li-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+@media (max-width: 720px) {.li-cols { grid-template-columns: 1fr; } }
+.li-cols h3 { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-muted); margin: 0 0 10px; font-weight: 600; }
+.li-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 13px; border-bottom: 1px solid var(--c-border); }
+.li-name { flex: 1; color: var(--c-text); font-weight: 500; }
+.li-bar { width: 70px; height: 5px; background: var(--c-bg); border-radius: 999px; overflow: hidden; }
+.li-bar span { display: block; height: 100%; background: #d49457; }
+.li-val { color: var(--c-muted); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.li-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.li-chip { padding: 6px 11px; background: var(--c-bg-2); border: 1px solid var(--c-border); border-radius: 20px; font-size: 12.5px; color: var(--c-text); }
+.li-chip b { color: var(--c-accent); margin-left: 3px; }
+.li-empty { color: var(--c-muted); font-size: 13px; font-style: italic; }
 </style>
 </head>
 <body class="auth-shell">
@@ -213,7 +234,6 @@
   </a>
   <div class="nav-links">
     <a href="/">Home</a>
-    <a href="/app">Chat</a>
     <a href="/cognitive">X-Ray</a>
     <a href="/simulation">Sim</a>
     <a href="/dashboard">Dashboard</a>
@@ -239,7 +259,7 @@ async function init() {
   if (!state.user) { renderPublicPreview(); return; }
 
   const r = await Auth.json('/auth/schools');
-  state.schools = (r.ok && r.data && r.data.schools) ? r.data.schools : [];
+  state.schools = (r.ok && r.data && r.data.schools)? r.data.schools : [];
   render();
   if (state.schools.length > 0) {
     const sid = state.activeSchool?.id || state.schools[0].id;
@@ -253,11 +273,11 @@ async function loadActiveDashboard(sid) {
   const role = state.activeSchool?.role;
   if (role === 'parent') {
     const r = await Auth.json(`/auth/schools/${sid}/parent-dashboard`);
-    state.parentDashboard = r.ok ? r.data : null;
+    state.parentDashboard = r.ok? r.data : null;
     state.activeDashboard = null;
   } else {
     const r = await Auth.json(`/auth/schools/${sid}/dashboard`);
-    state.activeDashboard = r.ok ? r.data : null;
+    state.activeDashboard = r.ok? r.data : null;
     state.parentDashboard = null;
   }
   render();
@@ -265,45 +285,45 @@ async function loadActiveDashboard(sid) {
 
 function renderPublicPreview() {
   // Seeded demo data — realistic numbers for a single Indian private school
-  // running a Class 8 Science pilot. Banner makes the preview status explicit.
+  // running a Class 8 English & Linguistics pilot. Banner makes the preview status explicit.
   const demo = {
     school_name: "Demo: Saraswati Vidya Mandir",
     blocked: 47,
     active: 32,
     enrolled: 40,
     queries_week: 421,
-    curriculum: "CBSE Class 8 Science",
+    curriculum: "CBSE Class 8 English — Phonetics & Grammar",
     queries: [
-      { who: "Riya M.",  when: "today, 14:22", text: "Why does ice float on water if it's the solid form?",         intent: "concept",  tokens: 380 },
-      { who: "Arjun K.", when: "today, 13:51", text: "Q3. State Newton's three laws of motion. (5 marks)",         intent: "blocked",  tokens: 0,   blocked: true },
-      { who: "Priya N.", when: "today, 12:08", text: "Can you explain photosynthesis with a real example?",         intent: "concept",  tokens: 412 },
-      { who: "Karan S.", when: "today, 11:34", text: "Difference between physical and chemical change?",            intent: "concept",  tokens: 296 },
-      { who: "Sneha B.", when: "today, 10:55", text: "How does a refrigerator work — is it the same as AC?",        intent: "concept",  tokens: 358 },
-      { who: "Aditya P.", when: "yesterday",    text: "Solve all questions from textbook exercise 5.",               intent: "blocked",  tokens: 0,   blocked: true },
-      { who: "Meera D.", when: "yesterday",    text: "What's the difference between mass and weight?",              intent: "concept",  tokens: 244 },
-      { who: "Rohan T.", when: "yesterday",    text: "Why do plants need sunlight even though they make food?",     intent: "concept",  tokens: 318 },
+      { who: "Riya M.", when: "today, 14:22", text: "Why is the 'p' in 'spin' not aspirated like in 'pin'?", intent: "concept", tokens: 380 },
+      { who: "Arjun K.", when: "today, 13:51", text: "Q3. Define phoneme, morpheme and grapheme. (5 marks)", intent: "blocked", tokens: 0, blocked: true },
+      { who: "Priya N.", when: "today, 12:08", text: "Can you explain assimilation with a real example?", intent: "concept", tokens: 412 },
+      { who: "Karan S.", when: "today, 11:34", text: "What's the difference between a phoneme and an allophone?", intent: "concept", tokens: 296 },
+      { who: "Sneha B.", when: "today, 10:55", text: "Why do many Bengali speakers say 'iskool' for 'school'?", intent: "concept", tokens: 358 },
+      { who: "Aditya P.", when: "yesterday", text: "Do all the questions from grammar exercise 5 for me.", intent: "blocked", tokens: 0, blocked: true },
+      { who: "Meera D.", when: "yesterday", text: "What's the difference between a prefix and a root?", intent: "concept", tokens: 244 },
+      { who: "Rohan T.", when: "yesterday", text: "Why does 'unhappiness' have three morphemes?", intent: "concept", tokens: 318 },
     ],
     top_concepts: [
-      { name: "Photosynthesis",          count: 18, weight: 100 },
-      { name: "Newton's Laws of Motion", count: 12, weight: 67 },
-      { name: "States of Matter",        count: 9,  weight: 50 },
-      { name: "Chemical Reactions",      count: 7,  weight: 39 },
-      { name: "Solar System",            count: 5,  weight: 28 },
+      { name: "Morphemes & word formation", count: 18, weight: 100 },
+      { name: "The IPA & vowel sounds", count: 12, weight: 67 },
+      { name: "Phonemes & allophones", count: 9, weight: 50 },
+      { name: "Syntax & sentence structure", count: 7, weight: 39 },
+      { name: "Etymology & word roots", count: 5, weight: 28 },
     ],
     struggling: [
-      { name: "Balancing chemical equations", reasks: 8, weight: 100 },
-      { name: "Force, friction & pressure",   reasks: 6, weight: 75 },
-      { name: "Reflection of light",          reasks: 4, weight: 50 },
+      { name: "Transcribing words in IPA", reasks: 8, weight: 100 },
+      { name: "Derivational vs inflectional affixes", reasks: 6, weight: 75 },
+      { name: "Identifying parts of speech", reasks: 4, weight: 50 },
     ],
   };
 
   const queryItems = demo.queries.map(q => `
-    <div class="query-item" ${q.blocked ? 'style="border-color:rgba(212,108,87,0.4);background:rgba(212,108,87,0.05);"' : ''}>
+    <div class="query-item" ${q.blocked? 'style="border-color:rgba(212,108,87,0.4);background:rgba(212,108,87,0.05);"' : ''}>
       <div class="q-student"><span>${q.who}</span><span class="q-time">${q.when}</span></div>
       <div class="q-text">${escapeHtml(q.text)}</div>
       <div class="q-meta">
         ${q.blocked
-          ? '<span style="background:rgba(212,108,87,0.12);color:#a64a37;border-color:rgba(212,108,87,0.3);">🛡 blocked — exam-style</span>'
+? '<span style="background:rgba(212,108,87,0.12);color:#a64a37;border-color:rgba(212,108,87,0.3);"> blocked — exam-style</span>'
           : `<span>${q.intent}</span><span>${q.tokens} tokens</span>`}
       </div>
     </div>`).join('');
@@ -337,7 +357,7 @@ function renderPublicPreview() {
       <div class="overview-stats">
         <div class="ov-tile highlight">
           <div class="ov-val">${demo.blocked}</div>
-          <div class="ov-label">🛡 Cheating attempts blocked</div>
+          <div class="ov-label"> Cheating attempts blocked</div>
         </div>
         <div class="ov-tile">
           <div class="ov-val">${demo.active}<span class="ov-unit">/${demo.enrolled}</span></div>
@@ -358,13 +378,13 @@ function renderPublicPreview() {
           <h2>Recent student queries (last 24h)</h2>
           <div class="query-feed">${queryItems}</div>
           <p style="margin-top:12px;font-size:11.5px;color:var(--c-muted);">
-            Queries flagged 🛡 were exam-style prompts caught by server-side Socratic guardrails — students never saw a direct answer.
+            Queries flagged were exam-style prompts caught by server-side Socratic guardrails — students never saw a direct answer.
           </p>
         </div>
         <div class="dash-card">
           <h2>Top concepts this week</h2>
           <div class="concept-list">${conceptRows}</div>
-          <h2 style="margin-top:24px;">⚠ Where students need help</h2>
+          <h2 style="margin-top:24px;"> Where students need help</h2>
           <p style="font-size:11.5px;color:var(--c-muted);margin-bottom:10px;">Concepts asked repeatedly across multiple students — flag these in your next class.</p>
           <div class="concept-list">${strugglingRows}</div>
         </div>
@@ -374,13 +394,13 @@ function renderPublicPreview() {
         <h2>Set up your school in 60 seconds</h2>
         <p>Create your school (or join one with your invite code), then invite teachers, students, and parents — each gets their own view. Admins manage guardrails. Teachers see student usage. Parents see their linked child's progress on web + Telegram.</p>
         <div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:0 auto 18px;max-width:720px;font-size:12.5px;color:var(--c-muted-strong);">
-          <span>👨‍💼 Admin view — full school</span>
-          <span>👩‍🏫 Teacher view — students + queries</span>
-          <span>👨‍👩‍👧 Parent view — your child's progress</span>
+          <span> Admin view — full school</span>
+          <span> Teacher view — students + queries</span>
+          <span> Parent view — your child's progress</span>
         </div>
         <div class="cta-row">
           <a class="btn btn-primary" href="/signup?next=/dashboard" style="padding:12px 24px;font-size:14px;">Create my school free</a>
-          <a class="btn btn-ghost"   href="/login?next=/dashboard"  style="padding:12px 24px;font-size:14px;">I have an account</a>
+          <a class="btn btn-ghost" href="/login?next=/dashboard" style="padding:12px 24px;font-size:14px;">I have an account</a>
         </div>
       </div>
 
@@ -424,7 +444,7 @@ function renderEmpty() {
 
 function renderDashboard() {
   const schoolOpts = state.schools.map(s =>
-    `<option value="${s.id}" ${state.activeSchool && state.activeSchool.id === s.id ? 'selected' : ''}>${escapeHtml(s.name)} (${escapeHtml(s.code)}) — ${s.role}</option>`
+    `<option value="${s.id}" ${state.activeSchool && state.activeSchool.id === s.id? 'selected' : ''}>${escapeHtml(s.name)} (${escapeHtml(s.code)}) — ${s.role}</option>`
   ).join('');
 
   const active = state.activeSchool || state.schools[0];
@@ -433,25 +453,25 @@ function renderDashboard() {
   let body = '';
   if (role === 'parent') {
     const pd = state.parentDashboard;
-    body = pd ? renderParentDashboard(pd) : '<div style="text-align:center;padding:40px;color:var(--c-muted);">Loading parent dashboard…</div>';
+    body = pd? renderParentDashboard(pd) : '<div style="text-align:center;padding:40px;color:var(--c-muted);">Loading parent dashboard…</div>';
   } else if (role === 'admin' || role === 'teacher') {
     const d = state.activeDashboard;
     if (d) {
-      body = renderStats(d) + renderStudents(d) + renderQueries(d) + (role === 'admin' ? renderParentLinkAdmin(active, d) : '') + renderGuardrails(active);
+      body = renderLeaderInsights(d) + renderStats(d) + renderStudents(d) + renderQueries(d) + (role === 'admin'? renderParentLinkAdmin(active, d) : '') + renderGuardrails(active);
     } else {
       body = '<div style="text-align:center;padding:40px;color:var(--c-muted);">Loading school data…</div>';
     }
   } else {
     body = `<div class="dash-card" style="text-align:center;padding:40px;">
       <h2>Student view</h2>
-      <p style="color:var(--c-muted-strong);margin:12px auto;max-width:480px;">You're enrolled as a student in ${escapeHtml(active.name)}. Open <a href="/app">Chat</a> to start a Socratic study session — your school's curriculum scope and guardrails are already configured for you.</p>
+      <p style="color:var(--c-muted-strong);margin:12px auto;max-width:480px;">You're enrolled as a student in ${escapeHtml(active.name)}. Your school's curriculum scope and guardrails are already configured for you.</p>
     </div>`;
   }
 
   const subtitle = role === 'parent'
-    ? `Parent view — ${escapeHtml(active.name)}`
+? `Parent view — ${escapeHtml(active.name)}`
     : role === 'admin'
-      ? 'Monitor student usage, configure guardrails, manage parent links.'
+? 'Monitor student usage, configure guardrails, manage parent links.'
       : 'Monitor student usage and configure guardrails.';
 
   return `
@@ -459,7 +479,7 @@ function renderDashboard() {
     <div class="dash-wrap">
       <div class="school-selector">
         <select id="schoolSelect">${schoolOpts}</select>
-        ${role !== 'student' ? `<span class="invite-code" id="inviteSpan">
+        ${role!== 'student'? `<span class="invite-code" id="inviteSpan">
           Invite code: <strong>${escapeHtml(active.code)}</strong>
           <button id="copyCodeBtn" title="Copy invite code">Copy</button>
         </span>` : ''}
@@ -507,7 +527,7 @@ function renderParentDashboard(pd) {
     childrenBlock = children.map(c => `
       <div class="dash-card" style="margin-bottom:18px;">
         <h2 style="text-transform:none;letter-spacing:0;font-size:18px;font-weight:600;color:var(--c-text);">${escapeHtml(c.name)}</h2>
-        <p style="font-size:12px;color:var(--c-muted);margin-top:-8px;margin-bottom:18px;">${escapeHtml(c.email)} · linked ${c.linked_at ? c.linked_at.slice(0,10) : ''}</p>
+        <p style="font-size:12px;color:var(--c-muted);margin-top:-8px;margin-bottom:18px;">${escapeHtml(c.email)} · linked ${c.linked_at? c.linked_at.slice(0,10) : ''}</p>
         <div class="overview-stats" style="grid-template-columns:repeat(3,1fr);">
           <div class="ov-tile"><div class="ov-val">${c.queries_total}</div><div class="ov-label">Recent queries</div></div>
           <div class="ov-tile"><div class="ov-val">${c.skills_tracked}</div><div class="ov-label">Topics studied</div></div>
@@ -515,9 +535,9 @@ function renderParentDashboard(pd) {
         </div>
         <h3 style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--c-muted);font-weight:600;margin:20px 0 12px;">Recent questions</h3>
         <div class="query-feed">${c.queries_recent.length === 0
-            ? '<div class="empty-state" style="padding:18px;color:var(--c-muted);">No questions asked yet. Encourage your child to use Vaaani for homework support.</div>'
+? '<div class="empty-state" style="padding:18px;color:var(--c-muted);">No questions asked yet. Encourage your child to use Vaaani for homework support.</div>'
             : c.queries_recent.map(q => `<div class="query-item">
-                <div class="q-student"><span>${escapeHtml(c.name)}</span><span class="q-time">${q.at ? q.at.slice(0,16).replace('T',' ') : ''}</span></div>
+                <div class="q-student"><span>${escapeHtml(c.name)}</span><span class="q-time">${q.at? q.at.slice(0,16).replace('T',' ') : ''}</span></div>
                 <div class="q-text">${escapeHtml(q.query)}</div>
                 <div class="q-meta"><span>${escapeHtml(q.intent || 'concept')}</span></div>
               </div>`).join('')
@@ -569,6 +589,37 @@ function renderParentLinkAdmin(school, d) {
     </div>`;
 }
 
+function renderLeaderInsights(d) {
+  const li = d.leader_insights;
+  if (!li) return '';
+  const grade = li.grade_level? ` · ${escapeHtml(li.grade_level)}` : '';
+  const eng = li.engagement || {};
+  const actions = (li.actions || []).map((a, i) =>
+    `<div class="li-action"><span class="li-num">${i + 1}</span><span>${escapeHtml(a)}</span></div>`
+  ).join('');
+  const weak = (li.weak_topics || []).map(w => {
+    const pct = Math.round(((w.avg_mastery || 0) / 5) * 100);
+    return `<div class="li-row"><span class="li-name">${escapeHtml(w.display || w.topic)}</span>
+      <span class="li-bar"><span style="width:${pct}%"></span></span>
+      <span class="li-val">${(w.avg_mastery || 0).toFixed(1)}/5 · ${w.students}</span></div>`;
+  }).join('') || '<div class="li-empty">No weak topics surfaced yet.</div>';
+  const mis = (li.misconceptions || []).map(m =>
+    `<span class="li-chip">${escapeHtml(m.label)} <b>${m.count}</b></span>`
+  ).join('') || '<div class="li-empty">No misconceptions logged yet.</div>';
+  return `
+  <div class="dash-card li-card">
+    <div class="li-head">
+      <h2>What to act on${grade}</h2>
+      <span class="li-eng">${eng.active || 0}/${eng.total || 0} students active</span>
+    </div>
+    <div class="li-actions">${actions}</div>
+    <div class="li-cols">
+      <div><h3>Weakest topics (cohort avg mastery)</h3>${weak}</div>
+      <div><h3>Most common mistakes</h3><div class="li-chips">${mis}</div></div>
+    </div>
+  </div>`;
+}
+
 function renderStats(d) {
   const c = d.member_counts || {};
   const totalQ = d.total_queries || 0;
@@ -580,7 +631,7 @@ function renderStats(d) {
       <div class="ov-tile"><div class="ov-val">${c.teacher || 0}</div><div class="ov-label">Teachers</div></div>
       <div class="ov-tile highlight"><div class="ov-val">${totalQ}</div><div class="ov-label">Total queries</div></div>
       <div class="ov-tile highlight"><div class="ov-val">${(totalT / 1000).toFixed(1)}<span class="ov-unit">k</span></div><div class="ov-label">Tokens used</div></div>
-      <div class="ov-tile highlight"><div class="ov-val">${d.students ? d.students.length : 0}</div><div class="ov-label">Active students</div></div>
+      <div class="ov-tile highlight"><div class="ov-val">${d.students? d.students.length : 0}</div><div class="ov-label">Active students</div></div>
     </div>`;
 }
 
@@ -620,13 +671,13 @@ function renderQueries(d) {
   let items = '';
   qs.forEach(q => {
     items += `<div class="query-item">
-      <div class="q-student"><span>${escapeHtml(q.student_name)}</span><span class="q-time">${q.at ? q.at.slice(0,16).replace('T',' ') : ''}</span></div>
+      <div class="q-student"><span>${escapeHtml(q.student_name)}</span><span class="q-time">${q.at? q.at.slice(0,16).replace('T',' ') : ''}</span></div>
       <div class="q-text">${escapeHtml(q.query)}</div>
       <div class="q-meta"><span>${escapeHtml(q.intent || 'knowledge')}</span><span>${q.tokens} tokens</span></div>
     </div>`;
   });
   return `<h2>Recent student queries</h2>
-    <div class="query-feed">${items || '<div class="empty-state">No queries yet. Students will appear here as they use the assistant.</div>'}</div>`;
+    <div class="query-feed">${items || '<div class="empty-state">No queries yet. Students will appear here as they use Vaaani.</div>'}</div>`;
 }
 
 function renderGuardrails(school) {
@@ -646,11 +697,11 @@ function renderGuardrails(school) {
             <label>Board / Syllabus</label>
             <select id="grBoard">
               <option value="">— None —</option>
-              <option value="CBSE" ${g.board === 'CBSE' ? 'selected' : ''}>CBSE</option>
-              <option value="ICSE" ${g.board === 'ICSE' ? 'selected' : ''}>ICSE</option>
-              <option value="State Board" ${g.board === 'State Board' ? 'selected' : ''}>State Board</option>
-              <option value="IB" ${g.board === 'IB' ? 'selected' : ''}>IB</option>
-              <option value="IGCSE" ${g.board === 'IGCSE' ? 'selected' : ''}>IGCSE</option>
+              <option value="CBSE" ${g.board === 'CBSE'? 'selected' : ''}>CBSE</option>
+              <option value="ICSE" ${g.board === 'ICSE'? 'selected' : ''}>ICSE</option>
+              <option value="State Board" ${g.board === 'State Board'? 'selected' : ''}>State Board</option>
+              <option value="IB" ${g.board === 'IB'? 'selected' : ''}>IB</option>
+              <option value="IGCSE" ${g.board === 'IGCSE'? 'selected' : ''}>IGCSE</option>
             </select>
           </div>
           <div class="field">
@@ -662,18 +713,18 @@ function renderGuardrails(school) {
           </div>
           <div class="field">
             <label>Allowed Subjects (comma-separated)</label>
-            <input id="grSubjects" type="text" value="${escapeHtml((g.allowed_subjects || []).join(', '))}" placeholder="e.g. Physics, Chemistry, Mathematics" />
+            <input id="grSubjects" type="text" value="${escapeHtml((g.allowed_subjects || []).join(', '))}" placeholder="e.g. Phonetics, Morphology, Syntax, Etymology" />
           </div>
           <div class="field">
-            <label>Curriculum Context (e.g. "CBSE Class 8 Science — NCERT textbook")</label>
+            <label>Curriculum Context (e.g. "CBSE Class 8 English — phonetics & grammar")</label>
             <textarea id="grCurriculum" placeholder="Describe the curriculum scope for your school...">${escapeHtml(g.curriculum || '')}</textarea>
           </div>
           <div class="field">
             <label>Socratic Enforcement Level</label>
             <select id="grSocratic">
-              <option value="strict" ${g.socratic_level === 'strict' ? 'selected' : ''}>Strict — never give direct answers</option>
-              <option value="moderate" ${(!g.socratic_level || g.socratic_level === 'moderate') ? 'selected' : ''}>Moderate — guide, confirm reasoning (recommended)</option>
-              <option value="light" ${g.socratic_level === 'light' ? 'selected' : ''}>Light — prefer questions but allow worked examples</option>
+              <option value="strict" ${g.socratic_level === 'strict'? 'selected' : ''}>Strict — never give direct answers</option>
+              <option value="moderate" ${(!g.socratic_level || g.socratic_level === 'moderate')? 'selected' : ''}>Moderate — guide, confirm reasoning (recommended)</option>
+              <option value="light" ${g.socratic_level === 'light'? 'selected' : ''}>Light — prefer questions but allow worked examples</option>
             </select>
           </div>
           <div class="auth-actions">
@@ -691,7 +742,7 @@ function renderGradeOptions(selected) {
     'Class 6','Class 7','Class 8','Class 9','Class 10',
     'Class 11','Class 12'
   ];
-  return grades.map(g => `<option value="${g}" ${g === selected ? 'selected' : ''}>${g}</option>`).join('');
+  return grades.map(g => `<option value="${g}" ${g === selected? 'selected' : ''}>${g}</option>`).join('');
 }
 
 async function loadDashboard(schoolId) {
@@ -726,7 +777,7 @@ function bindEvents() {
       const parent_email = document.getElementById('plParentEmail').value.trim();
       const student_email = document.getElementById('plStudentEmail').value.trim();
       const el = document.getElementById('parentLinkStatus');
-      if (!parent_email || !student_email) { Auth.setStatus(el, 'err', 'Enter both parent email and pick a student.'); return; }
+      if (!parent_email ||!student_email) { Auth.setStatus(el, 'err', 'Enter both parent email and pick a student.'); return; }
       const r = await Auth.json(`/auth/schools/${sid}/parent-links`, { method: 'POST', body: JSON.stringify({ parent_email, student_email }) });
       if (!r.ok) { Auth.setStatus(el, 'err', r.data?.detail || 'Link failed.'); return; }
       Auth.setStatus(el, 'ok', `Linked ${parent_email} → ${student_email}. The parent will see this child's activity in their parent dashboard.`);
@@ -812,7 +863,7 @@ function bindEvents() {
         allowed_subjects: document.getElementById('grSubjects').value.split(',').map(s => s.trim()).filter(Boolean),
         curriculum: document.getElementById('grCurriculum').value,
         socratic_level: document.getElementById('grSocratic').value,
-        allow_direct_answers: false,  // Socratic enforcement is non-negotiable — no admin override
+        allow_direct_answers: false, // Socratic enforcement is non-negotiable — no admin override
       };
       const r = await Auth.json(`/auth/schools/${sid}/guardrails`, { method: 'PUT', body: JSON.stringify(body) });
       const el = document.getElementById('guardrailStatus');

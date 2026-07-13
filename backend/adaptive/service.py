@@ -24,12 +24,17 @@ def normalize_topic(name: str) -> str:
     return " ".join((name or "").split()).lower()
 
 
-# Lightweight subject classifier mirrors the Socratic prompt pedagogies.
+# Lightweight subject classifier mirrors the Socratic prompt pedagogies
+# (linguistics-only scope: sounds / words / sentences / meaning / lit / writing).
 _SUBJECT_RULES = [
-    ("physics", r"\b(force|velocity|acceleration|momentum|energy|quantum|wave|circuit|optics|gravity|projectile|newton)\b"),
-    ("math",    r"\b(equation|integral|derivative|matrix|vector|theorem|proof|algebra|geometry|trig|calculus|limit)\b"),
-    ("english", r"\b(stanza|metaphor|simile|alliteration|protagonist|antagonist|theme|imagery|sonnet|allegory|narrator)\b"),
-    ("writing", r"\b(thesis|claim|warrant|evidence|rhetoric|ethos|pathos|logos|counter[- ]?argument|persuad)\b"),
+    ("etymology",  r"\b(etymolog\w*|loanword|borrow\w*|cognate|word origin|latin|greek|sanskrit|proto[- ]?indo)\b"),
+    ("phonetics",  r"\b(vowel|consonant|voiced|voiceless|articulat\w*|aspirat\w*|pronunciat\w*|pronounce|accent|ipa)\b"),
+    ("phonology",  r"\b(phoneme\w*|syllable\w*|stress|intonation|minimal pairs?|phonotactic\w*|assimilat\w*|rhym\w*)\b"),
+    ("morphology", r"\b(morpheme\w*|prefix\w*|suffix\w*|affix\w*|inflect\w*|deriv\w*|plural\w*|compound\w*|word[- ]formation)\b"),
+    ("semantics",  r"\b(meaning|synonym\w*|antonym\w*|homonym\w*|polysem\w*|idiom\w*|ambigu\w*|connotation|denotation|presuppos\w*)\b"),
+    ("syntax",     r"\b(sentence\w*|clauses?|phrases?|grammar|grammatical|word order|passive|tense|noun|verb|adjective|adverb|pronoun)\b"),
+    ("english",    r"\b(stanza|metaphor|simile|alliteration|protagonist|antagonist|theme|imagery|sonnet|allegory|narrator)\b"),
+    ("writing",    r"\b(thesis|claim|warrant|evidence|rhetoric|ethos|pathos|logos|counter[- ]?argument|persuad)\b"),
 ]
 
 

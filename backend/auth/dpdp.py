@@ -9,6 +9,7 @@ final Rules' letter; ship as "DPDP-aware", not "DPDP-certified".
 """
 from __future__ import annotations
 
+import os
 from datetime import date, datetime, timedelta, timezone
 from typing import Optional
 
@@ -19,7 +20,7 @@ from .security import random_token
 
 # Consent text version — bump whenever the legal text changes so audit logs
 # show exactly which version each parent agreed to.
-CONSENT_TEXT_VERSION = "v1.0.1-2026-05-26"  # bumped: grievance contact updated to neilshankarray@vaaani.in
+CONSENT_TEXT_VERSION = "v1.0.1-2026-05-26"  # bumped: grievance contact updated to iamanushka32@gmail.com
 
 CONSENT_TEXT = """\
 Vaaani is a Socratic study assistant for students. Under India's Digital
@@ -49,7 +50,7 @@ YOUR RIGHTS AS PARENT (DPDP §11-§14):
   • Right to correct or erase it
   • Right to withdraw this consent at any time
   • Right to nominate a successor data principal
-  • Right to grievance redressal (contact: neilshankarray@vaaani.in)
+  • Right to grievance redressal (contact: iamanushka32@gmail.com)
 
 By clicking CONFIRM you state that:
   1. You are the parent or lawful guardian of this child
@@ -194,7 +195,7 @@ def request_parental_consent(
         f"ignore it — your child's account remains inactive until you confirm.</p>"
         f"<p style='color:#666;font-size:12px;'>Consent text version "
         f"{CONSENT_TEXT_VERSION}. Withdraw anytime from your child's account page "
-        f"or by emailing neilshankarray@vaaani.in.</p>"
+        f"or by emailing iamanushka32@gmail.com.</p>"
     )
     try:
         get_email_sender().send(
@@ -346,6 +347,10 @@ def allow_processing(user: dict) -> tuple[bool, str]:
     a short machine-readable code the frontend uses to route the user
     (e.g. 'consent_required' → modal explaining parent-consent path).
     """
+    # Demo / non-production switch: VAAANI_DISABLE_CONSENT=1 turns the DPDP
+    # parental-consent gate OFF entirely (every authenticated user is allowed).
+    if os.environ.get("VAAANI_DISABLE_CONSENT") == "1":
+        return True, ""
     if user.get("deleted_at"):
         return False, "account_deleted"
     if not is_minor(user.get("date_of_birth")):

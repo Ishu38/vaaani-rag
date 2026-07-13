@@ -18,6 +18,10 @@ data/hermes/
 data/cache/
 data/cognitive.db
 data/cognitive.db-*
+data/cognitive_twin.db
+data/cognitive_twin.db-*
+data/explore.db
+data/explore.db-*
 data/simulation.db
 data/simulation.db-*
 data/jobs.db
@@ -47,3 +51,6 @@ build/
 # Playwright
 test-results/
 playwright-report/
+
+# Agent worktrees / local settings
+.claude/worktrees/

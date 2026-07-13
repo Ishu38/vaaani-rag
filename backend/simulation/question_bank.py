@@ -1,4 +1,4 @@
-"""Question bank — curated JEE problems with difficulty levels."""
+"""Question bank — curated linguistics questions with difficulty levels."""
 
 import random
 import hashlib
@@ -7,12 +7,12 @@ from .pressure import PressureState, Phase
 
 
 class QuestionBank:
-    def __init__(self, subject: str = "Physics"):
+    def __init__(self, subject: str = "Phonetics"):
         self.subject = subject
 
     def get_question(self, state: PressureState, question_index: int = 0) -> dict:
         from . import _questions
-        pool = getattr(_questions, f"POOL_{self.subject.upper()}", _questions.POOL_PHYSICS)
+        pool = getattr(_questions, f"POOL_{self.subject.upper()}", _questions.POOL_MORPHOLOGY)
 
         # Difficulty-based filtering
         d = state.current_difficulty
@@ -33,6 +33,7 @@ class QuestionBank:
         return {
             "query": selected["query"],
             "answer": selected["answer"],
+            "accept": selected.get("accept", []),
             "topic": selected.get("topic", ""),
             "difficulty": round(selected.get("difficulty", 1.0), 1),
             "choices": selected.get("choices", []),

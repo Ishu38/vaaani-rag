@@ -39,10 +39,29 @@ class ConsoleEmailSender:
         print("=" * 70, flush=True)
 
 
+# RFC 2606 / 6761 reserved domains: guaranteed undeliverable. Sending to these
+# only produces a bounce back to the From address, so we skip the SMTP send
+# entirely (covers test accounts AND real users who typo one of these).
+_UNDELIVERABLE_DOMAINS = {"example.com", "example.net", "example.org"}
+_UNDELIVERABLE_SUFFIXES = (".test", ".invalid", ".localhost", ".example")
+
+
+def is_undeliverable(to: str) -> bool:
+    dom = (to.rsplit("@", 1)[-1] if "@" in to else "").strip().lower()
+    if not dom or "." not in dom:
+        return True
+    if dom in _UNDELIVERABLE_DOMAINS:
+        return True
+    return any(dom == s.lstrip(".") or dom.endswith(s) for s in _UNDELIVERABLE_SUFFIXES)
+
+
 class SmtpEmailSender:
     """Real SMTP sender. Uses STARTTLS by default; set SMTP_USE_TLS=0 for plain."""
 
     def send(self, to: str, subject: str, body_text: str, body_html: str | None = None) -> None:
+        if is_undeliverable(to):
+            print(f"[email:skip] undeliverable/reserved domain — not sending to {to} (subject={subject})", flush=True)
+            return
         msg = EmailMessage()
         msg["From"] = SMTP_FROM
         msg["To"] = to

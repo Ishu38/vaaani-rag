@@ -1,68 +1,112 @@
-"""JEE question pools with difficulty ratings (1-5).
+"""Linguistics question pools with difficulty ratings (1-5).
+
+One pool per subject offered by the simulation UI (site/simulation.html):
+Phonetics, Phonology, Morphology, Syntax, Semantics, Etymology.
+
+Grading (engine._grade) is lenient free-text: normalized equality with the
+`answer` (parentheticals stripped), or word-boundary containment of the
+answer / any `accept` variant inside the student's reply. So: keep the
+gradable core of `answer` short and put elaboration in parentheses; list
+alternative correct phrasings in `accept`.
 
 Difficulty scale:
-  1 = basic recall / formula plug-in
-  2 = single concept, straightforward
-  3 = multi-step, moderate
+  1 = basic recall / single-term identification
+  2 = single concept, straightforward application
+  3 = multi-step analysis, moderate
   4 = multi-concept synthesis
   5 = tricky, requires deep insight
 """
 
-POOL_PHYSICS = [
-    {"query": "A ball is thrown vertically upward with speed 20 m/s. How high does it go? (g=10 m/s²)", "answer": "20 m", "topic": "kinematics", "difficulty": 1.0, "hint": "Use v² = u² - 2gh with v=0 at max height."},
-    {"query": "A car accelerates uniformly from rest to 20 m/s in 10 s. Find the distance covered.", "answer": "100 m", "topic": "kinematics", "difficulty": 1.0, "hint": "Use s = (u+v)t/2."},
-    {"query": "A 2 kg block is on a frictionless 30° incline. Find its acceleration. (g=10 m/s²)", "answer": "5 m/s²", "topic": "newtons_laws", "difficulty": 1.5, "hint": "a = g sin θ"},
-    {"query": "Find the work done by a force F = 10 N moving a body 5 m in the direction of the force.", "answer": "50 J", "topic": "work_energy", "difficulty": 1.0, "hint": "W = Fd cos θ, with θ=0."},
-    {"query": "A 1000 kg car at 10 m/s has what kinetic energy?", "answer": "50000 J", "topic": "work_energy", "difficulty": 1.0, "hint": "KE = ½mv²"},
-    {"query": "A stone is dropped from a cliff 80 m high. Find time to hit ground. (g=10 m/s²)", "answer": "4 s", "topic": "kinematics", "difficulty": 1.5, "hint": "h = ½gt²"},
-    {"query": "A projectile is launched at 45° with v₀ = 28.28 m/s. Find its range. (g=10 m/s²)", "answer": "80 m", "topic": "projectile_motion", "difficulty": 2.0, "hint": "R = v₀² sin(2θ) / g"},
-    {"query": "An object of mass 5 kg experiences a net force of 20 N. Find its acceleration.", "answer": "4 m/s²", "topic": "newtons_laws", "difficulty": 1.0, "hint": "F = ma"},
-    {"query": "A 50 kg person stands on a scale in an elevator accelerating upward at 2 m/s². What does the scale read? (g=10 m/s²)", "answer": "600 N", "topic": "newtons_laws", "difficulty": 2.5, "hint": "N = m(g+a)"},
-    {"query": "A block of mass m is pushed against a wall with horizontal force F. Coefficient of static friction is μ. What minimum F prevents it from sliding? (g=10)", "answer": "mg/μ", "topic": "friction", "difficulty": 3.0, "hint": "Friction f=μN where N=F. Equilibrium: f=mg."},
-    {"query": "A simple pendulum of length 1 m has what period? (Use g=π² m/s²)", "answer": "2 s", "topic": "oscillations", "difficulty": 1.5, "hint": "T = 2π√(L/g)"},
-    {"query": "A body of mass 2 kg moving at 4 m/s collides elastically with a stationary 2 kg body. Find velocities after collision.", "answer": "0 m/s and 4 m/s", "topic": "momentum", "difficulty": 2.5, "hint": "For equal masses in elastic collision, velocities swap."},
-    {"query": "A bullet of mass 10 g moving at 400 m/s embeds in a 2 kg block at rest on frictionless surface. Find their common velocity.", "answer": "1.99 m/s", "topic": "momentum", "difficulty": 2.0, "hint": "Conservation of momentum: m₁v₁ = (m₁+m₂)V"},
-    {"query": "An ideal gas at constant temperature expands to double its volume. The pressure becomes:", "answer": "half", "topic": "thermodynamics", "difficulty": 1.5, "hint": "PV = constant at constant T."},
-    {"query": "Two resistors 4Ω and 6Ω are in parallel. The equivalent resistance is:", "answer": "2.4 Ω", "topic": "current_electricity", "difficulty": 1.5, "hint": "1/Req = 1/4 + 1/6"},
-    {"query": "A 12V battery with internal resistance 2Ω is connected to a 10Ω external resistor. Find terminal voltage.", "answer": "10 V", "topic": "current_electricity", "difficulty": 2.0, "hint": "V_terminal = E - Ir where I = E/(R+r)"},
-    {"query": "If the charge on a capacitor doubles, the stored energy becomes:", "answer": "4 times", "topic": "electrostatics", "difficulty": 1.5, "hint": "U = Q²/(2C)"},
-    {"query": "Two point charges +4 μC and -2 μC are 30 cm apart. Where on the line joining them is the electric field zero?", "answer": "51 cm from the +4 μC charge (outside)", "topic": "electrostatics", "difficulty": 4.0, "hint": "Set field magnitudes equal: k|q₁|/x² = k|q₂|/(d-x)². Zero field lies outside, closer to smaller charge."},
-    {"query": "A wire of resistance R is stretched to triple its length. New resistance is:", "answer": "9R", "topic": "current_electricity", "difficulty": 2.5, "hint": "R ∝ L/A and volume constant → A ∝ 1/L. So R ∝ L²."},
-    {"query": "A transformer has 1000 primary turns and 100 secondary turns. If primary voltage is 220V, secondary voltage is:", "answer": "22 V", "topic": "electromagnetism", "difficulty": 1.5, "hint": "Vs/Vp = Ns/Np"},
-    {"query": "Light of wavelength 600 nm produces first minimum at angle 30° in single slit diffraction. Slit width is:", "answer": "1200 nm", "topic": "optics", "difficulty": 2.0, "hint": "a sin θ = λ"},
-    {"query": "A converging lens has focal length 20 cm. Object at 40 cm produces image at:", "answer": "40 cm (real, inverted, same size)", "topic": "optics", "difficulty": 2.0, "hint": "1/f = 1/v + 1/u"},
-    {"query": "A satellite orbits at height h = R above Earth's surface. Its orbital speed is (√_______ times surface escape velocity):", "answer": "1/2", "topic": "gravitation", "difficulty": 3.0, "hint": "v_orb = √(GM/2R), v_esc = √(2GM/R)"},
-    {"query": "A body of mass 2 kg is released from a height of 40 m. Just before impact its kinetic energy is: (g=10)", "answer": "800 J", "topic": "work_energy", "difficulty": 1.5, "hint": "KE = mgh = PE converted"},
-    {"query": "An alpha particle (charge +2e) enters uniform magnetic field B perpendicularly. Compared to a proton entering at same speed, radius ratio r_α/r_p is:", "answer": "2", "topic": "magnetic_effects", "difficulty": 3.0, "hint": "r = mv/qB. Alpha has 4× mass, 2× charge → r_α/r_p = (4m·v/2eB)/(m·v/eB) = 2"},
+POOL_PHONETICS = [
+    {"query": "Which speech organ vibrates to produce voiced sounds?", "answer": "the vocal cords (vocal folds)", "accept": ["vocal folds", "larynx", "voice box"], "topic": "articulation", "difficulty": 1.0, "hint": "It sits inside the larynx (voice box)."},
+    {"query": "Is the first sound of 'pat' voiced or voiceless?", "answer": "voiceless", "accept": ["unvoiced", "not voiced"], "topic": "voicing", "difficulty": 1.0, "hint": "Put your fingers on your throat and say it — do you feel a buzz?"},
+    {"query": "What is the place of articulation of the first sound in 'fan'?", "answer": "labiodental (lower lip against upper teeth)", "accept": ["lip and teeth", "lips and teeth", "labio dental"], "topic": "place_of_articulation", "difficulty": 1.5, "hint": "Watch your lip and teeth in a mirror while saying it."},
+    {"query": "The sounds in 'sip' and 'zip' differ in only one feature. Which one?", "answer": "voicing (s is voiceless, z is voiced)", "accept": ["voice", "voiced", "voiceless"], "topic": "voicing", "difficulty": 1.5, "hint": "Same place, same manner — what's left?"},
+    {"query": "What is the manner of articulation of the 'm' in 'map'?", "answer": "nasal", "accept": ["nasal stop", "through the nose"], "topic": "manner_of_articulation", "difficulty": 1.5, "hint": "Where does the air escape when your lips are closed?"},
+    {"query": "Which two English words below form a minimal pair? ship / sheep / shape", "answer": "ship and sheep", "accept": ["sheep and ship"], "topic": "minimal_pairs", "difficulty": 2.0, "hint": "A minimal pair differs in exactly one sound."},
+    {"query": "How many distinct sounds (not letters) are in the word 'thick'?", "answer": "3 (th-i-ck)", "accept": ["3"], "topic": "segmentation", "difficulty": 2.0, "hint": "'th' is one sound; 'ck' is one sound."},
+    {"query": "Describe the first sound of 'church' using manner of articulation.", "answer": "an affricate (a stop released into a fricative)", "accept": ["affricate"], "topic": "manner_of_articulation", "difficulty": 2.5, "hint": "It starts like 't' and finishes like 'sh'."},
+    {"query": "Why do many Hindi and Bengali speakers say 'iskool' for 'school'?", "answer": "a vowel is inserted before the sk- cluster (prothesis)", "accept": ["prothesis", "epenthesis", "vowel insertion", "insert a vowel", "add a vowel", "adds a vowel", "vowel is added"], "topic": "l1_interference", "difficulty": 3.0, "hint": "Think about which sound sequences each language allows at word beginnings."},
+    {"query": "The 'p' in 'pin' and the 'p' in 'spin' are pronounced differently in English. What is the difference?", "answer": "aspiration (the p in pin has a puff of air; after s it is unaspirated)", "accept": ["aspirated", "aspiration", "puff of air"], "topic": "aspiration", "difficulty": 3.0, "hint": "Hold a paper strip in front of your mouth and say both words."},
+    {"query": "A vowel is described as high, front, and unrounded. Which vowel of 'see' or 'saw' fits?", "answer": "the vowel of 'see'", "accept": ["see"], "topic": "vowels", "difficulty": 2.5, "hint": "Where is your tongue, and what are your lips doing, in each?"},
+    {"query": "English 'thin' and 'tin' contrast two sounds that many Indian languages treat as one. Explain why this makes 'th' hard for learners.", "answer": "most Indian languages have no dental fricative, so learners map 'th' to the nearest stop", "accept": ["dental fricative", "no th sound", "nearest stop", "not in their inventory", "doesn't exist in their language", "does not exist in their language", "no such sound"], "topic": "l1_interference", "difficulty": 4.0, "hint": "You can only hear contrasts your language trained you to hear."},
 ]
 
-POOL_MATH = [
-    {"query": "Evaluate: ∫ x² dx", "answer": "x³/3 + C", "topic": "integration", "difficulty": 1.0, "hint": "Power rule: ∫ x^n dx = x^(n+1)/(n+1) + C"},
-    {"query": "Find d/dx (sin 2x)", "answer": "2 cos 2x", "topic": "derivatives", "difficulty": 1.5, "hint": "Chain rule."},
-    {"query": "Find the limit: lim(x→0) (sin x)/x", "answer": "1", "topic": "limits", "difficulty": 1.0, "hint": "Standard limit."},
-    {"query": "Solve for x: 2^x = 32", "answer": "5", "topic": "algebra", "difficulty": 1.0, "hint": "Write 32 as 2^5."},
-    {"query": "If A = [[1,2],[3,4]], find det(A).", "answer": "-2", "topic": "matrices", "difficulty": 1.0, "hint": "det = ad - bc = 1×4 - 2×3"},
-    {"query": "What is the equation of a circle with center (2,-3) and radius 5?", "answer": "(x-2)²+(y+3)²=25", "topic": "coordinate_geometry", "difficulty": 1.5, "hint": "(x-h)²+(y-k)²=r²"},
-    {"query": "Find the value: C(10,3) = ?", "answer": "120", "topic": "combinatorics", "difficulty": 1.0, "hint": "C(n,r) = n!/(r!(n-r)!)"},
-    {"query": "Solve: |2x - 3| = 7", "answer": "x = 5 or x = -2", "topic": "algebra", "difficulty": 1.5, "hint": "2x-3 = 7 or 2x-3 = -7"},
-    {"query": "Evaluate: ∫₀^1 x dx", "answer": "1/2", "topic": "integration", "difficulty": 1.0, "hint": "∫x dx = x²/2, evaluate from 0 to 1"},
-    {"query": "Find dy/dx if y = x² e^x", "answer": "e^x(x²+2x)", "topic": "derivatives", "difficulty": 2.0, "hint": "Product rule: u'v + uv'"},
-    {"query": "Evaluate: ∫ x e^x dx", "answer": "e^x(x-1) + C", "topic": "integration", "difficulty": 2.0, "hint": "Integration by parts. u=x, dv=e^x dx."},
-    {"query": "Find the equation of the tangent to y = x² at x = 2.", "answer": "y = 4x - 4", "topic": "derivatives", "difficulty": 2.0, "hint": "Slope = dy/dx = 2x at x=2 is 4. Point is (2,4). Line: y-4 = 4(x-2)."},
-    {"query": "Solve the differential equation: dy/dx = y", "answer": "y = Ce^x", "topic": "differential_equations", "difficulty": 1.5, "hint": "Separation of variables: dy/y = dx"},
-    {"query": "The area bounded by y = x², x = 0, x = 2, and the x-axis is:", "answer": "8/3", "topic": "integration", "difficulty": 2.0, "hint": "∫₀² x² dx = [x³/3]₀² = 8/3"},
-    {"query": "A bag has 3 red and 5 blue balls. Two are drawn without replacement. P(both red) = ?", "answer": "3/28", "topic": "probability", "difficulty": 2.0, "hint": "(3/8)×(2/7) = 6/56 = 3/28"},
-    {"query": "Find the inverse of the matrix [[2,1],[5,3]]", "answer": "[[3,-1],[-5,2]]", "topic": "matrices", "difficulty": 2.5, "hint": "A⁻¹ = (1/det)[d -b; -c a]. det=6-5=1."},
-    {"query": "Solve: log₂(x) + log₂(x-2) = 3", "answer": "4", "topic": "algebra", "difficulty": 2.5, "hint": "log₂(x(x-2)) = 3 → x(x-2) = 8 → x²-2x-8=0 → x=4."},
-    {"query": "If z = (1+i)/(1-i), find |z|.", "answer": "1", "topic": "complex_numbers", "difficulty": 2.0, "hint": "Multiply numerator and denominator by (1+i). z = i."},
-    {"query": "Evaluate: lim(x→∞) (1 + 1/x)^x", "answer": "e", "topic": "limits", "difficulty": 1.5, "hint": "Euler's definition of e."},
-    {"query": "The sum of the series 1 + 1/2 + 1/4 + 1/8 + ... to infinity is:", "answer": "2", "topic": "sequences", "difficulty": 1.0, "hint": "Infinite GP with a=1, r=1/2: S = a/(1-r) = 2"},
-    {"query": "Solve: sin 2x = sin x for 0 ≤ x < 2π", "answer": "0, π/3, π, 5π/3", "topic": "trigonometry", "difficulty": 3.0, "hint": "2sin x cos x = sin x → sin x(2cos x - 1) = 0"},
-    {"query": "Find the maximum value of f(x) = sin x + cos x.", "answer": "√2", "topic": "trigonometry", "difficulty": 3.0, "hint": "sin x + cos x = √2 sin(x + π/4)"},
-    {"query": "The function f(x) = x³ - 3x² + 3x - 1 has how many real roots?", "answer": "1", "topic": "calculus", "difficulty": 2.5, "hint": "f(x) = (x-1)³. Triple root at x=1."},
-    {"query": "Two dice are rolled. Find P(sum = 7).", "answer": "1/6", "topic": "probability", "difficulty": 1.5, "hint": "Favorable: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1). Total 36 outcomes."},
-    {"query": "Find the area of the triangle with vertices (1,2), (4,6), (7,2).", "answer": "12", "topic": "coordinate_geometry", "difficulty": 2.0, "hint": "Area = ½|x₁(y₂-y₃) + x₂(y₃-y₁) + x₃(y₁-y₂)|"},
+POOL_PHONOLOGY = [
+    {"query": "What do we call the smallest sound unit that can change a word's meaning?", "answer": "a phoneme", "accept": ["phoneme"], "topic": "phoneme", "difficulty": 1.0, "hint": "Swapping it turns 'bat' into 'cat'."},
+    {"query": "How many syllables are in the word 'elephant'?", "answer": "3 (e-le-phant)", "accept": ["3"], "topic": "syllables", "difficulty": 1.0, "hint": "Clap once per beat as you say it."},
+    {"query": "In the word 'banana', which syllable is stressed?", "answer": "the second (ba-NA-na)", "accept": ["second", "2nd", "middle"], "topic": "stress", "difficulty": 1.5, "hint": "Say it three ways, stressing a different syllable each time — only one sounds right."},
+    {"query": "What are the two pronunciations of the plural ending in 'cats' and 'dogs'?", "answer": "s and z (voiceless s in cats, voiced z in dogs)", "accept": ["s and z", "z and s", "s in cats", "z in dogs", "voiceless and voiced", "voiced and voiceless"], "topic": "allophony", "difficulty": 2.0, "hint": "Listen to the very last sound of each word."},
+    {"query": "Why does the English article change from 'a' to 'an' before 'apple'?", "answer": "'an' appears before vowel sounds (a phonological rule, not a spelling rule)", "accept": ["vowel sound", "before a vowel", "starts with a vowel", "vowel"], "topic": "phonological_rules", "difficulty": 2.0, "hint": "Is it about the letter or the sound? Think of 'an hour'."},
+    {"query": "The words 'record' (noun) and 'record' (verb) are spelled the same. What distinguishes them in speech?", "answer": "stress (REcord noun vs reCORD verb)", "accept": ["stress", "stressed syllable"], "topic": "stress", "difficulty": 2.5, "hint": "Say 'I want to ___ a ___' out loud."},
+    {"query": "What is the rhyme (rime) of the syllable 'strong'?", "answer": "ong (the vowel plus the final consonants; 'str' is the onset)", "accept": ["ong"], "topic": "syllable_structure", "difficulty": 2.5, "hint": "Split the syllable at the vowel."},
+    {"query": "English allows 'str-' at the start of a word but not 'ngr-'. What is this kind of restriction called?", "answer": "phonotactics (the rules for legal sound sequences)", "accept": ["phonotactic", "phonotactics"], "topic": "phonotactics", "difficulty": 3.0, "hint": "It's the grammar of sound sequences."},
+    {"query": "In fast speech 'handbag' often sounds like 'hambag'. What process is this?", "answer": "assimilation (the nd becomes m to match the following b at the lips)", "accept": ["assimilation"], "topic": "assimilation", "difficulty": 3.0, "hint": "The sounds become more alike to make articulation easier."},
+    {"query": "Why does 'sing' + 'er' not rhyme with 'finger' for most English speakers?", "answer": "in 'singer' the ng is one nasal sound at a morpheme boundary; in 'finger' the g is separately pronounced", "accept": ["morpheme boundary", "morpheme", "g is pronounced", "one sound"], "topic": "phonological_rules", "difficulty": 4.0, "hint": "Break each word into its meaningful parts first."},
+    {"query": "A Bengali-medium student pronounces 'van' and 'wan' identically. State the phonological reason.", "answer": "Bengali has no v/w contrast, so the English contrast is merged", "accept": ["no contrast", "merge", "merged", "merger", "v and w", "one sound for both", "same sound"], "topic": "l1_interference", "difficulty": 3.5, "hint": "Does the student's first language treat v and w as different phonemes?"},
+    {"query": "Count the phonemes in 'box'.", "answer": "4 (b-o-k-s)", "accept": ["4"], "topic": "phoneme", "difficulty": 2.0, "hint": "The letter 'x' hides two sounds."},
 ]
 
-POOL_PHYSICS.sort(key=lambda q: q["difficulty"])
-POOL_MATH.sort(key=lambda q: q["difficulty"])
+POOL_MORPHOLOGY = [
+    {"query": "What is the smallest meaningful unit of language called?", "answer": "a morpheme", "accept": ["morpheme"], "topic": "morpheme", "difficulty": 1.0, "hint": "It's smaller than a word but still carries meaning."},
+    {"query": "How many morphemes are in the word 'unhappiness'?", "answer": "3 (un- + happy + -ness)", "accept": ["3"], "topic": "morpheme_counting", "difficulty": 1.5, "hint": "Peel off the prefix and the suffix."},
+    {"query": "Is the '-s' in 'books' a free morpheme or a bound morpheme?", "answer": "bound (it cannot stand alone)", "accept": ["bound", "bound morpheme"], "topic": "bound_free", "difficulty": 1.0, "hint": "Can you say it by itself and mean something?"},
+    {"query": "Which morpheme in 'rewriting' tells you the action is happening now?", "answer": "-ing", "accept": ["ing"], "topic": "inflection", "difficulty": 1.5, "hint": "There are three pieces: re-, write, -ing."},
+    {"query": "'Teacher' and 'taller' both end in -er. Do the two -er suffixes mean the same thing?", "answer": "no (in 'teacher' -er makes a noun; in 'taller' -er marks comparison)", "accept": ["no", "different", "not the same"], "topic": "affixes", "difficulty": 2.5, "hint": "What does each whole word mean, and what job does -er do in it?"},
+    {"query": "What is the difference between derivational and inflectional morphemes? Give one example of each.", "answer": "derivational morphemes create new words; inflectional morphemes mark grammar", "accept": ["new words", "create new words", "mark grammar", "grammatical"], "topic": "derivation_inflection", "difficulty": 2.5, "hint": "One builds new dictionary entries; the other just adjusts grammar."},
+    {"query": "How many inflectional morphemes does modern English have?", "answer": "8 (-s plural, -'s possessive, -s 3rd person, -ed past, -en past participle, -ing progressive, -er comparative, -est superlative)", "accept": ["8"], "topic": "inflection", "difficulty": 3.0, "hint": "It's a famously short list — under ten."},
+    {"query": "'Goed' instead of 'went' is a common child error. What does it show about how children learn morphology?", "answer": "overgeneralisation (the child applies the regular -ed rule everywhere, showing rule-learning)", "accept": ["overgeneralisation", "overgeneralization", "overgeneralise", "overgeneralize", "applies the rule", "rule learning", "learned the rule", "learnt the rule"], "topic": "acquisition", "difficulty": 3.0, "hint": "Could the child have heard 'goed' from adults?"},
+    {"query": "Break 'antidisestablishment' into its morphemes.", "answer": "anti- + dis- + establish + -ment", "accept": ["anti dis establish ment"], "topic": "morpheme_counting", "difficulty": 3.5, "hint": "Work outward from the verb at the core."},
+    {"query": "What kind of word-formation gives us 'brunch' from 'breakfast' + 'lunch'?", "answer": "blending", "accept": ["blend", "portmanteau"], "topic": "word_formation", "difficulty": 2.0, "hint": "Two words squeezed into one, losing pieces of each."},
+    {"query": "What word-formation process turns the noun 'google' into the verb 'to google'?", "answer": "conversion (zero derivation — the word class changes with no visible affix)", "accept": ["conversion", "zero derivation"], "topic": "word_formation", "difficulty": 3.0, "hint": "What was added to the word? Nothing — yet its class changed."},
+    {"query": "In Hindi, 'larkā' (boy) becomes 'larke' (boys); in English 'boy' becomes 'boys'. What is similar about the two processes?", "answer": "both use inflectional morphology (a suffix marks plural without creating a new word)", "accept": ["inflection", "inflectional", "suffix", "plural marking", "plural suffix"], "topic": "cross_linguistic", "difficulty": 3.5, "hint": "Compare the job the ending does in each language."},
+]
+
+POOL_SYNTAX = [
+    {"query": "In the sentence 'The dog chased the cat', what is the subject?", "answer": "the dog", "accept": ["dog"], "topic": "grammatical_roles", "difficulty": 1.0, "hint": "Who is doing the chasing?"},
+    {"query": "What part of speech is 'quickly' in 'She ran quickly'?", "answer": "an adverb", "accept": ["adverb"], "topic": "parts_of_speech", "difficulty": 1.0, "hint": "It describes how the running happened."},
+    {"query": "What is the basic word order of English: SOV, SVO, or VSO?", "answer": "SVO (subject-verb-object)", "accept": ["svo"], "topic": "word_order", "difficulty": 1.5, "hint": "Line up 'The dog (S) chased (V) the cat (O)'."},
+    {"query": "Hindi and Bengali usually place the verb where in a sentence?", "answer": "at the end (SOV order)", "accept": ["end", "sov", "last"], "topic": "word_order", "difficulty": 2.0, "hint": "Translate 'I rice eat' word by word."},
+    {"query": "Identify the noun phrase in: 'The tall boy with glasses smiled.'", "answer": "the tall boy with glasses", "accept": ["tall boy with glasses"], "topic": "phrases", "difficulty": 2.0, "hint": "What chunk could you replace with just 'he'?"},
+    {"query": "Why is 'I am knowing the answer' ungrammatical in standard English but common in Indian English?", "answer": "'know' is a stative verb and standard English blocks statives in the progressive", "accept": ["stative", "state verb", "stative verb"], "topic": "l1_interference", "difficulty": 3.5, "hint": "Some verbs describe states, not actions — can states be 'in progress'?"},
+    {"query": "'Visiting relatives can be boring' has two meanings. What are they?", "answer": "relatives who visit, or the act of going to visit relatives (a structural ambiguity)", "accept": ["relatives who visit", "going to visit", "structural ambiguity", "two readings"], "topic": "ambiguity", "difficulty": 3.0, "hint": "Who is doing the visiting in each reading?"},
+    {"query": "Turn 'She wrote the letter' into the passive voice.", "answer": "The letter was written by her.", "accept": ["letter was written"], "topic": "voice", "difficulty": 2.0, "hint": "Make the object the new subject."},
+    {"query": "In 'The girl who won the race is my friend', what does the clause 'who won the race' do?", "answer": "it is a relative clause modifying 'the girl'", "accept": ["relative clause", "modifies", "which girl", "describes the girl"], "topic": "clauses", "difficulty": 2.5, "hint": "Could you delete it and still have a sentence? What information would you lose?"},
+    {"query": "What is wrong with 'Him went to school', and what rule does it break?", "answer": "'him' is an object pronoun in subject position; English requires 'he'", "accept": ["object pronoun", "subject case", "should be he", "nominative"], "topic": "case", "difficulty": 2.0, "hint": "Pronouns change shape depending on their job in the sentence."},
+    {"query": "Why can 'The old man the boats' confuse readers even though it is grammatical?", "answer": "it's a garden-path sentence ('man' is the verb, 'the old' is the subject)", "accept": ["garden path", "man is the verb", "man is a verb", "verb"], "topic": "parsing", "difficulty": 4.5, "hint": "Try reading 'man' as an action."},
+    {"query": "Describe the two main branches of the sentence 'Birds sing'.", "answer": "a noun phrase 'birds' (subject) and a verb phrase 'sing' (predicate)", "accept": ["noun phrase and verb phrase", "np and vp", "subject and predicate", "subject and verb"], "topic": "phrase_structure", "difficulty": 1.5, "hint": "Every simple sentence splits into who/what + what-they-do."},
+]
+
+POOL_SEMANTICS = [
+    {"query": "What do we call words with opposite meanings, like 'hot' and 'cold'?", "answer": "antonyms", "accept": ["antonym", "antonymy"], "topic": "lexical_relations", "difficulty": 1.0, "hint": "'Syn-' means same; what means opposite?"},
+    {"query": "'Big' and 'large' mean nearly the same thing. What is this relationship called?", "answer": "synonymy", "accept": ["synonym", "synonyms"], "topic": "lexical_relations", "difficulty": 1.0, "hint": "Same meaning, different word."},
+    {"query": "'A rose is a flower' — what is the relationship of 'rose' to 'flower'?", "answer": "hyponymy (rose is a hyponym of flower)", "accept": ["hyponym", "hyponymy"], "topic": "lexical_relations", "difficulty": 2.0, "hint": "One term sits inside the other's category."},
+    {"query": "The word 'bank' can mean a riverbank or a money bank. Is this homonymy or polysemy, and why?", "answer": "homonymy (the two meanings are unrelated; they just share a form)", "accept": ["homonymy", "homonym", "homonyms", "unrelated"], "topic": "ambiguity", "difficulty": 3.0, "hint": "Are the meanings connected by any shared idea?"},
+    {"query": "'The head of the school' and 'the head on my shoulders' — homonymy or polysemy?", "answer": "polysemy (both senses grow from one core meaning)", "accept": ["polysemy", "polysemous", "related senses"], "topic": "ambiguity", "difficulty": 3.0, "hint": "Do the meanings share a family resemblance?"},
+    {"query": "What is the difference between the denotation and connotation of 'snake'?", "answer": "denotation is the reptile itself; connotation is the associated ideas like danger or treachery", "accept": ["reptile", "dictionary meaning", "literal meaning"], "topic": "denotation_connotation", "difficulty": 2.0, "hint": "One is the dictionary meaning; the other is the feeling it carries."},
+    {"query": "Why is 'My brother is an only child' semantically odd?", "answer": "it's a contradiction ('brother' presupposes a sibling; 'only child' denies one)", "accept": ["contradiction", "presuppose", "presupposes", "sibling", "contradicts"], "topic": "contradiction", "difficulty": 2.5, "hint": "What does calling someone a 'brother' already assume?"},
+    {"query": "'Could you pass the salt?' is a question in form. What is it in function?", "answer": "a request (an indirect speech act)", "accept": ["request", "indirect speech act"], "topic": "pragmatics", "difficulty": 2.5, "hint": "Would 'Yes, I could' be a helpful answer?"},
+    {"query": "'Kick the bucket' means 'die'. Why can't you work this out from the individual words?", "answer": "it's an idiom (the meaning is non-compositional — it belongs to the whole expression)", "accept": ["idiom", "non compositional", "noncompositional", "whole expression"], "topic": "idioms", "difficulty": 2.0, "hint": "Compare it with literally kicking a real bucket."},
+    {"query": "In 'John stopped smoking', what does the sentence presuppose?", "answer": "that John used to smoke", "accept": ["used to smoke", "smoked before", "he smoked", "was smoking", "was a smoker"], "topic": "presupposition", "difficulty": 3.0, "hint": "What must already be true for 'stopped' to make sense?"},
+    {"query": "'Every student read a book' has two readings. Explain both.", "answer": "one single book for all, or possibly a different book per student (a scope ambiguity)", "accept": ["scope", "same book", "different books", "one book for all"], "topic": "scope", "difficulty": 4.0, "hint": "How many books might there be in each reading?"},
+    {"query": "The Hindi word 'kal' can mean yesterday or tomorrow. What decides which meaning a listener understands?", "answer": "context (especially the tense of the verb around it)", "accept": ["context", "tense", "verb tense"], "topic": "pragmatics", "difficulty": 3.0, "hint": "'Kal main gaya' vs 'kal main jaunga'."},
+]
+
+POOL_ETYMOLOGY = [
+    {"query": "The root 'aqua' in 'aquarium' comes from Latin. What does it mean?", "answer": "water", "topic": "latin_roots", "difficulty": 1.0, "hint": "Where do the fish in an aquarium live?"},
+    {"query": "What does the Greek root 'tele' mean in 'telephone' and 'television'?", "answer": "far (at a distance)", "accept": ["far", "distance", "distant", "far away"], "topic": "greek_roots", "difficulty": 1.0, "hint": "Both devices bring you things from far away."},
+    {"query": "'Bio' means life and 'logy' means study. What does 'biology' literally mean?", "answer": "the study of life", "accept": ["study of life", "life study"], "topic": "greek_roots", "difficulty": 1.0, "hint": "Combine the two meanings."},
+    {"query": "The English word 'jungle' was borrowed from which language, and from which word?", "answer": "Hindi (from 'jangal', rough uncultivated land; ultimately Sanskrit)", "accept": ["hindi", "sanskrit", "jangal"], "topic": "borrowings", "difficulty": 2.0, "hint": "It entered English during colonial rule in India."},
+    {"query": "Name two more English words borrowed from Indian languages besides 'jungle'.", "answer": "e.g. shampoo, bungalow, pyjamas, loot, verandah, chutney, catamaran", "accept": ["shampoo", "bungalow", "pyjamas", "pajamas", "loot", "verandah", "veranda", "chutney", "catamaran", "bandana", "juggernaut", "thug", "cot", "dinghy", "guru", "yoga", "karma", "cheetah", "mango"], "topic": "borrowings", "difficulty": 2.0, "hint": "Think of clothing, houses, food."},
+    {"query": "Sanskrit 'mātā', Latin 'māter', English 'mother' — what do these similar forms suggest?", "answer": "they descend from a common ancestor (Proto-Indo-European)", "accept": ["common ancestor", "proto indo european", "related", "same family", "same ancestor"], "topic": "language_families", "difficulty": 3.0, "hint": "Coincidence, borrowing, or shared ancestry?"},
+    {"query": "What is a cognate? Give an example.", "answer": "words in different languages inherited from the same ancestral word (e.g. English 'night', German 'Nacht', Latin 'nox')", "accept": ["same ancestor", "common ancestor", "inherited from the same", "same origin"], "topic": "cognates", "difficulty": 2.5, "hint": "Same parent word, different daughters."},
+    {"query": "The word 'nice' once meant 'ignorant'. What is this kind of meaning change called?", "answer": "semantic change (specifically amelioration — the meaning improved)", "accept": ["amelioration", "semantic change", "meaning improved", "got better"], "topic": "semantic_change", "difficulty": 3.0, "hint": "Did the word's meaning get better or worse over the centuries?"},
+    {"query": "'Awful' once meant 'full of awe' (inspiring wonder). What happened to its meaning?", "answer": "pejoration (the meaning worsened over time)", "accept": ["pejoration", "worsened", "got worse", "became negative", "meaning got worse"], "topic": "semantic_change", "difficulty": 3.0, "hint": "Compare it with 'awesome', which kept the positive sense."},
+    {"query": "Why do 'father' in English and 'pitā' in Hindi both match 'pater' in Latin once you know p→f happened in Germanic?", "answer": "Grimm's Law (Proto-Indo-European p systematically became f in Germanic)", "accept": ["grimm", "grimms law", "p became f", "p to f", "regular sound change", "sound change"], "topic": "sound_change", "difficulty": 4.0, "hint": "Sound changes are regular — find the p/f pattern in pater/father, pada/foot."},
+    {"query": "What is the difference between a borrowed word and an inherited word? Classify English 'curry'.", "answer": "borrowed (inherited words come down from the language's own ancestor; 'curry' was taken from Tamil 'kari')", "accept": ["borrowed", "tamil", "kari", "loanword", "loan"], "topic": "borrowings", "difficulty": 3.5, "hint": "Did English get it from its Germanic parent, or from contact?"},
+    {"query": "The root 'graph' appears in 'autograph', 'photograph', 'paragraph'. What does it mean and where is it from?", "answer": "write (from Greek 'graphein', to write)", "accept": ["write", "writing", "draw", "greek"], "topic": "greek_roots", "difficulty": 1.5, "hint": "What action do all three words involve?"},
+]
+
+for _pool in (POOL_PHONETICS, POOL_PHONOLOGY, POOL_MORPHOLOGY,
+              POOL_SYNTAX, POOL_SEMANTICS, POOL_ETYMOLOGY):
+    _pool.sort(key=lambda q: q["difficulty"])
