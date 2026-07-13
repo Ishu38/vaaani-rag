@@ -93,6 +93,16 @@
   .sp.newsnd .tag{font-size:9px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
   .sp-note{margin-top:12px;font-size:13px;color:var(--ink-2);background:var(--accent-soft);border:1px solid #dcdcfb;border-radius:10px;padding:10px 13px}
   .sp-note a{color:var(--accent);font-weight:600;text-decoration:underline}
+  .hear.say{background:var(--good-soft);color:var(--good);border-color:#cdeede}
+  .hear.say.rec{background:var(--bad-soft);color:var(--bad);border-color:#f3cccc}
+  .say-fb{display:none;margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+  .say-fb .sf-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .say-fb .sf-row{display:flex;flex-wrap:wrap;gap:8px}
+  .say-fb .sf{display:flex;flex-direction:column;align-items:center;min-width:46px;padding:8px 10px;border-radius:10px}
+  .say-fb .sf.correct{background:var(--good-soft);color:var(--good);border:1px solid #cdeede}
+  .say-fb .sf.off{background:var(--warn-soft);color:var(--warn);border:1px solid #f0e0b8;cursor:pointer}
+  .say-fb .sf .ak2{font-size:20px;line-height:1.1}
+  .say-fb .sf .ip2{font-family:var(--mono);font-size:11px;margin-top:2px;opacity:.85}
 </style>
 </head>
 <body>
@@ -137,7 +147,9 @@
         <span class="the-word" id="theWord"></span>
         <span class="the-ipa" id="theIpa"></span>
         <button class="hear" id="hearBtn">🔊 Hear it</button>
+        <button class="hear say" id="sayBtn">🎤 Say it</button>
       </div>
+      <div class="say-fb" id="sayFb" style="display:none;"></div>
       <div class="phon-row" id="phonRow"></div>
       <p class="hint">Tap a highlighted sound to build it yourself in the Sound Lab.</p>
       <div class="script-panel" id="scriptPanel" style="display:none;"></div>
@@ -251,6 +263,50 @@
     }
   })();
 
+  // Voice-first "Say it" — record, send to the ear, feedback in the child's letters.
+  var mediaRec=null, chunks=[], recording=false;
+  async function toggleSay(){
+    var btn=$('sayBtn');
+    if(recording){ if(mediaRec) mediaRec.stop(); return; }
+    if(!currentWord){ banner('Look up a word first, then say it.'); return; }
+    if(!navigator.mediaDevices || !window.MediaRecorder){ banner('This device can’t record here — try Hear it and the Sound Lab.'); return; }
+    try{
+      var stream=await navigator.mediaDevices.getUserMedia({audio:true});
+      chunks=[]; mediaRec=new MediaRecorder(stream);
+      mediaRec.ondataavailable=function(e){ if(e.data && e.data.size) chunks.push(e.data); };
+      mediaRec.onstop=async function(){
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        recording=false; btn.classList.remove('rec'); btn.textContent='🎤 Say it';
+        await sendSay(new Blob(chunks,{type:'audio/webm'}));
+      };
+      mediaRec.start(); recording=true; btn.classList.add('rec'); btn.textContent='● Stop';
+      setTimeout(function(){ if(recording && mediaRec) mediaRec.stop(); }, 4000);
+    }catch(e){ banner('Microphone not allowed — tap the lock icon in the address bar to enable it.'); }
+  }
+  async function sendSay(blob){
+    var sf=$('sayFb'); sf.style.display='block'; sf.innerHTML='<div class="sf-h">Listening…</div>';
+    try{
+      var fd=new FormData(); fd.append('audio', blob, 'clip.webm'); fd.append('word', currentWord); fd.append('l1', l1);
+      var r=await fetch('/loop/say/'+encodeURIComponent(sid), {method:'POST', credentials:'same-origin', body:fd});
+      if(r.status===503){ sf.innerHTML='<div class="sf-h">The ear is waking up — try again in a moment.</div>'; return; }
+      var d=await r.json();
+      if(!d.recorded){ sf.innerHTML='<div class="sf-h">Didn’t catch that clearly — say it once more, a little louder.</div>'; return; }
+      var html='<div class="sf-h">You said “'+esc(currentWord)+'” — sound by sound</div><div class="sf-row">';
+      (d.per_sound||[]).forEach(function(s){
+        if(!s.node) return;
+        var ok=s.outcome==='correct';
+        var inner='<span class="ak2">'+esc(s.akshara||s.ipa)+'</span><span class="ip2">'+esc(s.ipa)+(ok?' ✓':'')+'</span>';
+        html+= ok ? '<span class="sf correct">'+inner+'</span>' : '<a class="sf off" href="/sound-lab">'+inner+'</a>';
+      });
+      html+='</div>';
+      var withC=(d.per_sound||[]).filter(function(s){ return s.contrast; });
+      if(withC.length){ var c=withC[0].contrast;
+        html+='<div class="sp-note">'+(c.why_meaningful?esc(c.why_meaningful)+' ':'')+(c.feel_it?'To make it, '+esc(c.feel_it)+'. ':'')+'<a href="/sound-lab">Build it in the Sound Lab →</a></div>';
+      }
+      sf.innerHTML=html;
+    }catch(e){ sf.innerHTML='<div class="sf-h">Couldn’t check that — try again.</div>'; }
+  }
+
   async function check(){
     var typed = ($('ipaIn').value||'').trim();
     if(!typed || !currentWord) return;
@@ -296,6 +352,7 @@
   $('lookBtn').addEventListener('click', lookup);
   $('wordIn').addEventListener('keydown', function(e){ if(e.key==='Enter') lookup(); });
   $('hearBtn').addEventListener('click', hear);
+  $('sayBtn').addEventListener('click', toggleSay);
   $('checkBtn').addEventListener('click', check);
   $('ipaIn').addEventListener('keydown', function(e){ if(e.key==='Enter') check(); });
 })();

@@ -293,6 +293,34 @@ def post_transcribe_check(body: TranscribeIn) -> dict:
                                    body.student_ipa, world, l1=body.l1)
 
 
+@router.post("/say/{student_id}")
+async def post_say(student_id: str, audio: UploadFile = File(...),
+                   word: str = Form(...), l1: str = Form("en")) -> dict:
+    """Voice-first door — the child SAYS any word; the ear measures which sounds
+    they made and returns per-sound feedback in their own letters + the 'why' for
+    any that drifted. No typing, no symbols. The accessible entry for a
+    vernacular-medium learner."""
+    import ear
+    world = _get_world()
+    blob = await audio.read()
+    if len(blob) > ear.MAX_AUDIO_BYTES:
+        raise HTTPException(413, "audio clip too large")
+    if not blob:
+        raise HTTPException(422, "empty audio")
+    try:
+        result = ear.check_with_engine(blob, audio.filename or "clip.webm", word, "en")
+    except ear.EarUnavailable as e:
+        raise HTTPException(503, str(e))
+    say = ear.ingest_say(student_id, word, result, world, l1=l1)
+    try:                                    # the word in the child's own letters
+        import l1_script
+        if l1_script.supported(l1):
+            say["script"] = l1_script.word_in_script(word, l1, world)
+    except Exception:
+        pass
+    return say
+
+
 @router.get("/edge-twin/{student_id}")
 def get_edge_twin(student_id: str) -> dict:
     world = _get_world()

@@ -82,6 +82,72 @@ def phone_node_index(world) -> dict[str, str]:
     return idx
 
 
+def ingest_say(student_id: str, word: str, result: dict, world,
+               l1: str = "en") -> dict:
+    """Voice-first door — the child SAYS an arbitrary word; the ear measures which
+    sounds they produced. Returns per-sound feedback in the child's own letters
+    (akshara) with the first-principles 'why' for any sound that drifted, folding
+    the outcomes into the twin + confusion field. No typing, no symbols required —
+    the accessible entry for a vernacular-medium learner."""
+    status = result.get("status")
+    if status != "ok":
+        return {"recorded": False,
+                "reason": result.get("reason") or result.get("error")
+                or f"engine status {status!r}"}
+
+    import cognitive_twin as twin
+    from evidence_graph import EvidenceObject
+    idx = phone_node_index(world)
+
+    per_sound, mapped_ok, mapped_total = [], 0, 0
+    for item in result.get("evidence", []):
+        phone = item.get("phone", "")
+        outcome = item.get("outcome", "incorrect")
+        conf = float(item.get("confidence", 0.6))
+        pnode = idx.get(_norm(phone)) if phone else None
+        if pnode is None:
+            per_sound.append({"ipa": phone, "node": None, "outcome": outcome,
+                              "akshara": None, "status": "other"})
+            continue
+        correct = outcome == "correct"
+        mapped_total += 1
+        mapped_ok += 1 if correct else 0
+        b = twin.update(EvidenceObject(
+            student_id=student_id, node_id=pnode, source="audio",
+            outcome="correct" if correct else "incorrect", confidence=conf,
+            meta={"word": word, "phone": phone, "level": "phone", "channel": "say"}))
+        entry = {"ipa": world.display(pnode), "node": pnode, "outcome": outcome,
+                 "mastery": round(b.mastery, 4)}
+        if l1 and l1 != "en":
+            try:
+                import l1_confusion as lc
+                lc.note_production(student_id, l1, pnode, correct=correct, confidence=conf)
+                lc.suppress_on_mastery(student_id, l1, pnode, b.mastery)
+                aksh, st = (None, None)
+                try:
+                    import l1_script
+                    if l1_script.supported(l1):
+                        aksh, st = l1_script.akshara_for_consonant(l1, pnode)
+                except Exception:
+                    pass
+                entry["akshara"], entry["status"] = aksh, st
+                # inferred contrast: a missed sound their L1 lacks → why it's new
+                if not correct:
+                    att = lc.attractor_for(l1, pnode)
+                    if att:
+                        import contrast
+                        entry["contrast"] = contrast.contrast(world, pnode, att[0])
+            except Exception:
+                pass
+        per_sound.append(entry)
+
+    return {"recorded": True, "word": word,
+            "matched": mapped_ok, "total": mapped_total,
+            "score": round(mapped_ok / mapped_total, 3) if mapped_total else 0.0,
+            "low_confidence": bool(result.get("low_confidence")),
+            "per_sound": per_sound}
+
+
 def _word_phone_edges(word_id: str, pnode: str, graph_edges: dict) -> list[str]:
     """CASCADE: the graph edges that literally connect this word to this
     phoneme (either direction, any type) — e.g. phone —sounds_like→ f, or
